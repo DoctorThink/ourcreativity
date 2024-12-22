@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Image, 
   Video, 
-  GameController, 
+  Gamepad2, 
   Bot, 
   Users, 
   MessageSquare,
@@ -38,7 +38,7 @@ const Groups = () => {
       id: 3,
       name: "O.C Edisi Ngegame",
       description: "Gaming Community",
-      icon: <GameController className="w-6 h-6" />,
+      icon: <Gamepad2 className="w-6 h-6" />,
       color: "bg-cyan-500",
       members: 324,
       status: "Active"
