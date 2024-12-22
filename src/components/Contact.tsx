@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 export const Contact = () => {
   return (
     <section className="py-20 bg-background">
-      <div className="container mx-auto px-4">
+      <div className="container max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -17,7 +17,7 @@ export const Contact = () => {
             Ready to be part of something extraordinary? Connect with fellow creators and start your journey with us.
           </p>
           <Button
-            className="bg-primary text-primary-foreground hover:bg-primary/90 text-lg px-8 py-6"
+            className="bg-lavender text-primary-foreground hover:bg-lavender/90 text-lg px-8 py-6 rounded-ios transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Get Started
           </Button>
