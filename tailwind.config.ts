@@ -12,9 +12,12 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
+      padding: {
+        DEFAULT: "1rem",
+        sm: "2rem",
+        lg: "4rem",
+        xl: "5rem",
+        "2xl": "6rem",
       },
     },
     extend: {
@@ -22,35 +25,19 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "#221F26",
+        foreground: "#FFFFFF",
         primary: {
-          DEFAULT: "#9b87f5",
-          foreground: "#FFFFFF",
-        },
-        secondary: {
-          DEFAULT: "#221F26",
-          foreground: "#F6F6F7",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "#E5DEFF",
+          DEFAULT: "#FFFFFF",
           foreground: "#221F26",
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+        secondary: {
+          DEFAULT: "#333333",
+          foreground: "#FFFFFF",
         },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+        accent: {
+          DEFAULT: "#555555",
+          foreground: "#FFFFFF",
         },
       },
       fontFamily: {
@@ -59,12 +46,17 @@ export default {
       },
       keyframes: {
         "glow": {
-          "0%, 100%": { textShadow: "0 0 10px #9b87f5, 0 0 20px #9b87f5" },
-          "50%": { textShadow: "0 0 20px #9b87f5, 0 0 30px #9b87f5" },
+          "0%, 100%": { textShadow: "0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.8)" },
+          "50%": { textShadow: "0 0 20px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.8)" },
         },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        }
       },
       animation: {
         "glow": "glow 2s ease-in-out infinite",
+        "float": "float 6s ease-in-out infinite",
       },
     },
   },
