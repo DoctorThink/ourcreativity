@@ -25,7 +25,7 @@ const Groups = () => {
       name: "O.C Edisi Desain Grafis",
       description: "Komunitas Desain Grafis",
       icon: <Image className="w-6 h-6" />,
-      color: "bg-purple-500",
+      color: "bg-white/10",
       members: 256,
       status: "Aktif"
     },
@@ -34,7 +34,7 @@ const Groups = () => {
       name: "O.C Edisi Video Editing",
       description: "Komunitas Editing Video",
       icon: <Video className="w-6 h-6" />,
-      color: "bg-red-500",
+      color: "bg-white/10",
       members: 189,
       status: "Aktif"
     },
@@ -43,7 +43,7 @@ const Groups = () => {
       name: "O.C Edisi Ngegame",
       description: "Komunitas Gaming",
       icon: <Gamepad2 className="w-6 h-6" />,
-      color: "bg-cyan-500",
+      color: "bg-white/10",
       members: 324,
       status: "Aktif"
     },
@@ -52,7 +52,7 @@ const Groups = () => {
       name: "O.C BOT",
       description: "Pengembangan Bot",
       icon: <Bot className="w-6 h-6" />,
-      color: "bg-orange-500",
+      color: "bg-white/10",
       members: 145,
       status: "Aktif"
     },
@@ -61,7 +61,7 @@ const Groups = () => {
       name: "O.C BOT V.2 [FOR DESIGN]",
       description: "Otomatisasi Desain",
       icon: <Bot className="w-6 h-6" />,
-      color: "bg-pink-500",
+      color: "bg-white/10",
       members: 111,
       status: "Aktif"
     },
@@ -70,7 +70,7 @@ const Groups = () => {
       name: "HØPECØRE INDONESIA",
       description: "Komunitas Kreatif Indonesia",
       icon: <Users className="w-6 h-6" />,
-      color: "bg-gray-500",
+      color: "bg-white/10",
       members: 278,
       status: "Aktif"
     },
@@ -79,7 +79,7 @@ const Groups = () => {
       name: "Para Ademin",
       description: "Grup Admin",
       icon: <MessageSquare className="w-6 h-6" />,
-      color: "bg-gray-600",
+      color: "bg-white/10",
       members: 12,
       status: "Privat"
     }
@@ -92,24 +92,53 @@ const Groups = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen bg-background text-foreground p-4 pb-24"
     >
-      {/* Header */}
+      {/* Header with Logo */}
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-lg mb-6 pb-4">
-        <button 
-          onClick={() => navigate(-1)}
-          className="flex items-center space-x-2 text-foreground/60 hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Kembali</span>
-        </button>
+        <div className="flex items-center justify-between">
+          <button 
+            onClick={() => navigate(-1)}
+            className="flex items-center space-x-2 text-foreground/60 hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>Kembali</span>
+          </button>
+          
+          {/* Logo Container */}
+          <div className="flex items-center gap-2">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="w-8 h-8 rounded-full bg-white/5 p-1 flex items-center justify-center backdrop-blur-md border border-white/10"
+            >
+              <img
+                src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
+                alt="Logo"
+                className="w-6 h-6 object-contain"
+              />
+            </motion.div>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="w-8 h-8 rounded-full bg-white/5 p-1 flex items-center justify-center backdrop-blur-md border border-white/10"
+            >
+              <img
+                src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png"
+                alt="Text Logo"
+                className="w-6 h-6 object-contain"
+              />
+            </motion.div>
+          </div>
+        </div>
+        
         <div className="mt-4">
-          <h1 className="text-2xl font-bold">KOMUNITAS KREATIF KITA</h1>
+          <h1 className="text-2xl font-bold font-serif glow-text">OUR CREATIVITY</h1>
           <p className="text-foreground/60">8 Grup Kreatif</p>
         </div>
       </div>
 
       {/* Groups Grid */}
       <ScrollArea className="h-[calc(100vh-280px)]">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-6">
+        <div className="grid grid-cols-1 gap-4 pb-6">
           {groups.map((group) => (
             <motion.div
               key={group.id}
@@ -117,20 +146,20 @@ const Groups = () => {
               animate={{ scale: 1, opacity: 1 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="group relative bg-secondary rounded-ios p-4 transition-all duration-200 hover:bg-secondary/80"
+              className="group relative glass rounded-2xl p-4 transition-all duration-200 hover:bg-white/10"
             >
               <div className="flex items-start space-x-4">
-                <div className={`${group.color} p-3 rounded-ios`}>
+                <div className={`${group.color} p-3 rounded-full backdrop-blur-md border border-white/10`}>
                   {group.icon}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-semibold">{group.name}</h3>
-                    <Badge variant="outline" className="ml-2">
+                    <h3 className="font-serif font-semibold">{group.name}</h3>
+                    <Badge variant="outline" className="ml-2 rounded-full">
                       {group.status}
                     </Badge>
                   </div>
-                  <p className="text-sm text-foreground/60 mt-1">
+                  <p className="text-sm text-foreground/60 mt-1 font-serif">
                     {group.description}
                   </p>
                   <div className="flex items-center space-x-2 mt-2">
@@ -141,43 +170,42 @@ const Groups = () => {
                   </div>
                 </div>
               </div>
-              <div className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             </motion.div>
           ))}
         </div>
       </ScrollArea>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-lg border-t border-accent/10 p-4">
+      <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-lg border-t border-white/10 p-4">
         <div className="max-w-screen-xl mx-auto grid grid-cols-4 gap-2">
           <Button 
             variant="ghost" 
-            className="flex flex-col items-center gap-1 h-auto py-2"
-            onClick={() => navigate('/groups')}
+            className="flex flex-col items-center gap-1 h-auto py-2 rounded-full hover:bg-white/10"
           >
             <Rocket className="w-5 h-5" />
-            <span className="text-xs">Jelajahi</span>
+            <span className="text-xs font-serif">Jelajahi</span>
           </Button>
           <Button 
             variant="ghost" 
-            className="flex flex-col items-center gap-1 h-auto py-2"
+            className="flex flex-col items-center gap-1 h-auto py-2 rounded-full hover:bg-white/10"
           >
             <Users className="w-5 h-5" />
-            <span className="text-xs">Mulai</span>
+            <span className="text-xs font-serif">Mulai</span>
           </Button>
           <Button 
             variant="ghost" 
-            className="flex flex-col items-center gap-1 h-auto py-2"
+            className="flex flex-col items-center gap-1 h-auto py-2 rounded-full hover:bg-white/10"
           >
             <Info className="w-5 h-5" />
-            <span className="text-xs">Informasi</span>
+            <span className="text-xs font-serif">Informasi</span>
           </Button>
           <Button 
             variant="ghost" 
-            className="flex flex-col items-center gap-1 h-auto py-2"
+            className="flex flex-col items-center gap-1 h-auto py-2 rounded-full hover:bg-white/10"
           >
             <Bell className="w-5 h-5" />
-            <span className="text-xs">Pengumuman</span>
+            <span className="text-xs font-serif">Pengumuman</span>
           </Button>
         </div>
       </div>
