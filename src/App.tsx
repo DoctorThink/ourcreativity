@@ -8,7 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Lazy load pages for better performance
 const Index = lazy(() => import("./pages/Index"));
-const Groups = lazy(() => import("./pages/Groups"));
+const BrandStory = lazy(() => import("./pages/BrandStory"));
 const Informasi = lazy(() => import("./pages/Informasi"));
 const Pengumuman = lazy(() => import("./pages/Pengumuman"));
 
@@ -45,7 +45,7 @@ const App = () => (
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/groups" element={<Groups />} />
+            <Route path="/brand-story" element={<BrandStory />} />
             <Route path="/informasi" element={<Informasi />} />
             <Route path="/pengumuman" element={<Pengumuman />} />
           </Routes>

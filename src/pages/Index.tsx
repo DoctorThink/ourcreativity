@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Users, Play, Info, Bell } from "lucide-react";
+import { Users, Play, Info, Bell, BookOpen } from "lucide-react";
 import { lazy, Suspense } from "react";
 
 // Lazy load components to improve initial loading time
@@ -31,7 +31,7 @@ const Index = () => {
 
   // Navigation items with optimized rendering
   const navigationItems = [
-    { icon: Users, text: "Jelajahi Grup", href: "/groups", color: "bg-lavender/10" },
+    { icon: BookOpen, text: "Cerita Kami", href: "/brand-story", color: "bg-lavender/10" },
     { icon: Play, text: "Mulai", href: "#", color: "bg-mint/10" },
     { icon: Info, text: "Informasi", href: "/informasi", color: "bg-peach/10" },
     { icon: Bell, text: "Pengumuman", href: "/pengumuman", color: "bg-softPink/10" }
