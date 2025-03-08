@@ -30,6 +30,8 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false, // Improve performance by not refetching on window focus
       retry: 1, // Reduce number of retries
+      staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+      cacheTime: 1000 * 60 * 30, // Keep unused data in cache for 30 minutes
     },
   },
 });
