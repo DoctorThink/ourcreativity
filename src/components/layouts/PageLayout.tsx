@@ -22,18 +22,24 @@ const PageLayout = ({
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Fixed Background Gradient for better performance */}
-      <div className="fixed inset-0 bg-gradient-to-b from-black to-zinc-900 -z-10" />
+      {/* Fixed Background Gradient with geometric elements */}
+      <div className="fixed inset-0 bg-gradient-to-b from-black to-zinc-900 -z-10">
+        {/* Geometric elements */}
+        <div className="absolute top-[10%] right-[5%] w-64 h-64 rounded-full border border-white/5 opacity-20" />
+        <div className="absolute bottom-[20%] left-[10%] w-48 h-48 rounded-xl border border-white/5 opacity-10 rotate-12" />
+        <div className="absolute top-[30%] left-[15%] w-32 h-32 rounded-md border border-white/5 opacity-15 rotate-45" />
+        <div className="absolute bottom-[15%] right-[20%] w-24 h-24 border border-white/5 opacity-20 -rotate-12" />
+      </div>
       
       {/* Header with Logo */}
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg p-4 border-b border-white/10">
+      <header className="sticky top-0 z-50 backdrop-blur-lg p-4 border-b border-white/10">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           {showBackButton && (
             <motion.button 
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/")}
               className="flex items-center space-x-2 text-foreground/60 hover:text-foreground transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
@@ -115,6 +121,20 @@ const PageLayout = ({
             >
               {children}
             </motion.div>
+          </motion.div>
+
+          {/* Credits Footer */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
+            className="mt-16 mb-8 text-center"
+          >
+            <div className="glass rounded-full px-4 py-2 inline-block">
+              <p className="text-xs text-gray-400">
+                &copy; 2024 OUR CREATIVITY • Designed by Ardellio S. A.
+              </p>
+            </div>
           </motion.div>
         </div>
       </ScrollArea>

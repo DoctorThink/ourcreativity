@@ -11,6 +11,7 @@ const Index = lazy(() => import("./pages/Index"));
 const BrandStory = lazy(() => import("./pages/BrandStory"));
 const Informasi = lazy(() => import("./pages/Informasi"));
 const Pengumuman = lazy(() => import("./pages/Pengumuman"));
+const Terms = lazy(() => import("./pages/Terms"));
 
 // Loading component
 const LoadingFallback = () => (
@@ -31,7 +32,7 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false, // Improve performance by not refetching on window focus
       retry: 1, // Reduce number of retries
       staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
-      cacheTime: 1000 * 60 * 30, // Keep unused data in cache for 30 minutes
+      gcTime: 1000 * 60 * 30, // Keep unused data in cache for 30 minutes (replaces cacheTime)
     },
   },
 });
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/brand-story" element={<BrandStory />} />
             <Route path="/informasi" element={<Informasi />} />
             <Route path="/pengumuman" element={<Pengumuman />} />
+            <Route path="/terms" element={<Terms />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
