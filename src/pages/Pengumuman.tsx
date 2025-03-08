@@ -1,9 +1,10 @@
 
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layouts/PageLayout";
-import { Bell, Megaphone, Speaker, Calendar, Star, Users, PlusCircle, AlertCircle } from "lucide-react";
+import { Bell, Megaphone, Speaker, Calendar, Star, Users, PlusCircle, AlertCircle, ArrowRight, Zap, Instagram } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 const Pengumuman = () => {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
@@ -30,7 +31,7 @@ const Pengumuman = () => {
     {
       id: 1,
       title: "Pertemuan Komunitas",
-      date: "15 Maret 2024",
+      date: "Mei 2024",
       content: "Akan diadakan pertemuan komunitas untuk membahas project kreatif mendatang dan eksplorasi kolaborasi antar divisi.",
       icon: <Bell className="w-6 h-6" />,
       priority: "high",
@@ -40,8 +41,8 @@ const Pengumuman = () => {
     },
     {
       id: 2,
-      title: "Workshop Design Thinking",
-      date: "20 Maret 2024",
+      title: "Workshop Desain Grafis",
+      date: "Juni 2024",
       content: "Workshop online tentang proses design thinking dan implementasinya dalam project kreatif modern. Dibawakan oleh praktisi berpengalaman.",
       icon: <Megaphone className="w-6 h-6" />,
       priority: "medium",
@@ -52,8 +53,8 @@ const Pengumuman = () => {
     {
       id: 3,
       title: "Open Recruitment",
-      date: "1 April 2024",
-      content: "Pembukaan pendaftaran anggota baru untuk periode April 2024. Fokus rekrutmen pada desainer UI/UX, motion designer, dan content writer.",
+      date: "Juli 2024",
+      content: "Pembukaan pendaftaran anggota baru untuk periode mendatang. Fokus rekrutmen pada desainer UI/UX, motion designer, dan content writer.",
       icon: <Users className="w-6 h-6" />,
       priority: "high",
       color: "from-[#2A2A2A] to-transparent",
@@ -62,9 +63,9 @@ const Pengumuman = () => {
     },
     {
       id: 4,
-      title: "Kompetisi Digital Art",
-      date: "15 April 2024",
-      content: "Kompetisi digital art dengan tema 'Futurisme dalam Kehidupan Sehari-hari'. Hadiah menarik untuk 3 karya terbaik.",
+      title: "Kompetisi Kreativitas",
+      date: "Agustus 2024",
+      content: "Kompetisi kreativitas dengan tema 'Kekayaan Budaya Indonesia'. Hadiah menarik untuk 3 karya terbaik di masing-masing kategori.",
       icon: <Star className="w-6 h-6" />,
       priority: "medium",
       color: "from-[#252525] to-transparent",
@@ -73,8 +74,8 @@ const Pengumuman = () => {
     },
     {
       id: 5,
-      title: "Pembaruan Platform",
-      date: "10 Mei 2024",
+      title: "Update Platform Komunitas",
+      date: "September 2024",
       content: "Pengembangan platform komunitas dengan fitur-fitur baru untuk memudahkan interaksi dan kolaborasi antar anggota.",
       icon: <PlusCircle className="w-6 h-6" />,
       priority: "low",
@@ -84,10 +85,56 @@ const Pengumuman = () => {
     }
   ];
 
+  // Flowchart steps
+  const flowchartSteps = [
+    {
+      id: 1,
+      title: "Media Sosial 1",
+      description: "Konten yang menginspirasi/menarik minat sebagai pemicu",
+      icon: <Instagram className="w-5 h-5" />
+    },
+    {
+      id: 2,
+      title: "Minat Didapat",
+      description: "Ketertarikan terbentuk dari konten inspiratif",
+      icon: <Star className="w-5 h-5" />
+    },
+    {
+      id: 3,
+      title: "Bergabung ke OurCreativity",
+      description: "Menjadi bagian dari komunitas kreatif",
+      icon: <Users className="w-5 h-5" />
+    },
+    {
+      id: 4,
+      title: "Berkarya, Berdiskusi, Belajar",
+      description: "Aktif berpartisipasi dalam kegiatan komunitas",
+      icon: <Zap className="w-5 h-5" />
+    },
+    {
+      id: 5,
+      title: "Menjadi Pribadi yang Konsisten",
+      description: "Membangun kebiasaan berkarya secara berkelanjutan",
+      icon: <Star className="w-5 h-5" />
+    },
+    {
+      id: 6,
+      title: "Berkolaborasi di Akun @ourcreativity.ofc",
+      description: "Mendapatkan apresiasi/kritik dan branding secara gratis",
+      icon: <Instagram className="w-5 h-5" />
+    },
+    {
+      id: 7,
+      title: "Media Sosial 2",
+      description: "Menarik minat lebih banyak anak muda kreatif",
+      icon: <Users className="w-5 h-5" />
+    }
+  ];
+
   return (
     <PageLayout
       title="PENGUMUMAN"
-      subtitle="Informasi terbaru dari komunitas OUR CREATIVITY"
+      subtitle="Informasi terbaru dan alur perkembangan komunitas OurCreativity"
     >
       {/* Announcements List with enhanced design */}
       <motion.div 
@@ -176,6 +223,120 @@ const Pengumuman = () => {
           </div>
         </motion.div>
         
+        {/* Flowchart Section */}
+        <motion.div 
+          variants={itemVariants}
+          className="backdrop-blur-xl bg-black/40 border border-white/10 rounded-3xl p-6 overflow-hidden relative"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/50 to-black opacity-50" />
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBzdHJva2U9IiNmZmZmZmYwNSIgc3Ryb2tlLXdpZHRoPSIxIiBkPSJNMjkuNS45OGwxOS4wOCAxMS4wM3YyMi4wNUwyOS41IDQ1LjA5IDEwLjQyIDM0LjA2VjEyLjAxTDI5LjUuOTh6Ii8+PC9nPjwvc3ZnPg==')] bg-repeat opacity-5" />
+          
+          {/* Flow Header with enhanced styling */}
+          <div className="flex items-center gap-3 mb-6 relative z-10">
+            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-xl">
+              <ArrowRight className="w-5 h-5 text-white/80" />
+            </div>
+            <h2 className="text-xl font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+              Harapan & Alur Perkembangan
+            </h2>
+          </div>
+          
+          <Separator className="bg-white/5 mb-6" />
+          
+          <div className="relative">
+            {/* Connector line */}
+            <div className="absolute h-full w-[1px] bg-gradient-to-b from-white/5 via-white/20 to-white/5 left-6 top-0 z-0 ml-3.5"></div>
+            
+            <div className="space-y-5 relative z-10">
+              {flowchartSteps.map((step, index) => (
+                <motion.div
+                  key={step.id}
+                  variants={itemVariants}
+                  className="flex items-start gap-4 ml-1"
+                >
+                  <div className="relative flex flex-col items-center">
+                    <div className="w-8 h-8 rounded-full backdrop-blur-md bg-white/5 border border-white/20 flex items-center justify-center z-10">
+                      {step.icon}
+                    </div>
+                    {index !== flowchartSteps.length - 1 && (
+                      <div className="h-12 w-[1px] bg-white/5"></div>
+                    )}
+                  </div>
+                  
+                  <div className="backdrop-blur-xl bg-black/20 border border-white/10 rounded-xl p-4 flex-1">
+                    <h3 className="text-lg font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-1">
+                      {step.title}
+                    </h3>
+                    <p className="text-white/70 text-sm">
+                      {step.description}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+              
+              {/* Alternative path */}
+              <motion.div
+                variants={itemVariants}
+                className="ml-8 mt-2 mb-2"
+              >
+                <div className="relative">
+                  <div className="absolute -left-7 top-1/2 w-6 h-[1px] bg-white/20"></div>
+                  <div className="absolute -left-7 -top-4 h-10 w-[1px] bg-white/20"></div>
+                  <div className="backdrop-blur-xl bg-black/20 border border-white/10 rounded-xl p-4">
+                    <h3 className="text-lg font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-1">
+                      Terciptanya Komunitas Baru
+                    </h3>
+                    <p className="text-white/70 text-sm">
+                      Alternatif skenario - berkembangnya komunitas-komunitas kreatif lainnya
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+              
+              {/* Cycle indicator */}
+              <motion.div
+                variants={itemVariants}
+                className="flex justify-center mt-4"
+              >
+                <div className="text-white/50 text-sm backdrop-blur-xl bg-white/5 border border-white/10 rounded-full px-4 py-2">
+                  Proses berjalan berulang dan berkelanjutan
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
+        
+        {/* Call to Action */}
+        <motion.div 
+          variants={itemVariants}
+          className="backdrop-blur-xl bg-black/30 border border-white/10 rounded-3xl p-8 text-center relative overflow-hidden"
+        >
+          <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-white/5 to-transparent"></div>
+          <div className="absolute bottom-0 right-0 w-60 h-60 rounded-tl-[100px] border-l border-t border-white/5" style={{ opacity: 0.05 }} />
+          
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <div className="w-12 h-12 rounded-full backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center">
+              <Instagram className="w-6 h-6 text-white/80" />
+            </div>
+          </div>
+          
+          <h3 className="text-2xl font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-4">
+            Bergabung dengan OurCreativity
+          </h3>
+          
+          <p className="text-white/70 max-w-2xl mx-auto mb-8">
+            Jadilah bagian dari perjalanan 3000+ anak muda kreatif Indonesia. Kunjungi media sosial kami dan mulai berkarya bersama.
+          </p>
+          
+          <Button
+            onClick={() => window.open("https://linktr.ee/ourcreativity.ofc", "_blank")}
+            className="backdrop-blur-xl bg-white/10 hover:bg-white/20 text-white px-8 py-6 rounded-full text-lg font-semibold relative z-10 group border border-white/10"
+          >
+            <span>LINKTR.EE/OURCREATIVITY.OFC</span>
+            <ArrowRight className="ml-2 w-5 h-5 inline transition-transform group-hover:translate-x-1" />
+          </Button>
+        </motion.div>
+        
         {/* Additional note with geometric styling */}
         <motion.div 
           variants={itemVariants}
@@ -191,7 +352,7 @@ const Pengumuman = () => {
           </div>
           
           <p className="text-white/70 relative z-10">
-            Pengumuman akan diperbarui secara berkala. Pantau terus halaman ini untuk mendapatkan informasi terbaru.
+            Pengumuman akan diperbarui secara berkala. Pantau terus halaman ini dan media sosial kami untuk mendapatkan informasi terbaru.
           </p>
         </motion.div>
       </motion.div>

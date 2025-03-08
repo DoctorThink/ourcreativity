@@ -1,6 +1,7 @@
+
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layouts/PageLayout";
-import { Check, Shield, AlertTriangle, FileText, Bookmark, User, FileCode, Lock, Users } from "lucide-react";
+import { Check, Shield, AlertTriangle, FileText, Bookmark, User, FileCode, Lock, Users, Palette, Video, MessageSquare, Heart } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 const Terms = () => {
@@ -26,12 +27,12 @@ const Terms = () => {
     {
       id: "membership",
       title: "Keanggotaan",
-      description: "Syarat dan ketentuan untuk menjadi anggota komunitas OUR CREATIVITY.",
+      description: "Syarat dan ketentuan untuk menjadi anggota komunitas OurCreativity.",
       icon: <User className="w-5 h-5" />,
       rules: [
-        "Keanggotaan terbuka untuk semua yang berusia minimal 18 tahun",
+        "Keanggotaan terbuka untuk semua yang tertarik berkarya di bidang kreatif",
         "Setiap anggota wajib mematuhi kode etik komunitas",
-        "Pendaftaran mengharuskan verifikasi identitas melalui email",
+        "Anggota didorong untuk berpartisipasi aktif dalam diskusi dan kegiatan",
         "Anggota dapat mengundurkan diri kapan saja dengan pemberitahuan"
       ],
       decoration: (
@@ -46,7 +47,7 @@ const Terms = () => {
       rules: [
         "Semua karya yang dibagikan harus merupakan karya asli atau memiliki izin",
         "Konten tidak boleh melanggar hak cipta atau hak kekayaan intelektual",
-        "Karya yang menampilkan konten dewasa harus diberi label yang sesuai",
+        "Karya harus sesuai dengan norma-norma dan nilai positif",
         "Komunitas memiliki hak untuk menampilkan karya Anda untuk keperluan promosi"
       ],
       decoration: (
@@ -69,15 +70,15 @@ const Terms = () => {
       )
     },
     {
-      id: "privacy",
-      title: "Privasi & Data",
-      description: "Informasi tentang bagaimana data Anda dikelola dan dilindungi.",
-      icon: <Lock className="w-5 h-5" />,
+      id: "groups",
+      title: "Pengelompokan Jenis",
+      description: "Informasi tentang 4 jenis grup dalam komunitas.",
+      icon: <Heart className="w-5 h-5" />,
       rules: [
-        "Informasi pribadi anggota akan dilindungi sesuai kebijakan privasi",
-        "Anggota tidak boleh membagikan informasi pribadi anggota lain tanpa izin",
-        "Kami berhak menggunakan karya yang dibagikan untuk keperluan promosi komunitas",
-        "Data anggota tidak akan dijual atau dibagikan kepada pihak ketiga tanpa persetujuan"
+        "Anggota dapat bergabung di lebih dari satu grup (Desain Grafis, Video Editing, Meme Creator, Karya Tulis)",
+        "Setiap grup memiliki forum diskusi khusus untuk topik terkait",
+        "Konten yang dibagikan harus relevan dengan grup tempat dibagikan",
+        "Kolaborasi antar anggota dari grup berbeda sangat dianjurkan"
       ],
       decoration: (
         <div className="absolute bottom-10 right-10 w-20 h-20 rounded-md border border-white/10" style={{ opacity: 0.1 }} />
@@ -85,10 +86,18 @@ const Terms = () => {
     }
   ];
 
+  // Group icons
+  const groupIcons = [
+    { icon: <Palette className="w-5 h-5" />, title: "Desain Grafis" },
+    { icon: <Video className="w-5 h-5" />, title: "Video Editing" },
+    { icon: <MessageSquare className="w-5 h-5" />, title: "Meme Creator" },
+    { icon: <FileText className="w-5 h-5" />, title: "Karya Tulis" }
+  ];
+
   return (
     <PageLayout 
       title="SYARAT & KETENTUAN"
-      subtitle="Panduan dan peraturan untuk menjaga kualitas dan integritas komunitas OUR CREATIVITY"
+      subtitle="Panduan dan peraturan untuk menjaga kualitas dan integritas komunitas OurCreativity"
     >
       <motion.div
         variants={containerVariants}
@@ -117,13 +126,34 @@ const Terms = () => {
                   Tentang Syarat & Ketentuan
                 </h2>
                 <p className="text-white/70 mt-2">
-                  Syarat dan ketentuan berikut dirancang untuk memastikan pengalaman yang positif dan produktif bagi semua anggota komunitas. Dengan bergabung dengan OUR CREATIVITY, Anda setuju untuk mematuhi aturan-aturan ini.
+                  Syarat dan ketentuan berikut dirancang untuk memastikan pengalaman yang positif dan produktif bagi semua anggota komunitas. Dengan bergabung dengan OurCreativity, Anda setuju untuk mematuhi aturan-aturan ini.
                 </p>
               </div>
             </div>
           </div>
         </motion.div>
 
+        {/* Group Icons Section */}
+        <motion.div 
+          variants={itemVariants}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4"
+        >
+          {groupIcons.map((group, index) => (
+            <div 
+              key={index}
+              className="backdrop-blur-xl bg-black/30 border border-white/10 rounded-xl p-4 text-center relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/30 to-black opacity-50" />
+              <div className="flex flex-col items-center gap-3 relative z-10">
+                <div className="w-12 h-12 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center">
+                  {group.icon}
+                </div>
+                <p className="text-white/70 text-sm font-medium">Edisi {group.title}</p>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+        
         {/* Grid layout for terms sections */}
         <div className="grid grid-cols-1 gap-8">
           {termsSections.map((section) => (
@@ -207,13 +237,13 @@ const Terms = () => {
           </div>
           
           <p className="text-white/80 relative z-10 font-medium">
-            Dengan berpartisipasi dalam komunitas OUR CREATIVITY, Anda mengakui bahwa telah membaca, memahami, dan setuju untuk mematuhi semua syarat dan ketentuan yang telah ditetapkan.
+            Dengan berpartisipasi dalam komunitas OurCreativity, Anda mengakui bahwa telah membaca, memahami, dan setuju untuk mematuhi semua syarat dan ketentuan yang telah ditetapkan.
           </p>
           
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent mx-auto my-4" />
           
           <p className="text-sm text-white/50 italic relative z-10">
-            Ketentuan ini berlaku sejak 1 Januari 2024 dan dapat berubah sewaktu-waktu dengan pemberitahuan kepada seluruh anggota.
+            Ketentuan ini berlaku sejak 2024 dan dapat berubah sewaktu-waktu dengan pemberitahuan kepada seluruh anggota.
           </p>
         </motion.div>
       </motion.div>
