@@ -29,29 +29,33 @@ const BrandStory = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
-  // Logo variants with enhanced metadata - Updated with new logos
-  const logoVariants = [
+  // Combined community groups and logo variants
+  const communityGroups = [
     {
-      title: "Edisi Design",
-      description: "Varian logo untuk grup Desain Grafis",
+      title: "Desain Grafis",
+      icon: <Palette className="w-6 h-6" />,
+      description: "Fokus pada pengembangan keterampilan desain visual dan grafis.",
       image: "/lovable-uploads/a82afd70-9de5-4764-9dd5-af747ae8405f.png",
       color: "from-purple-500/20 to-transparent"
     },
     {
-      title: "Edisi Karya",
-      description: "Varian logo untuk grup Karya Tulis",
+      title: "Karya Tulis",
+      icon: <FileText className="w-6 h-6" />,
+      description: "Menulis dan mengembangkan konten tertulis yang kreatif.",
       image: "/lovable-uploads/595d8581-6612-482f-8275-a6a2735f9d57.png",
       color: "from-gray-500/20 to-transparent"
     },
     {
-      title: "Edisi Game",
-      description: "Varian logo untuk grup Game Creator",
+      title: "Game Creator",
+      icon: <Gamepad2 className="w-6 h-6" />,
+      description: "Mengembangkan game dan konten interaktif digital.",
       image: "/lovable-uploads/c3ebd3bb-9f56-4e8c-af6f-a72b010941c8.png",
       color: "from-red-500/20 to-transparent"
     },
     {
-      title: "Edisi Video",
-      description: "Varian logo untuk grup Video Editing",
+      title: "Video Editing",
+      icon: <Video className="w-6 h-6" />,
+      description: "Belajar dan berkarya dalam pengeditan dan produksi video.",
       image: "/lovable-uploads/b6d89970-6471-4763-b7de-f7b863e538da.png",
       color: "from-blue-500/20 to-transparent"
     }
@@ -82,34 +86,6 @@ const BrandStory = () => {
       title: "Pertumbuhan Pesat",
       description: "Belum setahun sejak komunitas ini dibuat, namun berhasil mengumpulkan sekitar 3000+ member dari seluruh Indonesia, yang memiliki kemauan untuk belajar.",
       highlight: "3000+ Anggota"
-    }
-  ];
-
-  // Enhanced community group sections - Updated name for Meme Creator to Game Creator
-  const communityGroups = [
-    {
-      title: "Desain Grafis",
-      icon: <Palette className="w-6 h-6" />,
-      description: "Fokus pada pengembangan keterampilan desain visual dan grafis.",
-      color: "from-lavender/20 to-transparent"
-    },
-    {
-      title: "Video Editing",
-      icon: <Video className="w-6 h-6" />,
-      description: "Belajar dan berkarya dalam pengeditan dan produksi video.",
-      color: "from-mint/20 to-transparent"
-    },
-    {
-      title: "Game Creator",
-      icon: <Gamepad2 className="w-6 h-6" />,
-      description: "Mengembangkan game dan konten interaktif digital.",
-      color: "from-peach/20 to-transparent"
-    },
-    {
-      title: "Karya Tulis",
-      icon: <FileText className="w-6 h-6" />,
-      description: "Menulis dan mengembangkan konten tertulis yang kreatif.",
-      color: "from-softPink/20 to-transparent"
     }
   ];
 
@@ -321,45 +297,19 @@ const BrandStory = () => {
                 <Separator className="bg-white/10" />
                 
                 <div className="flex justify-center">
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 p-4 flex items-center justify-center animate-float shadow-lg shadow-black/20">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 p-3 flex items-center justify-center animate-float shadow-lg shadow-black/20">
                     <img
                       src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
                       alt="Logo Philosophy"
-                      className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                 </div>
               </div>
             </motion.div>
-            
-            {/* Logo variants grid - Improved mobile responsiveness */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              {logoVariants.map((logo, index) => (
-                <motion.div
-                  key={index}
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                  className="backdrop-blur-xl bg-black/30 border border-white/10 p-4 sm:p-6 rounded-xl text-center relative overflow-hidden h-full"
-                >
-                  {/* Dynamic background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${logo.color} opacity-30`}></div>
-                  <div className="absolute -bottom-4 -right-4 w-12 h-12 rounded-full border border-white/10" style={{ opacity: 0.2 }} />
-                  
-                  <div className="flex flex-col items-center gap-3 sm:gap-4 relative z-10">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full backdrop-blur-md bg-white/5 border border-white/10 p-2 flex items-center justify-center mb-2">
-                      <img src={logo.image} alt={logo.title} className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
-                    </div>
-                    <h3 className="text-base sm:text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
-                      {logo.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-white/70">{logo.description}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
           </motion.section>
 
-          {/* Community Growth Section - Improved mobile responsiveness */}
+          {/* Combined Community & Logo Variants Section */}
           <motion.section
             variants={containerVariants}
             initial="hidden"
@@ -372,7 +322,7 @@ const BrandStory = () => {
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
-                  Komunitas Kami
+                  Komunitas & Logo Varian
                 </span>
               </h2>
             </div>
@@ -406,7 +356,7 @@ const BrandStory = () => {
               </div>
             </motion.div>
             
-            {/* Community groups grid - Improved mobile responsiveness */}
+            {/* Community groups grid with larger logo displays - Improved mobile responsiveness */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {communityGroups.map((group, index) => (
                 <motion.div
@@ -419,13 +369,24 @@ const BrandStory = () => {
                   <div className={`absolute inset-0 bg-gradient-to-br ${group.color} opacity-30`}></div>
                   <div className="absolute -bottom-4 -right-4 w-12 h-12 rounded-full border border-white/10" style={{ opacity: 0.2 }} />
                   
-                  <div className="flex flex-col items-center gap-2 sm:gap-3 relative z-10">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center mb-2">
-                      {group.icon}
+                  <div className="flex flex-col items-center gap-2 sm:gap-4 relative z-10">
+                    {/* Larger logo display */}
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center mb-2 overflow-hidden">
+                      <img 
+                        src={group.image} 
+                        alt={`Logo ${group.title}`} 
+                        className="w-full h-full object-cover" 
+                      />
                     </div>
+                    
                     <h3 className="text-base sm:text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
                       Edisi {group.title}
                     </h3>
+                    
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center">
+                      {group.icon}
+                    </div>
+                    
                     <p className="text-xs sm:text-sm text-white/70 text-center">{group.description}</p>
                   </div>
                 </motion.div>
@@ -465,8 +426,8 @@ const BrandStory = () => {
                   
                   <div className="absolute top-6 right-6 text-4xl sm:text-6xl opacity-20 font-serif">"</div>
                   <div className="flex items-center mb-4 relative z-10">
-                    <Avatar className="h-10 w-10 sm:h-12 sm:w-12 mr-4 border border-white/10">
-                      <img src={testimonial.image} alt={testimonial.name} />
+                    <Avatar className="h-10 w-10 sm:h-12 sm:w-12 mr-4 border border-white/10 overflow-hidden">
+                      <img src={testimonial.image} alt={testimonial.name} className="w-full h-full object-cover" />
                     </Avatar>
                     <div>
                       <h4 className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
