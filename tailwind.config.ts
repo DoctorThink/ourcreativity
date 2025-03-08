@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -43,6 +44,12 @@ export default {
         lavender: "#E5DEFF",
         peach: "#FEC6A1",
         softPink: "#FFD1DC",
+        // New expanded color palette
+        amethyst: "#9B6DFF",
+        turquoise: "#40E0D0",
+        coral: "#FF7F50",
+        amber: "#FFBF00",
+        emerald: "#50C878",
       },
       fontFamily: {
         serif: ["SF Pro Display", "Playfair Display", "serif"],
@@ -59,12 +66,38 @@ export default {
         "float": {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" }
+        },
+        // New animations for micro-interactions
+        "pulse-soft": {
+          "0%, 100%": { opacity: "0.7" },
+          "50%": { opacity: "1" }
+        },
+        "rotate-slow": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" }
+        },
+        "morph": {
+          "0%": { borderRadius: "60% 40% 30% 70%/60% 30% 70% 40%" },
+          "50%": { borderRadius: "30% 60% 70% 40%/50% 60% 30% 60%" },
+          "100%": { borderRadius: "60% 40% 30% 70%/60% 30% 70% 40%" }
+        },
+        "shimmer": {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" }
         }
       },
       animation: {
         "glow": "glow 2s ease-in-out infinite",
         "float": "float 6s ease-in-out infinite",
+        // New animations
+        "pulse-soft": "pulse-soft 3s ease-in-out infinite",
+        "rotate-slow": "rotate-slow 12s linear infinite",
+        "morph": "morph 8s ease-in-out infinite",
+        "shimmer": "shimmer 3s ease-in-out infinite"
       },
+      backgroundImage: {
+        "shimmer-gradient": "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%)",
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

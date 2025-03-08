@@ -27,10 +27,10 @@ const Index = () => {
 
   // Navigation items with updated routing and refined design
   const navigationItems = [
-    { icon: BookOpen, text: "Cerita Kami", href: "/brand-story", color: "from-lavender/20 to-transparent" },
-    { icon: ScrollText, text: "Syarat & Ketentuan", href: "/terms", color: "from-mint/20 to-transparent" },
-    { icon: Info, text: "Informasi", href: "/informasi", color: "from-peach/20 to-transparent" },
-    { icon: Bell, text: "Pengumuman", href: "/pengumuman", color: "from-softPink/20 to-transparent" }
+    { icon: BookOpen, text: "Cerita Kami", href: "/brand-story", color: "from-lavender to-amethyst/50", decorColor: "border-lavender" },
+    { icon: ScrollText, text: "Syarat & Ketentuan", href: "/terms", color: "from-mint to-turquoise/50", decorColor: "border-mint" },
+    { icon: Info, text: "Informasi", href: "/informasi", color: "from-peach to-coral/50", decorColor: "border-peach" },
+    { icon: Bell, text: "Pengumuman", href: "/pengumuman", color: "from-softPink to-amber/50", decorColor: "border-softPink" }
   ];
 
   return (
@@ -40,25 +40,32 @@ const Index = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen overflow-hidden relative"
     >
-      {/* Dynamic Background with geometric elements */}
+      {/* Enhanced Dynamic Background with geometric elements */}
       <div className="fixed inset-0 bg-black -z-10">
-        {/* Geometric decorative elements */}
-        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-zinc-900/50 -top-[20%] -right-[20%]" />
-        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-zinc-800/30 -bottom-[10%] -left-[10%]" />
+        {/* Geometric decorative elements with enhanced colors */}
+        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-amethyst/5 -top-[20%] -right-[20%]" />
+        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-turquoise/5 -bottom-[10%] -left-[10%]" />
+        <div className="absolute w-[40vw] h-[40vh] rounded-full blur-[80px] bg-coral/5 bottom-[30%] right-[5%]" />
         
-        {/* Grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(30,30,30,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(30,30,30,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
+        {/* Enhanced Grid overlay with dot pattern */}
+        <div className="absolute inset-0 geometric-dot-pattern opacity-30" />
+        <div className="absolute inset-0 geometric-line-pattern opacity-20" />
         
-        {/* Subtle lines */}
-        <div className="absolute left-[5%] top-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-transparent via-white/10 to-transparent" />
-        <div className="absolute right-[10%] top-[20%] w-[1px] h-[40vh] bg-gradient-to-b from-transparent via-white/5 to-transparent" />
-        <div className="absolute left-[20%] bottom-[10%] w-[40vw] h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        {/* Animated subtle lines */}
+        <div className="absolute left-[5%] top-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-transparent via-lavender/20 to-transparent animate-pulse-soft" />
+        <div className="absolute right-[10%] top-[20%] w-[1px] h-[40vh] bg-gradient-to-b from-transparent via-mint/20 to-transparent animate-pulse-soft" />
+        <div className="absolute left-[20%] bottom-[10%] w-[40vw] h-[1px] bg-gradient-to-r from-transparent via-peach/20 to-transparent animate-pulse-soft" />
+        
+        {/* Floating geometric shapes */}
+        <div className="absolute top-[15%] left-[15%] w-16 h-16 border border-lavender/20 rounded-full animate-float" style={{ animationDelay: "-2s" }} />
+        <div className="absolute bottom-[25%] right-[25%] w-24 h-24 border border-mint/20 rounded-full animate-float" style={{ animationDelay: "-1s" }} />
+        <div className="absolute top-[40%] right-[10%] w-12 h-12 border border-peach/20 morphing-blob animate-float" style={{ animationDelay: "-3s" }} />
       </div>
 
       {/* Main Content */}
       <div className="relative z-10 container mx-auto px-4 py-8 min-h-screen flex flex-col">
         <div className="flex-grow flex flex-col items-center justify-center">
-          {/* Logo Container with Enhanced Animation */}
+          {/* Logo Container with Enhanced Animation and Geometric Accents */}
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -68,13 +75,21 @@ const Index = () => {
               damping: 20,
               duration: 1.2
             }}
-            className="flex gap-6 mb-12"
+            className="flex gap-6 mb-12 relative"
           >
+            {/* Decorative circles */}
+            <div className="absolute inset-0 -z-10 w-full h-full flex items-center justify-center">
+              <div className="w-64 h-64 border border-white/5 rounded-full animate-rotate-slow" />
+              <div className="absolute w-80 h-80 border border-white/5 rounded-full animate-rotate-slow" style={{ animationDirection: "reverse", animationDuration: "15s" }} />
+              <div className="absolute w-96 h-96 border border-white/5 rounded-full animate-pulse-soft" />
+            </div>
+            
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.7 }}
-              className="w-24 h-24 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 p-4 flex items-center justify-center animate-float shadow-lg shadow-black/20"
+              className="w-24 h-24 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 p-4 flex items-center justify-center animate-float shadow-lg shadow-black/20 geometric-circle"
+              whileHover={{ scale: 1.05, borderColor: "rgba(155, 109, 255, 0.3)" }}
             >
               <img
                 src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
@@ -87,7 +102,9 @@ const Index = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.7 }}
-              className="w-32 h-32 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 p-4 flex items-center justify-center animate-float shadow-lg shadow-black/20"
+              className="w-32 h-32 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 p-4 flex items-center justify-center animate-float shadow-lg shadow-black/20 geometric-circle"
+              whileHover={{ scale: 1.05, borderColor: "rgba(64, 224, 208, 0.3)" }}
+              style={{ animationDelay: "-2s" }}
             >
               <img
                 src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png"
@@ -98,75 +115,87 @@ const Index = () => {
             </motion.div>
           </motion.div>
 
-          {/* Title with Enhanced Design */}
+          {/* Enhanced Title with Gradient and Animation */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.7 }}
             className="text-5xl md:text-7xl font-serif font-bold mb-6 text-center relative z-10"
           >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
+            <span className="bg-clip-text text-transparent bg-gradient-to-br from-white via-white/90 to-amethyst/70 animate-shimmer">
               OUR CREATIVITY
             </span>
           </motion.h1>
 
-          {/* Description with better typography */}
+          {/* Description with enhanced typography and subtle animation */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.7 }}
             className="text-lg md:text-xl text-white/70 max-w-2xl text-center mb-12 font-serif relative z-10"
           >
-            Dimana imajinasi bertemu dengan inovasi. Bergabunglah dengan komunitas kreatif kami.
+            <span className="shimmer px-6 py-4 rounded-full">
+              Dimana imajinasi bertemu dengan inovasi. Bergabunglah dengan komunitas kreatif kami.
+            </span>
           </motion.p>
 
-          {/* Interactive Navigation Buttons with improved design */}
+          {/* Interactive Navigation Buttons with improved design and micro-interactions */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-4xl mx-auto"
           >
-            {navigationItems.map(({ icon: Icon, text, href, color }) => (
+            {navigationItems.map(({ icon: Icon, text, href, color, decorColor }) => (
               <motion.div
                 key={text}
                 variants={itemVariants}
                 whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
                 whileTap={{ scale: 0.95 }}
+                className="relative"
               >
                 <Button
                   onClick={() => navigate(href)}
                   variant="secondary"
-                  className={`w-full h-full min-h-[120px] rounded-2xl backdrop-blur-xl bg-black/30 border border-white/10 flex flex-col items-center justify-center gap-4 hover:bg-white/10 transition-all duration-300 group overflow-hidden relative`}
+                  className={`w-full h-full min-h-[120px] rounded-2xl backdrop-blur-xl bg-black/30 border border-white/10 flex flex-col items-center justify-center gap-4 transition-all duration-300 group overflow-hidden relative btn-hover-effect`}
                 >
-                  {/* Background gradient */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-30`}></div>
+                  {/* Enhanced background gradient */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-30 transition-opacity duration-300 group-hover:opacity-50`}></div>
                   
-                  {/* Interactive hover effect */}
-                  <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/5 to-white/0 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-full transition-all duration-1000 ease-in-out" />
+                  {/* Interactive hover effect with shimmer */}
+                  <span className="absolute inset-0 bg-shimmer-gradient bg-[length:200%_100%] opacity-0 group-hover:opacity-100 group-hover:animate-shimmer" />
                   
-                  {/* Geometric accent */}
-                  <div className="absolute -bottom-6 -right-6 w-12 h-12 rounded-full border border-white/10" style={{ opacity: 0.2 }} />
+                  {/* Enhanced geometric accent */}
+                  <div className={`absolute -bottom-6 -right-6 w-16 h-16 ${decorColor} rounded-full border opacity-20 group-hover:opacity-30 transition-all duration-500 group-hover:scale-125`} />
+                  <div className={`absolute -top-6 -left-6 w-12 h-12 ${decorColor} rounded-full border opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125`} />
                   
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-white/10 backdrop-blur-sm transition-transform duration-300 group-hover:-translate-y-1 relative z-10">
-                    <Icon className="w-6 h-6" />
+                  {/* Icon container with enhanced micro-interactions */}
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-white/10 backdrop-blur-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-white/20 relative z-10 overflow-hidden">
+                    <Icon className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
+                    {/* Animated border */}
+                    <span className="absolute inset-0 border border-white/0 group-hover:border-white/20 rounded-xl transition-all duration-300"></span>
                   </div>
-                  <span className="text-sm font-serif transition-transform duration-300 group-hover:translate-y-1 relative z-10">{text}</span>
+                  
+                  {/* Enhanced text with subtle animation */}
+                  <span className="text-sm font-serif transition-all duration-300 group-hover:translate-y-1 relative z-10 group-hover:font-medium">{text}</span>
                 </Button>
               </motion.div>
             ))}
           </motion.div>
         </div>
 
-        {/* Credits Footer with enhanced design */}
+        {/* Enhanced Credits Footer with geometric accents */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
           className="mt-auto pt-16 pb-6 text-center"
         >
-          <div className="backdrop-blur-xl bg-black/20 border border-white/10 rounded-full px-6 py-3 inline-block">
-            <p className="text-xs text-white/50">
+          <div className="backdrop-blur-xl bg-black/20 border border-white/10 rounded-full px-6 py-3 inline-block relative overflow-hidden group hover:border-white/20 transition-colors duration-300">
+            {/* Animated subtle accents */}
+            <span className="absolute inset-0 bg-gradient-to-r from-amethyst/0 via-amethyst/5 to-amethyst/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
+            
+            <p className="text-xs text-white/50 group-hover:text-white/60 transition-colors duration-300">
               &copy; 2024 OUR CREATIVITY • Designed by Ardellio S. A.
             </p>
           </div>
