@@ -10,29 +10,37 @@ interface PageLayoutProps {
   subtitle?: string;
   children: ReactNode;
   showBackButton?: boolean;
+  darkMode?: boolean;
 }
 
 const PageLayout = ({ 
   title,
   subtitle,
   children,
-  showBackButton = true
+  showBackButton = true,
+  darkMode = true
 }: PageLayoutProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Fixed Background Gradient with geometric elements */}
-      <div className="fixed inset-0 bg-gradient-to-b from-black to-zinc-900 -z-10">
-        {/* Geometric elements */}
-        <div className="absolute top-[10%] right-[5%] w-64 h-64 rounded-full border border-white/5 opacity-20" />
-        <div className="absolute bottom-[20%] left-[10%] w-48 h-48 rounded-xl border border-white/5 opacity-10 rotate-12" />
-        <div className="absolute top-[30%] left-[15%] w-32 h-32 rounded-md border border-white/5 opacity-15 rotate-45" />
-        <div className="absolute bottom-[15%] right-[20%] w-24 h-24 border border-white/5 opacity-20 -rotate-12" />
+    <div className="min-h-screen overflow-hidden relative">
+      {/* Dynamic Background with geometric elements */}
+      <div className="fixed inset-0 bg-black -z-10">
+        {/* Geometric decorative elements */}
+        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-zinc-900/50 -top-[20%] -right-[20%]" />
+        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-zinc-800/30 -bottom-[10%] -left-[10%]" />
+        
+        {/* Grid overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(30,30,30,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(30,30,30,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
+        
+        {/* Subtle lines */}
+        <div className="absolute left-[5%] top-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-transparent via-white/10 to-transparent" />
+        <div className="absolute right-[10%] top-[20%] w-[1px] h-[40vh] bg-gradient-to-b from-transparent via-white/5 to-transparent" />
+        <div className="absolute left-[20%] bottom-[10%] w-[40vw] h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
       
       {/* Header with Logo */}
-      <header className="sticky top-0 z-50 backdrop-blur-lg p-4 border-b border-white/10">
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-black/40 p-4 border-b border-white/5">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           {showBackButton && (
             <motion.button 
@@ -40,7 +48,7 @@ const PageLayout = ({
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
               onClick={() => navigate("/")}
-              className="flex items-center space-x-2 text-foreground/60 hover:text-foreground transition-colors"
+              className="flex items-center space-x-2 text-white/60 hover:text-white transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Kembali</span>
@@ -79,37 +87,45 @@ const PageLayout = ({
       </header>
 
       <ScrollArea className="h-[calc(100vh-72px)]">
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto px-4 py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="space-y-12"
           >
-            {/* Title Section */}
+            {/* Title Section with enhanced typography */}
             {(title || subtitle) && (
               <div className="text-center space-y-4">
                 {title && (
                   <motion.h1 
-                    className="text-4xl md:text-6xl font-serif font-bold tracking-tight glow-text"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.2 }}
+                    className="text-4xl md:text-6xl font-serif font-bold tracking-tight text-white"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.7 }}
                   >
-                    {title}
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">{title}</span>
                   </motion.h1>
                 )}
                 
                 {subtitle && (
                   <motion.p 
-                    className="text-lg md:text-xl text-gray-300 leading-relaxed"
+                    className="text-lg md:text-xl text-white/70 leading-relaxed max-w-3xl mx-auto"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
+                    transition={{ delay: 0.4, duration: 0.7 }}
                   >
                     {subtitle}
                   </motion.p>
                 )}
+                
+                {/* Decorative line */}
+                <motion.div 
+                  className="w-16 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent mx-auto mt-8"
+                  initial={{ width: 0 }}
+                  animate={{ width: "4rem" }}
+                  transition={{ delay: 0.6, duration: 0.8 }}
+                />
               </div>
             )}
 
@@ -117,21 +133,21 @@ const PageLayout = ({
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
             >
               {children}
             </motion.div>
           </motion.div>
 
-          {/* Credits Footer */}
+          {/* Enhanced Credits Footer */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.5 }}
-            className="mt-16 mb-8 text-center"
+            className="mt-24 mb-8 text-center"
           >
-            <div className="glass rounded-full px-4 py-2 inline-block">
-              <p className="text-xs text-gray-400">
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 inline-block">
+              <p className="text-xs text-white/50">
                 &copy; 2024 OUR CREATIVITY • Designed by Ardellio S. A.
               </p>
             </div>
