@@ -1,7 +1,6 @@
-
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layouts/PageLayout";
-import { Check, Shield, AlertTriangle, FileText, Bookmark, User, FileCode, Lock } from "lucide-react";
+import { Check, Shield, AlertTriangle, FileText, Bookmark, User, FileCode, Lock, Users } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 const Terms = () => {
