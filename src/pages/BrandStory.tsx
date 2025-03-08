@@ -1,17 +1,10 @@
 
 import { motion } from "framer-motion";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import { Avatar } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Users, Quote, Calendar, ArrowRight, Infinity, Palette, Video, MessageSquare, FileText, Instagram, Gamepad2 } from "lucide-react";
+import PageLayout from "@/components/layouts/PageLayout";
+import { Bookmark, BookOpen, Target, ExternalLink, Sparkles, Star } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 const BrandStory = () => {
-  const navigate = useNavigate();
-
   // Enhanced animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -19,7 +12,7 @@ const BrandStory = () => {
       opacity: 1,
       transition: { 
         staggerChildren: 0.15,
-        delayChildren: 0.3
+        delayChildren: 0.2
       } 
     }
   };
@@ -29,483 +22,281 @@ const BrandStory = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
-  // Combined community groups and logo variants
-  const communityGroups = [
+  // Timeline events with enhanced design
+  const timelineEvents = [
     {
-      title: "Desain Grafis",
-      icon: <Palette className="w-6 h-6" />,
-      description: "Fokus pada pengembangan keterampilan desain visual dan grafis.",
-      image: "/lovable-uploads/a82afd70-9de5-4764-9dd5-af747ae8405f.png",
-      color: "from-purple-500/20 to-transparent"
+      date: "Januari 2024",
+      title: "Awal Mula",
+      description: "Berawal dari visi untuk menciptakan wadah bagi anak muda kreatif Indonesia untuk berkarya dan berkembang bersama.",
+      highlight: true,
+      color: "from-lavender/20 to-transparent"
     },
     {
-      title: "Karya Tulis",
-      icon: <FileText className="w-6 h-6" />,
-      description: "Menulis dan mengembangkan konten tertulis yang kreatif.",
-      image: "/lovable-uploads/595d8581-6612-482f-8275-a6a2735f9d57.png",
-      color: "from-gray-500/20 to-transparent"
+      date: "Februari 2024",
+      title: "Pembentukan Komunitas",
+      description: "Dimulainya pengembangan struktur komunitas dan pembuatan platform untuk berkomunikasi.",
+      highlight: false,
+      color: "from-mint/20 to-transparent"
     },
     {
-      title: "Game Creator",
-      icon: <Gamepad2 className="w-6 h-6" />,
-      description: "Mengembangkan game dan konten interaktif digital.",
-      image: "/lovable-uploads/c3ebd3bb-9f56-4e8c-af6f-a72b010941c8.png",
-      color: "from-red-500/20 to-transparent"
+      date: "Maret 2024",
+      title: "Peluncuran Media Sosial",
+      description: "Peluncuran akun media sosial sebagai sarana untuk menjangkau lebih banyak anak muda kreatif.",
+      highlight: true,
+      color: "from-peach/20 to-transparent"
     },
     {
-      title: "Video Editing",
-      icon: <Video className="w-6 h-6" />,
-      description: "Belajar dan berkarya dalam pengeditan dan produksi video.",
-      image: "/lovable-uploads/b6d89970-6471-4763-b7de-f7b863e538da.png",
-      color: "from-blue-500/20 to-transparent"
+      date: "April 2024",
+      title: "Pengembangan Grup",
+      description: "Pembentukan 4 jenis grup untuk memfasilitasi berbagai minat kreatif: Desain Grafis, Video Editing, Meme Creator, dan Karya Tulis.",
+      highlight: false,
+      color: "from-softPink/20 to-transparent"
+    },
+    {
+      date: "Mei 2024",
+      title: "Fase Pertumbuhan",
+      description: "Menjangkau 3000+ anggota komunitas dan meluncurkan inisiatif kolaborasi antar grup.",
+      highlight: true,
+      color: "from-amethyst/20 to-transparent"
     }
   ];
 
-  // Updated content data with refined metadata
-  const milestones = [
+  // Core values with enhanced design
+  const coreValues = [
     {
-      year: "2024",
-      title: "Pendirian",
-      description: "OurCreativityIDN didirikan atas dasar kemauan founder untuk memberikan manfaat bagi banyak orang dan menciptakan lebih banyak anak muda kreatif di Indonesia.",
-      highlight: "Founder's Vision"
+      title: "Kreativitas Tanpa Batas",
+      description: "Mendorong eksplorasi ide dan inovasi tanpa dibatasi oleh konvensi.",
+      icon: <Sparkles className="w-5 h-5" />,
+      color: "border-lavender"
     },
     {
-      year: "2024",
-      title: "Komunitas Terbentuk",
-      description: "Komunitas ini diciptakan karena banyaknya komentar di internet yang berisi kemauan mereka untuk mempelajari suatu hal, namun tidak memiliki tempat untuk bertanya.",
-      highlight: "Community Need"
+      title: "Kolaborasi & Komunitas",
+      description: "Membangun hubungan yang kuat melalui kerja sama dan dukungan sesama.",
+      icon: <BookOpen className="w-5 h-5" />,
+      color: "border-mint"
     },
     {
-      year: "2024",
-      title: "Menarik Minat",
-      description: "Dengan cara menarik anggota lewat Media Sosial dan karya-karya yang dapat menarik perhatian. Memanfaatkan konten sehari-hari untuk menarik SDM dengan minat yang sama.",
-      highlight: "Social Media Strategy"
+      title: "Konsistensi",
+      description: "Berkomitmen untuk terus berkarya dan berkembang secara berkelanjutan.",
+      icon: <Target className="w-5 h-5" />,
+      color: "border-peach"
     },
     {
-      year: "2024",
-      title: "Pertumbuhan Pesat",
-      description: "Belum setahun sejak komunitas ini dibuat, namun berhasil mengumpulkan sekitar 3000+ member dari seluruh Indonesia, yang memiliki kemauan untuk belajar.",
-      highlight: "3000+ Anggota"
-    }
-  ];
-
-  // Testimonials with enhanced profiles
-  const testimonials = [
-    {
-      name: "Anggota Aktif",
-      role: "Desainer Grafis",
-      quote: "OurCreativity memberi saya ruang untuk bereksperimen dengan ide-ide yang tidak konvensional dan mendapat umpan balik yang konstruktif.",
-      image: "/lovable-uploads/a82afd70-9de5-4764-9dd5-af747ae8405f.png"
-    },
-    {
-      name: "Faasigma",
-      role: "Video Editor",
-      quote: "Bang bang tutor pissss. Bergabung dengan komunitas ini membuka banyak peluang kolaborasi yang tidak pernah saya bayangkan sebelumnya.",
-      image: "/lovable-uploads/b6d89970-6471-4763-b7de-f7b863e538da.png"
+      title: "Keunggulan",
+      description: "Selalu berusaha memberikan yang terbaik dalam setiap karya dan kontribusi.",
+      icon: <Star className="w-5 h-5" />,
+      color: "border-softPink"
     }
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-screen overflow-hidden relative"
+    <PageLayout
+      title="CERITA KAMI"
+      subtitle="Perjalanan OurCreativity dalam menciptakan ruang bagi kreativitas anak muda Indonesia"
     >
-      {/* Dynamic Background with geometric elements */}
-      <div className="fixed inset-0 bg-black -z-10">
-        {/* Geometric decorative elements */}
-        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-zinc-900/50 -top-[20%] -right-[20%]" />
-        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-zinc-800/30 -bottom-[10%] -left-[10%]" />
-        
-        {/* Grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(30,30,30,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(30,30,30,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
-        
-        {/* Subtle lines */}
-        <div className="absolute left-[5%] top-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-transparent via-white/10 to-transparent" />
-        <div className="absolute right-[10%] top-[20%] w-[1px] h-[40vh] bg-gradient-to-b from-transparent via-white/5 to-transparent" />
-        <div className="absolute left-[20%] bottom-[10%] w-[40vw] h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      </div>
-
-      {/* Header - Improved mobile responsiveness */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-black/40 p-4 border-b border-white/5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <motion.button 
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-            onClick={() => navigate("/")}
-            className="flex items-center space-x-2 text-white/60 hover:text-white transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="hidden sm:inline">Kembali</span>
-          </motion.button>
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="space-y-12"
+      >
+        {/* Origin Story with enhanced design */}
+        <motion.section 
+          variants={itemVariants}
+          className="backdrop-blur-xl bg-black/30 border border-white/10 rounded-3xl p-8 relative overflow-hidden"
+        >
+          {/* Geometric decorative elements */}
+          <div className="absolute top-0 right-0 w-32 h-32 rounded-bl-[100px] border-l border-b border-white/10" style={{ opacity: 0.1 }} />
+          <div className="absolute bottom-0 left-0 w-48 h-48 rounded-tr-[100px] border-t border-r border-white/5" style={{ opacity: 0.1 }} />
+          <div className="absolute inset-0 geometric-dot-pattern opacity-20" />
           
-          <div className="flex items-center gap-2 ml-auto">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.4 }}
-              className="w-8 h-8 rounded-full bg-white/5 p-1 flex items-center justify-center backdrop-blur-md border border-white/10"
-            >
-              <img
-                src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
-                alt="Logo"
-                className="w-6 h-6 object-contain"
-                loading="eager"
-              />
-            </motion.div>
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              className="w-8 h-8 rounded-full bg-white/5 p-1 flex items-center justify-center backdrop-blur-md border border-white/10"
-            >
-              <img
-                src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png"
-                alt="Text Logo"
-                className="w-6 h-6 object-contain"
-                loading="eager"
-              />
-            </motion.div>
+          <div className="relative z-10 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center">
+                <BookOpen className="w-5 h-5 text-white/80" />
+              </div>
+              <h2 className="text-2xl font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+                Asal Mula
+              </h2>
+            </div>
+            
+            <Separator className="bg-white/10" />
+            
+            <p className="text-white/70 leading-relaxed">
+              OurCreativityIDN lahir dari keinginan untuk memberikan dampak positif bagi perkembangan anak muda kreatif di Indonesia. Berawal dari pengamatan terhadap banyaknya komentar di internet tentang keinginan untuk mempelajari sesuatu namun tidak memiliki tempat untuk bertanya, kami memutuskan untuk membuat komunitas ini.
+            </p>
+            
+            <p className="text-white/70 leading-relaxed">
+              Komunitas ini bukan hanya menjadi tempat untuk belajar dan bertanya, tetapi juga menjadi wadah untuk menampung karya-karya kreatif dari para anggota. Kami percaya bahwa setiap orang memiliki potensi kreatif yang perlu diasah dan diberi ruang untuk berkembang.
+            </p>
           </div>
-        </div>
-      </header>
-
-      <ScrollArea className="h-[calc(100vh-64px)]">
-        <div className="max-w-6xl mx-auto px-4 py-8 sm:py-16">
-          {/* Hero Section with enhanced design and improved mobile responsiveness */}
-          <motion.div 
-            variants={itemVariants}
-            initial="hidden"
-            animate="visible"
-            className="text-center mb-12 sm:mb-20"
-          >
-            <motion.h1 
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.7 }}
-              className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold mb-6"
-            >
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
-                Cerita Kami
-              </span>
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.7 }}
-              className="text-base sm:text-lg md:text-xl text-white/70 max-w-3xl mx-auto font-serif"
-            >
-              OurCreativityIDN adalah komunitas kreatif yang didirikan pada tahun 2024 atas dasar kemauan founder untuk memberikan manfaat bagi banyak orang dan menciptakan lebih banyak anak muda kreatif di Indonesia.
-            </motion.p>
-            
-            {/* Decorative line */}
-            <motion.div 
-              className="w-16 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent mx-auto mt-8"
-              initial={{ width: 0 }}
-              animate={{ width: "4rem" }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-            />
-          </motion.div>
-
-          {/* Timeline Section with enhanced visual design and improved mobile responsiveness */}
-          <motion.section
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="mb-16 sm:mb-24"
-          >
-            <div className="flex items-center mb-8 sm:mb-12">
-              <div className="w-10 h-10 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 flex items-center justify-center mr-4">
-                <Calendar className="w-5 h-5" />
-              </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
-                  Perjalanan Kami
-                </span>
-              </h2>
+        </motion.section>
+        
+        {/* Timeline section with enhanced design */}
+        <motion.section 
+          variants={itemVariants}
+          className="space-y-6"
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center">
+              <ExternalLink className="w-5 h-5" />
             </div>
-
-            <div className="relative pl-8 border-l border-white/20">
-              {milestones.map((milestone, index) => (
+            <h2 className="text-2xl font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+              Perjalanan Kami
+            </h2>
+          </div>
+          
+          <div className="relative">
+            {/* Vertical timeline line */}
+            <div className="absolute h-full w-[1px] bg-gradient-to-b from-white/5 via-white/20 to-white/5 left-6 top-0 z-0 ml-3"></div>
+            
+            {/* Timeline events with enhanced design */}
+            <div className="space-y-8">
+              {timelineEvents.map((event, index) => (
                 <motion.div
                   key={index}
                   variants={itemVariants}
-                  className="mb-12 relative"
+                  className="flex items-start gap-4 ml-1"
                 >
-                  <div className="absolute -left-[41px] w-6 h-6 rounded-full bg-white/20 border-4 border-black"></div>
-                  <div className="backdrop-blur-xl bg-black/30 border border-white/10 p-4 sm:p-6 rounded-xl relative overflow-hidden">
-                    {/* Dynamic geometric background */}
-                    <div className="absolute -bottom-6 -right-6 w-20 h-20 rounded-full border border-white/10" style={{ opacity: 0.1 }} />
-                    <div className="absolute top-0 left-0 w-40 h-40 rounded-br-3xl border-r border-b border-white/5" style={{ opacity: 0.1 }} />
-                    
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-4 relative z-10">
-                      <h3 className="text-xl sm:text-2xl font-serif font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
-                        {milestone.title}
-                      </h3>
-                      <Badge variant="secondary" className="self-start backdrop-blur-xl bg-white/5 border border-white/10">
-                        {milestone.year}
-                      </Badge>
+                  <div className="relative">
+                    <div className={`w-8 h-8 rounded-full backdrop-blur-md bg-white/5 border ${event.highlight ? 'border-white/30' : 'border-white/10'} flex items-center justify-center z-10`}>
+                      {event.highlight ? (
+                        <div className="w-3 h-3 rounded-full bg-white/50 animate-pulse-soft" />
+                      ) : (
+                        <div className="w-2 h-2 rounded-full bg-white/30" />
+                      )}
                     </div>
-                    <p className="text-white/70 mb-4 text-sm sm:text-base">{milestone.description}</p>
-                    <Badge variant="outline" className="backdrop-blur-xl bg-white/5 border border-white/10">
-                      {milestone.highlight}
-                    </Badge>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-
-          {/* Logo Philosophy Section - Improved mobile responsiveness */}
-          <motion.section
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="mb-16 sm:mb-24"
-          >
-            <div className="flex items-center mb-8 sm:mb-12">
-              <div className="w-10 h-10 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 flex items-center justify-center mr-4">
-                <Infinity className="w-5 h-5" />
-              </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
-                  Filosofi Logo
-                </span>
-              </h2>
-            </div>
-
-            <motion.div 
-              variants={itemVariants}
-              className="backdrop-blur-xl bg-black/30 border border-white/10 p-4 sm:p-8 rounded-3xl relative overflow-hidden mb-8 sm:mb-12"
-            >
-              {/* Geometric background elements */}
-              <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/30 to-black opacity-50" />
-              <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-white/5 blur-3xl" />
-              <div className="absolute -bottom-24 -left-24 w-48 h-48 rounded-full bg-white/5 blur-3xl" />
-              
-              <div className="relative z-10 space-y-4 sm:space-y-6">
-                <p className="text-white/80 leading-relaxed text-sm sm:text-base">
-                  Secara keseluruhan logo ini mengambil bentuk "infinity" atau tidak terbatas. Kami ingin menunjukkan bahwa kreativitas manusia, bukanlah sesuatu yang seharusnya diberikan batas tertentu, karena dapat terus berkembang, dan menjadi semakin baik, juga memiliki ciri khasnya tersendiri.
-                </p>
-                
-                <p className="text-white/80 leading-relaxed text-sm sm:text-base">
-                  Kami juga membuat bentuk O dan C yang dapat disebut O.C dan juga memiliki singkatan OurCreativity. Kami juga mengambil warna merah yang memberi makna keberanian sangat dibutuhkan dalam berkarya. Karena yang kami yakini, tanpa keberanian seseorang tidak akan pernah berkarya dan tidak akan berkembang.
-                </p>
-                
-                <Separator className="bg-white/10" />
-                
-                <div className="flex justify-center">
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 p-3 flex items-center justify-center animate-float shadow-lg shadow-black/20">
-                    <img
-                      src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
-                      alt="Logo Philosophy"
-                      className="w-full h-full object-cover"
+                  
+                  <div className={`backdrop-blur-xl bg-black/30 border border-white/10 rounded-xl p-5 flex-1 hover:bg-white/5 transition-colors duration-300 relative overflow-hidden group`}>
+                    {/* Dynamic background gradient */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${event.color} opacity-30`}></div>
+                    <div className="absolute right-0 bottom-0 w-24 h-24 rounded-tl-[50px] border-l border-t border-white/10" style={{ opacity: 0.1 }} />
+                    
+                    {/* Interactive hover effect */}
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/5 to-white/0 opacity-0 group-hover:opacity-100 transform -translate-x-full group-hover:translate-x-full transition-all duration-1000 ease-in-out" 
                     />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.section>
-
-          {/* Combined Community & Logo Variants Section */}
-          <motion.section
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="mb-16 sm:mb-24"
-          >
-            <div className="flex items-center mb-8 sm:mb-12">
-              <div className="w-10 h-10 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 flex items-center justify-center mr-4">
-                <Users className="w-5 h-5" />
-              </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
-                  Komunitas & Logo Varian
-                </span>
-              </h2>
-            </div>
-
-            <motion.div 
-              variants={itemVariants}
-              className="backdrop-blur-xl bg-black/30 border border-white/10 p-4 sm:p-8 rounded-3xl relative overflow-hidden mb-8 sm:mb-12"
-            >
-              {/* Geometric background elements */}
-              <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/30 to-black opacity-50" />
-              <div className="absolute top-10 left-10 w-60 h-60 rounded-full bg-red-500/5 blur-3xl" />
-              
-              <div className="relative z-10 space-y-4 sm:space-y-6">
-                <h3 className="text-xl sm:text-2xl font-serif font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
-                  Dedication
-                </h3>
-                
-                <p className="text-white/80 leading-relaxed text-sm sm:text-base">
-                  Belum setahun sejak komunitas ini dibuat, tetapi secara tak disangka kami berhasil mengumpulkan sekitar 3000+ member dari seluruh Indonesia, yang memiliki kemauan untuk belajar, dan masih berkarya setiap harinya di OurCreativity. Tentu saja karya mereka bisa dilihat secara gratis di @ourcreativity.ofc.
-                </p>
-                
-                <p className="text-white/80 leading-relaxed text-sm sm:text-base">
-                  Dari hasil ini, kami bisa menyimpulkan bahwa sebenarnya, anak muda Indonesia sebenarnya memiliki "kemauan yang tinggi" atau ketertarikan yang tinggi pada suatu hal di media sosial. Dan jika hal itu adalah sesuatu yang positif, kami yakin, Indonesia akan semakin dipenuhi dengan jiwa-jiwa kreatif dari para anak muda.
-                </p>
-                
-                <div className="flex justify-center pt-4">
-                  <div className="backdrop-blur-xl bg-white/5 border border-white/10 px-6 sm:px-8 py-3 sm:py-4 rounded-full">
-                    <p className="text-2xl sm:text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">3000+ Member</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-            
-            {/* Community groups grid with larger logo displays - Improved mobile responsiveness */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              {communityGroups.map((group, index) => (
-                <motion.div
-                  key={index}
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                  className="backdrop-blur-xl bg-black/30 border border-white/10 p-4 sm:p-6 rounded-xl relative overflow-hidden"
-                >
-                  {/* Dynamic background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${group.color} opacity-30`}></div>
-                  <div className="absolute -bottom-4 -right-4 w-12 h-12 rounded-full border border-white/10" style={{ opacity: 0.2 }} />
-                  
-                  <div className="flex flex-col items-center gap-2 sm:gap-4 relative z-10">
-                    {/* Larger logo display */}
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center mb-2 overflow-hidden">
-                      <img 
-                        src={group.image} 
-                        alt={`Logo ${group.title}`} 
-                        className="w-full h-full object-cover" 
-                      />
-                    </div>
                     
-                    <h3 className="text-base sm:text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
-                      Edisi {group.title}
+                    <div className="relative z-10">
+                      <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-xs text-white/70 mb-2">
+                        {event.date}
+                      </span>
+                      <h3 className="text-lg font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-2">
+                        {event.title}
+                      </h3>
+                      <p className="text-white/70 text-sm">
+                        {event.description}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Core values section with enhanced design */}
+        <motion.section 
+          variants={itemVariants}
+          className="space-y-6"
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center">
+              <Bookmark className="w-5 h-5" />
+            </div>
+            <h2 className="text-2xl font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+              Nilai-Nilai Kami
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {coreValues.map((value, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
+                className="backdrop-blur-xl bg-black/30 border border-white/10 p-6 rounded-xl relative overflow-hidden"
+              >
+                {/* Geometric decoration */}
+                <div className="absolute top-0 right-0 w-20 h-20 rounded-bl-3xl border-l border-b border-white/10" style={{ opacity: 0.1 }} />
+                <div className="absolute inset-0 geometric-line-pattern opacity-10" />
+                
+                <div className="flex items-start gap-4 relative z-10">
+                  <div className={`w-12 h-12 rounded-xl backdrop-blur-md bg-white/5 ${value.color} flex items-center justify-center flex-shrink-0 animate-pulse-soft`}>
+                    {value.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-2">
+                      {value.title}
                     </h3>
-                    
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center">
-                      {group.icon}
-                    </div>
-                    
-                    <p className="text-xs sm:text-sm text-white/70 text-center">{group.description}</p>
+                    <p className="text-white/70">{value.description}</p>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-
-          {/* Testimonials Section - Improved mobile responsiveness */}
-          <motion.section
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="mb-16 sm:mb-24"
-          >
-            <div className="flex items-center mb-8 sm:mb-12">
-              <div className="w-10 h-10 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 flex items-center justify-center mr-4">
-                <Quote className="w-5 h-5" />
-              </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
-                  Suara Komunitas
-                </span>
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              {testimonials.map((testimonial, index) => (
-                <motion.div
-                  key={index}
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
-                  className="backdrop-blur-xl bg-black/30 border border-white/10 p-4 sm:p-6 rounded-xl relative overflow-hidden h-full"
-                >
-                  {/* Dynamic geometric elements */}
-                  <div className="absolute top-0 right-0 w-20 h-20 rounded-bl-3xl border-l border-b border-white/10" style={{ opacity: 0.1 }} />
-                  <div className="absolute -bottom-8 -left-8 w-16 h-16 rounded-full border border-white/10" style={{ opacity: 0.2 }} />
-                  
-                  <div className="absolute top-6 right-6 text-4xl sm:text-6xl opacity-20 font-serif">"</div>
-                  <div className="flex items-center mb-4 relative z-10">
-                    <Avatar className="h-10 w-10 sm:h-12 sm:w-12 mr-4 border border-white/10 overflow-hidden">
-                      <img src={testimonial.image} alt={testimonial.name} className="w-full h-full object-cover" />
-                    </Avatar>
-                    <div>
-                      <h4 className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
-                        {testimonial.name}
-                      </h4>
-                      <p className="text-xs sm:text-sm text-white/50">{testimonial.role}</p>
-                    </div>
-                  </div>
-                  <p className="text-white/70 italic relative z-10 text-sm sm:text-base">"{testimonial.quote}"</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-
-          {/* Social Media Section - Improved mobile responsiveness */}
-          <motion.section
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="mb-16 sm:mb-24"
-          >
-            <div className="flex items-center mb-8 sm:mb-12">
-              <div className="w-10 h-10 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 flex items-center justify-center mr-4">
-                <Instagram className="w-5 h-5" />
-              </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
-                  Media Sosial
-                </span>
-              </h2>
-            </div>
-
-            <motion.div 
-              variants={itemVariants}
-              className="backdrop-blur-xl bg-black/30 border border-white/10 p-4 sm:p-8 rounded-3xl relative overflow-hidden"
-            >
-              {/* Geometric background elements */}
-              <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/30 to-black opacity-50" />
-              <div className="absolute top-20 right-20 w-40 h-40 rounded-full bg-red-500/5 blur-3xl" />
-              
-              <div className="relative z-10 text-center space-y-4 sm:space-y-6">
-                <h3 className="text-lg sm:text-xl font-serif font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
-                  Bergabung Dengan Kami
-                </h3>
-                
-                <p className="text-white/80 leading-relaxed max-w-3xl mx-auto text-sm sm:text-base">
-                  Ikuti kami di media sosial dan bergabunglah dengan komunitas kreatif kami. Lihat karya-karya anggota kami dan dapatkan inspirasi untuk berkarya.
-                </p>
-                
-                <div className="flex justify-center pt-4">
-                  <Button
-                    onClick={() => window.open("https://linktr.ee/ourcreativity.ofc", "_blank")}
-                    className="backdrop-blur-xl bg-white/10 hover:bg-white/20 text-white px-4 sm:px-8 py-3 sm:py-6 rounded-full text-sm sm:text-lg font-semibold relative z-10 group border border-white/10"
-                  >
-                    <span className="hidden sm:inline">LINKTR.EE/</span>OURCREATIVITY.OFC
-                    <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 inline transition-transform group-hover:translate-x-1" />
-                  </Button>
                 </div>
-              </div>
-            </motion.div>
-          </motion.section>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
 
-          {/* Credits Footer */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-            className="mt-16 sm:mt-24 mb-8 text-center"
-          >
-            <div className="backdrop-blur-xl bg-black/20 border border-white/10 rounded-full px-4 sm:px-6 py-2 sm:py-3 inline-block">
-              <p className="text-xs text-white/50">
-                &copy; 2024 OUR CREATIVITY • Designed by Ardellio S. A.
+        {/* Quote with enhanced design */}
+        <motion.div 
+          variants={itemVariants}
+          className="py-10 px-8 backdrop-blur-xl bg-black/20 border border-white/10 rounded-3xl text-center relative overflow-hidden"
+        >
+          {/* Geometric background elements */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBzdHJva2U9IiNmZmZmZmYwNSIgc3Ryb2tlLXdpZHRoPSIxIiBkPSJNMjkuNS45OGwxOS4wOCAxMS4wM3YyMi4wNUwyOS41IDQ1LjA5IDEwLjQyIDM0LjA2VjEyLjAxTDI5LjUuOTh6Ii8+PC9nPjwvc3ZnPg==')] bg-repeat opacity-5" />
+          <div className="absolute w-60 h-60 rounded-full bg-white/5 blur-[60px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+          
+          <blockquote className="relative z-10">
+            <div className="absolute left-2 top-0 text-6xl opacity-10 font-serif">"</div>
+            <div className="absolute right-2 bottom-0 text-6xl opacity-10 font-serif">"</div>
+            
+            <p className="text-2xl font-serif italic text-white">
+              "Kreativitas adalah menemukan cara untuk menyampaikan apa yang tidak bisa dikatakan."
+            </p>
+            <footer className="text-white/50 mt-4">— Team OurCreativity</footer>
+          </blockquote>
+        </motion.div>
+        
+        {/* Future Vision with enhanced design */}
+        <motion.section 
+          variants={itemVariants}
+          className="backdrop-blur-xl bg-black/30 border border-white/10 rounded-3xl p-8 relative overflow-hidden"
+        >
+          {/* Geometric decorative elements */}
+          <div className="absolute bottom-0 right-0 w-48 h-48 rounded-tl-[100px] border-l border-t border-white/5" style={{ opacity: 0.1 }} />
+          <div className="absolute top-0 left-0 w-32 h-32 rounded-br-[100px] border-r border-b border-white/10" style={{ opacity: 0.1 }} />
+          <div className="absolute inset-0 geometric-dot-pattern opacity-20" />
+          
+          <div className="relative z-10 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center">
+                <Target className="w-5 h-5 text-white/80" />
+              </div>
+              <h2 className="text-2xl font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+                Visi Ke Depan
+              </h2>
+            </div>
+            
+            <Separator className="bg-white/10" />
+            
+            <p className="text-white/70 leading-relaxed">
+              Ke depannya, OurCreativityIDN berkomitmen untuk terus berkembang dan memberikan manfaat lebih banyak bagi komunitas kreatif di Indonesia. Kami berencana untuk memperluas jangkauan dengan membuka lebih banyak grup fokus, mengadakan workshop dan pelatihan, serta memfasilitasi kolaborasi antar anggota yang lebih intensif.
+            </p>
+            
+            <p className="text-white/70 leading-relaxed">
+              Kami percaya bahwa dengan membangun platform dan komunitas yang solid, kami dapat mendorong lebih banyak anak muda Indonesia untuk mengembangkan kreativitas mereka dan berkontribusi positif bagi perkembangan industri kreatif di tanah air.
+            </p>
+            
+            <div className="mt-4 backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col items-center text-center morphing-blob">
+              <p className="text-white/80 font-medium relative z-10">
+                <span className="glow-text font-serif">Berkarya tanpa batas dengan OurCreativity</span>
               </p>
             </div>
-          </motion.div>
-        </div>
-      </ScrollArea>
-    </motion.div>
+          </div>
+        </motion.section>
+      </motion.div>
+    </PageLayout>
   );
 };
 

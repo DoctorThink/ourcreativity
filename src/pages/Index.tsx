@@ -115,16 +115,36 @@ const Index = () => {
             </motion.div>
           </motion.div>
 
-          {/* Enhanced Title with Gradient and Animation */}
+          {/* Enhanced Title with Gradient Animation */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.7 }}
             className="text-5xl md:text-7xl font-serif font-bold mb-6 text-center relative z-10"
           >
-            <span className="bg-clip-text text-transparent bg-gradient-to-br from-white via-white/90 to-amethyst/70 animate-shimmer">
+            <motion.span 
+              className="inline-block"
+              animate={{ 
+                background: [
+                  "linear-gradient(to right, #fff, #fff)",
+                  "linear-gradient(to right, #fff, #9B6DFF)",
+                  "linear-gradient(to right, #9B6DFF, #FEC6A1)",
+                  "linear-gradient(to right, #FEC6A1, #8A898C)",
+                  "linear-gradient(to right, #8A898C, #33C3F0)",
+                  "linear-gradient(to right, #33C3F0, #fff)"
+                ],
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                color: "transparent"
+              }}
+              transition={{ 
+                duration: 8, 
+                repeat: Infinity,
+                repeatType: "reverse"
+              }}
+            >
               OUR CREATIVITY
-            </span>
+            </motion.span>
           </motion.h1>
 
           {/* Description with enhanced typography and subtle animation */}

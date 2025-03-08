@@ -82,6 +82,11 @@
   animation: shimmer 3s ease-in-out infinite;
 }
 
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 /* Geometric patterns */
 .geometric-dot-pattern {
   background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
@@ -130,4 +135,59 @@
 .morphing-blob {
   border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   animation: morph 8s ease-in-out infinite;
+}
+
+@keyframes morph {
+  0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+  100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+}
+
+/* Color cycling animation */
+.text-color-cycle {
+  animation: colorCycle 10s infinite alternate;
+  background-size: 400% 400%;
+}
+
+@keyframes colorCycle {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* New enhanced geometric patterns */
+.geometric-hexagon-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath stroke='rgba(255,255,255,0.05)' stroke-width='1' d='M29.5.98l19.08 11.03v22.05L29.5 45.09 10.42 34.06V12.01L29.5.98z'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  opacity: 0.1;
+}
+
+.geometric-triangle-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 2.5l17.5 30h-35z' stroke='rgba(255,255,255,0.05)' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  opacity: 0.1;
+}
+
+/* Animated gradient text */
+.gradient-text-animation {
+  background: linear-gradient(
+    to right,
+    #ffffff,
+    #9B6DFF,
+    #FEC6A1,
+    #8A898C,
+    #33C3F0,
+    #ffffff
+  );
+  background-size: 300% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradientTextAnimation 8s ease infinite;
+}
+
+@keyframes gradientTextAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

@@ -50,6 +50,15 @@ export default {
         coral: "#FF7F50",
         amber: "#FFBF00",
         emerald: "#50C878",
+        // Additional colors for gradients
+        purpleLight: "#B197FC",
+        purpleDark: "#7E57C2",
+        orangeLight: "#FFA07A",
+        orangeDark: "#FF6347",
+        grayLight: "#CCCCCC",
+        grayDark: "#666666",
+        blueLight: "#87CEFA",
+        blueDark: "#1E90FF",
       },
       fontFamily: {
         serif: ["SF Pro Display", "Playfair Display", "serif"],
@@ -84,7 +93,13 @@ export default {
         "shimmer": {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" }
-        }
+        },
+        // New keyframes for gradient animations
+        "gradient-cycle": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" }
+        },
       },
       animation: {
         "glow": "glow 2s ease-in-out infinite",
@@ -93,10 +108,13 @@ export default {
         "pulse-soft": "pulse-soft 3s ease-in-out infinite",
         "rotate-slow": "rotate-slow 12s linear infinite",
         "morph": "morph 8s ease-in-out infinite",
-        "shimmer": "shimmer 3s ease-in-out infinite"
+        "shimmer": "shimmer 3s ease-in-out infinite",
+        "gradient-cycle": "gradient-cycle 8s ease-in-out infinite",
       },
       backgroundImage: {
         "shimmer-gradient": "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%)",
+        "gradient-purple-orange": "linear-gradient(to right, var(--tw-gradient-stops))",
+        "gradient-blue-cyan": "linear-gradient(to right, var(--tw-gradient-stops))",
       }
     },
   },
