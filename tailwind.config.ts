@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -23,9 +22,9 @@ export default {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+        border: "hsl(var(--border) / <alpha-value>)",
+        input: "hsl(var(--input) / <alpha-value>)",
+        ring: "hsl(var(--ring) / <alpha-value>)",
         background: {
           DEFAULT: "var(--background)",
           dark: "#1C1C1E",
@@ -55,13 +54,11 @@ export default {
         lavender: "#E5DEFF",
         peach: "#FEC6A1",
         softPink: "#FFD1DC",
-        // New expanded color palette
         amethyst: "#9B6DFF",
         turquoise: "#40E0D0",
         coral: "#FF7F50",
         amber: "#FFBF00",
         emerald: "#50C878",
-        // Additional colors for gradients
         purpleLight: "#B197FC",
         purpleDark: "#7E57C2",
         orangeLight: "#FFA07A",
@@ -87,7 +84,6 @@ export default {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" }
         },
-        // New animations for micro-interactions
         "pulse-soft": {
           "0%, 100%": { opacity: "0.7" },
           "50%": { opacity: "1" }
@@ -105,13 +101,11 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" }
         },
-        // New keyframes for gradient animations
         "gradient-cycle": {
           "0%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" }
         },
-        // Theme transition
         "theme-fade": {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" }
@@ -120,13 +114,11 @@ export default {
       animation: {
         "glow": "glow 2s ease-in-out infinite",
         "float": "float 6s ease-in-out infinite",
-        // New animations
         "pulse-soft": "pulse-soft 3s ease-in-out infinite",
         "rotate-slow": "rotate-slow 12s linear infinite",
         "morph": "morph 8s ease-in-out infinite",
         "shimmer": "shimmer 3s ease-in-out infinite",
         "gradient-cycle": "gradient-cycle 8s ease-in-out infinite",
-        // Theme transition
         "theme-fade": "theme-fade 0.5s ease-in-out",
       },
       backgroundImage: {
