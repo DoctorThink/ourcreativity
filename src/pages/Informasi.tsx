@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layouts/PageLayout";
 import { Separator } from "@/components/ui/separator";
-import { Info, Sparkles, Users, BookOpen, Lightbulb, Target, Palette, Video, FileText, MessageSquare, List } from "lucide-react";
+import { Info, Sparkles, Users, Target, Palette, Video, FileText, MessageSquare, List } from "lucide-react";
 
 const Informasi = () => {
   // Enhanced animation variants
@@ -26,9 +26,9 @@ const Informasi = () => {
   const sections = [
     {
       id: "about",
-      title: "Tentang OurCreativity",
+      title: "OUR CREATIVITY",
       icon: <Info className="w-5 h-5" />,
-      content: "OurCreativityIDN adalah komunitas kreatif yang didirikan pada tahun 2024 atas dasar kemauan founder untuk memberikan manfaat bagi banyak orang dan menciptakan lebih banyak anak muda kreatif di Indonesia. Sebenarnya komunitas ini diciptakan karena banyaknya komentar yang bertebaran di internet yang berisi kemauan mereka untuk mempelajari suatu hal, namun sayangnya mereka tidak memiliki tempat untuk bertanya, karena itulah dibuat komunitas ini, dengan harapan mereka dapat bertanya sekaligus menghasilkan karya dari komunitas ini.",
+      content: "OurCreativityIDN adalah komunitas kreatif yang didirikan pada tahun 2024 atas dasar kemauan founder untuk memberikan manfaat bagi banyak orang dan menciptakan lebih banyak anak muda kreatif di Indonesia. Komunitas ini dibuat karena banyaknya komentar di internet yang berisi kemauan mereka untuk mempelajari suatu hal, namun tidak memiliki tempat untuk bertanya. Dengan OurCreativity, mereka dapat bertanya sekaligus menghasilkan karya.",
       decoration: (
         <>
           <div className="absolute top-0 right-0 w-32 h-32 rounded-full border border-white/10" style={{ opacity: 0.1 }} />
@@ -40,7 +40,7 @@ const Informasi = () => {
       id: "vision",
       title: "Visi Komunitas",
       icon: <Target className="w-5 h-5" />,
-      content: "OurCreativityIDN bertujuan untuk mengembangkan jiwa kreatif anak muda Indonesia dengan menciptakan wadah bagi mereka untuk berdiskusi, berkolaborasi, dan menghasilkan karya. Kami ingin membantu generasi muda dalam menemukan serta mengasah bakat mereka di bidang Karya Tulis, Desain Grafis, dan Video Editing, serta memberikan kesempatan bagi mereka untuk mempublikasikan hasil karyanya agar dapat dikenal lebih luas. Melalui komunitas ini, kami berharap dapat menciptakan individu yang memiliki pemahaman dan keterampilan kreatif yang lebih luas serta mampu berkontribusi bagi perkembangan industri kreatif di Indonesia.",
+      content: "OurCreativityIDN bertujuan untuk mengembangkan jiwa kreatif anak muda Indonesia dengan menciptakan wadah bagi mereka untuk berdiskusi, berkolaborasi, dan menghasilkan karya. Kami ingin membantu generasi muda dalam menemukan serta mengasah bakat mereka di bidang Karya Tulis, Desain Grafis, dan Video Editing, serta memberikan kesempatan bagi mereka untuk mempublikasikan hasil karyanya agar dapat dikenal lebih luas.",
       decoration: (
         <>
           <div className="absolute top-10 left-10 w-16 h-16 rotate-45 border border-white/10" style={{ opacity: 0.1 }} />
@@ -54,11 +54,11 @@ const Informasi = () => {
       icon: <List className="w-5 h-5" />,
       content: (
         <ul className="space-y-3 list-decimal list-inside">
-          <li className="text-white/70">Menyaring dan menghubungkan anak muda berbakat melalui media sosial untuk bergabung dalam komunitas kreatif.</li>
-          <li className="text-white/70">Menyediakan platform diskusi dan kolaborasi agar anggota dapat berbagi ilmu serta mengembangkan kreativitasnya.</li>
-          <li className="text-white/70">Mempublikasikan setiap karya anggota melalui media sosial agar mendapatkan apresiasi lebih luas.</li>
-          <li className="text-white/70">Menyelenggarakan berbagai program gratis, seperti diskusi, event eksklusif, dan proyek kolaboratif, guna mendukung pengembangan keterampilan anggota.</li>
-          <li className="text-white/70">Mendorong anggota untuk memahami dan menguasai berbagai bidang kreatif agar dapat menciptakan karya yang lebih inovatif dan bernilai bagi masyarakat.</li>
+          <li className="text-white/80">Menyaring dan menghubungkan anak muda berbakat melalui media sosial untuk bergabung dalam komunitas kreatif.</li>
+          <li className="text-white/80">Menyediakan platform diskusi dan kolaborasi agar anggota dapat berbagi ilmu serta mengembangkan kreativitasnya.</li>
+          <li className="text-white/80">Mempublikasikan setiap karya anggota melalui media sosial agar mendapatkan apresiasi lebih luas.</li>
+          <li className="text-white/80">Menyelenggarakan berbagai program gratis, seperti diskusi, event eksklusif, dan proyek kolaboratif.</li>
+          <li className="text-white/80">Mendorong anggota untuk memahami dan menguasai berbagai bidang kreatif.</li>
         </ul>
       ),
       decoration: (
@@ -100,7 +100,7 @@ const Informasi = () => {
 
   return (
     <PageLayout 
-      title="TENTANG OURCREATIVITY"
+      title="OURCREATIVITY"
       subtitle="Komunitas kreatif yang bertujuan mengembangkan jiwa kreatif anak muda Indonesia dengan menciptakan wadah berkarya, berdiskusi, dan berkolaborasi."
     >
       {/* Main Content with enhanced design */}
@@ -115,7 +115,7 @@ const Informasi = () => {
           {sections.map((section) => (
             <div 
               key={section.id}
-              className="backdrop-blur-xl bg-black/30 border border-white/10 rounded-3xl p-8 relative overflow-hidden"
+              className="backdrop-blur-xl bg-black/20 border border-white/10 rounded-3xl p-8 relative overflow-hidden"
             >
               {/* Decorative geometric elements */}
               {section.decoration}
@@ -133,7 +133,7 @@ const Informasi = () => {
                 <Separator className="bg-white/10" />
                 
                 {typeof section.content === 'string' ? (
-                  <p className="text-white/70 leading-relaxed">
+                  <p className="text-white/80 leading-relaxed">
                     {section.content}
                   </p>
                 ) : (
@@ -164,7 +164,7 @@ const Informasi = () => {
                 key={index}
                 variants={itemVariants}
                 whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
-                className="backdrop-blur-xl bg-black/30 border border-white/10 p-6 rounded-xl relative overflow-hidden"
+                className="backdrop-blur-xl bg-black/20 border border-white/10 p-6 rounded-xl relative overflow-hidden"
               >
                 {/* Dynamic background */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${group.color} opacity-30`}></div>
@@ -178,7 +178,7 @@ const Informasi = () => {
                     <h3 className="text-xl font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-2">
                       Edisi {group.title}
                     </h3>
-                    <p className="text-white/70">{group.description}</p>
+                    <p className="text-white/80">{group.description}</p>
                   </div>
                 </div>
               </motion.div>
@@ -202,7 +202,7 @@ const Informasi = () => {
             <p className="text-2xl font-serif italic text-white">
               "Tanpa keberanian seseorang tidak akan pernah berkarya dan tidak akan berkembang."
             </p>
-            <footer className="text-white/50">— OurCreativity</footer>
+            <footer className="text-white/60">— OurCreativity</footer>
             
             <motion.div 
               className="w-16 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent mx-auto mt-4"
@@ -218,7 +218,7 @@ const Informasi = () => {
           variants={itemVariants}
           className="text-center space-y-6 pt-8 relative"
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent -z-10 rounded-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent -z-10 rounded-3xl" />
           
           {/* Geometric decorations */}
           <div className="absolute bottom-12 left-12 w-8 h-8 rotate-45 border border-white/10" style={{ opacity: 0.2 }} />
@@ -247,7 +247,7 @@ const Informasi = () => {
               </span>
             </motion.p>
             
-            <p className="text-white/50 italic mt-4">- Admin</p>
+            <p className="text-white/60 italic mt-4">- Admin</p>
           </div>
         </motion.div>
       </motion.div>
