@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -22,18 +23,18 @@ export default {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border) / <alpha-value>)",
-        input: "hsl(var(--input) / <alpha-value>)",
-        ring: "hsl(var(--ring) / <alpha-value>)",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
         background: {
           DEFAULT: "var(--background)",
           dark: "#1C1C1E",
-          light: "#F4F4F6"
+          light: "#F8F8FA"
         },
         foreground: {
           DEFAULT: "var(--foreground)",
           dark: "#FFFFFF",
-          light: "#2A2A2E"
+          light: "#1C1C1E"
         },
         primary: {
           DEFAULT: "#E5DEFF",
@@ -44,32 +45,23 @@ export default {
           DEFAULT: "var(--secondary)",
           foreground: "var(--secondary-foreground)",
           dark: "#2C2C2E",
-          light: "#EBEBED"
+          light: "#F2F2F4",
         },
         accent: {
           DEFAULT: "#FEC6A1",
           foreground: "#1C1C1E",
         },
-        gray: {
-          100: "#F8F8FA",
-          200: "#F2F2F4",
-          300: "#EBEBED",
-          400: "#DCDCE0",
-          500: "#AEAEB2",
-          600: "#8E8E93",
-          700: "#636366",
-          800: "#48484A",
-          900: "#2A2A2E",
-        },
         mint: "#98F5E1",
         lavender: "#E5DEFF",
         peach: "#FEC6A1",
         softPink: "#FFD1DC",
+        // New expanded color palette
         amethyst: "#9B6DFF",
         turquoise: "#40E0D0",
         coral: "#FF7F50",
         amber: "#FFBF00",
         emerald: "#50C878",
+        // Additional colors for gradients
         purpleLight: "#B197FC",
         purpleDark: "#7E57C2",
         orangeLight: "#FFA07A",
@@ -95,6 +87,7 @@ export default {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" }
         },
+        // New animations for micro-interactions
         "pulse-soft": {
           "0%, 100%": { opacity: "0.7" },
           "50%": { opacity: "1" }
@@ -112,11 +105,13 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" }
         },
+        // New keyframes for gradient animations
         "gradient-cycle": {
           "0%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" }
         },
+        // Theme transition
         "theme-fade": {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" }
@@ -125,11 +120,13 @@ export default {
       animation: {
         "glow": "glow 2s ease-in-out infinite",
         "float": "float 6s ease-in-out infinite",
+        // New animations
         "pulse-soft": "pulse-soft 3s ease-in-out infinite",
         "rotate-slow": "rotate-slow 12s linear infinite",
         "morph": "morph 8s ease-in-out infinite",
         "shimmer": "shimmer 3s ease-in-out infinite",
         "gradient-cycle": "gradient-cycle 8s ease-in-out infinite",
+        // Theme transition
         "theme-fade": "theme-fade 0.5s ease-in-out",
       },
       backgroundImage: {

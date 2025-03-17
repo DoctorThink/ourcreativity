@@ -25,12 +25,12 @@ const PageLayout = ({
     <div className="min-h-screen overflow-hidden relative">
       {/* Dynamic Background with geometric elements */}
       <div className="fixed inset-0 bg-background -z-10">
-        {/* Geometric decorative elements - adjusted for light/dark compatibility */}
-        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-primary/10 dark:bg-foreground/5 -top-[20%] -right-[20%]" />
-        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-accent/10 dark:bg-foreground/3 -bottom-[10%] -left-[10%]" />
+        {/* Geometric decorative elements */}
+        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-foreground/5 -top-[20%] -right-[20%]" />
+        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-foreground/3 -bottom-[10%] -left-[10%]" />
         
-        {/* Grid overlay - adapted for light mode */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(42,42,46,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(42,42,46,0.02)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
+        {/* Grid overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(30,30,30,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(30,30,30,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
         
         {/* Subtle lines */}
         <div className="absolute left-[5%] top-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-transparent via-foreground/10 to-transparent" />
@@ -38,8 +38,8 @@ const PageLayout = ({
         <div className="absolute left-[20%] bottom-[10%] w-[40vw] h-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
       </div>
       
-      {/* Header with Logo - adjusted for light mode */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/60 border-b border-foreground/5 p-4">
+      {/* Header with Logo */}
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/40 p-4 border-b border-foreground/5">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           {showBackButton && (
             <motion.button 
@@ -47,7 +47,7 @@ const PageLayout = ({
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
               onClick={() => navigate("/")}
-              className="flex items-center space-x-2 text-foreground/70 hover:text-foreground transition-colors"
+              className="flex items-center space-x-2 text-foreground/60 hover:text-foreground transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Kembali</span>
@@ -58,12 +58,11 @@ const PageLayout = ({
             {/* Theme Toggle */}
             <ThemeToggle />
             
-            {/* Logo elements */}
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.4 }}
-              className="w-8 h-8 rounded-full glass flex items-center justify-center"
+              className="w-8 h-8 rounded-full bg-foreground/5 p-1 flex items-center justify-center backdrop-blur-md border border-foreground/10"
             >
               <img
                 src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
@@ -76,7 +75,7 @@ const PageLayout = ({
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.4, delay: 0.1 }}
-              className="w-8 h-8 rounded-full glass flex items-center justify-center"
+              className="w-8 h-8 rounded-full bg-foreground/5 p-1 flex items-center justify-center backdrop-blur-md border border-foreground/10"
             >
               <img
                 src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png"
@@ -107,7 +106,7 @@ const PageLayout = ({
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.7 }}
                   >
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 dark:from-foreground dark:via-foreground/90 dark:to-foreground/70">{title}</span>
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70">{title}</span>
                   </motion.h1>
                 )}
                 
@@ -149,8 +148,8 @@ const PageLayout = ({
             transition={{ delay: 0.8, duration: 0.5 }}
             className="mt-24 mb-8 text-center"
           >
-            <div className="glass inline-block rounded-full px-4 py-2">
-              <p className="text-xs text-foreground/60">
+            <div className="bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-full px-4 py-2 inline-block">
+              <p className="text-xs text-foreground/50">
                 &copy; 2024 OUR CREATIVITY • Designed by Ardellio S. A.
               </p>
             </div>

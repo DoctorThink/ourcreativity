@@ -3,11 +3,9 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Users, Play, Info, Bell } from "lucide-react";
-import { useTheme } from "@/contexts/ThemeContext";
 
 const Hero = () => {
   const navigate = useNavigate();
-  const { theme } = useTheme();
 
   // Performance optimized animations
   const logoVariants = {
@@ -25,10 +23,10 @@ const Hero = () => {
 
   // Optimized navigation items
   const navigationItems = [
-    { text: "Jelajahi Grup", href: "/groups", color: "from-lavender/20 to-transparent", darkColor: "from-lavender/20 to-transparent", lightColor: "from-amethyst/10 to-transparent" },
-    { text: "Mulai", href: "#", color: "from-mint/20 to-transparent", darkColor: "from-mint/20 to-transparent", lightColor: "from-emerald/10 to-transparent" },
-    { text: "Informasi", href: "/informasi", color: "from-peach/20 to-transparent", darkColor: "from-peach/20 to-transparent", lightColor: "from-orangeLight/10 to-transparent" },
-    { text: "Pengumuman", href: "/pengumuman", color: "from-softPink/20 to-transparent", darkColor: "from-softPink/20 to-transparent", lightColor: "from-coral/10 to-transparent" }
+    { text: "Jelajahi Grup", href: "/groups", color: "from-lavender/20 to-transparent" },
+    { text: "Mulai", href: "#", color: "from-mint/20 to-transparent" },
+    { text: "Informasi", href: "/informasi", color: "from-peach/20 to-transparent" },
+    { text: "Pengumuman", href: "/pengumuman", color: "from-softPink/20 to-transparent" }
   ];
 
   return (
@@ -49,7 +47,7 @@ const Hero = () => {
                 variants={logoVariants}
                 initial="hidden"
                 animate="visible"
-                className="w-24 h-24 rounded-full glass flex items-center justify-center animate-float"
+                className="w-24 h-24 rounded-full bg-white/5 p-4 flex items-center justify-center animate-float backdrop-blur-md border border-white/10"
               >
                 <img
                   src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
@@ -64,7 +62,7 @@ const Hero = () => {
                 initial="hidden"
                 animate="visible"
                 transition={{ delay: 0.2 }}
-                className="w-32 h-32 rounded-full glass flex items-center justify-center animate-float"
+                className="w-32 h-32 rounded-full bg-white/5 p-4 flex items-center justify-center animate-float backdrop-blur-md border border-white/10"
               >
                 <img
                   src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png"
@@ -77,7 +75,7 @@ const Hero = () => {
             
             <div className="text-center space-y-8">
               <motion.h1 
-                className="text-4xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight glow-text gradient-text-animation"
+                className="text-4xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight glow-text"
               >
                 OUR CREATIVITY
               </motion.h1>
@@ -86,7 +84,7 @@ const Hero = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto leading-relaxed font-serif"
+                className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed font-serif"
               >
                 Dimana imajinasi bertemu dengan inovasi. Bergabunglah dengan komunitas kreatif kami dan wujudkan ide-ide Anda.
               </motion.p>
@@ -105,15 +103,13 @@ const Hero = () => {
                   onClick={() => navigate(button.href)}
                   whileHover={{ 
                     scale: 1.05, 
-                    boxShadow: theme === "dark" 
-                      ? "0 0 15px rgba(255,255,255,0.2)" 
-                      : "0 0 15px rgba(42,42,46,0.1)"
+                    boxShadow: "0 0 15px rgba(255,255,255,0.2)"
                   }}
                   whileTap={{ scale: 0.95 }}
-                  className="rounded-full px-6 py-3 glass text-foreground font-serif text-center transition-all relative overflow-hidden group"
+                  className={`rounded-full px-6 py-3 bg-white/5 backdrop-blur-md border border-white/10 text-white font-serif text-center transition-all hover:bg-white/10 relative overflow-hidden group`}
                 >
-                  {/* Interactive gradient effect - adaptive to theme */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${theme === "dark" ? button.darkColor : button.lightColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                  {/* Interactive gradient effect */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${button.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                   
                   {/* Show little icon on hover */}
                   <div className="relative z-10 flex items-center justify-center">
