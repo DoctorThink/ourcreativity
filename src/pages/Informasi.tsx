@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layouts/PageLayout";
 import { Separator } from "@/components/ui/separator";
-import { Info, Sparkles, Users, Target, Palette, Video, FileText, MessageSquare, List } from "lucide-react";
+import { Info, Sparkles, Users, Target, Palette, Video, FileText, MessageSquare } from "lucide-react";
 
 const Informasi = () => {
   // Enhanced animation variants
@@ -26,13 +26,20 @@ const Informasi = () => {
   const sections = [
     {
       id: "about",
-      title: "OUR CREATIVITY",
+      title: "OURCREATIVITY",
       icon: <Info className="w-5 h-5" />,
-      content: "OurCreativityIDN adalah komunitas kreatif yang didirikan pada tahun 2024 atas dasar kemauan founder untuk memberikan manfaat bagi banyak orang dan menciptakan lebih banyak anak muda kreatif di Indonesia. Komunitas ini dibuat karena banyaknya komentar di internet yang berisi kemauan mereka untuk mempelajari suatu hal, namun tidak memiliki tempat untuk bertanya. Dengan OurCreativity, mereka dapat bertanya sekaligus menghasilkan karya.",
+      content: (
+        <ul className="space-y-4 list-disc list-inside text-foreground/80 leading-relaxed">
+          <li>Komunitas kreatif yang didirikan pada tahun 2024 dengan tujuan memberikan manfaat bagi banyak orang.</li>
+          <li>Dibuat untuk menciptakan lebih banyak anak muda kreatif di Indonesia.</li>
+          <li>Menjadi tempat bertanya dan belajar bagi mereka yang ingin mengembangkan kreativitas.</li>
+          <li>Memungkinkan anggota untuk bertanya sekaligus menghasilkan karya.</li>
+        </ul>
+      ),
       decoration: (
         <>
-          <div className="absolute top-0 right-0 w-32 h-32 rounded-full border border-white/10" style={{ opacity: 0.1 }} />
-          <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full border border-white/5" style={{ opacity: 0.1 }} />
+          <div className="absolute top-0 right-0 w-32 h-32 rounded-full border border-foreground/10" style={{ opacity: 0.1 }} />
+          <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full border border-foreground/5" style={{ opacity: 0.1 }} />
         </>
       )
     },
@@ -40,31 +47,38 @@ const Informasi = () => {
       id: "vision",
       title: "Visi Komunitas",
       icon: <Target className="w-5 h-5" />,
-      content: "OurCreativityIDN bertujuan untuk mengembangkan jiwa kreatif anak muda Indonesia dengan menciptakan wadah bagi mereka untuk berdiskusi, berkolaborasi, dan menghasilkan karya. Kami ingin membantu generasi muda dalam menemukan serta mengasah bakat mereka di bidang Karya Tulis, Desain Grafis, dan Video Editing, serta memberikan kesempatan bagi mereka untuk mempublikasikan hasil karyanya agar dapat dikenal lebih luas.",
+      content: (
+        <ul className="space-y-4 list-disc list-inside text-foreground/80 leading-relaxed">
+          <li>Mengembangkan jiwa kreatif anak muda Indonesia.</li>
+          <li>Menciptakan wadah untuk berdiskusi, berkolaborasi, dan menghasilkan karya.</li>
+          <li>Membantu generasi muda menemukan dan mengasah bakat di bidang Karya Tulis, Desain Grafis, dan Video Editing.</li>
+          <li>Memberikan kesempatan untuk mempublikasikan hasil karya agar dikenal lebih luas.</li>
+        </ul>
+      ),
       decoration: (
         <>
-          <div className="absolute top-10 left-10 w-16 h-16 rotate-45 border border-white/10" style={{ opacity: 0.1 }} />
-          <div className="absolute -bottom-5 right-0 w-32 h-32 rounded-tl-3xl border-l border-t border-white/10" style={{ opacity: 0.1 }} />
+          <div className="absolute top-10 left-10 w-16 h-16 rotate-45 border border-foreground/10" style={{ opacity: 0.1 }} />
+          <div className="absolute -bottom-5 right-0 w-32 h-32 rounded-tl-3xl border-l border-t border-foreground/10" style={{ opacity: 0.1 }} />
         </>
       )
     },
     {
       id: "mission",
       title: "Misi Kami",
-      icon: <List className="w-5 h-5" />,
+      icon: <Target className="w-5 h-5" />,
       content: (
-        <ul className="space-y-3 list-decimal list-inside">
-          <li className="text-white/80">Menyaring dan menghubungkan anak muda berbakat melalui media sosial untuk bergabung dalam komunitas kreatif.</li>
-          <li className="text-white/80">Menyediakan platform diskusi dan kolaborasi agar anggota dapat berbagi ilmu serta mengembangkan kreativitasnya.</li>
-          <li className="text-white/80">Mempublikasikan setiap karya anggota melalui media sosial agar mendapatkan apresiasi lebih luas.</li>
-          <li className="text-white/80">Menyelenggarakan berbagai program gratis, seperti diskusi, event eksklusif, dan proyek kolaboratif.</li>
-          <li className="text-white/80">Mendorong anggota untuk memahami dan menguasai berbagai bidang kreatif.</li>
+        <ul className="space-y-4 list-disc list-inside text-foreground/80 leading-relaxed">
+          <li>Menyaring dan menghubungkan anak muda berbakat melalui media sosial untuk bergabung dalam komunitas.</li>
+          <li>Menyediakan platform diskusi dan kolaborasi untuk berbagi ilmu serta mengembangkan kreativitas.</li>
+          <li>Mempublikasikan karya anggota melalui media sosial agar mendapatkan apresiasi lebih luas.</li>
+          <li>Menyelenggarakan program gratis, seperti diskusi, event eksklusif, dan proyek kolaboratif.</li>
+          <li>Mendorong anggota untuk memahami dan menguasai berbagai bidang kreatif.</li>
         </ul>
       ),
       decoration: (
         <>
-          <div className="absolute bottom-10 right-10 w-20 h-20 rounded-md border border-white/10" style={{ opacity: 0.1 }} />
-          <div className="absolute top-0 left-0 w-40 h-40 rounded-br-3xl border-r border-b border-white/5" style={{ opacity: 0.1 }} />
+          <div className="absolute bottom-10 right-10 w-20 h-20 rounded-md border border-foreground/10" style={{ opacity: 0.1 }} />
+          <div className="absolute top-0 left-0 w-40 h-40 rounded-br-3xl border-r border-b border-foreground/5" style={{ opacity: 0.1 }} />
         </>
       )
     }
@@ -101,7 +115,7 @@ const Informasi = () => {
   return (
     <PageLayout 
       title="OURCREATIVITY"
-      subtitle="Komunitas kreatif yang bertujuan mengembangkan jiwa kreatif anak muda Indonesia dengan menciptakan wadah berkarya, berdiskusi, dan berkolaborasi."
+      subtitle="Komunitas yang bertujuan mengembangkan jiwa kreatif anak muda Indonesia melalui wadah berkarya, berdiskusi, dan berkolaborasi."
     >
       {/* Main Content with enhanced design */}
       <motion.div
@@ -115,30 +129,26 @@ const Informasi = () => {
           {sections.map((section) => (
             <div 
               key={section.id}
-              className="backdrop-blur-xl bg-black/20 border border-white/10 rounded-3xl p-8 relative overflow-hidden"
+              className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-3xl p-8 relative overflow-hidden"
             >
               {/* Decorative geometric elements */}
               {section.decoration}
               
               <div className="relative z-10 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl backdrop-blur-md bg-foreground/5 border border-foreground/10 flex items-center justify-center">
                     {section.icon}
                   </div>
-                  <h2 className="text-2xl font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+                  <h2 className="text-2xl font-serif font-semibold text-foreground">
                     {section.title}
                   </h2>
                 </div>
                 
-                <Separator className="bg-white/10" />
+                <Separator className="bg-foreground/10" />
                 
-                {typeof section.content === 'string' ? (
-                  <p className="text-white/80 leading-relaxed">
-                    {section.content}
-                  </p>
-                ) : (
-                  section.content
-                )}
+                <div className="pt-2">
+                  {section.content}
+                </div>
               </div>
             </div>
           ))}
@@ -150,10 +160,10 @@ const Informasi = () => {
           className="space-y-6"
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl backdrop-blur-md bg-foreground/5 border border-foreground/10 flex items-center justify-center">
               <Users className="w-5 h-5" />
             </div>
-            <h2 className="text-2xl font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-serif font-semibold text-foreground">
               4 Jenis Grup
             </h2>
           </div>
@@ -164,21 +174,21 @@ const Informasi = () => {
                 key={index}
                 variants={itemVariants}
                 whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
-                className="backdrop-blur-xl bg-black/20 border border-white/10 p-6 rounded-xl relative overflow-hidden"
+                className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 p-6 rounded-xl relative overflow-hidden"
               >
                 {/* Dynamic background */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${group.color} opacity-30`}></div>
-                <div className="absolute top-0 right-0 w-20 h-20 rounded-bl-3xl border-l border-b border-white/10" style={{ opacity: 0.1 }} />
+                <div className="absolute top-0 right-0 w-20 h-20 rounded-bl-3xl border-l border-b border-foreground/10" style={{ opacity: 0.1 }} />
                 
                 <div className="flex items-start gap-4 relative z-10">
-                  <div className="w-12 h-12 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl backdrop-blur-md bg-foreground/5 border border-foreground/10 flex items-center justify-center flex-shrink-0">
                     {group.icon}
                   </div>
                   <div>
-                    <h3 className="text-xl font-serif font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-2">
+                    <h3 className="text-xl font-serif font-semibold text-foreground mb-2">
                       Edisi {group.title}
                     </h3>
-                    <p className="text-white/80">{group.description}</p>
+                    <p className="text-foreground/80">{group.description}</p>
                   </div>
                 </div>
               </motion.div>
@@ -189,23 +199,23 @@ const Informasi = () => {
         {/* Quote Section with enhanced geometric design */}
         <motion.div 
           variants={itemVariants}
-          className="py-10 px-8 relative backdrop-blur-xl bg-black/20 border border-white/10 rounded-3xl overflow-hidden"
+          className="py-10 px-8 relative backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-3xl overflow-hidden"
         >
           {/* Geometric background elements */}
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBzdHJva2U9IiNmZmZmZmYwNSIgc3Ryb2tlLXdpZHRoPSIxIiBkPSJNMjkuNS45OGwxOS4wOCAxMS4wM3YyMi4wNUwyOS41IDQ1LjA5IDEwLjQyIDM0LjA2VjEyLjAxTDI5LjUuOTh6Ii8+PC9nPjwvc3ZnPg==')] bg-repeat opacity-5" />
-          <div className="absolute w-60 h-60 rounded-full bg-white/5 blur-[60px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute inset-0 geometric-hexagon-pattern" />
+          <div className="absolute w-60 h-60 rounded-full bg-foreground/5 blur-[60px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
           
           <div className="absolute left-8 top-8 text-6xl opacity-10 font-serif">"</div>
           <div className="absolute right-8 bottom-8 text-6xl opacity-10 font-serif">"</div>
           
           <blockquote className="text-center space-y-6 relative z-10">
-            <p className="text-2xl font-serif italic text-white">
+            <p className="text-2xl font-serif italic text-foreground">
               "Tanpa keberanian seseorang tidak akan pernah berkarya dan tidak akan berkembang."
             </p>
-            <footer className="text-white/60">— OurCreativity</footer>
+            <footer className="text-foreground/60">— OurCreativity</footer>
             
             <motion.div 
-              className="w-16 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent mx-auto mt-4"
+              className="w-16 h-[1px] bg-gradient-to-r from-transparent via-foreground/30 to-transparent mx-auto mt-4"
               initial={{ width: 0 }}
               animate={{ width: "4rem" }}
               transition={{ delay: 0.6, duration: 0.8 }}
@@ -218,36 +228,30 @@ const Informasi = () => {
           variants={itemVariants}
           className="text-center space-y-6 pt-8 relative"
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent -z-10 rounded-3xl" />
-          
-          {/* Geometric decorations */}
-          <div className="absolute bottom-12 left-12 w-8 h-8 rotate-45 border border-white/10" style={{ opacity: 0.2 }} />
-          <div className="absolute bottom-20 right-20 w-12 h-12 rounded-full border border-white/10" style={{ opacity: 0.2 }} />
-          
-          <div className="backdrop-blur-xl bg-black/20 border border-white/10 rounded-3xl p-8 relative overflow-hidden">
+          <div className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-3xl p-8 relative overflow-hidden">
             <div className="flex items-center justify-center mb-6">
-              <div className="w-10 h-10 rounded-full backdrop-blur-md bg-white/5 border border-white/10 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white/80" />
+              <div className="w-10 h-10 rounded-full backdrop-blur-md bg-foreground/5 border border-foreground/10 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-foreground/80" />
               </div>
             </div>
             
-            <p className="text-lg text-white/80 relative z-10 mb-6">
-              Bergabunglah dengan OurCreativity dan jadilah bagian dari pergerakan kreatif anak muda Indonesia yang terus berkembang. 
+            <p className="text-lg text-foreground/80 relative z-10 mb-6">
+              Bergabunglah dengan OurCreativity dan jadilah bagian dari pergerakan kreatif anak muda Indonesia. 
             </p>
             
             <motion.p 
               className="text-xl font-serif font-semibold"
               animate={{ 
-                textShadow: ["0 0 8px rgba(255,255,255,0.5)", "0 0 16px rgba(255,255,255,0.5)", "0 0 8px rgba(255,255,255,0.5)"]
+                textShadow: ["0 0 8px rgba(155,109,255,0.5)", "0 0 16px rgba(155,109,255,0.5)", "0 0 8px rgba(155,109,255,0.5)"]
               }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
+              <span className="text-foreground">
                 "Berkarya tanpa batas dengan OurCreativity"
               </span>
             </motion.p>
             
-            <p className="text-white/60 italic mt-4">- Admin</p>
+            <p className="text-foreground/60 italic mt-4">- Admin</p>
           </div>
         </motion.div>
       </motion.div>

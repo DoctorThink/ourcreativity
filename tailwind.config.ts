@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -33,11 +34,11 @@ export default {
         foreground: {
           DEFAULT: "var(--foreground)",
           dark: "#FFFFFF",
-          light: "#1C1C1E"
+          light: "#333336"  // Darker than before but not pure black
         },
         primary: {
           DEFAULT: "#E5DEFF",
-          foreground: "#1C1C1E",
+          foreground: "#333336",
           light: "#9B6DFF",
         },
         secondary: {
@@ -48,7 +49,7 @@ export default {
         },
         accent: {
           DEFAULT: "#FEC6A1",
-          foreground: "#1C1C1E",
+          foreground: "#333336",
         },
         mint: "#98F5E1",
         lavender: "#E5DEFF",
@@ -64,7 +65,8 @@ export default {
         orangeLight: "#FFA07A",
         orangeDark: "#FF6347",
         grayLight: "#CCCCCC",
-        grayDark: "#666666",
+        grayMid: "#8A898C",
+        grayDark: "#555558",
         blueLight: "#87CEFA",
         blueDark: "#1E90FF",
       },
