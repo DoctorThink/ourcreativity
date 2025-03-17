@@ -6,17 +6,46 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: #F8F8FA;
+    --foreground: #1C1C1E;
+    --secondary: #F2F2F4;
+    --secondary-foreground: #1C1C1E;
+    --border: #E5E5E7;
+    --input: #F2F2F4;
+    --ring: #9B6DFF;
+  }
+
+  .dark {
+    --background: #1C1C1E;
+    --foreground: #FFFFFF;
+    --secondary: #2C2C2E;
+    --secondary-foreground: #FFFFFF;
+    --border: #2C2C2E;
+    --input: #2C2C2E;
+    --ring: #E5DEFF;
+  }
+
+  /* Apply transition to all elements when theme changes */
+  *, *::before, *::after {
+    transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+
   html {
     scroll-behavior: smooth;
   }
   
   body {
-    @apply bg-black text-white font-serif antialiased;
+    @apply bg-background text-foreground font-serif antialiased;
   }
   
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
   }
+}
+
+.theme-transition {
+  @apply animate-theme-fade;
 }
 
 .glow-text {
@@ -32,19 +61,23 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-black backdrop-blur-md;
+  @apply bg-background backdrop-blur-md;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-white/20 rounded-full backdrop-blur-md;
+  @apply bg-foreground/20 rounded-full backdrop-blur-md;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-white/30;
+  @apply bg-foreground/30;
 }
 
 /* Glass effect */
 .glass {
+  @apply backdrop-blur-md bg-foreground/5 border border-foreground/10;
+}
+
+.dark .glass {
   @apply backdrop-blur-md bg-white/5 border border-white/10;
 }
 
@@ -82,6 +115,14 @@
   animation: shimmer 3s ease-in-out infinite;
 }
 
+.dark .shimmer {
+  background-image: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%);
+}
+
+.light .shimmer {
+  background-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0) 100%);
+}
+
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -93,11 +134,21 @@
   background-size: 20px 20px;
 }
 
+.light .geometric-dot-pattern {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+}
+
 .geometric-line-pattern {
   background-image: 
     linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 20px 20px;
+}
+
+.light .geometric-line-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
 }
 
 .geometric-circle {
@@ -106,7 +157,7 @@
 
 .geometric-circle::before {
   content: '';
-  @apply absolute border border-white/10 rounded-full animate-pulse-soft;
+  @apply absolute border border-foreground/10 rounded-full animate-pulse-soft;
   width: 150%;
   height: 150%;
   top: -25%;
@@ -119,12 +170,20 @@
 }
 
 .btn-hover-effect:hover {
-  @apply translate-y-[-2px] shadow-lg shadow-white/5;
+  @apply translate-y-[-2px] shadow-lg;
+}
+
+.dark .btn-hover-effect:hover {
+  @apply shadow-white/5;
+}
+
+.light .btn-hover-effect:hover {
+  @apply shadow-black/5;
 }
 
 .btn-hover-effect::after {
   content: '';
-  @apply absolute inset-0 bg-white/0 opacity-0 transition-opacity duration-300;
+  @apply absolute inset-0 bg-foreground/0 opacity-0 transition-opacity duration-300;
 }
 
 .btn-hover-effect:hover::after {
@@ -162,10 +221,18 @@
   opacity: 0.1;
 }
 
+.light .geometric-hexagon-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath stroke='rgba(0,0,0,0.05)' stroke-width='1' d='M29.5.98l19.08 11.03v22.05L29.5 45.09 10.42 34.06V12.01L29.5.98z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
 .geometric-triangle-pattern {
   background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 2.5l17.5 30h-35z' stroke='rgba(255,255,255,0.05)' stroke-width='1' fill='none'/%3E%3C/svg%3E");
   background-repeat: repeat;
   opacity: 0.1;
+}
+
+.light .geometric-triangle-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 2.5l17.5 30h-35z' stroke='rgba(0,0,0,0.05)' stroke-width='1' fill='none'/%3E%3C/svg%3E");
 }
 
 /* Animated gradient text */
@@ -184,6 +251,22 @@
   -webkit-background-clip: text;
   color: transparent;
   animation: gradientTextAnimation 8s ease infinite;
+}
+
+.light .gradient-text-animation {
+  background: linear-gradient(
+    to right,
+    #1C1C1E,
+    #9B6DFF,
+    #FEC6A1,
+    #8A898C,
+    #33C3F0,
+    #1C1C1E
+  );
+  background-size: 300% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 @keyframes gradientTextAnimation {

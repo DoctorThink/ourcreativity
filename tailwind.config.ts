@@ -26,15 +26,26 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "#1C1C1E",
-        foreground: "#FFFFFF",
+        background: {
+          DEFAULT: "var(--background)",
+          dark: "#1C1C1E",
+          light: "#F8F8FA"
+        },
+        foreground: {
+          DEFAULT: "var(--foreground)",
+          dark: "#FFFFFF",
+          light: "#1C1C1E"
+        },
         primary: {
           DEFAULT: "#E5DEFF",
           foreground: "#1C1C1E",
+          light: "#9B6DFF",
         },
         secondary: {
-          DEFAULT: "#2C2C2E",
-          foreground: "#FFFFFF",
+          DEFAULT: "var(--secondary)",
+          foreground: "var(--secondary-foreground)",
+          dark: "#2C2C2E",
+          light: "#F2F2F4",
         },
         accent: {
           DEFAULT: "#FEC6A1",
@@ -100,6 +111,11 @@ export default {
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" }
         },
+        // Theme transition
+        "theme-fade": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" }
+        },
       },
       animation: {
         "glow": "glow 2s ease-in-out infinite",
@@ -110,6 +126,8 @@ export default {
         "morph": "morph 8s ease-in-out infinite",
         "shimmer": "shimmer 3s ease-in-out infinite",
         "gradient-cycle": "gradient-cycle 8s ease-in-out infinite",
+        // Theme transition
+        "theme-fade": "theme-fade 0.5s ease-in-out",
       },
       backgroundImage: {
         "shimmer-gradient": "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%)",
