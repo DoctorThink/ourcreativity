@@ -29,12 +29,12 @@ export default {
         background: {
           DEFAULT: "var(--background)",
           dark: "#1C1C1E",
-          light: "#F8F8FA"
+          light: "#EAEAEC"  // Softer light background
         },
         foreground: {
           DEFAULT: "var(--foreground)",
           dark: "#FFFFFF",
-          light: "#333336"  // Darker than before but not pure black
+          light: "#333336"
         },
         primary: {
           DEFAULT: "#E5DEFF",
@@ -45,7 +45,7 @@ export default {
           DEFAULT: "var(--secondary)",
           foreground: "var(--secondary-foreground)",
           dark: "#2C2C2E",
-          light: "#F2F2F4",
+          light: "#E8E8EA",  // Softer light secondary
         },
         accent: {
           DEFAULT: "#FEC6A1",

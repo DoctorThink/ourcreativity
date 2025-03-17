@@ -23,19 +23,19 @@ const PageLayout = ({
 
   return (
     <div className="min-h-screen overflow-hidden relative">
-      {/* Dynamic Background with geometric elements */}
+      {/* Dynamic Background with softer geometric elements */}
       <div className="fixed inset-0 bg-background -z-10">
-        {/* Geometric decorative elements */}
-        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-foreground/5 -top-[20%] -right-[20%]" />
-        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-foreground/3 -bottom-[10%] -left-[10%]" />
+        {/* Softer geometric decorative elements */}
+        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-foreground/3 -top-[20%] -right-[20%]" />
+        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-foreground/2 -bottom-[10%] -left-[10%]" />
         
-        {/* Grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(30,30,30,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(30,30,30,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
+        {/* Softer Grid overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(30,30,30,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(30,30,30,0.02)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
         
-        {/* Subtle lines */}
-        <div className="absolute left-[5%] top-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-transparent via-foreground/10 to-transparent" />
-        <div className="absolute right-[10%] top-[20%] w-[1px] h-[40vh] bg-gradient-to-b from-transparent via-foreground/5 to-transparent" />
-        <div className="absolute left-[20%] bottom-[10%] w-[40vw] h-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
+        {/* Subtle lines with reduced opacity */}
+        <div className="absolute left-[5%] top-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-transparent via-foreground/5 to-transparent" />
+        <div className="absolute right-[10%] top-[20%] w-[1px] h-[40vh] bg-gradient-to-b from-transparent via-foreground/3 to-transparent" />
+        <div className="absolute left-[20%] bottom-[10%] w-[40vw] h-[1px] bg-gradient-to-r from-transparent via-foreground/5 to-transparent" />
       </div>
       
       {/* Header with Logo */}
