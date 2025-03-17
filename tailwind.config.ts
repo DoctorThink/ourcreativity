@@ -28,12 +28,12 @@ export default {
         background: {
           DEFAULT: "var(--background)",
           dark: "#1C1C1E",
-          light: "#F8F8FA"
+          light: "#F4F4F6"
         },
         foreground: {
           DEFAULT: "var(--foreground)",
           dark: "#FFFFFF",
-          light: "#1C1C1E"
+          light: "#2A2A2E"
         },
         primary: {
           DEFAULT: "#E5DEFF",
@@ -44,11 +44,22 @@ export default {
           DEFAULT: "var(--secondary)",
           foreground: "var(--secondary-foreground)",
           dark: "#2C2C2E",
-          light: "#F2F2F4",
+          light: "#EBEBED"
         },
         accent: {
           DEFAULT: "#FEC6A1",
           foreground: "#1C1C1E",
+        },
+        gray: {
+          100: "#F8F8FA",
+          200: "#F2F2F4",
+          300: "#EBEBED",
+          400: "#DCDCE0",
+          500: "#AEAEB2",
+          600: "#8E8E93",
+          700: "#636366",
+          800: "#48484A",
+          900: "#2A2A2E",
         },
         mint: "#98F5E1",
         lavender: "#E5DEFF",

@@ -6,16 +6,16 @@
 
 @layer base {
   :root {
-    --background: #F8F8FA;
-    --foreground: #1C1C1E;
-    --secondary: #F2F2F4;
-    --secondary-foreground: #1C1C1E;
-    --border: #E5E5E7;
-    --input: #F2F2F4;
+    --background: #F4F4F6;
+    --foreground: #2A2A2E;
+    --secondary: #EBEBED;
+    --secondary-foreground: #2A2A2E;
+    --border: #DCDCE0;
+    --input: #EBEBED;
     --ring: #9B6DFF;
     
-    --foreground-rgb: 28, 28, 30;
-    --background-rgb: 248, 248, 250;
+    --foreground-rgb: 42, 42, 46;
+    --background-rgb: 244, 244, 246;
   }
 
   .dark {
@@ -59,7 +59,12 @@
   @apply animate-glow;
 }
 
-/* Smooth scrollbar */
+.light .glow-text {
+  text-shadow: 0 0 10px rgba(155, 109, 255, 0.3),
+               0 0 20px rgba(155, 109, 255, 0.2),
+               0 0 30px rgba(155, 109, 255, 0.1);
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -77,11 +82,16 @@
   background-color: rgba(var(--foreground-rgb), 0.3);
 }
 
-/* Glass effect */
 .glass {
   background-color: rgba(var(--foreground-rgb), 0.05);
   @apply backdrop-blur-md border;
   border-color: rgba(var(--foreground-rgb), 0.1);
+}
+
+.light .glass {
+  background-color: rgba(42, 42, 46, 0.03);
+  border-color: rgba(42, 42, 46, 0.08);
+  @apply backdrop-blur-md shadow-sm;
 }
 
 .dark .glass {
@@ -90,7 +100,6 @@
   @apply backdrop-blur-md;
 }
 
-/* Enhanced animations */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -108,7 +117,6 @@
   }
 }
 
-/* New geometric patterns and animations */
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
@@ -117,7 +125,6 @@
   animation: glow 2s ease-in-out infinite;
 }
 
-/* Shimmer effect */
 .shimmer {
   background-size: 200% 100%;
   background-image: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%);
@@ -137,14 +144,13 @@
   100% { background-position: 200% 0; }
 }
 
-/* Geometric patterns */
 .geometric-dot-pattern {
   background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
 .light .geometric-dot-pattern {
-  background-image: radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(42, 42, 46, 0.08) 1px, transparent 1px);
 }
 
 .geometric-line-pattern {
@@ -156,8 +162,8 @@
 
 .light .geometric-line-pattern {
   background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(42, 42, 46, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(42, 42, 46, 0.05) 1px, transparent 1px);
 }
 
 .geometric-circle {
@@ -174,7 +180,6 @@
   left: -25%;
 }
 
-/* Micro-interaction button effects */
 .btn-hover-effect {
   @apply relative overflow-hidden transition-all duration-300;
 }
@@ -201,7 +206,6 @@
   @apply opacity-10;
 }
 
-/* Morphing blob animation */
 .morphing-blob {
   border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   animation: morph 8s ease-in-out infinite;
@@ -213,7 +217,6 @@
   100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
 }
 
-/* Color cycling animation */
 .text-color-cycle {
   animation: colorCycle 10s infinite alternate;
   background-size: 400% 400%;
@@ -225,7 +228,6 @@
   100% { background-position: 0% 50%; }
 }
 
-/* New enhanced geometric patterns */
 .geometric-hexagon-pattern {
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath stroke='rgba(255,255,255,0.05)' stroke-width='1' d='M29.5.98l19.08 11.03v22.05L29.5 45.09 10.42 34.06V12.01L29.5.98z'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: repeat;
@@ -233,7 +235,7 @@
 }
 
 .light .geometric-hexagon-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath stroke='rgba(0,0,0,0.05)' stroke-width='1' d='M29.5.98l19.08 11.03v22.05L29.5 45.09 10.42 34.06V12.01L29.5.98z'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath stroke='rgba(42,42,46,0.05)' stroke-width='1' d='M29.5.98l19.08 11.03v22.05L29.5 45.09 10.42 34.06V12.01L29.5.98z'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 .geometric-triangle-pattern {
@@ -243,10 +245,9 @@
 }
 
 .light .geometric-triangle-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 2.5l17.5 30h-35z' stroke='rgba(0,0,0,0.05)' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 2.5l17.5 30h-35z' stroke='rgba(42,42,46,0.05)' stroke-width='1' fill='none'/%3E%3C/svg%3E");
 }
 
-/* Animated gradient text */
 .gradient-text-animation {
   background: linear-gradient(
     to right,
@@ -267,12 +268,12 @@
 .light .gradient-text-animation {
   background: linear-gradient(
     to right,
-    #1C1C1E,
+    #2A2A2E,
     #9B6DFF,
     #FEC6A1,
-    #8A898C,
-    #33C3F0,
-    #1C1C1E
+    #666666,
+    #40E0D0,
+    #2A2A2E
   );
   background-size: 300% 300%;
   background-clip: text;
@@ -284,4 +285,12 @@
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+.light-card {
+  @apply bg-gray-200 border border-gray-300 rounded-lg shadow-sm;
+}
+
+.light-button {
+  @apply bg-gray-300 text-gray-900 hover:bg-gray-400 border border-gray-400;
 }
