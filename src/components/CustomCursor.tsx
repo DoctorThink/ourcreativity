@@ -21,7 +21,8 @@ const CustomCursor = () => {
         target.classList.contains('cursor-pointer') ||
         !!target.onclick;
       
-      setIsPointer(clickable);
+      // Fixed: Make sure we're passing a boolean value to setIsPointer
+      setIsPointer(!!clickable);
     };
 
     const handleMouseDown = () => setIsClicking(true);
