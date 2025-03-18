@@ -2,7 +2,6 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -28,13 +27,11 @@ export default {
         ring: "hsl(var(--ring) / <alpha-value>)",
         background: {
           DEFAULT: "var(--background)",
-          dark: "#1C1C1E",
-          light: "#F8F8FA"
+          dark: "#1C1C1E"
         },
         foreground: {
           DEFAULT: "var(--foreground)",
-          dark: "#FFFFFF",
-          light: "#333336"  // Darker than before but not pure black
+          dark: "#FFFFFF"
         },
         primary: {
           DEFAULT: "#E5DEFF",
@@ -44,8 +41,7 @@ export default {
         secondary: {
           DEFAULT: "var(--secondary)",
           foreground: "var(--secondary-foreground)",
-          dark: "#2C2C2E",
-          light: "#F2F2F4",
+          dark: "#2C2C2E"
         },
         accent: {
           DEFAULT: "#FEC6A1",
