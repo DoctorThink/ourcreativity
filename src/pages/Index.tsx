@@ -1,13 +1,30 @@
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Info, Bell, ScrollText } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useEffect, useState, useRef } from "react";
 
 const Index = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const scrollRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: scrollRef });
+  
+  const navOpacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+  
+  // Handle scroll to reveal navigation
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > window.innerHeight * 0.3);
+    };
+    
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Enhanced animation variants for staggered animations
   const containerVariants = {
@@ -40,7 +57,8 @@ const Index = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen overflow-hidden relative"
+      className="min-h-screen overflow-x-hidden overflow-y-auto relative"
+      ref={scrollRef}
     >
       {/* Enhanced Dynamic Background with geometric elements */}
       <div className="fixed inset-0 bg-background -z-10">
@@ -65,8 +83,9 @@ const Index = () => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 container mx-auto px-4 py-8 min-h-screen flex flex-col">
-        <div className="flex-grow flex flex-col items-center justify-center">
+      <div className="relative z-10 container mx-auto px-4 py-8 min-h-[200vh]">
+        {/* First section - only the logo */}
+        <div className="h-screen flex items-center justify-center">
           {/* Logo Container with Enhanced Animation and Geometric Accents */}
           <motion.div
             initial={{ scale: 0 }}
@@ -77,13 +96,13 @@ const Index = () => {
               damping: 20,
               duration: 1.2
             }}
-            className="flex gap-6 mb-12 relative"
+            className="flex gap-6 relative"
           >
-            {/* Decorative circles */}
+            {/* Decorative circles - Fixed sizing to ensure visibility on all devices */}
             <div className="absolute inset-0 -z-10 w-full h-full flex items-center justify-center">
-              <div className="w-64 h-64 border border-foreground/5 rounded-full animate-rotate-slow" />
-              <div className="absolute w-80 h-80 border border-foreground/5 rounded-full animate-rotate-slow" style={{ animationDirection: "reverse", animationDuration: "15s" }} />
-              <div className="absolute w-96 h-96 border border-foreground/5 rounded-full animate-pulse-soft" />
+              <div className="w-[80%] max-w-[20rem] aspect-square border border-foreground/5 rounded-full animate-rotate-slow" />
+              <div className="absolute w-[100%] max-w-[25rem] aspect-square border border-foreground/5 rounded-full animate-rotate-slow" style={{ animationDirection: "reverse", animationDuration: "15s" }} />
+              <div className="absolute w-[120%] max-w-[30rem] aspect-square border border-foreground/5 rounded-full animate-pulse-soft" />
             </div>
             
             <motion.div 
@@ -116,7 +135,10 @@ const Index = () => {
               />
             </motion.div>
           </motion.div>
+        </div>
 
+        {/* Second section - content that appears after scrolling */}
+        <div className="min-h-screen pt-16">
           {/* Enhanced Title with Gradient Animation */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -161,19 +183,20 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.7 }}
-            className="text-lg md:text-xl text-foreground/70 max-w-2xl text-center mb-12 font-serif relative z-10"
+            className="text-lg md:text-xl text-foreground/70 max-w-2xl text-center mb-12 font-serif relative z-10 mx-auto"
           >
             <span className="shimmer px-6 py-4 rounded-full">
               Dimana imajinasi bertemu dengan inovasi. Bergabunglah dengan komunitas kreatif kami.
             </span>
           </motion.p>
 
-          {/* Interactive Navigation Buttons with improved design and micro-interactions */}
+          {/* Interactive Navigation Buttons - Appear on scroll */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-4xl mx-auto"
+            style={{ opacity: navOpacity }}
+            className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 w-full max-w-4xl mx-auto"
           >
             {navigationItems.map(({ icon: Icon, text, href, color, decorColor }) => (
               <motion.div
@@ -186,7 +209,7 @@ const Index = () => {
                 <Button
                   onClick={() => navigate(href)}
                   variant="secondary"
-                  className={`w-full h-full min-h-[120px] rounded-2xl backdrop-blur-xl bg-foreground/5 border border-foreground/10 flex flex-col items-center justify-center gap-4 transition-all duration-300 group overflow-hidden relative btn-hover-effect`}
+                  className={`w-full h-full min-h-[100px] sm:min-h-[120px] rounded-2xl backdrop-blur-xl bg-foreground/5 border border-foreground/10 flex flex-col items-center justify-center gap-4 transition-all duration-300 group overflow-hidden relative btn-hover-effect`}
                 >
                   {/* Enhanced background gradient */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-30 transition-opacity duration-300 group-hover:opacity-50`}></div>
