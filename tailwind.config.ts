@@ -112,6 +112,28 @@ export default {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" }
         },
+        "blob-animation": {
+          "0%, 100%": { 
+            borderRadius: "60% 40% 30% 70%/60% 30% 70% 40%",
+            transform: "scale(1) rotate(0deg)"
+          },
+          "25%": { 
+            borderRadius: "40% 60% 70% 30%/30% 60% 40% 70%",
+            transform: "scale(0.8) rotate(5deg)"
+          },
+          "50%": { 
+            borderRadius: "30% 60% 70% 40%/50% 60% 30% 60%",
+            transform: "scale(1.2) rotate(0deg)"
+          },
+          "75%": { 
+            borderRadius: "40% 60% 30% 70%/60% 40% 70% 30%",
+            transform: "scale(0.8) rotate(-5deg)"
+          }
+        },
+        "cursor-pulse": {
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.2)" }
+        },
       },
       animation: {
         "glow": "glow 2s ease-in-out infinite",
@@ -122,13 +144,62 @@ export default {
         "shimmer": "shimmer 3s ease-in-out infinite",
         "gradient-cycle": "gradient-cycle 8s ease-in-out infinite",
         "theme-fade": "theme-fade 0.5s ease-in-out",
+        "blob": "blob-animation 8s ease-in-out infinite",
+        "cursor-pulse": "cursor-pulse 2s ease-in-out infinite",
       },
       backgroundImage: {
         "shimmer-gradient": "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%)",
         "gradient-purple-orange": "linear-gradient(to right, var(--tw-gradient-stops))",
         "gradient-blue-cyan": "linear-gradient(to right, var(--tw-gradient-stops))",
-      }
+      },
+      transitionProperty: {
+        'width': 'width',
+        'height': 'height',
+        'spacing': 'margin, padding',
+      },
+      perspective: {
+        'none': 'none',
+        '500': '500px',
+        '1000': '1000px',
+        '2000': '2000px',
+      },
+      transformStyle: {
+        'flat': 'flat',
+        '3d': 'preserve-3d',
+      },
+      backfaceVisibility: {
+        'visible': 'visible',
+        'hidden': 'hidden',
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function({ addUtilities }) {
+      const newUtilities = {
+        '.perspective': {
+          perspective: '1000px',
+        },
+        '.perspective-500': {
+          perspective: '500px',
+        },
+        '.perspective-1000': {
+          perspective: '1000px',
+        },
+        '.perspective-2000': {
+          perspective: '2000px',
+        },
+        '.transform-style-3d': {
+          transformStyle: 'preserve-3d',
+        },
+        '.backface-hidden': {
+          backfaceVisibility: 'hidden',
+        },
+        '.backface-visible': {
+          backfaceVisibility: 'visible',
+        },
+      }
+      addUtilities(newUtilities)
+    }
+  ],
 } satisfies Config;

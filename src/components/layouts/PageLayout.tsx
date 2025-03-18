@@ -5,6 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
+import ParallaxEffect from "@/components/ParallaxEffect";
 
 interface PageLayoutProps {
   title: string;
@@ -22,12 +23,18 @@ const PageLayout = ({
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen overflow-hidden relative">
-      {/* Dynamic Background with geometric elements */}
+    <div className="min-h-screen overflow-hidden relative parallax-container">
+      {/* Enhanced Background with geometric elements */}
       <div className="fixed inset-0 bg-background -z-10">
-        {/* Geometric decorative elements */}
-        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-foreground/5 -top-[20%] -right-[20%]" />
-        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-foreground/3 -bottom-[10%] -left-[10%]" />
+        {/* Geometric patterns */}
+        <div className="absolute inset-0 geometric-hexagons opacity-50" />
+        <div className="absolute inset-0 geometric-grid opacity-30" />
+        
+        {/* Animated blob backgrounds */}
+        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-foreground/5 -top-[20%] -right-[20%] blob-sm" 
+             style={{"--blob-color-1": "rgba(155, 109, 255, 0.02)", "--blob-color-2": "rgba(64, 224, 208, 0.01)"} as React.CSSProperties} />
+        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-foreground/3 -bottom-[10%] -left-[10%] blob-sm" 
+             style={{"--blob-color-1": "rgba(254, 198, 161, 0.02)", "--blob-color-2": "rgba(255, 209, 220, 0.01)"} as React.CSSProperties} />
         
         {/* Grid overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(30,30,30,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(30,30,30,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
@@ -96,29 +103,33 @@ const PageLayout = ({
             transition={{ duration: 0.6 }}
             className="space-y-12"
           >
-            {/* Title Section with enhanced typography */}
+            {/* Title Section with enhanced typography and parallax effect */}
             {(title || subtitle) && (
               <div className="text-center space-y-4">
                 {title && (
-                  <motion.h1 
-                    className="text-4xl md:text-6xl font-serif font-bold tracking-tight text-foreground"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2, duration: 0.7 }}
-                  >
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70">{title}</span>
-                  </motion.h1>
+                  <ParallaxEffect speed={-0.2}>
+                    <motion.h1 
+                      className="text-4xl md:text-6xl font-serif font-bold tracking-tight text-foreground"
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2, duration: 0.7 }}
+                    >
+                      <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70">{title}</span>
+                    </motion.h1>
+                  </ParallaxEffect>
                 )}
                 
                 {subtitle && (
-                  <motion.p 
-                    className="text-lg md:text-xl text-foreground/70 leading-relaxed max-w-3xl mx-auto"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4, duration: 0.7 }}
-                  >
-                    {subtitle}
-                  </motion.p>
+                  <ParallaxEffect speed={-0.1}>
+                    <motion.p 
+                      className="text-lg md:text-xl text-foreground/70 leading-relaxed max-w-3xl mx-auto"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.4, duration: 0.7 }}
+                    >
+                      {subtitle}
+                    </motion.p>
+                  </ParallaxEffect>
                 )}
                 
                 {/* Decorative line */}
@@ -131,13 +142,16 @@ const PageLayout = ({
               </div>
             )}
 
-            {/* Main Content */}
+            {/* Main Content with card-3d effect for children */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
+              className="card-3d-container"
             >
-              {children}
+              <div className="card-3d card-3d-content">
+                {children}
+              </div>
             </motion.div>
           </motion.div>
 
