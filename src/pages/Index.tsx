@@ -119,7 +119,7 @@ const Index = () => {
               animationDirection: "reverse",
               animationDuration: "15s"
             }} />
-              <div className="absolute w-96 h-96 border border-foreground/5 rounded-full animate-pulse-soft mx-0" />
+              <div className="absolute w-96 h-96 border border-foreground/5 rounded-full animate-pulse-soft mx-0 px-[10px]" />
             </div>
             
             <motion.div initial={{
