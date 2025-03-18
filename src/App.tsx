@@ -6,6 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import CustomCursor from "@/components/ui/CustomCursor";
+import PageTransition from "@/components/ui/PageTransition";
 
 // Improved lazy loading with dynamic imports
 const Index = lazy(() => import("./pages/Index"));
@@ -53,6 +55,19 @@ const queryClient = new QueryClient({
 const App = () => {
   // State to track if the app is ready
   const [isAppReady, setIsAppReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   // Simulate preloading critical resources
   useEffect(() => {
@@ -68,6 +83,17 @@ const App = () => {
     
     preloadAssets();
   }, []);
+
+  // Add the cursor-none class to body
+  useEffect(() => {
+    if (isAppReady && !isMobile) {
+      document.body.classList.add('cursor-none');
+    }
+    
+    return () => {
+      document.body.classList.remove('cursor-none');
+    };
+  }, [isAppReady, isMobile]);
   
   return (
     <QueryClientProvider client={queryClient}>
@@ -77,15 +103,20 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             {isAppReady ? (
-              <Suspense fallback={<LoadingFallback />}>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/brand-story" element={<BrandStory />} />
-                  <Route path="/informasi" element={<Informasi />} />
-                  <Route path="/pengumuman" element={<Pengumuman />} />
-                  <Route path="/terms" element={<Terms />} />
-                </Routes>
-              </Suspense>
+              <>
+                {!isMobile && <CustomCursor />}
+                <Suspense fallback={<LoadingFallback />}>
+                  <PageTransition transitionType="fade">
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/brand-story" element={<BrandStory />} />
+                      <Route path="/informasi" element={<Informasi />} />
+                      <Route path="/pengumuman" element={<Pengumuman />} />
+                      <Route path="/terms" element={<Terms />} />
+                    </Routes>
+                  </PageTransition>
+                </Suspense>
+              </>
             ) : (
               <LoadingFallback />
             )}
