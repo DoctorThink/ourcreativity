@@ -108,31 +108,6 @@ export default {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" }
         },
-        "ripple": {
-          "0%": { transform: "scale(0)", opacity: "0.5" },
-          "100%": { transform: "scale(4)", opacity: "0" }
-        },
-        "page-fade-in": {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" }
-        },
-        "page-slide-in": {
-          "0%": { transform: "translateY(20px)", opacity: "0" },
-          "100%": { transform: "translateY(0)", opacity: "1" }
-        },
-        "fade-up": {
-          "0%": { opacity: "0", transform: "translateY(20px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" }
-        },
-        "zoom-in": {
-          "0%": { opacity: "0", transform: "scale(0.95)" },
-          "100%": { opacity: "1", transform: "scale(1)" }
-        },
-        "bounce-in": {
-          "0%": { transform: "scale(0.9)", opacity: "0" },
-          "70%": { transform: "scale(1.05)", opacity: "0.7" },
-          "100%": { transform: "scale(1)", opacity: "1" }
-        },
       },
       animation: {
         "glow": "glow 2s ease-in-out infinite",
@@ -143,12 +118,6 @@ export default {
         "shimmer": "shimmer 3s ease-in-out infinite",
         "gradient-cycle": "gradient-cycle 8s ease-in-out infinite",
         "theme-fade": "theme-fade 0.5s ease-in-out",
-        "ripple": "ripple 1s linear",
-        "page-fade-in": "page-fade-in 0.5s ease-out forwards",
-        "page-slide-in": "page-slide-in 0.5s ease-out forwards",
-        "fade-up": "fade-up 0.6s ease-out",
-        "zoom-in": "zoom-in 0.5s ease-out",
-        "bounce-in": "bounce-in 0.7s ease-out",
       },
       backgroundImage: {
         "shimmer-gradient": "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%)",
