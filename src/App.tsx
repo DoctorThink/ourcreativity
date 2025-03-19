@@ -1,58 +1,99 @@
 
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
-// Lazy load pages for better performance
+// Improved lazy loading with dynamic imports
 const Index = lazy(() => import("./pages/Index"));
 const BrandStory = lazy(() => import("./pages/BrandStory"));
 const Informasi = lazy(() => import("./pages/Informasi"));
 const Pengumuman = lazy(() => import("./pages/Pengumuman"));
+const Terms = lazy(() => import("./pages/Terms"));
 
-// Loading component
+// Enhanced loading component
 const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-black">
-    <div className="w-16 h-16 relative">
-      <div className="w-full h-full rounded-full border-t-2 border-l-2 border-white animate-spin"></div>
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="w-20 h-20 relative">
+      {/* Outer ring */}
+      <div className="absolute inset-0 rounded-full border-2 border-t-foreground/20 border-r-foreground/10 border-b-transparent border-l-foreground/10 animate-spin"></div>
+      
+      {/* Middle ring */}
+      <div className="absolute inset-[4px] rounded-full border-2 border-t-foreground/30 border-r-transparent border-b-foreground/10 border-l-transparent animate-spin" style={{ animationDuration: '1.5s', animationDirection: 'reverse' }}></div>
+      
+      {/* Inner content */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 rounded-full bg-white/5 backdrop-blur-md"></div>
+        <div className="w-10 h-10 rounded-full bg-foreground/5 backdrop-blur-xl flex items-center justify-center">
+          <img
+            src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
+            alt="Logo"
+            className="w-6 h-6 object-contain animate-pulse"
+          />
+        </div>
       </div>
     </div>
   </div>
 );
 
-// Create a single QueryClient instance
+// Create a single QueryClient instance with optimized settings
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false, // Improve performance by not refetching on window focus
-      retry: 1, // Reduce number of retries
-      staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
-      cacheTime: 1000 * 60 * 30, // Keep unused data in cache for 30 minutes
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 1000 * 60 * 5,
+      gcTime: 1000 * 60 * 30,
     },
   },
 });
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/brand-story" element={<BrandStory />} />
-            <Route path="/informasi" element={<Informasi />} />
-            <Route path="/pengumuman" element={<Pengumuman />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  // State to track if the app is ready
+  const [isAppReady, setIsAppReady] = useState(false);
+  
+  // Simulate preloading critical resources
+  useEffect(() => {
+    // Preload essential assets
+    const preloadAssets = async () => {
+      // Add a slight delay to ensure smooth animations
+      const timer = setTimeout(() => {
+        setIsAppReady(true);
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    };
+    
+    preloadAssets();
+  }, []);
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            {isAppReady ? (
+              <Suspense fallback={<LoadingFallback />}>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/brand-story" element={<BrandStory />} />
+                  <Route path="/informasi" element={<Informasi />} />
+                  <Route path="/pengumuman" element={<Pengumuman />} />
+                  <Route path="/terms" element={<Terms />} />
+                </Routes>
+              </Suspense>
+            ) : (
+              <LoadingFallback />
+            )}
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
