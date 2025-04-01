@@ -1,11 +1,13 @@
 
 import { Suspense, lazy, useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 
 // Improved lazy loading with dynamic imports
 const Index = lazy(() => import("./pages/Index"));
@@ -14,6 +16,9 @@ const Informasi = lazy(() => import("./pages/Informasi"));
 const Pengumuman = lazy(() => import("./pages/Pengumuman"));
 const Terms = lazy(() => import("./pages/Terms"));
 const TimKami = lazy(() => import("./pages/TimKami"));
+const OurAdmin = lazy(() => import("./pages/OurAdmin"));
+const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const RequireAuth = lazy(() => import("./components/admin/RequireAuth"));
 
 // Enhanced loading component
 const LoadingFallback = () => (
@@ -72,28 +77,36 @@ const App = () => {
   
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            {isAppReady ? (
-              <Suspense fallback={<LoadingFallback />}>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/brand-story" element={<BrandStory />} />
-                  <Route path="/informasi" element={<Informasi />} />
-                  <Route path="/pengumuman" element={<Pengumuman />} />
-                  <Route path="/terms" element={<Terms />} />
-                  <Route path="/tim-kami" element={<TimKami />} />
-                </Routes>
-              </Suspense>
-            ) : (
-              <LoadingFallback />
-            )}
-          </BrowserRouter>
-        </TooltipProvider>
-      </ThemeProvider>
+      <AdminAuthProvider>
+        <ThemeProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              {isAppReady ? (
+                <Suspense fallback={<LoadingFallback />}>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/brand-story" element={<BrandStory />} />
+                    <Route path="/informasi" element={<Informasi />} />
+                    <Route path="/pengumuman" element={<Pengumuman />} />
+                    <Route path="/terms" element={<Terms />} />
+                    <Route path="/tim-kami" element={<TimKami />} />
+                    <Route path="/admin-login" element={<AdminLogin />} />
+                    <Route path="/our-admin" element={
+                      <RequireAuth>
+                        <OurAdmin />
+                      </RequireAuth>
+                    } />
+                  </Routes>
+                </Suspense>
+              ) : (
+                <LoadingFallback />
+              )}
+            </BrowserRouter>
+          </TooltipProvider>
+        </ThemeProvider>
+      </AdminAuthProvider>
     </QueryClientProvider>
   );
 };
