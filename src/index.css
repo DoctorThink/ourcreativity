@@ -80,6 +80,58 @@
   }
 }
 
+@layer components {
+  /* Card styles */
+  .card {
+    @apply bg-surface border border-border rounded-lg p-6 transition-all duration-300;
+  }
+
+  .card:hover {
+    @apply border-accent-blue/30 bg-surface-hover;
+  }
+
+  /* Button styles */
+  .btn {
+    @apply font-medium text-base px-6 py-3 rounded transition-all duration-200 inline-flex items-center justify-center;
+  }
+
+  .btn-solid {
+    @apply bg-gradient-to-r from-accent-blue to-accent-teal text-background border-0;
+  }
+
+  .btn-solid:hover {
+    @apply -translate-y-0.5 shadow-lg;
+    box-shadow: 0 10px 15px -3px rgba(51, 195, 240, 0.2);
+  }
+
+  .btn-outline {
+    @apply bg-transparent text-foreground border border-border;
+  }
+
+  .btn-outline:hover {
+    @apply border-accent-blue text-accent-blue;
+  }
+
+  /* Text link */
+  .text-link {
+    @apply text-accent-blue no-underline relative transition-colors duration-200;
+  }
+
+  .text-link::after {
+    content: '';
+    @apply absolute w-full h-px -bottom-0.5 left-0 scale-x-0 origin-bottom-right transition-transform duration-300;
+    background-color: var(--accent-blue);
+  }
+
+  .text-link:hover {
+    @apply text-accent-teal;
+  }
+
+  .text-link:hover::after {
+    @apply scale-x-100 origin-bottom-left;
+  }
+}
+
 /* Smooth scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -96,58 +148,6 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--surface-active);
-}
-
-/* Component styles */
-
-/* Button styles */
-.btn {
-  @apply font-medium text-base px-6 py-3 rounded transition-all duration-200 inline-flex items-center justify-center;
-}
-
-.btn-solid {
-  @apply bg-gradient-to-r from-accent-blue to-accent-teal text-background border-0;
-}
-
-.btn-solid:hover {
-  @apply -translate-y-0.5 shadow-lg;
-  box-shadow: 0 10px 15px -3px rgba(51, 195, 240, 0.2);
-}
-
-.btn-outline {
-  @apply bg-transparent text-foreground border border-border;
-}
-
-.btn-outline:hover {
-  @apply border-accent-blue text-accent-blue;
-}
-
-/* Text link */
-.text-link {
-  @apply text-accent-blue no-underline relative transition-colors duration-200;
-}
-
-.text-link::after {
-  content: '';
-  @apply absolute w-full h-px -bottom-0.5 left-0 scale-x-0 origin-bottom-right transition-transform duration-300;
-  background-color: var(--accent-blue);
-}
-
-.text-link:hover {
-  @apply text-accent-teal;
-}
-
-.text-link:hover::after {
-  @apply scale-x-100 origin-bottom-left;
-}
-
-/* Card styles */
-.card {
-  @apply bg-surface border border-border rounded-lg p-6 transition-all duration-300;
-}
-
-.card:hover {
-  @apply border-accent-blue/30 bg-surface-hover;
 }
 
 /* Layout helpers */

@@ -22,7 +22,7 @@ export default {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border) / <alpha-value>)",
+        border: "var(--border)",
         input: "hsl(var(--input) / <alpha-value>)",
         ring: "hsl(var(--ring) / <alpha-value>)",
         background: {
@@ -31,7 +31,9 @@ export default {
         },
         foreground: {
           DEFAULT: "var(--foreground)",
-          dark: "#FFFFFF"
+          dark: "#FFFFFF",
+          muted: "var(--foreground-muted)",
+          subtle: "var(--foreground-subtle)"
         },
         primary: {
           DEFAULT: "#E5DEFF",
@@ -42,6 +44,11 @@ export default {
           DEFAULT: "var(--secondary)",
           foreground: "var(--secondary-foreground)",
           dark: "#2C2C2E"
+        },
+        surface: {
+          DEFAULT: "var(--surface)",
+          hover: "var(--surface-hover)",
+          active: "var(--surface-active)"
         },
         accent: {
           DEFAULT: "#FEC6A1",
