@@ -1,3 +1,4 @@
+/* src/index.css */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
@@ -13,8 +14,8 @@
     --secondary-foreground: #FFFFFF;
     --border: #2C2C2E;
     --input: #2C2C2E;
-    --ring: #E5DEFF;
-    
+    --ring: #E5DEFF; /* Lavender accent often used for rings/focus */
+
     --foreground-rgb: 255, 255, 255;
     --background-rgb: 28, 28, 30;
 
@@ -28,20 +29,23 @@
   }
 
   *, *::before, *::after {
-    transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    /* General smooth transitions for theme changes or minor adjustments */
+    transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    /* Note: Specific hover/animation transitions are often handled by utility classes or Framer Motion */
   }
 
   html {
     scroll-behavior: smooth;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Prevent horizontal scroll */
   }
-  
+
   body {
     @apply bg-background text-foreground font-serif antialiased overflow-x-hidden;
+    /* Default font is Serif (Playfair Display) */
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
+    @apply font-serif; /* Reinforce serif for headings */
   }
 
   /* Improved Smooth Scrolling */
@@ -53,6 +57,18 @@
     html {
       scroll-behavior: auto;
     }
+    /* Optionally disable animations globally here if needed */
+    *, *::before, *::after {
+       animation-duration: 0.01ms !important;
+       animation-iteration-count: 1 !important;
+       transition-duration: 0.01ms !important;
+       scroll-behavior: auto !important;
+     }
+  }
+
+  /* Ensure elements specifically wanting sans-serif get it */
+  .font-sans {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Define Inter with fallbacks */
   }
 }
 
@@ -60,18 +76,18 @@
 .home-title {
   background: linear-gradient(
     to right,
-    #ffffff,
-    #9B6DFF,
-    #FEC6A1,
-    #8A898C,
-    #33C3F0,
-    #ffffff
+    #ffffff,        /* White */
+    #9B6DFF,        /* Lavender/Amethyst */
+    #FEC6A1,        /* Peach */
+    #40E0D0,        /* Turquoise/Mint */
+    #FFD1DC,        /* Soft Pink */
+    #ffffff         /* White */
   );
-  background-size: 300% 300%;
+  background-size: 400% 400%; /* Larger size for smoother gradient shift */
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  animation: gradientTextAnimation 8s ease infinite;
+  animation: gradientTextAnimation 10s ease infinite; /* Slower animation */
 }
 
 @keyframes gradientTextAnimation {
@@ -80,66 +96,47 @@
   100% { background-position: 0% 50%; }
 }
 
-/* Enhanced Depth Effects */
+/* Enhanced Depth Effects (Using Shadows) */
 .depth-layer-1 {
-  transform: translateZ(var(--depth-1));
+  /* transform: translateZ(var(--depth-1)); /* Optional: Use if perspective is set */
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
 }
-
 .depth-layer-2 {
-  transform: translateZ(var(--depth-2));
+  /* transform: translateZ(var(--depth-2)); */
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
 }
-
 .depth-layer-3 {
-  transform: translateZ(var(--depth-3));
+  /* transform: translateZ(var(--depth-3)); */
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
 }
-
 .depth-layer-4 {
-  transform: translateZ(var(--depth-4));
+  /* transform: translateZ(var(--depth-4)); */
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
-
 .depth-layer-5 {
-  transform: translateZ(var(--depth-5));
+  /* transform: translateZ(var(--depth-5)); */
   box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.6);
 }
 
 /* Enhanced text shadows */
-.text-shadow-sm {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.text-shadow-md {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-}
-
-.text-shadow-lg {
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
-}
-
-.text-shadow-xl {
-  text-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
-}
+.text-shadow-sm { text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
+.text-shadow-md { text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); }
+.text-shadow-lg { text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); }
+.text-shadow-xl { text-shadow: 0 8px 16px rgba(0, 0, 0, 0.8); }
 
 /* Topographic Layer Styles */
 .topo-layer {
   position: relative;
   overflow: hidden;
 }
-
 .topo-layer::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,10 C30,20 70,20 100,10 L100,100 L0,100 Z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+  /* SVG for subtle wavy lines */
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,10 C30,20 70,20 100,10 M0,30 C30,40 70,40 100,30 M0,50 C30,60 70,60 100,50 M0,70 C30,80 70,80 100,70 M0,90 C30,100 70,100 100,90' stroke='%23ffffff' stroke-width='0.5' fill='none' stroke-opacity='0.05'/%3E%3C/svg%3E");
   background-size: 100px 100px;
-  opacity: 0.1;
-}
-
-.topo-layer-dark::before {
-  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,10 C30,20 70,20 100,10 L100,100 L0,100 Z' fill='%23000000' fill-opacity='0.1'/%3E%3C/svg%3E");
+  opacity: 0.2; /* Slightly more visible */
 }
 
 /* Improved Depth Effects for Cards and Panels */
@@ -148,232 +145,156 @@
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
-.card-depth:before {
+.card-depth:before { /* Subtle top-left shine on hover */
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 0% 0%, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 40%);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
+  pointer-events: none; /* Don't block interactions */
 }
-
 .card-depth:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  /* transform: translateY(-4px); /* Handled by Framer Motion better */
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 0 15px rgba(var(--foreground-rgb), 0.05); /* Base shadow + subtle white glow */
 }
-
 .card-depth:hover:before {
   opacity: 1;
 }
 
-/* Enhanced Smooth Animations */
+/* Standard Floating Animations */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
-
 @keyframes float-slow {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-5px); }
 }
+.animate-float { animation: float 6s ease-in-out infinite; will-change: transform; }
+.animate-float-slow { animation: float-slow 8s ease-in-out infinite; will-change: transform; }
+/* Add other float variations (float-x, float-diagonal) if used */
 
-@keyframes float-x {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(10px); }
+/* Soft pulsing animation */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
 }
+.animate-pulse-soft { animation: pulse-soft 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 
-@keyframes float-diagonal {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(5px, -5px); }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-  will-change: transform;
-}
-
-.animate-float-slow {
-  animation: float-slow 8s ease-in-out infinite;
-  will-change: transform;
-}
-
-.animate-float-x {
-  animation: float-x 7s ease-in-out infinite;
-  will-change: transform;
-}
-
-.animate-float-diagonal {
-  animation: float-diagonal 9s ease-in-out infinite;
-  will-change: transform;
-}
-
-/* Parallax scrolling effects */
-.parallax-bg {
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
 
 /* Improved Smooth Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgba(var(--background-rgb), 0.8); backdrop-filter: blur(10px); }
+::-webkit-scrollbar-thumb { background-color: rgba(var(--foreground-rgb), 0.2); border-radius: 4px; border: 1px solid rgba(var(--foreground-rgb), 0.1);}
+::-webkit-scrollbar-thumb:hover { background-color: rgba(var(--foreground-rgb), 0.3); }
+/* For Firefox */
+* { scrollbar-width: thin; scrollbar-color: rgba(var(--foreground-rgb), 0.2) rgba(var(--background-rgb), 0.8); }
 
-::-webkit-scrollbar-track {
-  @apply bg-background backdrop-blur-md;
-}
 
-::-webkit-scrollbar-thumb {
-  background-color: rgba(var(--foreground-rgb), 0.2);
-  @apply rounded-full backdrop-blur-md;
+/* Background Patterns */
+.geometric-dot-pattern {
+  background-image: radial-gradient(rgba(var(--foreground-rgb), 0.08) 1px, transparent 1px); /* Slightly more visible dots */
+  background-size: 25px 25px;
 }
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(var(--foreground-rgb), 0.3);
-}
-
-/* Curved patterns for backgrounds */
-.curved-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,50 C25,20 75,80 100,50 L100,100 L0,100 Z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
-  background-size: 100px 100px;
-}
-
-/* Community clusters visualization */
-.community-node {
-  position: relative;
-}
-
-.community-node:after {
-  content: '';
-  position: absolute;
-  width: 150%;
-  height: 150%;
-  border-radius: 50%;
-  border: 1px solid rgba(var(--foreground-rgb), 0.1);
-  top: -25%;
-  left: -25%;
-  animation: pulse 3s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 0.3; }
-  50% { transform: scale(1.1); opacity: 0.5; }
-}
-
-.community-path {
-  position: absolute;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(var(--foreground-rgb), 0.1), transparent);
-  transform-origin: left center;
-  animation: pathPulse 4s ease-in-out infinite;
-}
-
-@keyframes pathPulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.6; }
-}
-
-/* Enhanced animations for page transitions */
-.page-transition-enter {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.page-transition-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.3s, transform 0.3s;
-}
-
-.page-transition-exit {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.page-transition-exit-active {
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.3s, transform 0.3s;
+.geometric-line-pattern {
+  background-image:
+    linear-gradient(to right, rgba(var(--foreground-rgb), 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(var(--foreground-rgb), 0.05) 1px, transparent 1px);
+  background-size: 30px 30px; /* Larger grid */
 }
 
 /* Text styles for improved readability */
-.text-readable {
-  letter-spacing: 0.01em;
-  line-height: 1.6;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-}
+.text-readable { letter-spacing: 0.01em; line-height: 1.6; }
+.text-enhanced { letter-spacing: 0.02em; line-height: 1.7; }
 
-.text-enhanced {
-  letter-spacing: 0.02em;
-  line-height: 1.8;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* Glass effect */
+/* Glass effect (can be applied via Tailwind utilities if preferred) */
 .glass {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-  @apply backdrop-blur-md border;
-}
-
-/* New geometric patterns and animations */
-.geometric-dot-pattern {
-  background-image: radial-gradient(rgba(var(--foreground-rgb), 0.1) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.geometric-line-pattern {
-  background-image: 
-    linear-gradient(to right, rgba(var(--foreground-rgb), 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(var(--foreground-rgb), 0.05) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.geometric-circle {
-  @apply relative overflow-hidden;
-}
-
-.geometric-circle::before {
-  content: '';
+  background-color: rgba(var(--foreground-rgb), 0.03); /* Subtler background */
   border-color: rgba(var(--foreground-rgb), 0.1);
-  @apply absolute border rounded-full animate-pulse-soft;
-  width: 150%;
-  height: 150%;
-  top: -25%;
-  left: -25%;
+  @apply backdrop-blur-lg border rounded-xl; /* Example usage with Tailwind */
 }
 
-/* Micro-interaction button effects */
-.btn-hover-effect {
-  @apply relative overflow-hidden transition-all duration-300;
+/* ----------------------------------------------- */
+/* ---- ADDED UTILITIES FOR BENTO GRID -------- */
+/* ----------------------------------------------- */
+@layer utilities {
+  /* 1. Shimmer Effect */
+  .bg-shimmer-gradient {
+    background-image: linear-gradient(
+      -75deg,
+      rgba(255, 255, 255, 0) 30%, /* Start later */
+      rgba(255, 255, 255, 0.1) 50%, /* Tighter highlight */
+      rgba(255, 255, 255, 0) 70%  /* End sooner */
+    );
+    background-size: 200% 100%; /* Keep size for movement */
+    pointer-events: none; /* Allow clicks through shimmer */
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2.5s infinite linear; /* Slightly slower */
+  }
+
+  /* 2. Glow Effects (Applied via group-hover) */
+  /* Base transition for smooth glow appearance/disappearance */
+  .group .transition-glow {
+    transition: box-shadow 0.4s ease-in-out;
+  }
+
+  .group-hover\:glow-lavender .transition-glow {
+     box-shadow: 0 0 15px 3px rgba(155, 109, 255, 0.4),
+                 0 0 25px 8px rgba(155, 109, 255, 0.2);
+  }
+   .group-hover\:glow-mint .transition-glow {
+     box-shadow: 0 0 15px 3px rgba(64, 224, 208, 0.4),
+                 0 0 25px 8px rgba(64, 224, 208, 0.2);
+   }
+    .group-hover\:glow-peach .transition-glow {
+     box-shadow: 0 0 15px 3px rgba(255, 127, 80, 0.4),
+                 0 0 25px 8px rgba(255, 127, 80, 0.2);
+   }
+    .group-hover\:glow-softPink .transition-glow {
+      box-shadow: 0 0 15px 3px rgba(255, 182, 193, 0.4),
+                  0 0 25px 8px rgba(255, 182, 193, 0.2);
+   }
+   .group-hover\:glow-turquoise .transition-glow {
+      box-shadow: 0 0 15px 3px rgba(64, 224, 208, 0.4), /* Using mint color as example */
+                  0 0 25px 8px rgba(64, 224, 208, 0.2);
+   }
+   /* Add other glow colors (e.g., amber, amethyst) using their specific RGB/Hex values */
+   /* .group-hover\:glow-amethyst .transition-glow { box-shadow: 0 0 15px 3px rgba(155, 109, 255, 0.4), ... } */
+   /* .group-hover\:glow-amber .transition-glow { box-shadow: 0 0 15px 3px rgba(255, 191, 0, 0.4), ... } */
+
+  /* 3. Morphing Blob Animation */
+  @keyframes morph {
+    0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(5deg) scale(1.02); }
+    50% { border-radius: 30% 70% 70% 30% / 30% 60% 40% 60%; transform: rotate(-5deg) scale(1.05); }
+    75% { transform: rotate(2deg) scale(0.98); }
+  }
+
+  .morphing-blob {
+    animation: morph 10s ease-in-out infinite alternate; /* Added alternate direction */
+    /* Initial shape */
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    will-change: border-radius, transform; /* Optimize animation */
+    transition: border-radius 0.5s ease-in-out; /* Smooth transitions between keyframes */
+  }
 }
 
-.btn-hover-effect:hover {
-  @apply translate-y-[-2px] shadow-lg;
-}
+/* --- End of Added Utilities --- */
 
-.btn-hover-effect:hover {
-  @apply shadow-white/5;
-}
-
-.btn-hover-effect::after {
-  content: '';
-  background-color: rgba(var(--foreground-rgb), 0);
-  @apply absolute inset-0 opacity-0 transition-opacity duration-300;
-}
-
-.btn-hover-effect:hover::after {
-  @apply opacity-10;
-}
-
-/* 3D text effect only for special headings */
-.text-3d {
-  text-shadow: 
-    0 1px 0 rgba(var(--foreground-rgb), 0.6),
-    0 2px 0 rgba(var(--foreground-rgb), 0.5),
-    0 3px 0 rgba(var(--foreground-rgb), 0.4),
-    0 4px 0 rgba(var(--foreground-rgb), 0.3),
-    0 5px 10px rgba(0, 0, 0, 0.7);
-}
+/* --- Deprecated or Less Used Styles (Review if needed) --- */
+/* .parallax-bg { background-attachment: fixed; ... } /* Parallax can be performance intensive */
+/* .community-node, .community-path { ... } /* Specific visualization styles */
+/* .page-transition-* { ... } /* Page transitions often handled by routing library/Framer Motion */
+/* .text-3d { ... } /* Can look dated if overused */
+/* .btn-hover-effect { ... } /* Hover effects now handled by group-hover utilities or Framer Motion */
