@@ -223,9 +223,13 @@
     animation: shimmer 2.5s infinite linear;
   }
 
-  /* Style for the "Coming Soon" Label */
+  /* Style for the "Coming Soon" Label -- CORRECTED */
    .coming-soon-label {
-      @apply absolute bottom-2 right-2 text-[10px] font-sans uppercase tracking-wider bg-foreground/10 text-foreground/50 px-1.5 py-0.5 rounded;
+      /* Keep Tailwind utilities for layout/styling */
+      @apply absolute bottom-2 right-2 text-[10px] font-sans uppercase tracking-wider px-1.5 py-0.5 rounded;
+      /* Use direct CSS with CSS variables for color/opacity */
+      background-color: rgba(var(--foreground-rgb), 0.1); /* Equivalent to bg-foreground/10 */
+      color: rgba(var(--foreground-rgb), 0.5);          /* Equivalent to text-foreground/50 */
    }
 
   /* Text styles */
