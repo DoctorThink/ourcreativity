@@ -1,28 +1,24 @@
 // src/pages/Index.tsx
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button"; // Keep button for potential use inside tiles if needed
-import { BookOpen, Info, Bell, ScrollText, Users, Palette, Feather, Sparkles } from "lucide-react"; // Added more icons for variety
-// Removed useTheme, useEffect, useState, useRef, useScroll, useTransform as scroll-based nav hiding is removed
+// Removed Button import as it's not directly used for tiles
+import { BookOpen, Info, Bell, ScrollText, Users, Palette, Feather, Clock } from "lucide-react"; // Added Feather for Karya, Clock for Coming Soon
 
 const Index = () => {
   const navigate = useNavigate();
-  // theme removed as it wasn't directly used in the render logic here, assuming handled globally or via CSS vars
 
   // --- Animation Variants ---
-  // Stagger animation for the grid container
   const gridContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.08, // Faster stagger for grid
+        staggerChildren: 0.08,
         delayChildren: 0.2,
       }
     }
   };
 
-  // Animation for individual grid items
   const gridItemVariants = {
     hidden: { opacity: 0, scale: 0.95, y: 10 },
     visible: {
@@ -36,60 +32,75 @@ const Index = () => {
     }
   };
 
+  // --- Enhanced Hover Animation ---
+  const interactiveHover = {
+    y: -6, // Slightly more lift
+    scale: 1.04, // Slightly more scale
+    rotate: 1, // Subtle tilt
+    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.4)", // Enhance shadow on hover
+    transition: { type: "spring", stiffness: 300, damping: 15 } // Springy feel
+  };
+
+  const interactiveTap = {
+    scale: 0.96,
+    transition: { type: "spring", stiffness: 400, damping: 20 }
+  };
+
   // --- Bento Grid Tile Content & Configuration ---
-  // Combined static and dynamic tiles definition
+  // Order matters for visual layout in the grid
   const bentoTiles = [
     {
       id: "title",
-      colSpan: "col-span-2 md:col-span-3", // Spans more columns
-      rowSpan: "row-span-2 md:row-span-2", // Spans more rows
+      colSpan: "col-span-2 md:col-span-3",
+      rowSpan: "row-span-2 md:row-span-2",
       content: (
         <div className="flex flex-col justify-center h-full p-6 text-left">
-           <motion.h1
+          <motion.h1
             className="text-4xl lg:text-6xl font-serif font-bold mb-3 text-foreground leading-tight home-title"
-             // Reuse existing title animation if desired, or simplify
-             animate={{
-               textShadow: ["0 0 5px rgba(155,109,255,0.3)", "0 0 10px rgba(155,109,255,0.3)", "0 0 5px rgba(155,109,255,0.3)"]
-             }}
-             transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+            animate={{
+              textShadow: ["0 0 5px rgba(155,109,255,0.3)", "0 0 10px rgba(155,109,255,0.3)", "0 0 5px rgba(155,109,255,0.3)"]
+            }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
           >
-             OUR CREATIVITY
-           </motion.h1>
-           <p className="text-md lg:text-lg text-foreground/80 font-sans max-w-md">
-             Dimana imajinasi bertemu dengan inovasi. Bergabunglah dengan komunitas kreatif kami.
-           </p>
+            OUR CREATIVITY
+          </motion.h1>
+          <p className="text-md lg:text-lg text-foreground/80 font-sans max-w-md">
+            Dimana imajinasi bertemu dengan inovasi. Bergabunglah dengan komunitas kreatif kami.
+          </p>
         </div>
       ),
-      bgColor: "bg-foreground/5", // Standard background
-      hoverEffect: "scale-102",
+      bgColor: "bg-foreground/5",
+      isInteractive: false, // Non-clickable title block
     },
     {
       id: "logo-fish",
       colSpan: "col-span-1",
       rowSpan: "row-span-1",
       content: (
-         <div className="flex items-center justify-center h-full">
-            <img
-              src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
-              alt="Fish Logo"
-              className="w-16 h-16 md:w-20 md:h-20 object-contain transition-transform duration-300 group-hover:scale-110"
-              loading="eager"
-            />
-         </div>
+        <div className="flex items-center justify-center h-full">
+          <motion.img // Added motion here for potential hover on logo
+            src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
+            alt="Fish Logo"
+            className="w-16 h-16 md:w-20 md:h-20 object-contain"
+            loading="eager"
+            whileHover={{ scale: 1.1, rotate: -5 }} // Simple hover for logo
+            transition={{ type: "spring", stiffness: 300 }}
+          />
+        </div>
       ),
-      bgColor: "bg-gradient-to-br from-lavender/10 to-amethyst/10", // Accent background
-      hoverEffect: "rotate-3 scale-105",
+      bgColor: "bg-gradient-to-br from-lavender/10 to-amethyst/10",
+      isInteractive: false, // Make logo non-clickable, just visual
     },
-     {
+    {
       id: "cerita",
       icon: BookOpen,
       text: "Cerita Kami",
       href: "/brand-story",
       colSpan: "col-span-1 md:col-span-1",
       rowSpan: "row-span-1",
-      bgColor: "bg-gradient-to-br from-lavender/5 to-amethyst/5", // Subtle accent gradient
-      decorColor: "border-lavender",
-      hoverEffect: "scale-105 glow-lavender", // Custom glow class needed in CSS if used
+      bgColor: "bg-gradient-to-br from-lavender/5 to-amethyst/5",
+      glowColor: "lavender", // Define glow color reference for CSS
+      isInteractive: true,
     },
     {
       id: "tim",
@@ -99,8 +110,8 @@ const Index = () => {
       colSpan: "col-span-1 md:col-span-1",
       rowSpan: "row-span-1",
       bgColor: "bg-gradient-to-br from-mint/5 to-turquoise/5",
-      decorColor: "border-mint",
-      hoverEffect: "scale-105 glow-mint",
+      glowColor: "mint",
+      isInteractive: true,
     },
     {
       id: "syarat",
@@ -110,10 +121,21 @@ const Index = () => {
       colSpan: "col-span-1 md:col-span-1",
       rowSpan: "row-span-1",
       bgColor: "bg-gradient-to-br from-peach/5 to-coral/5",
-      decorColor: "border-peach",
-      hoverEffect: "scale-105 glow-peach",
+      glowColor: "peach",
+      isInteractive: true,
     },
     {
+      id: "karya", // NEW TILE
+      icon: Feather,
+      text: "Karya",
+      colSpan: "col-span-2", // Spans two columns
+      rowSpan: "row-span-1",
+      bgColor: "bg-foreground/5", // Use a standard muted background
+      glowColor: "foreground", // Use foreground for a white/grey glow
+      isInteractive: false, // Not clickable yet
+      comingSoon: true, // Flag for special rendering
+    },
+     {
       id: "informasi",
       icon: Info,
       text: "Informasi",
@@ -121,8 +143,8 @@ const Index = () => {
       colSpan: "col-span-1 md:col-span-1",
       rowSpan: "row-span-1",
       bgColor: "bg-gradient-to-br from-softPink/5 to-amber/5",
-      decorColor: "border-softPink",
-      hoverEffect: "scale-105 glow-softPink",
+      glowColor: "softPink",
+      isInteractive: true,
     },
     {
       id: "pengumuman",
@@ -132,33 +154,31 @@ const Index = () => {
       colSpan: "col-span-1 md:col-span-1",
       rowSpan: "row-span-1",
       bgColor: "bg-gradient-to-br from-turquoise/5 to-mint/5",
-      decorColor: "border-turquoise",
-      hoverEffect: "scale-105 glow-turquoise",
+      glowColor: "turquoise",
+      isInteractive: true,
     },
      {
-      id: "visual-accent", // Example of a purely visual tile
+      id: "visual-accent",
       colSpan: "col-span-1 md:col-span-1",
       rowSpan: "row-span-1",
       content: (
         <div className="flex items-center justify-center h-full relative overflow-hidden">
-           {/* Example: Animated color blobs */}
-           <motion.div
-             className="absolute w-1/2 h-1/2 bg-lavender/30 rounded-full blur-lg -top-1/4 -left-1/4"
-             animate={{ scale: [1, 1.2, 1], opacity: [0.7, 0.5, 0.7] }}
-             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-           />
-           <motion.div
-             className="absolute w-1/2 h-1/2 bg-mint/30 rounded-full blur-lg -bottom-1/4 -right-1/4"
-             animate={{ scale: [1, 1.2, 1], opacity: [0.6, 0.8, 0.6] }}
-             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-           />
-           <Palette className="w-8 h-8 text-foreground/50 relative z-10" />
+          <motion.div
+            className="absolute w-3/4 h-3/4 bg-lavender/30 rounded-full blur-xl" // Slightly smaller, more blur
+            animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0.4, 0.6] }}
+            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute w-2/3 h-2/3 bg-mint/30 rounded-full blur-xl" // Slightly smaller
+            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.7, 0.5] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+          />
+          <Palette className="w-8 h-8 text-foreground/60 relative z-10" />
         </div>
       ),
       bgColor: "bg-foreground/5",
-      hoverEffect: "scale-103",
+      isInteractive: false,
     },
-    // Add more tiles as needed (e.g., quotes, specific group links, etc.)
   ];
 
   return (
@@ -166,10 +186,9 @@ const Index = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen overflow-x-hidden relative perspective-1000 bg-background" // Keep bg-background
-      // ref removed unless needed for other scroll effects later
+      className="min-h-screen overflow-x-hidden relative perspective-1000 bg-background"
     >
-      {/* --- Re-usable Background Elements (Keep the cool background!) --- */}
+      {/* --- Background Elements (Unchanged from previous version) --- */}
       <div className="fixed inset-0 -z-10">
         <motion.div
           className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-amethyst/5 -top-[20%] -right-[20%]"
@@ -189,21 +208,20 @@ const Index = () => {
         <div className="absolute inset-0 topo-layer opacity-30" />
         <div className="absolute inset-0 geometric-dot-pattern opacity-30" />
         <div className="absolute inset-0 geometric-line-pattern opacity-20" />
-        {/* Keep other background elements if desired (lines, floating shapes etc.) */}
-         <motion.div
+        <motion.div
           className="absolute top-[15%] left-[15%] w-16 h-16 border border-lavender/20 rounded-full"
           animate={{ y: [0, -10, 0] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           style={{ transformStyle: "preserve-3d", transform: "translateZ(30px)" }}
         />
-         <motion.div
+        <motion.div
           className="absolute bottom-[25%] right-[25%] w-24 h-24 border border-mint/20 rounded-full"
           animate={{ y: [0, -15, 0] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
           style={{ transformStyle: "preserve-3d", transform: "translateZ(20px)" }}
         />
-         <motion.div
-          className="absolute top-[40%] right-[10%] w-12 h-12 border border-peach/20 morphing-blob" // Ensure .morphing-blob CSS exists if needed
+        <motion.div
+          className="absolute top-[40%] right-[10%] w-12 h-12 border border-peach/20 morphing-blob"
           animate={{ y: [0, -10, 0], rotate: [0, 10, 0] }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
           style={{ transformStyle: "preserve-3d", transform: "translateZ(40px)" }}
@@ -211,71 +229,82 @@ const Index = () => {
       </div>
 
       {/* --- Main Content Area: Bento Grid --- */}
-      <div className="relative z-10 container mx-auto px-4 py-16 md:py-24 min-h-screen flex items-center"> {/* Center grid vertically */}
+      <div className="relative z-10 container mx-auto px-4 py-16 md:py-24 min-h-screen flex items-center">
         <motion.div
-          className="grid grid-cols-3 md:grid-cols-5 gap-4 md:gap-6 w-full auto-rows-[120px] md:auto-rows-[150px]" // Define grid structure
+          // Updated grid definition for potentially more columns if needed, adjust cols-5 if layout changes
+          className="grid grid-cols-3 md:grid-cols-5 gap-4 md:gap-6 w-full auto-rows-[120px] md:auto-rows-[150px]"
           variants={gridContainerVariants}
           initial="hidden"
           animate="visible"
         >
           {bentoTiles.map((tile) => {
-            const { id, colSpan, rowSpan, content, bgColor, decorColor, icon: Icon, text, href, hoverEffect } = tile;
+            const { id, colSpan, rowSpan, content, bgColor, glowColor, icon: Icon, text, href, isInteractive, comingSoon } = tile;
 
-             // Basic hover classes from string
-             const hoverClasses = hoverEffect?.split(' ').map(eff => `group-hover:${eff}`).join(' ') || '';
-
-             // Determine if tile is clickable
-             const isClickable = !!href;
-             const MotionComponent = isClickable ? motion.button : motion.div;
+            const MotionComponent = isInteractive ? motion.button : motion.div;
+            const TagName = isInteractive ? 'button' : 'div'; // Use button tag for interactive elements
 
             return (
               <MotionComponent
                 key={id}
+                layout // Keep layout for potential grid changes
                 variants={gridItemVariants}
-                className={`relative group overflow-hidden rounded-2xl backdrop-blur-lg border border-foreground/10 transition-all duration-300 cursor-pointer ${colSpan} ${rowSpan} ${bgColor} ${hoverClasses} ${isClickable ? '' : 'cursor-default'}`}
-                onClick={isClickable ? () => navigate(href) : undefined}
-                whileHover={isClickable ? { y: -4 } : {}} // Simple lift on hover for clickable
-                whileTap={isClickable ? { scale: 0.97 } : {}}
-                // Apply layout prop for smooth resizing if grid structure changes dynamically
-                layout 
+                className={`relative group ${colSpan} ${rowSpan}`} // Base positioning classes
+                // Apply hover/tap only if interactive and not coming soon
+                whileHover={isInteractive && !comingSoon ? interactiveHover : {}}
+                whileTap={isInteractive && !comingSoon ? interactiveTap : {}}
+                // Navigation logic
+                onClick={isInteractive && !comingSoon && href ? () => navigate(href) : undefined}
+                // Disable button semantics if not interactive
+                {...(!isInteractive && TagName === 'button' ? { disabled: true } : {})}
               >
-                {/* Optional: Decorative border accent */}
-                {decorColor && (
-                   <div className={`absolute -bottom-4 -right-4 w-12 h-12 ${decorColor} rounded-full border opacity-20 group-hover:opacity-30 transition-all duration-500 group-hover:scale-110`} />
-                 )}
-                 {decorColor && (
-                   <div className={`absolute -top-4 -left-4 w-10 h-10 ${decorColor} rounded-full border opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-110`} />
-                 )}
+                {/* Animated Border Wrapper - Target for CSS Animation */}
+                <div className={`animated-border-wrapper h-full w-full rounded-2xl border border-foreground/10 overflow-hidden backdrop-blur-lg transition-colors duration-300 ${bgColor} ${isInteractive && !comingSoon ? 'cursor-pointer' : 'cursor-default'} ${comingSoon ? 'opacity-70' : ''}`}
+                     data-glow-color={glowColor || 'foreground'} // Pass glow color to CSS via data attribute
+                >
+                  {/* Content Area */}
+                  <div className="relative z-10 h-full w-full">
+                    {/* Shimmer effect on hover for INTERACTIVE items */}
+                    {isInteractive && !comingSoon && (
+                      <span className="absolute inset-0 bg-shimmer-gradient bg-[length:200%_100%] opacity-0 group-hover:opacity-10 group-hover:animate-shimmer transition-opacity duration-500" />
+                    )}
 
-                 {/* Shimmer effect on hover for clickable items */}
-                 {isClickable && (
-                    <span className="absolute inset-0 bg-shimmer-gradient bg-[length:200%_100%] opacity-0 group-hover:opacity-10 group-hover:animate-shimmer" /> // Ensure shimmer CSS exists
-                  )}
-
-                {/* Render Icon and Text for navigation tiles */}
-                {Icon && text ? (
-                  <div className="flex flex-col items-center justify-center h-full gap-2 p-4 text-center">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center bg-foreground/10 backdrop-blur-sm transition-all duration-300 group-hover:bg-foreground/20">
-                       <Icon className="w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:scale-110 text-foreground" />
-                     </div>
-                     <span className="text-xs md:text-sm font-serif transition-all duration-300 text-foreground">{text}</span>
+                    {/* Render Icon and Text OR Custom Content OR Coming Soon */}
+                    {comingSoon ? (
+                      // Coming Soon Layout
+                      <div className="flex flex-col items-center justify-center h-full gap-1 p-4 text-center text-foreground/60">
+                         <Icon className="w-8 h-8 md:w-10 md:h-10 mb-1 opacity-80" />
+                         <span className="text-sm md:text-md font-serif font-semibold">{text}</span>
+                         <span className="flex items-center gap-1 text-xs font-sans font-medium text-amber-400/80 mt-1">
+                           <Clock size={12} />
+                           Coming Soon
+                         </span>
+                      </div>
+                    ) : Icon && text ? (
+                      // Standard Icon + Text Layout
+                      <div className="flex flex-col items-center justify-center h-full gap-2 p-4 text-center">
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center bg-foreground/10 backdrop-blur-sm transition-all duration-300 group-hover:bg-foreground/15">
+                          <Icon className="w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:scale-110 text-foreground" />
+                        </div>
+                        <span className="text-xs md:text-sm font-serif transition-all duration-300 text-foreground">{text}</span>
+                      </div>
+                    ) : (
+                      // Custom Content (like title or visual accent)
+                      content
+                    )}
                   </div>
-                ) : (
-                  // Render custom content for non-standard tiles
-                  content
-                )}
+                </div>
               </MotionComponent>
             );
           })}
         </motion.div>
       </div>
 
-      {/* --- Footer (Keep the existing footer) --- */}
+      {/* --- Footer (Unchanged) --- */}
       <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.8 }} // Adjust delay based on grid animation
-          className="absolute bottom-0 left-0 right-0 z-10 pt-8 pb-6 text-center" // Position footer absolutely
+          transition={{ delay: 0.8, duration: 0.8 }}
+          className="absolute bottom-0 left-0 right-0 z-10 pt-8 pb-6 text-center"
         >
          <div className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-full px-6 py-3 inline-block relative overflow-hidden group hover:border-foreground/20 transition-colors duration-300">
             <span className="absolute inset-0 bg-gradient-to-r from-amethyst/0 via-amethyst/5 to-amethyst/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
