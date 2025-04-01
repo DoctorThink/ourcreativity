@@ -19,6 +19,15 @@
     --foreground-rgb: 255, 255, 255;
     --background-rgb: 28, 28, 30;
 
+    /* Accent Color RGB values for animations */
+    --color-lavender-rgb: 155, 109, 255; /* #9B6DFF */
+    --color-mint-rgb: 64, 224, 208;     /* #40E0D0 */
+    --color-peach-rgb: 255, 127, 80;    /* #FF7F50 */
+    --color-softPink-rgb: 255, 182, 193; /* #FFB6C1 approx */
+    --color-turquoise-rgb: 64, 224, 208; /* #40E0D0 - Same as Mint */
+    --color-foreground-glow-rgb: 200, 200, 210; /* Subtle greyish white for foreground glow */
+
+
     /* Depth variables for layers */
     --depth-0: 0px;
     --depth-1: 5px;
@@ -29,26 +38,22 @@
   }
 
   *, *::before, *::after {
-    /* General smooth transitions for theme changes or minor adjustments */
     transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    /* Note: Specific hover/animation transitions are often handled by utility classes or Framer Motion */
   }
 
   html {
     scroll-behavior: smooth;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    overflow-x: hidden;
   }
 
   body {
     @apply bg-background text-foreground font-serif antialiased overflow-x-hidden;
-    /* Default font is Serif (Playfair Display) */
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif; /* Reinforce serif for headings */
+    @apply font-serif;
   }
 
-  /* Improved Smooth Scrolling */
   html {
     scroll-behavior: smooth;
   }
@@ -57,7 +62,6 @@
     html {
       scroll-behavior: auto;
     }
-    /* Optionally disable animations globally here if needed */
     *, *::before, *::after {
        animation-duration: 0.01ms !important;
        animation-iteration-count: 1 !important;
@@ -66,28 +70,22 @@
      }
   }
 
-  /* Ensure elements specifically wanting sans-serif get it */
   .font-sans {
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Define Inter with fallbacks */
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
 }
 
-/* Homepage Title Animation - Only for OUR CREATIVITY on homepage */
+/* Homepage Title Animation */
 .home-title {
   background: linear-gradient(
     to right,
-    #ffffff,        /* White */
-    #9B6DFF,        /* Lavender/Amethyst */
-    #FEC6A1,        /* Peach */
-    #40E0D0,        /* Turquoise/Mint */
-    #FFD1DC,        /* Soft Pink */
-    #ffffff         /* White */
+    #ffffff, #9B6DFF, #FEC6A1, #40E0D0, #FFD1DC, #ffffff
   );
-  background-size: 400% 400%; /* Larger size for smoother gradient shift */
+  background-size: 400% 400%;
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  animation: gradientTextAnimation 10s ease infinite; /* Slower animation */
+  animation: gradientTextAnimation 10s ease infinite;
 }
 
 @keyframes gradientTextAnimation {
@@ -96,205 +94,163 @@
   100% { background-position: 0% 50%; }
 }
 
-/* Enhanced Depth Effects (Using Shadows) */
-.depth-layer-1 {
-  /* transform: translateZ(var(--depth-1)); /* Optional: Use if perspective is set */
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
-}
-.depth-layer-2 {
-  /* transform: translateZ(var(--depth-2)); */
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
-}
-.depth-layer-3 {
-  /* transform: translateZ(var(--depth-3)); */
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
-}
-.depth-layer-4 {
-  /* transform: translateZ(var(--depth-4)); */
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-}
-.depth-layer-5 {
-  /* transform: translateZ(var(--depth-5)); */
-  box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.6);
-}
-
-/* Enhanced text shadows */
+/* Existing Depth & Shadow Styles */
+.depth-layer-1 { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1); }
+.depth-layer-2 { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1); }
+.depth-layer-3 { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.1); }
+.depth-layer-4 { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+.depth-layer-5 { box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.6); }
 .text-shadow-sm { text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
 .text-shadow-md { text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); }
 .text-shadow-lg { text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); }
 .text-shadow-xl { text-shadow: 0 8px 16px rgba(0, 0, 0, 0.8); }
 
-/* Topographic Layer Styles */
-.topo-layer {
-  position: relative;
-  overflow: hidden;
-}
+/* Existing Background Effects */
+.topo-layer { position: relative; overflow: hidden; }
 .topo-layer::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  /* SVG for subtle wavy lines */
+  content: ''; position: absolute; inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,10 C30,20 70,20 100,10 M0,30 C30,40 70,40 100,30 M0,50 C30,60 70,60 100,50 M0,70 C30,80 70,80 100,70 M0,90 C30,100 70,100 100,90' stroke='%23ffffff' stroke-width='0.5' fill='none' stroke-opacity='0.05'/%3E%3C/svg%3E");
-  background-size: 100px 100px;
-  opacity: 0.2; /* Slightly more visible */
+  background-size: 100px 100px; opacity: 0.2;
 }
-
-/* Improved Depth Effects for Cards and Panels */
-.card-depth {
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.card-depth:before { /* Subtle top-left shine on hover */
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 0% 0%, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 40%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none; /* Don't block interactions */
-}
-.card-depth:hover {
-  /* transform: translateY(-4px); /* Handled by Framer Motion better */
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 0 15px rgba(var(--foreground-rgb), 0.05); /* Base shadow + subtle white glow */
-}
-.card-depth:hover:before {
-  opacity: 1;
-}
-
-/* Standard Floating Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-@keyframes float-slow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-.animate-float { animation: float 6s ease-in-out infinite; will-change: transform; }
-.animate-float-slow { animation: float-slow 8s ease-in-out infinite; will-change: transform; }
-/* Add other float variations (float-x, float-diagonal) if used */
-
-/* Soft pulsing animation */
-@keyframes pulse-soft {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.8; }
-}
-.animate-pulse-soft { animation: pulse-soft 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-
-
-/* Improved Smooth Scrollbar */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: rgba(var(--background-rgb), 0.8); backdrop-filter: blur(10px); }
-::-webkit-scrollbar-thumb { background-color: rgba(var(--foreground-rgb), 0.2); border-radius: 4px; border: 1px solid rgba(var(--foreground-rgb), 0.1);}
-::-webkit-scrollbar-thumb:hover { background-color: rgba(var(--foreground-rgb), 0.3); }
-/* For Firefox */
-* { scrollbar-width: thin; scrollbar-color: rgba(var(--foreground-rgb), 0.2) rgba(var(--background-rgb), 0.8); }
-
-
-/* Background Patterns */
 .geometric-dot-pattern {
-  background-image: radial-gradient(rgba(var(--foreground-rgb), 0.08) 1px, transparent 1px); /* Slightly more visible dots */
+  background-image: radial-gradient(rgba(var(--foreground-rgb), 0.08) 1px, transparent 1px);
   background-size: 25px 25px;
 }
 .geometric-line-pattern {
   background-image:
     linear-gradient(to right, rgba(var(--foreground-rgb), 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(var(--foreground-rgb), 0.05) 1px, transparent 1px);
-  background-size: 30px 30px; /* Larger grid */
+  background-size: 30px 30px;
 }
 
-/* Text styles for improved readability */
+/* Existing Animations */
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes float-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+.animate-float { animation: float 6s ease-in-out infinite; will-change: transform; }
+.animate-float-slow { animation: float-slow 8s ease-in-out infinite; will-change: transform; }
+@keyframes pulse-soft { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
+.animate-pulse-soft { animation: pulse-soft 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@keyframes morph {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(5deg) scale(1.02); }
+  50% { border-radius: 30% 70% 70% 30% / 30% 60% 40% 60%; transform: rotate(-5deg) scale(1.05); }
+  75% { transform: rotate(2deg) scale(0.98); }
+}
+.morphing-blob {
+  animation: morph 10s ease-in-out infinite alternate;
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  will-change: border-radius, transform;
+  transition: border-radius 0.5s ease-in-out;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgba(var(--background-rgb), 0.8); backdrop-filter: blur(10px); }
+::-webkit-scrollbar-thumb { background-color: rgba(var(--foreground-rgb), 0.2); border-radius: 4px; border: 1px solid rgba(var(--foreground-rgb), 0.1);}
+::-webkit-scrollbar-thumb:hover { background-color: rgba(var(--foreground-rgb), 0.3); }
+* { scrollbar-width: thin; scrollbar-color: rgba(var(--foreground-rgb), 0.2) rgba(var(--background-rgb), 0.8); }
+
+/* Text Styles */
 .text-readable { letter-spacing: 0.01em; line-height: 1.6; }
 .text-enhanced { letter-spacing: 0.02em; line-height: 1.7; }
 
-/* Glass effect (can be applied via Tailwind utilities if preferred) */
-.glass {
-  background-color: rgba(var(--foreground-rgb), 0.03); /* Subtler background */
-  border-color: rgba(var(--foreground-rgb), 0.1);
-  @apply backdrop-blur-lg border rounded-xl; /* Example usage with Tailwind */
-}
-
 /* ----------------------------------------------- */
-/* ---- ADDED UTILITIES FOR BENTO GRID -------- */
+/* ---- UTILITIES FOR BENTO GRID -------- */
 /* ----------------------------------------------- */
 @layer utilities {
-  /* 1. Shimmer Effect */
+
+  /* 1. Shimmer Effect (On Hover for Interactive Tiles) */
   .bg-shimmer-gradient {
-    background-image: linear-gradient(
-      -75deg,
-      rgba(255, 255, 255, 0) 30%, /* Start later */
-      rgba(255, 255, 255, 0.1) 50%, /* Tighter highlight */
-      rgba(255, 255, 255, 0) 70%  /* End sooner */
+    background-image: linear-gradient( -75deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 70% );
+    background-size: 200% 100%;
+    pointer-events: none;
+  }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .animate-shimmer { animation: shimmer 2.5s infinite linear; }
+
+  /* 2. Live Glowing Animated Border */
+  @property --angle { /* Define custom property for animation */
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+  }
+
+  @keyframes rotate { /* Simple rotation for the conic gradient */
+      to { --angle: 360deg; }
+  }
+
+  .animated-border-wrapper {
+    position: relative; /* Needed for pseudo-element positioning */
+    border: 1px solid rgba(var(--foreground-rgb), 0.1); /* Base border color */
+    /* --- Define Glow Colors based on data attribute --- */
+    /* Default/Fallback Glow (Subtle White) */
+    --glow-color-1: rgba(var(--color-foreground-glow-rgb), 0.3);
+    --glow-color-2: rgba(var(--color-foreground-glow-rgb), 0.1);
+  }
+
+  .animated-border-wrapper[data-glow-color="lavender"] {
+    --glow-color-1: rgba(var(--color-lavender-rgb), 0.6);
+    --glow-color-2: rgba(var(--color-lavender-rgb), 0.3);
+  }
+  .animated-border-wrapper[data-glow-color="mint"] {
+    --glow-color-1: rgba(var(--color-mint-rgb), 0.6);
+    --glow-color-2: rgba(var(--color-mint-rgb), 0.3);
+  }
+   .animated-border-wrapper[data-glow-color="peach"] {
+    --glow-color-1: rgba(var(--color-peach-rgb), 0.5); /* Peach often needs less alpha */
+    --glow-color-2: rgba(var(--color-peach-rgb), 0.25);
+  }
+   .animated-border-wrapper[data-glow-color="softPink"] {
+    --glow-color-1: rgba(var(--color-softPink-rgb), 0.6);
+    --glow-color-2: rgba(var(--color-softPink-rgb), 0.3);
+  }
+   .animated-border-wrapper[data-glow-color="turquoise"] {
+    --glow-color-1: rgba(var(--color-turquoise-rgb), 0.6);
+    --glow-color-2: rgba(var(--color-turquoise-rgb), 0.3);
+  }
+   /* Add other colors if needed */
+
+
+  .animated-border-wrapper::before,
+  .animated-border-wrapper::after {
+    content: '';
+    position: absolute;
+    z-index: -1; /* Place behind content */
+    inset: -1px; /* Slightly outside the main border */
+    border-radius: inherit; /* Match the parent's border-radius */
+    /* Conic gradient using the defined glow colors and rotating angle */
+    background: conic-gradient(
+        from var(--angle),
+        var(--glow-color-2),
+        var(--glow-color-1),
+        var(--glow-color-1),
+        var(--glow-color-2),
+        var(--glow-color-1), /* Add more stops for complexity if desired */
+        var(--glow-color-2)
     );
-    background-size: 200% 100%; /* Keep size for movement */
-    pointer-events: none; /* Allow clicks through shimmer */
+    animation: rotate 6s linear infinite; /* Apply rotation animation */
+    opacity: 0.7; /* Overall opacity */
   }
 
-  @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  .animate-shimmer {
-    animation: shimmer 2.5s infinite linear; /* Slightly slower */
-  }
-
-  /* 2. Glow Effects (Applied via group-hover) */
-  /* Base transition for smooth glow appearance/disappearance */
-  .group .transition-glow {
-    transition: box-shadow 0.4s ease-in-out;
-  }
-
-  .group-hover\:glow-lavender .transition-glow {
-     box-shadow: 0 0 15px 3px rgba(155, 109, 255, 0.4),
-                 0 0 25px 8px rgba(155, 109, 255, 0.2);
-  }
-   .group-hover\:glow-mint .transition-glow {
-     box-shadow: 0 0 15px 3px rgba(64, 224, 208, 0.4),
-                 0 0 25px 8px rgba(64, 224, 208, 0.2);
+  .animated-border-wrapper::after {
+     /* Second pseudo-element for blur effect */
+     filter: blur(6px); /* Adjust blur amount */
+     opacity: 0.5; /* Lower opacity for blur */
+     animation-duration: 8s; /* Slightly different speed */
    }
-    .group-hover\:glow-peach .transition-glow {
-     box-shadow: 0 0 15px 3px rgba(255, 127, 80, 0.4),
-                 0 0 25px 8px rgba(255, 127, 80, 0.2);
+
+  /* Make border slightly stronger on hover for interactive elements */
+   .group:hover .animated-border-wrapper[data-glow-color] {
+     border-color: rgba(var(--foreground-rgb), 0.2); /* Slightly lighter base border */
    }
-    .group-hover\:glow-softPink .transition-glow {
-      box-shadow: 0 0 15px 3px rgba(255, 182, 193, 0.4),
-                  0 0 25px 8px rgba(255, 182, 193, 0.2);
+   .group:hover .animated-border-wrapper::before {
+      opacity: 1;
+      animation-duration: 5s; /* Faster spin on hover */
    }
-   .group-hover\:glow-turquoise .transition-glow {
-      box-shadow: 0 0 15px 3px rgba(64, 224, 208, 0.4), /* Using mint color as example */
-                  0 0 25px 8px rgba(64, 224, 208, 0.2);
+   .group:hover .animated-border-wrapper::after {
+      opacity: 0.7;
+      filter: blur(8px);
+      animation-duration: 7s;
    }
-   /* Add other glow colors (e.g., amber, amethyst) using their specific RGB/Hex values */
-   /* .group-hover\:glow-amethyst .transition-glow { box-shadow: 0 0 15px 3px rgba(155, 109, 255, 0.4), ... } */
-   /* .group-hover\:glow-amber .transition-glow { box-shadow: 0 0 15px 3px rgba(255, 191, 0, 0.4), ... } */
 
-  /* 3. Morphing Blob Animation */
-  @keyframes morph {
-    0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(0deg) scale(1); }
-    25% { transform: rotate(5deg) scale(1.02); }
-    50% { border-radius: 30% 70% 70% 30% / 30% 60% 40% 60%; transform: rotate(-5deg) scale(1.05); }
-    75% { transform: rotate(2deg) scale(0.98); }
-  }
-
-  .morphing-blob {
-    animation: morph 10s ease-in-out infinite alternate; /* Added alternate direction */
-    /* Initial shape */
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-    will-change: border-radius, transform; /* Optimize animation */
-    transition: border-radius 0.5s ease-in-out; /* Smooth transitions between keyframes */
-  }
-}
-
-/* --- End of Added Utilities --- */
-
-/* --- Deprecated or Less Used Styles (Review if needed) --- */
-/* .parallax-bg { background-attachment: fixed; ... } /* Parallax can be performance intensive */
-/* .community-node, .community-path { ... } /* Specific visualization styles */
-/* .page-transition-* { ... } /* Page transitions often handled by routing library/Framer Motion */
-/* .text-3d { ... } /* Can look dated if overused */
-/* .btn-hover-effect { ... } /* Hover effects now handled by group-hover utilities or Framer Motion */
+} /* End of @layer utilities */
