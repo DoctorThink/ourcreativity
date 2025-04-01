@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { ReactNode, useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Instagram } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface PageLayoutProps {
@@ -121,7 +121,7 @@ const PageLayout = ({
       </div>
       
       {/* Enhanced Header with Logo */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/40 p-4 border-b border-foreground/5">
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/40 p-4 border-b border-foreground/5 shadow-md shadow-black/10">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           {showBackButton && (
             <motion.button 
@@ -130,7 +130,7 @@ const PageLayout = ({
               transition={{ duration: 0.3 }}
               onClick={() => navigate("/")}
               className="flex items-center space-x-2 text-foreground/60 hover:text-foreground transition-colors"
-              whileHover={{ x: -3 }}
+              whileHover={{ x: -3, scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
             >
               <ArrowLeft className="w-5 h-5" />
@@ -143,8 +143,8 @@ const PageLayout = ({
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.4 }}
-              whileHover={{ rotate: 5 }}
-              className="w-8 h-8 rounded-full bg-foreground/5 p-1 flex items-center justify-center backdrop-blur-md border border-foreground/10"
+              whileHover={{ rotate: 5, scale: 1.1 }}
+              className="w-8 h-8 rounded-full bg-foreground/5 p-1 flex items-center justify-center backdrop-blur-md border border-foreground/10 shadow-lg shadow-black/20"
             >
               <img
                 src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
@@ -157,8 +157,8 @@ const PageLayout = ({
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.4, delay: 0.1 }}
-              whileHover={{ rotate: -5 }}
-              className="w-8 h-8 rounded-full bg-foreground/5 p-1 flex items-center justify-center backdrop-blur-md border border-foreground/10"
+              whileHover={{ rotate: -5, scale: 1.1 }}
+              className="w-8 h-8 rounded-full bg-foreground/5 p-1 flex items-center justify-center backdrop-blur-md border border-foreground/10 shadow-lg shadow-black/20"
             >
               <img
                 src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png"
@@ -182,8 +182,9 @@ const PageLayout = ({
               <div className="text-center space-y-4">
                 {title && (
                   <motion.h1 
-                    className="text-4xl md:text-6xl font-serif font-bold tracking-tight text-foreground text-3d"
+                    className="text-4xl md:text-6xl font-serif font-bold tracking-tight text-foreground text-3d shadow-black text-shadow-lg"
                     variants={titleVariants}
+                    style={{ textShadow: '0px 4px 8px rgba(0,0,0,0.5)' }}
                   >
                     {title}
                   </motion.h1>
@@ -222,9 +223,18 @@ const PageLayout = ({
             transition={{ delay: 0.8, duration: 0.5 }}
             className="mt-24 mb-8 text-center"
           >
-            <div className="bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-full px-4 py-2 inline-block relative overflow-hidden group hover:bg-foreground/10 transition-colors">
-              <p className="text-xs text-foreground/50">
-                &copy; 2024 OUR CREATIVITY • Designed by Ardellio S. A.
+            <div className="bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-full px-4 py-2 inline-block relative overflow-hidden group hover:bg-foreground/10 transition-colors shadow-lg shadow-black/10">
+              <p className="text-xs text-foreground/50 flex items-center justify-center gap-1">
+                &copy; 2024 OUR CREATIVITY • Designed by 
+                <a 
+                  href="https://instagram.com/ardel.yo" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 hover:text-foreground/80 transition-colors"
+                >
+                  @ardel.yo
+                  <Instagram size={12} className="inline-block animate-pulse-soft" />
+                </a>
               </p>
             </div>
           </motion.div>

@@ -73,15 +73,16 @@ const TimKami = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 * sectionIndex, duration: 0.6 }}
           >
-            <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 overflow-hidden">
+            <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 overflow-hidden shadow-xl shadow-black/20">
               <CardHeader className="relative pb-2">
                 <CardTitle className="text-xl font-serif">
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+                  <span className="text-foreground">
                     {section.title}
                   </span>
                 </CardTitle>
-                {/* Decorative element */}
+                {/* Enhanced decorative element */}
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-foreground/20 to-transparent" />
+                <div className="absolute top-0 right-0 w-20 h-20 rounded-full bg-foreground/5 blur-xl opacity-40" />
               </CardHeader>
               
               <Separator className="bg-foreground/10" />
@@ -102,53 +103,6 @@ const TimKami = () => {
             </Card>
           </motion.div>
         ))}
-
-        {/* Team photo section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
-          className="mt-16 text-center"
-        >
-          <h3 className="text-2xl font-serif mb-8">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70">
-              Bersama-sama Kita Kreatif
-            </span>
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="aspect-video rounded-xl overflow-hidden border border-foreground/10"
-            >
-              <img 
-                src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&q=80" 
-                alt="Team collaboration" 
-                className="w-full h-full object-cover"
-              />
-            </motion.div>
-            <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="aspect-video rounded-xl overflow-hidden border border-foreground/10"
-            >
-              <img 
-                src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80" 
-                alt="Team working together" 
-                className="w-full h-full object-cover"
-              />
-            </motion.div>
-            <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="aspect-video rounded-xl overflow-hidden border border-foreground/10 md:col-span-2 lg:col-span-1"
-            >
-              <img 
-                src="https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?auto=format&fit=crop&q=80" 
-                alt="Creative innovation" 
-                className="w-full h-full object-cover"
-              />
-            </motion.div>
-          </div>
-        </motion.div>
       </motion.div>
     </PageLayout>
   );

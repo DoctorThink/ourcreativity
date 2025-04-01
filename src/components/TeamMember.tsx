@@ -27,7 +27,7 @@ const TeamMember = ({ name, instagram, role, imageUrl, index }: TeamMemberProps)
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 * index }}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
-      className="backdrop-blur-lg bg-foreground/5 border border-foreground/10 rounded-xl p-4 flex items-center gap-4 relative overflow-hidden group card-depth topo-layer"
+      className="backdrop-blur-lg bg-foreground/5 border border-foreground/10 rounded-xl p-4 flex items-center gap-4 relative overflow-hidden group card-depth topo-layer shadow-lg shadow-black/20"
     >
       {/* Enhanced depth layers */}
       <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 via-transparent to-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -43,7 +43,7 @@ const TeamMember = ({ name, instagram, role, imageUrl, index }: TeamMemberProps)
           {imageUrl ? (
             <AvatarImage src={imageUrl} alt={name} />
           ) : (
-            <AvatarFallback className="bg-foreground/10 text-foreground">
+            <AvatarFallback className="bg-foreground/10 text-foreground shadow-inner">
               {getInitials(name)}
             </AvatarFallback>
           )}
@@ -62,7 +62,7 @@ const TeamMember = ({ name, instagram, role, imageUrl, index }: TeamMemberProps)
               rel="noopener noreferrer"
               className="text-foreground/70 hover:text-foreground transition-colors flex items-center gap-1 text-sm"
             >
-              <Instagram size={16} />
+              <Instagram size={16} className="animate-pulse-soft" />
               <span>{instagram}</span>
             </motion.a>
           )}
@@ -70,7 +70,9 @@ const TeamMember = ({ name, instagram, role, imageUrl, index }: TeamMemberProps)
         <p className="text-sm text-foreground/60">{role}</p>
       </div>
 
-      {/* Community Node effect */}
+      {/* Enhanced 3D effects */}
+      <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-foreground/5 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+      <div className="absolute inset-0 shadow-inner opacity-20"></div>
       <div className="absolute inset-0 community-node opacity-30 pointer-events-none"></div>
     </motion.div>
   );

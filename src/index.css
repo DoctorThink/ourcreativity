@@ -83,22 +83,44 @@
 /* Enhanced Depth Effects */
 .depth-layer-1 {
   transform: translateZ(var(--depth-1));
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
 }
 
 .depth-layer-2 {
   transform: translateZ(var(--depth-2));
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
 }
 
 .depth-layer-3 {
   transform: translateZ(var(--depth-3));
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
 }
 
 .depth-layer-4 {
   transform: translateZ(var(--depth-4));
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 .depth-layer-5 {
   transform: translateZ(var(--depth-5));
+  box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.6);
+}
+
+/* Enhanced text shadows */
+.text-shadow-sm {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.text-shadow-md {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.text-shadow-lg {
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+.text-shadow-xl {
+  text-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
 }
 
 /* Topographic Layer Styles */
@@ -138,6 +160,7 @@
 
 .card-depth:hover {
   transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
 .card-depth:hover:before {
