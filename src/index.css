@@ -8,37 +8,36 @@
 
 @layer base {
   :root {
+    /* Core Theme Colors */
     --background: #1C1C1E;
     --foreground: #FFFFFF;
-    --secondary: #2C2C2E;
+    --secondary: #2C2C2E; /* Slightly lighter dark grey */
     --secondary-foreground: #FFFFFF;
-    --border: #2C2C2E;
+    --border: #3a3a3c; /* Default subtle border slightly lighter than secondary */
     --input: #2C2C2E;
-    --ring: #E5DEFF; /* Lavender accent often used for rings/focus */
+    --ring: #9B6DFF; /* Amethyst for focus rings */
 
+    /* RGB versions for potential use in rgba() */
     --foreground-rgb: 255, 255, 255;
     --background-rgb: 28, 28, 30;
+    --secondary-rgb: 44, 44, 46;
 
-    /* Accent Color RGB values for animations */
+    /* Accent Color RGB values (kept for potential future use) */
     --color-lavender-rgb: 155, 109, 255; /* #9B6DFF */
+    --color-amethyst-rgb: 155, 109, 255; /* #9B6DFF */
     --color-mint-rgb: 64, 224, 208;     /* #40E0D0 */
+    --color-turquoise-rgb: 64, 224, 208; /* #40E0D0 */
     --color-peach-rgb: 255, 127, 80;    /* #FF7F50 */
+    --color-coral-rgb: 255, 127, 80;    /* #FF7F50 */
     --color-softPink-rgb: 255, 182, 193; /* #FFB6C1 approx */
-    --color-turquoise-rgb: 64, 224, 208; /* #40E0D0 - Same as Mint */
-    --color-foreground-glow-rgb: 200, 200, 210; /* Subtle greyish white for foreground glow */
+    --color-amber-rgb: 255, 191, 0;     /* #FFBF00 */
+    --color-foreground-glow-rgb: 200, 200, 210;
 
-
-    /* Depth variables for layers */
-    --depth-0: 0px;
-    --depth-1: 5px;
-    --depth-2: 10px;
-    --depth-3: 15px;
-    --depth-4: 20px;
-    --depth-5: 30px;
   }
 
   *, *::before, *::after {
-    transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    /* Keep general transitions */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
   }
 
   html {
@@ -48,16 +47,16 @@
 
   body {
     @apply bg-background text-foreground font-serif antialiased overflow-x-hidden;
+    /* Apply slight font smoothing */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
   }
 
-  html {
-    scroll-behavior: smooth;
-  }
-
+  /* Reduced motion preferences */
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -68,14 +67,16 @@
        transition-duration: 0.01ms !important;
        scroll-behavior: auto !important;
      }
+     /* Specifically target Framer Motion if needed, though usually respects prefers-reduced-motion */
   }
 
+  /* Ensure sans-serif font applies correctly */
   .font-sans {
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
 }
 
-/* Homepage Title Animation */
+/* Homepage Title Gradient Animation */
 .home-title {
   background: linear-gradient(
     to right,
@@ -87,170 +88,73 @@
   color: transparent;
   animation: gradientTextAnimation 10s ease infinite;
 }
-
 @keyframes gradientTextAnimation {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Existing Depth & Shadow Styles */
-.depth-layer-1 { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1); }
-.depth-layer-2 { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1); }
-.depth-layer-3 { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.1); }
-.depth-layer-4 { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-.depth-layer-5 { box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.6); }
-.text-shadow-sm { text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
-.text-shadow-md { text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); }
-.text-shadow-lg { text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); }
-.text-shadow-xl { text-shadow: 0 8px 16px rgba(0, 0, 0, 0.8); }
-
-/* Existing Background Effects */
-.topo-layer { position: relative; overflow: hidden; }
-.topo-layer::before {
-  content: ''; position: absolute; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,10 C30,20 70,20 100,10 M0,30 C30,40 70,40 100,30 M0,50 C30,60 70,60 100,50 M0,70 C30,80 70,80 100,70 M0,90 C30,100 70,100 100,90' stroke='%23ffffff' stroke-width='0.5' fill='none' stroke-opacity='0.05'/%3E%3C/svg%3E");
-  background-size: 100px 100px; opacity: 0.2;
-}
-.geometric-dot-pattern {
-  background-image: radial-gradient(rgba(var(--foreground-rgb), 0.08) 1px, transparent 1px);
-  background-size: 25px 25px;
-}
-.geometric-line-pattern {
-  background-image:
-    linear-gradient(to right, rgba(var(--foreground-rgb), 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(var(--foreground-rgb), 0.05) 1px, transparent 1px);
-  background-size: 30px 30px;
+/* Simplified Background Patterns & Effects */
+.noise-pattern { /* Added Noise Pattern */
+    position: fixed; /* Or absolute if within a specific container */
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    /* Using SVG for noise */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    z-index: -5; /* Ensure it's behind content but above solid background if needed */
+    pointer-events: none;
 }
 
-/* Existing Animations */
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-@keyframes float-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-.animate-float { animation: float 6s ease-in-out infinite; will-change: transform; }
-.animate-float-slow { animation: float-slow 8s ease-in-out infinite; will-change: transform; }
-@keyframes pulse-soft { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
-.animate-pulse-soft { animation: pulse-soft 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-@keyframes morph {
-  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(0deg) scale(1); }
-  25% { transform: rotate(5deg) scale(1.02); }
-  50% { border-radius: 30% 70% 70% 30% / 30% 60% 40% 60%; transform: rotate(-5deg) scale(1.05); }
-  75% { transform: rotate(2deg) scale(0.98); }
+.geometric-dot-pattern { /* Keep if still desired for bg layer */
+  background-image: radial-gradient(rgba(var(--foreground-rgb), 0.06) 0.5px, transparent 0.5px); /* Finer dots */
+  background-size: 20px 20px;
 }
-.morphing-blob {
-  animation: morph 10s ease-in-out infinite alternate;
-  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-  will-change: border-radius, transform;
-  transition: border-radius 0.5s ease-in-out;
-}
+
+/* Removed topo-layer and geometric-line-pattern for simplicity */
+/* Removed complex depth-layer shadows */
+/* Removed morphing-blob animation */
 
 /* Scrollbar Styles */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: rgba(var(--background-rgb), 0.8); backdrop-filter: blur(10px); }
-::-webkit-scrollbar-thumb { background-color: rgba(var(--foreground-rgb), 0.2); border-radius: 4px; border: 1px solid rgba(var(--foreground-rgb), 0.1);}
-::-webkit-scrollbar-thumb:hover { background-color: rgba(var(--foreground-rgb), 0.3); }
-* { scrollbar-width: thin; scrollbar-color: rgba(var(--foreground-rgb), 0.2) rgba(var(--background-rgb), 0.8); }
+::-webkit-scrollbar { width: 6px; height: 6px; } /* Slimmer scrollbar */
+::-webkit-scrollbar-track { background: rgba(var(--background-rgb), 0.5); }
+::-webkit-scrollbar-thumb { background-color: rgba(var(--foreground-rgb), 0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background-color: rgba(var(--foreground-rgb), 0.25); }
+* { scrollbar-width: thin; scrollbar-color: rgba(var(--foreground-rgb), 0.15) rgba(var(--background-rgb), 0.5); }
 
 /* Text Styles */
 .text-readable { letter-spacing: 0.01em; line-height: 1.6; }
-.text-enhanced { letter-spacing: 0.02em; line-height: 1.7; }
+/* Removed text-enhanced and complex text-shadows */
 
 /* ----------------------------------------------- */
 /* ---- UTILITIES FOR BENTO GRID -------- */
 /* ----------------------------------------------- */
 @layer utilities {
 
-  /* 1. Shimmer Effect (On Hover for Interactive Tiles) */
+  /* Shimmer Effect (On Hover for Interactive Tiles) - Kept as it's subtle */
   .bg-shimmer-gradient {
-    background-image: linear-gradient( -75deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 70% );
+    background-image: linear-gradient( -75deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0) 70% ); /* Reduced intensity */
     background-size: 200% 100%;
     pointer-events: none;
   }
   @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-  .animate-shimmer { animation: shimmer 2.5s infinite linear; }
+  .animate-shimmer { animation: shimmer 3s infinite linear; } /* Slower */
 
-  /* 2. Live Glowing Animated Border */
-  @property --angle { /* Define custom property for animation */
-      syntax: '<angle>';
-      initial-value: 0deg;
-      inherits: false;
-  }
+  /* --- REMOVED ANIMATED BORDER STYLES --- */
+  /* Removed @property --angle */
+  /* Removed @keyframes rotate */
+  /* Removed .animated-border-wrapper and its ::before/::after styles */
+  /* Removed [data-glow-color] overrides */
+  /* Removed group:hover styles targeting .animated-border-wrapper */
 
-  @keyframes rotate { /* Simple rotation for the conic gradient */
-      to { --angle: 360deg; }
-  }
-
-  .animated-border-wrapper {
-    position: relative; /* Needed for pseudo-element positioning */
-    border: 1px solid rgba(var(--foreground-rgb), 0.1); /* Base border color */
-    /* --- Define Glow Colors based on data attribute --- */
-    /* Default/Fallback Glow (Subtle White) */
-    --glow-color-1: rgba(var(--color-foreground-glow-rgb), 0.3);
-    --glow-color-2: rgba(var(--color-foreground-glow-rgb), 0.1);
-  }
-
-  .animated-border-wrapper[data-glow-color="lavender"] {
-    --glow-color-1: rgba(var(--color-lavender-rgb), 0.6);
-    --glow-color-2: rgba(var(--color-lavender-rgb), 0.3);
-  }
-  .animated-border-wrapper[data-glow-color="mint"] {
-    --glow-color-1: rgba(var(--color-mint-rgb), 0.6);
-    --glow-color-2: rgba(var(--color-mint-rgb), 0.3);
-  }
-   .animated-border-wrapper[data-glow-color="peach"] {
-    --glow-color-1: rgba(var(--color-peach-rgb), 0.5); /* Peach often needs less alpha */
-    --glow-color-2: rgba(var(--color-peach-rgb), 0.25);
-  }
-   .animated-border-wrapper[data-glow-color="softPink"] {
-    --glow-color-1: rgba(var(--color-softPink-rgb), 0.6);
-    --glow-color-2: rgba(var(--color-softPink-rgb), 0.3);
-  }
-   .animated-border-wrapper[data-glow-color="turquoise"] {
-    --glow-color-1: rgba(var(--color-turquoise-rgb), 0.6);
-    --glow-color-2: rgba(var(--color-turquoise-rgb), 0.3);
-  }
-   /* Add other colors if needed */
-
-
-  .animated-border-wrapper::before,
-  .animated-border-wrapper::after {
-    content: '';
-    position: absolute;
-    z-index: -1; /* Place behind content */
-    inset: -1px; /* Slightly outside the main border */
-    border-radius: inherit; /* Match the parent's border-radius */
-    /* Conic gradient using the defined glow colors and rotating angle */
-    background: conic-gradient(
-        from var(--angle),
-        var(--glow-color-2),
-        var(--glow-color-1),
-        var(--glow-color-1),
-        var(--glow-color-2),
-        var(--glow-color-1), /* Add more stops for complexity if desired */
-        var(--glow-color-2)
-    );
-    animation: rotate 6s linear infinite; /* Apply rotation animation */
-    opacity: 0.7; /* Overall opacity */
-  }
-
-  .animated-border-wrapper::after {
-     /* Second pseudo-element for blur effect */
-     filter: blur(6px); /* Adjust blur amount */
-     opacity: 0.5; /* Lower opacity for blur */
-     animation-duration: 8s; /* Slightly different speed */
+  /* Optional: Add subtle border highlight on hover if desired */
+  .group:hover .subtle-hover-border {
+     border-color: rgba(var(--foreground-rgb), 0.15);
    }
-
-  /* Make border slightly stronger on hover for interactive elements */
-   .group:hover .animated-border-wrapper[data-glow-color] {
-     border-color: rgba(var(--foreground-rgb), 0.2); /* Slightly lighter base border */
-   }
-   .group:hover .animated-border-wrapper::before {
-      opacity: 1;
-      animation-duration: 5s; /* Faster spin on hover */
-   }
-   .group:hover .animated-border-wrapper::after {
-      opacity: 0.7;
-      filter: blur(8px);
-      animation-duration: 7s;
-   }
+   /* Usage in TSX: Add class 'subtle-hover-border transition-colors' to the main tile div */
 
 } /* End of @layer utilities */
+
+/* Clean up potentially unused animations */
+/* Removed @keyframes float, float-slow, pulse-soft */
+/* Removed .animate-float, .animate-float-slow, .animate-pulse-soft */
