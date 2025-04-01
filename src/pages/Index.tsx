@@ -1,8 +1,7 @@
-
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Info, Bell, ScrollText } from "lucide-react";
+import { BookOpen, Info, Bell, ScrollText, Users } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useEffect, useState, useRef } from "react";
 
@@ -47,9 +46,10 @@ const Index = () => {
   // Navigation items with updated routing and refined design
   const navigationItems = [
     { icon: BookOpen, text: "Cerita Kami", href: "/brand-story", color: "from-lavender to-amethyst/50", decorColor: "border-lavender" },
-    { icon: ScrollText, text: "Syarat & Ketentuan", href: "/terms", color: "from-mint to-turquoise/50", decorColor: "border-mint" },
-    { icon: Info, text: "Informasi", href: "/informasi", color: "from-peach to-coral/50", decorColor: "border-peach" },
-    { icon: Bell, text: "Pengumuman", href: "/pengumuman", color: "from-softPink to-amber/50", decorColor: "border-softPink" }
+    { icon: Users, text: "Tim Kami", href: "/tim-kami", color: "from-mint to-turquoise/50", decorColor: "border-mint" },
+    { icon: ScrollText, text: "Syarat & Ketentuan", href: "/terms", color: "from-peach to-coral/50", decorColor: "border-peach" },
+    { icon: Info, text: "Informasi", href: "/informasi", color: "from-softPink to-amber/50", decorColor: "border-softPink" },
+    { icon: Bell, text: "Pengumuman", href: "/pengumuman", color: "from-turquoise to-mint/50", decorColor: "border-turquoise" }
   ];
 
   return (
@@ -60,33 +60,25 @@ const Index = () => {
       className="min-h-screen overflow-x-hidden overflow-y-auto relative"
       ref={scrollRef}
     >
-      {/* Enhanced Dynamic Background with geometric elements */}
       <div className="fixed inset-0 bg-background -z-10">
-        {/* Geometric decorative elements with enhanced colors */}
         <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-amethyst/5 -top-[20%] -right-[20%]" />
         <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-turquoise/5 -bottom-[10%] -left-[10%]" />
         <div className="absolute w-[40vw] h-[40vh] rounded-full blur-[80px] bg-coral/5 bottom-[30%] right-[5%]" />
         
-        {/* Enhanced Grid overlay with dot pattern */}
         <div className="absolute inset-0 geometric-dot-pattern opacity-30" />
         <div className="absolute inset-0 geometric-line-pattern opacity-20" />
         
-        {/* Animated subtle lines */}
         <div className="absolute left-[5%] top-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-transparent via-lavender/20 to-transparent animate-pulse-soft" />
         <div className="absolute right-[10%] top-[20%] w-[1px] h-[40vh] bg-gradient-to-b from-transparent via-mint/20 to-transparent animate-pulse-soft" />
         <div className="absolute left-[20%] bottom-[10%] w-[40vw] h-[1px] bg-gradient-to-r from-transparent via-peach/20 to-transparent animate-pulse-soft" />
         
-        {/* Floating geometric shapes */}
         <div className="absolute top-[15%] left-[15%] w-16 h-16 border border-lavender/20 rounded-full animate-float" style={{ animationDelay: "-2s" }} />
         <div className="absolute bottom-[25%] right-[25%] w-24 h-24 border border-mint/20 rounded-full animate-float" style={{ animationDelay: "-1s" }} />
         <div className="absolute top-[40%] right-[10%] w-12 h-12 border border-peach/20 morphing-blob animate-float" style={{ animationDelay: "-3s" }} />
       </div>
 
-      {/* Main Content */}
       <div className="relative z-10 container mx-auto px-4 py-8 min-h-[200vh]">
-        {/* First section - only the logo */}
         <div className="h-screen flex items-center justify-center">
-          {/* Logo Container with Enhanced Animation and Geometric Accents */}
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -98,7 +90,6 @@ const Index = () => {
             }}
             className="flex gap-6 relative"
           >
-            {/* Decorative circles - Fixed sizing to ensure visibility on all devices */}
             <div className="absolute inset-0 -z-10 w-full h-full flex items-center justify-center">
               <div className="w-[80%] max-w-[20rem] aspect-square border border-foreground/5 rounded-full animate-rotate-slow" />
               <div className="absolute w-[100%] max-w-[25rem] aspect-square border border-foreground/5 rounded-full animate-rotate-slow" style={{ animationDirection: "reverse", animationDuration: "15s" }} />
@@ -137,9 +128,7 @@ const Index = () => {
           </motion.div>
         </div>
 
-        {/* Second section - content that appears after scrolling */}
         <div className="min-h-screen pt-16">
-          {/* Enhanced Title with Gradient Animation */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -178,7 +167,6 @@ const Index = () => {
             </motion.span>
           </motion.h1>
 
-          {/* Description with enhanced typography and subtle animation */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -190,13 +178,12 @@ const Index = () => {
             </span>
           </motion.p>
 
-          {/* Interactive Navigation Buttons - Appear on scroll */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             style={{ opacity: navOpacity }}
-            className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 w-full max-w-4xl mx-auto"
+            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 w-full max-w-5xl mx-auto"
           >
             {navigationItems.map(({ icon: Icon, text, href, color, decorColor }) => (
               <motion.div
@@ -211,24 +198,18 @@ const Index = () => {
                   variant="secondary"
                   className={`w-full h-full min-h-[100px] sm:min-h-[120px] rounded-2xl backdrop-blur-xl bg-foreground/5 border border-foreground/10 flex flex-col items-center justify-center gap-4 transition-all duration-300 group overflow-hidden relative btn-hover-effect`}
                 >
-                  {/* Enhanced background gradient */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-30 transition-opacity duration-300 group-hover:opacity-50`}></div>
                   
-                  {/* Interactive hover effect with shimmer */}
                   <span className="absolute inset-0 bg-shimmer-gradient bg-[length:200%_100%] opacity-0 group-hover:opacity-100 group-hover:animate-shimmer" />
                   
-                  {/* Enhanced geometric accent */}
                   <div className={`absolute -bottom-6 -right-6 w-16 h-16 ${decorColor} rounded-full border opacity-20 group-hover:opacity-30 transition-all duration-500 group-hover:scale-125`} />
                   <div className={`absolute -top-6 -left-6 w-12 h-12 ${decorColor} rounded-full border opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125`} />
                   
-                  {/* Icon container with enhanced micro-interactions */}
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-foreground/10 backdrop-blur-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-foreground/20 relative z-10 overflow-hidden">
                     <Icon className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
-                    {/* Animated border */}
                     <span className="absolute inset-0 border border-foreground/0 group-hover:border-foreground/20 rounded-xl transition-all duration-300"></span>
                   </div>
                   
-                  {/* Enhanced text with subtle animation */}
                   <span className="text-sm font-serif transition-all duration-300 group-hover:translate-y-1 relative z-10 group-hover:font-medium">{text}</span>
                 </Button>
               </motion.div>
@@ -236,7 +217,6 @@ const Index = () => {
           </motion.div>
         </div>
 
-        {/* Enhanced Credits Footer with geometric accents */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -244,7 +224,6 @@ const Index = () => {
           className="mt-auto pt-16 pb-6 text-center"
         >
           <div className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-full px-6 py-3 inline-block relative overflow-hidden group hover:border-foreground/20 transition-colors duration-300">
-            {/* Animated subtle accents */}
             <span className="absolute inset-0 bg-gradient-to-r from-amethyst/0 via-amethyst/5 to-amethyst/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
             
             <p className="text-xs text-foreground/50 group-hover:text-foreground/60 transition-colors duration-300">

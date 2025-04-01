@@ -13,6 +13,7 @@ const BrandStory = lazy(() => import("./pages/BrandStory"));
 const Informasi = lazy(() => import("./pages/Informasi"));
 const Pengumuman = lazy(() => import("./pages/Pengumuman"));
 const Terms = lazy(() => import("./pages/Terms"));
+const TimKami = lazy(() => import("./pages/TimKami"));
 
 // Enhanced loading component
 const LoadingFallback = () => (
@@ -84,6 +85,7 @@ const App = () => {
                   <Route path="/informasi" element={<Informasi />} />
                   <Route path="/pengumuman" element={<Pengumuman />} />
                   <Route path="/terms" element={<Terms />} />
+                  <Route path="/tim-kami" element={<TimKami />} />
                 </Routes>
               </Suspense>
             ) : (
