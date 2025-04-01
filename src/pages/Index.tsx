@@ -1,8 +1,7 @@
 // src/pages/Index.tsx
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-// Removed Button import as it's not directly used for tiles
-import { BookOpen, Info, Bell, ScrollText, Users, Palette, Feather, Clock } from "lucide-react"; // Added Feather for Karya, Clock for Coming Soon
+import { BookOpen, Info, Bell, ScrollText, Users, Palette, Feather, Clock, Code } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -13,170 +12,189 @@ const Index = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.2,
+        staggerChildren: 0.06,
+        delayChildren: 0.1,
       }
     }
   };
 
   const gridItemVariants = {
-    hidden: { opacity: 0, scale: 0.95, y: 10 },
+    hidden: { opacity: 0, y: 15 },
     visible: {
       opacity: 1,
-      scale: 1,
       y: 0,
       transition: {
-        duration: 0.4,
-        ease: "easeOut"
+        duration: 0.5,
+        ease: [0.25, 0.1, 0.25, 1.0]
       }
     }
   };
 
-  // --- Enhanced Hover Animation ---
+  // --- Simplified Hover Animation ---
   const interactiveHover = {
-    y: -6, // Slightly more lift
-    scale: 1.04, // Slightly more scale
-    rotate: 1, // Subtle tilt
-    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.4)", // Enhance shadow on hover
-    transition: { type: "spring", stiffness: 300, damping: 15 } // Springy feel
+    y: -4,
+    scale: 1.03,
+    // boxShadow removed for cleaner look
+    transition: { type: "spring", stiffness: 350, damping: 20 }
   };
 
   const interactiveTap = {
-    scale: 0.96,
-    transition: { type: "spring", stiffness: 400, damping: 20 }
+    scale: 0.98,
+    transition: { type: "spring", stiffness: 400, damping: 25 }
   };
 
-  // --- Bento Grid Tile Content & Configuration ---
-  // Order matters for visual layout in the grid
+
+  // --- Bento Grid Tile Configuration (Revised Colors & Layout) ---
   const bentoTiles = [
+    // Row 1
     {
       id: "title",
-      colSpan: "col-span-2 md:col-span-3",
-      rowSpan: "row-span-2 md:row-span-2",
+      colSpan: "col-span-2 sm:col-span-2",
+      rowSpan: "row-span-2",
+      mdColSpan: "md:col-span-2",
+      mdRowSpan: "md:row-span-2",
       content: (
-        <div className="flex flex-col justify-center h-full p-6 text-left">
+        <div className="flex flex-col justify-center h-full p-4 md:p-6 text-left">
           <motion.h1
-            className="text-4xl lg:text-6xl font-serif font-bold mb-3 text-foreground leading-tight home-title"
-            animate={{
-              textShadow: ["0 0 5px rgba(155,109,255,0.3)", "0 0 10px rgba(155,109,255,0.3)", "0 0 5px rgba(155,109,255,0.3)"]
-            }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+            className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold mb-2 md:mb-3 text-foreground leading-tight home-title" // Using CSS class for gradient
+            // Optional simple text shadow if home-title animation is removed
+            // style={{ textShadow: '0 1px 3px rgba(0,0,0,0.2)' }}
           >
             OUR CREATIVITY
           </motion.h1>
-          <p className="text-md lg:text-lg text-foreground/80 font-sans max-w-md">
+          <p className="text-sm sm:text-base lg:text-lg text-foreground/70 font-sans max-w-md">
             Dimana imajinasi bertemu dengan inovasi. Bergabunglah dengan komunitas kreatif kami.
           </p>
         </div>
       ),
-      bgColor: "bg-foreground/5",
-      isInteractive: false, // Non-clickable title block
+      bgColor: "bg-secondary", // Dark grey background
+      isInteractive: false,
     },
-    {
-      id: "logo-fish",
-      colSpan: "col-span-1",
-      rowSpan: "row-span-1",
-      content: (
-        <div className="flex items-center justify-center h-full">
-          <motion.img // Added motion here for potential hover on logo
-            src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
-            alt="Fish Logo"
-            className="w-16 h-16 md:w-20 md:h-20 object-contain"
-            loading="eager"
-            whileHover={{ scale: 1.1, rotate: -5 }} // Simple hover for logo
-            transition={{ type: "spring", stiffness: 300 }}
-          />
-        </div>
-      ),
-      bgColor: "bg-gradient-to-br from-lavender/10 to-amethyst/10",
-      isInteractive: false, // Make logo non-clickable, just visual
-    },
-    {
+    { // Widget 1: Cerita Kami (Purple)
       id: "cerita",
       icon: BookOpen,
       text: "Cerita Kami",
       href: "/brand-story",
-      colSpan: "col-span-1 md:col-span-1",
+      colSpan: "col-span-1",
       rowSpan: "row-span-1",
-      bgColor: "bg-gradient-to-br from-lavender/5 to-amethyst/5",
-      glowColor: "lavender", // Define glow color reference for CSS
+      mdColSpan: "md:col-span-1",
+      mdRowSpan: "md:row-span-1",
+      bgColor: "bg-amethyst", // Use the darker purple #9B6DFF
+      textColor: "text-foreground", // White text
       isInteractive: true,
+      isWidget: true,
     },
-    {
+    { // Widget 2: Tim Kami (Teal)
       id: "tim",
       icon: Users,
       text: "Tim Kami",
       href: "/tim-kami",
-      colSpan: "col-span-1 md:col-span-1",
+      colSpan: "col-span-1",
       rowSpan: "row-span-1",
-      bgColor: "bg-gradient-to-br from-mint/5 to-turquoise/5",
-      glowColor: "mint",
+      mdColSpan: "md:col-span-1",
+      mdRowSpan: "md:row-span-1",
+      bgColor: "bg-turquoise", // Use the darker teal #40E0D0
+      textColor: "text-foreground",
       isInteractive: true,
+      isWidget: true,
     },
-    {
+    // Row 2
+    { // Widget 3: Syarat (Orange)
       id: "syarat",
       icon: ScrollText,
       text: "Syarat & Ketentuan",
       href: "/terms",
-      colSpan: "col-span-1 md:col-span-1",
+      colSpan: "col-span-1",
       rowSpan: "row-span-1",
-      bgColor: "bg-gradient-to-br from-peach/5 to-coral/5",
-      glowColor: "peach",
+      mdColSpan: "md:col-span-1",
+      mdRowSpan: "md:row-span-1",
+      bgColor: "bg-coral", // Use the darker orange #FF7F50
+      textColor: "text-foreground",
       isInteractive: true,
+      isWidget: true,
     },
-    {
-      id: "karya", // NEW TILE
-      icon: Feather,
-      text: "Karya",
-      colSpan: "col-span-2", // Spans two columns
-      rowSpan: "row-span-1",
-      bgColor: "bg-foreground/5", // Use a standard muted background
-      glowColor: "foreground", // Use foreground for a white/grey glow
-      isInteractive: false, // Not clickable yet
-      comingSoon: true, // Flag for special rendering
-    },
-     {
+    { // Widget 4: Informasi (Pink)
       id: "informasi",
       icon: Info,
       text: "Informasi",
       href: "/informasi",
-      colSpan: "col-span-1 md:col-span-1",
+      colSpan: "col-span-1",
       rowSpan: "row-span-1",
-      bgColor: "bg-gradient-to-br from-softPink/5 to-amber/5",
-      glowColor: "softPink",
+      mdColSpan: "md:col-span-1",
+      mdRowSpan: "md:row-span-1",
+      bgColor: "bg-softPink", // Use soft pink #FFD1DC
+      // Consider a darker text for better contrast on light pink if needed
+      textColor: "text-gray-800", // Darker text on light pink
       isInteractive: true,
+      isWidget: true,
     },
-    {
+    // Row 3
+    { // Karya (Coming Soon)
+      id: "karya",
+      icon: Feather,
+      text: "Karya",
+      colSpan: "col-span-2 sm:col-span-2",
+      rowSpan: "row-span-1",
+      mdColSpan: "md:col-span-2",
+      mdRowSpan: "md:row-span-1",
+      bgColor: "bg-secondary", // Dark grey
+      textColor: "text-foreground/60", // Muted text
+      isInteractive: false,
+      comingSoon: true,
+    },
+     { // Widget 5: Pengumuman (Teal)
       id: "pengumuman",
       icon: Bell,
       text: "Pengumuman",
       href: "/pengumuman",
-      colSpan: "col-span-1 md:col-span-1",
+      colSpan: "col-span-1",
       rowSpan: "row-span-1",
-      bgColor: "bg-gradient-to-br from-turquoise/5 to-mint/5",
-      glowColor: "turquoise",
+      mdColSpan: "md:col-span-1",
+      mdRowSpan: "md:row-span-1",
+      bgColor: "bg-turquoise", // Use darker teal #40E0D0
+      textColor: "text-foreground",
       isInteractive: true,
+      isWidget: true,
     },
-     {
-      id: "visual-accent",
-      colSpan: "col-span-1 md:col-span-1",
+    { // Logo Visual Accent
+      id: "logo-visual",
+      colSpan: "col-span-1",
       rowSpan: "row-span-1",
+      mdColSpan: "md:col-span-1",
+      mdRowSpan: "md:row-span-1",
       content: (
-        <div className="flex items-center justify-center h-full relative overflow-hidden">
-          <motion.div
-            className="absolute w-3/4 h-3/4 bg-lavender/30 rounded-full blur-xl" // Slightly smaller, more blur
-            animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0.4, 0.6] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute w-2/3 h-2/3 bg-mint/30 rounded-full blur-xl" // Slightly smaller
-            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.7, 0.5] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-          />
-          <Palette className="w-8 h-8 text-foreground/60 relative z-10" />
-        </div>
+         <div className="flex items-center justify-center h-full relative overflow-hidden">
+            {/* Simplified background elements */}
+            <div className="absolute inset-0 bg-gradient-radial from-lavender/10 via-transparent to-transparent opacity-50 blur-md"></div>
+            <motion.img
+              src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" // Fish logo
+              alt="Logo Icon"
+              className="w-12 h-12 md:w-16 md:h-16 object-contain relative z-10"
+              loading="eager"
+              whileHover={{ scale: 1.1, rotate: 3 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            />
+         </div>
       ),
-      bgColor: "bg-foreground/5",
+      bgColor: "bg-foreground/5", // Very subtle dark bg
+      isInteractive: false,
+    },
+    // Row 4 - Designer Credit
+     {
+      id: "designer-credit",
+      colSpan: "col-span-2 sm:col-span-2",
+      rowSpan: "row-span-1",
+      mdColSpan: "md:col-span-4",
+      mdRowSpan: "md:row-span-1",
+      content: (
+         <div className="flex items-center justify-center h-full text-center p-3 md:p-4">
+           <p className="text-xs sm:text-sm text-foreground/50 font-sans flex items-center gap-2">
+             <Code size={14} className="opacity-70"/> {/* Slightly smaller icon */}
+             <span>© 2024 OUR CREATIVITY • Designed by Ardellio S. A.</span>
+           </p>
+         </div>
+      ),
+      bgColor: "bg-secondary", // Use secondary dark grey for contrast
       isInteractive: false,
     },
   ];
@@ -186,134 +204,85 @@ const Index = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen overflow-x-hidden relative perspective-1000 bg-background"
+      className="min-h-screen h-screen overflow-hidden relative bg-background flex flex-col"
     >
-      {/* --- Background Elements (Unchanged from previous version) --- */}
-      <div className="fixed inset-0 -z-10">
-        <motion.div
-          className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-amethyst/5 -top-[20%] -right-[20%]"
-          animate={{ y: [0, -15, 0], opacity: [0.5, 0.7, 0.5] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-turquoise/5 -bottom-[10%] -left-[10%]"
-          animate={{ y: [0, 15, 0], opacity: [0.5, 0.3, 0.5] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute w-[40vw] h-[40vh] rounded-full blur-[80px] bg-coral/5 bottom-[30%] right-[5%]"
-          animate={{ x: [0, 10, 0], opacity: [0.4, 0.6, 0.4] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <div className="absolute inset-0 topo-layer opacity-30" />
-        <div className="absolute inset-0 geometric-dot-pattern opacity-30" />
-        <div className="absolute inset-0 geometric-line-pattern opacity-20" />
-        <motion.div
-          className="absolute top-[15%] left-[15%] w-16 h-16 border border-lavender/20 rounded-full"
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          style={{ transformStyle: "preserve-3d", transform: "translateZ(30px)" }}
-        />
-        <motion.div
-          className="absolute bottom-[25%] right-[25%] w-24 h-24 border border-mint/20 rounded-full"
-          animate={{ y: [0, -15, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          style={{ transformStyle: "preserve-3d", transform: "translateZ(20px)" }}
-        />
-        <motion.div
-          className="absolute top-[40%] right-[10%] w-12 h-12 border border-peach/20 morphing-blob"
-          animate={{ y: [0, -10, 0], rotate: [0, 10, 0] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          style={{ transformStyle: "preserve-3d", transform: "translateZ(40px)" }}
-        />
+      {/* --- Simplified Static Background --- */}
+      <div className="fixed inset-0 -z-10 opacity-90">
+        {/* Main Background Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-secondary to-background"></div>
+        {/* Subtle Accent Blurs */}
+        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-amethyst/5 -top-[10%] -right-[10%] opacity-60"></div>
+        <div className="absolute w-[40vw] h-[40vh] rounded-full blur-[90px] bg-turquoise/5 -bottom-[10%] -left-[10%] opacity-50"></div>
+        {/* Subtle Noise Pattern */}
+        <div className="absolute inset-0 noise-pattern opacity-5"></div>
       </div>
 
       {/* --- Main Content Area: Bento Grid --- */}
-      <div className="relative z-10 container mx-auto px-4 py-16 md:py-24 min-h-screen flex items-center">
+      <div className="relative z-10 container mx-auto p-3 sm:p-4 md:p-6 flex-grow flex items-center justify-center h-full">
         <motion.div
-          // Updated grid definition for potentially more columns if needed, adjust cols-5 if layout changes
-          className="grid grid-cols-3 md:grid-cols-5 gap-4 md:gap-6 w-full auto-rows-[120px] md:auto-rows-[150px]"
+          // Responsive Grid: 2 cols mobile, 4 cols desktop
+          // Use aspect ratio for tiles to help maintain shape
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 w-full h-full max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-8rem)]" // Adjust max-h as needed
+          style={{ gridAutoRows: 'minmax(0, 1fr)' }} // Let rows size naturally based on content/height
           variants={gridContainerVariants}
           initial="hidden"
           animate="visible"
         >
           {bentoTiles.map((tile) => {
-            const { id, colSpan, rowSpan, content, bgColor, glowColor, icon: Icon, text, href, isInteractive, comingSoon } = tile;
+            const { id, colSpan, rowSpan, mdColSpan, mdRowSpan, content, bgColor, textColor, icon: Icon, text, href, isInteractive, comingSoon, isWidget } = tile;
 
-            const MotionComponent = isInteractive ? motion.button : motion.div;
-            const TagName = isInteractive ? 'button' : 'div'; // Use button tag for interactive elements
+            const MotionComponent = motion.div; // Use motion.div always, handle click internally
 
             return (
               <MotionComponent
                 key={id}
-                layout // Keep layout for potential grid changes
+                layout
                 variants={gridItemVariants}
-                className={`relative group ${colSpan} ${rowSpan}`} // Base positioning classes
-                // Apply hover/tap only if interactive and not coming soon
+                className={`relative group overflow-hidden rounded-xl md:rounded-2xl shadow-lg border border-white/5 ${colSpan} ${rowSpan} ${mdColSpan || colSpan} ${mdRowSpan || rowSpan} ${bgColor} ${textColor || 'text-foreground'} ${comingSoon ? 'opacity-75 filter grayscale-[60%]' : ''}`} // Added subtle border
                 whileHover={isInteractive && !comingSoon ? interactiveHover : {}}
                 whileTap={isInteractive && !comingSoon ? interactiveTap : {}}
-                // Navigation logic
                 onClick={isInteractive && !comingSoon && href ? () => navigate(href) : undefined}
-                // Disable button semantics if not interactive
-                {...(!isInteractive && TagName === 'button' ? { disabled: true } : {})}
+                style={isInteractive && !comingSoon ? { cursor: 'pointer' } : { cursor: 'default' }}
               >
-                {/* Animated Border Wrapper - Target for CSS Animation */}
-                <div className={`animated-border-wrapper h-full w-full rounded-2xl border border-foreground/10 overflow-hidden backdrop-blur-lg transition-colors duration-300 ${bgColor} ${isInteractive && !comingSoon ? 'cursor-pointer' : 'cursor-default'} ${comingSoon ? 'opacity-70' : ''}`}
-                     data-glow-color={glowColor || 'foreground'} // Pass glow color to CSS via data attribute
-                >
-                  {/* Content Area */}
-                  <div className="relative z-10 h-full w-full">
-                    {/* Shimmer effect on hover for INTERACTIVE items */}
-                    {isInteractive && !comingSoon && (
-                      <span className="absolute inset-0 bg-shimmer-gradient bg-[length:200%_100%] opacity-0 group-hover:opacity-10 group-hover:animate-shimmer transition-opacity duration-500" />
-                    )}
+                 {/* Static Border Gradient Effect (Requires CSS) */}
+                 <div className={`static-border-gradient ${isWidget ? 'widget-border' : 'default-border'} ${id}`} data-color={bgColor}></div>
 
-                    {/* Render Icon and Text OR Custom Content OR Coming Soon */}
+                 {/* Content Area with Padding */}
+                 <div className="relative z-10 h-full w-full p-3 md:p-4 flex flex-col justify-center items-center text-center">
                     {comingSoon ? (
                       // Coming Soon Layout
-                      <div className="flex flex-col items-center justify-center h-full gap-1 p-4 text-center text-foreground/60">
-                         <Icon className="w-8 h-8 md:w-10 md:h-10 mb-1 opacity-80" />
-                         <span className="text-sm md:text-md font-serif font-semibold">{text}</span>
-                         <span className="flex items-center gap-1 text-xs font-sans font-medium text-amber-400/80 mt-1">
-                           <Clock size={12} />
-                           Coming Soon
-                         </span>
-                      </div>
+                      <>
+                        <Icon className="w-7 h-7 md:w-8 md:h-8 mb-1 opacity-60 text-amber-500" />
+                        <span className="text-sm md:text-base font-serif font-medium opacity-80">{text}</span>
+                        <span className="flex items-center gap-1 text-xs font-sans text-amber-500/80 mt-1">
+                          <Clock size={12} />
+                          Coming Soon
+                        </span>
+                      </>
+                    ) : isWidget ? (
+                       // Widget Layout
+                       <>
+                         <div className={`mb-2 p-2 ${isWidget ? 'bg-black/15' : 'bg-black/10'} rounded-full backdrop-blur-sm shadow-inner`}>
+                           <Icon className={`w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:scale-110 ${textColor || 'text-foreground'}`} />
+                         </div>
+                         <span className={`text-xs md:text-sm font-serif font-medium ${textColor || 'text-foreground'}`}>{text}</span>
+                       </>
                     ) : Icon && text ? (
-                      // Standard Icon + Text Layout
-                      <div className="flex flex-col items-center justify-center h-full gap-2 p-4 text-center">
-                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center bg-foreground/10 backdrop-blur-sm transition-all duration-300 group-hover:bg-foreground/15">
-                          <Icon className="w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:scale-110 text-foreground" />
-                        </div>
-                        <span className="text-xs md:text-sm font-serif transition-all duration-300 text-foreground">{text}</span>
-                      </div>
-                    ) : (
-                      // Custom Content (like title or visual accent)
-                      content
+                       // Standard Icon/Text (If needed)
+                       <>
+                          <Icon className="w-6 h-6 md:w-8 md:h-8 mb-1" />
+                          <span className="text-xs md:text-sm font-serif">{text}</span>
+                       </>
+                     ) : (
+                       // Custom Content (Title, Logo Visual)
+                       <div className="h-full w-full flex"> {content} </div>
                     )}
-                  </div>
-                </div>
+                 </div>
               </MotionComponent>
             );
           })}
         </motion.div>
       </div>
-
-      {/* --- Footer (Unchanged) --- */}
-      <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="absolute bottom-0 left-0 right-0 z-10 pt-8 pb-6 text-center"
-        >
-         <div className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-full px-6 py-3 inline-block relative overflow-hidden group hover:border-foreground/20 transition-colors duration-300">
-            <span className="absolute inset-0 bg-gradient-to-r from-amethyst/0 via-amethyst/5 to-amethyst/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
-             <p className="text-xs text-foreground/50 group-hover:text-foreground/60 transition-colors duration-300">
-              © 2024 OUR CREATIVITY • Designed by Ardellio S. A.
-             </p>
-          </div>
-       </motion.div>
-
     </motion.div>
   );
 };
