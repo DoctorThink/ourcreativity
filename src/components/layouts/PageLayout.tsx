@@ -1,6 +1,6 @@
 
-import { motion } from "framer-motion";
-import { ReactNode } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ReactNode, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -19,46 +19,88 @@ const PageLayout = ({
   showBackButton = true,
 }: PageLayoutProps) => {
   const navigate = useNavigate();
+  const scrollRef = useRef(null);
+  const { scrollYProgress } = useScroll({ 
+    target: scrollRef,
+    offset: ["start start", "end end"] 
+  });
+  
+  // Parallax effects
+  const layer1Y = useTransform(scrollYProgress, [0, 1], [0, -30]);
+  const layer2Y = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const titleY = useTransform(scrollYProgress, [0, 0.3], [0, -20]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0.7]);
 
   return (
-    <div className="min-h-screen overflow-hidden relative">
-      {/* Dynamic Background with geometric elements */}
+    <div className="min-h-screen overflow-hidden relative perspective-1000">
+      {/* Topographical Background */}
       <div className="fixed inset-0 bg-background -z-10">
-        {/* Geometric decorative elements */}
-        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-foreground/5 -top-[20%] -right-[20%]" />
-        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-foreground/3 -bottom-[10%] -left-[10%]" />
+        {/* Base patterns */}
+        <div className="absolute inset-0 geo-topo-pattern opacity-20" />
+        <div className="absolute inset-0 contour-pattern opacity-10" />
         
-        {/* Grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
+        {/* Curved layers */}
+        <motion.div 
+          className="absolute w-[120vw] h-[35vh] -left-[10vw] top-[65vh] rounded-topo topo-layer-1"
+          style={{ y: layer1Y }}
+        />
+        <motion.div 
+          className="absolute w-[130vw] h-[40vh] -right-[15vw] top-[70vh] rounded-topo topo-layer-2"
+          style={{ y: layer2Y }}
+        />
         
-        {/* Subtle lines */}
-        <div className="absolute left-[5%] top-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-transparent via-foreground/10 to-transparent" />
-        <div className="absolute right-[10%] top-[20%] w-[1px] h-[40vh] bg-gradient-to-b from-transparent via-foreground/5 to-transparent" />
-        <div className="absolute left-[20%] bottom-[10%] w-[40vw] h-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
+        {/* Connection nodes */}
+        <div className="absolute left-[15%] top-[20%] w-2 h-2 rounded-full bg-tone-300/20 animate-pulse-soft" />
+        <div className="absolute right-[20%] top-[30%] w-3 h-3 rounded-full bg-tone-300/30 animate-pulse-soft" style={{ animationDelay: "-2s" }} />
+        
+        {/* Connection lines */}
+        <svg className="absolute inset-0 w-full h-full">
+          <motion.path 
+            d="M15%,20% Q30%,40% 20%,60%" 
+            className="connection-line" 
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2, delay: 1 }}
+          />
+          <motion.path 
+            d="M80%,30% Q65%,45% 70%,65%" 
+            className="connection-line" 
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2, delay: 1.5 }}
+          />
+        </svg>
       </div>
       
       {/* Header with Logo */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/40 p-4 border-b border-foreground/5">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-tone-900/40 border-b border-tone-800/20">
+        <div className="flex items-center justify-between max-w-7xl mx-auto py-4 px-4 md:px-8">
           {showBackButton && (
             <motion.button 
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
               onClick={() => navigate("/")}
-              className="flex items-center space-x-2 text-foreground/60 hover:text-foreground transition-colors"
+              className="flex items-center space-x-2 text-tone-400 hover:text-tone-100 transition-colors group"
             >
               <ArrowLeft className="w-5 h-5" />
-              <span>Kembali</span>
+              <span className="font-mono text-sm relative tracking-wide">
+                BACK
+                <motion.span 
+                  className="absolute bottom-0 left-0 w-0 h-[1px] bg-tone-400"
+                  whileHover={{ width: "100%" }}
+                  transition={{ duration: 0.3 }}
+                />
+              </span>
             </motion.button>
           )}
           
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="flex items-center gap-3 ml-auto">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.4 }}
-              className="w-8 h-8 rounded-full bg-foreground/5 p-1 flex items-center justify-center backdrop-blur-md border border-foreground/10"
+              className="w-8 h-8 rounded-full bg-tone-900/60 p-1 flex items-center justify-center backdrop-blur-md border border-tone-800/40 shadow-lg"
             >
               <img
                 src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
@@ -71,7 +113,7 @@ const PageLayout = ({
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.4, delay: 0.1 }}
-              className="w-8 h-8 rounded-full bg-foreground/5 p-1 flex items-center justify-center backdrop-blur-md border border-foreground/10"
+              className="w-8 h-8 rounded-full bg-tone-900/60 p-1 flex items-center justify-center backdrop-blur-md border border-tone-800/40 shadow-lg"
             >
               <img
                 src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png"
@@ -84,47 +126,51 @@ const PageLayout = ({
         </div>
       </header>
 
-      <ScrollArea className="h-[calc(100vh-72px)]">
-        <div className="max-w-4xl mx-auto px-4 py-12">
+      <ScrollArea className="h-[calc(100vh-64px)]">
+        <div className="max-w-5xl mx-auto px-4 py-16" ref={scrollRef}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="space-y-12"
+            className="space-y-16"
           >
             {/* Title Section with enhanced typography */}
             {(title || subtitle) && (
-              <div className="text-center space-y-4">
+              <motion.div 
+                className="text-center space-y-6"
+                style={{ y: titleY, opacity: titleOpacity }}
+              >
                 {title && (
                   <motion.h1 
-                    className="text-4xl md:text-6xl font-serif font-bold tracking-tight text-foreground"
+                    className="display-large text-3d"
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.7 }}
+                    data-text={title}
                   >
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70">{title}</span>
+                    {title}
                   </motion.h1>
                 )}
                 
                 {subtitle && (
                   <motion.p 
-                    className="text-lg md:text-xl text-foreground/70 leading-relaxed max-w-3xl mx-auto"
+                    className="text-lg md:text-xl text-tone-400 leading-relaxed max-w-3xl mx-auto font-mono tracking-wide"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.4, duration: 0.7 }}
                   >
-                    {subtitle}
+                    <span className="relative">
+                      {subtitle}
+                      <motion.span 
+                        className="absolute bottom-0 left-0 w-full h-[1px] bg-tone-700"
+                        initial={{ width: 0 }}
+                        animate={{ width: "100%" }}
+                        transition={{ delay: 0.8, duration: 1.2 }}
+                      />
+                    </span>
                   </motion.p>
                 )}
-                
-                {/* Decorative line */}
-                <motion.div 
-                  className="w-16 h-[1px] bg-gradient-to-r from-transparent via-foreground/30 to-transparent mx-auto mt-8"
-                  initial={{ width: 0 }}
-                  animate={{ width: "4rem" }}
-                  transition={{ delay: 0.6, duration: 0.8 }}
-                />
-              </div>
+              </motion.div>
             )}
 
             {/* Main Content */}
@@ -132,8 +178,12 @@ const PageLayout = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
+              className="relative z-10 topo-layer-1 rounded-topo p-6 md:p-10 backdrop-blur-md bg-tone-900/30 border border-tone-800/20"
             >
-              {children}
+              <div className="absolute inset-0 contour-pattern opacity-10 rounded-topo" />
+              <div className="relative z-10">
+                {children}
+              </div>
             </motion.div>
           </motion.div>
 
@@ -144,8 +194,8 @@ const PageLayout = ({
             transition={{ delay: 0.8, duration: 0.5 }}
             className="mt-24 mb-8 text-center"
           >
-            <div className="bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-full px-4 py-2 inline-block">
-              <p className="text-xs text-foreground/50">
+            <div className="bg-tone-900/30 backdrop-blur-md border border-tone-800/20 rounded-full px-4 py-2 inline-block">
+              <p className="text-xs text-tone-500 font-mono tracking-wide">
                 &copy; 2024 OUR CREATIVITY • Designed by Ardellio S. A.
               </p>
             </div>

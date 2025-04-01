@@ -1,3 +1,4 @@
+
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -10,8 +11,18 @@ const Index = () => {
   const { theme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: scrollRef });
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({ 
+    target: scrollRef,
+    offset: ["start start", "end end"]
+  });
   
+  // Parallax effects for layers
+  const layer1Y = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const layer2Y = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const layer3Y = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const textY = useTransform(scrollYProgress, [0, 0.2], [0, -50]);
   const navOpacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
   
   // Handle scroll to reveal navigation
@@ -45,11 +56,11 @@ const Index = () => {
 
   // Navigation items with updated routing and refined design
   const navigationItems = [
-    { icon: BookOpen, text: "Cerita Kami", href: "/brand-story", color: "from-lavender to-amethyst/50", decorColor: "border-lavender" },
-    { icon: Users, text: "Tim Kami", href: "/tim-kami", color: "from-mint to-turquoise/50", decorColor: "border-mint" },
-    { icon: ScrollText, text: "Syarat & Ketentuan", href: "/terms", color: "from-peach to-coral/50", decorColor: "border-peach" },
-    { icon: Info, text: "Informasi", href: "/informasi", color: "from-softPink to-amber/50", decorColor: "border-softPink" },
-    { icon: Bell, text: "Pengumuman", href: "/pengumuman", color: "from-turquoise to-mint/50", decorColor: "border-turquoise" }
+    { icon: BookOpen, text: "Cerita Kami", href: "/brand-story", height: 0 },
+    { icon: Users, text: "Tim Kami", href: "/tim-kami", height: 10 },
+    { icon: ScrollText, text: "Syarat & Ketentuan", href: "/terms", height: 20 },
+    { icon: Info, text: "Informasi", href: "/informasi", height: 5 },
+    { icon: Bell, text: "Pengumuman", href: "/pengumuman", height: 15 }
   ];
 
   return (
@@ -57,176 +68,244 @@ const Index = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen overflow-x-hidden overflow-y-auto relative"
-      ref={scrollRef}
+      className="min-h-screen overflow-x-hidden overflow-y-auto relative perspective-1000"
+      ref={containerRef}
     >
+      {/* Background layers */}
       <div className="fixed inset-0 bg-background -z-10">
-        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-amethyst/5 -top-[20%] -right-[20%]" />
-        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-turquoise/5 -bottom-[10%] -left-[10%]" />
-        <div className="absolute w-[40vw] h-[40vh] rounded-full blur-[80px] bg-coral/5 bottom-[30%] right-[5%]" />
+        {/* Topographical patterns */}
+        <div className="absolute inset-0 geo-topo-pattern opacity-20" />
         
-        <div className="absolute inset-0 geometric-dot-pattern opacity-30" />
-        <div className="absolute inset-0 geometric-line-pattern opacity-20" />
+        {/* Dynamic curved layers */}
+        <motion.div 
+          className="absolute w-[120vw] h-[40vh] -left-[10vw] top-[65vh] rounded-topo topo-layer-1"
+          style={{ y: layer1Y }}
+        />
+        <motion.div 
+          className="absolute w-[130vw] h-[45vh] -right-[15vw] top-[75vh] rounded-topo topo-layer-2"
+          style={{ y: layer2Y }}
+        />
+        <motion.div 
+          className="absolute w-[140vw] h-[50vh] -left-[20vw] top-[85vh] rounded-topo topo-layer-3"
+          style={{ y: layer3Y }}
+        />
         
-        <div className="absolute left-[5%] top-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-transparent via-lavender/20 to-transparent animate-pulse-soft" />
-        <div className="absolute right-[10%] top-[20%] w-[1px] h-[40vh] bg-gradient-to-b from-transparent via-mint/20 to-transparent animate-pulse-soft" />
-        <div className="absolute left-[20%] bottom-[10%] w-[40vw] h-[1px] bg-gradient-to-r from-transparent via-peach/20 to-transparent animate-pulse-soft" />
+        {/* Contour lines */}
+        <div className="absolute inset-0 contour-pattern opacity-10" />
         
-        <div className="absolute top-[15%] left-[15%] w-16 h-16 border border-lavender/20 rounded-full animate-float" style={{ animationDelay: "-2s" }} />
-        <div className="absolute bottom-[25%] right-[25%] w-24 h-24 border border-mint/20 rounded-full animate-float" style={{ animationDelay: "-1s" }} />
-        <div className="absolute top-[40%] right-[10%] w-12 h-12 border border-peach/20 morphing-blob animate-float" style={{ animationDelay: "-3s" }} />
+        {/* Connection nodes */}
+        <div className="absolute left-[15%] top-[20%] w-2 h-2 rounded-full bg-tone-300/20 animate-pulse-soft" />
+        <div className="absolute left-[25%] top-[40%] w-3 h-3 rounded-full bg-tone-300/30 animate-pulse-soft" style={{ animationDelay: "-1.5s" }} />
+        <div className="absolute right-[20%] top-[30%] w-4 h-4 rounded-full bg-tone-300/20 animate-pulse-soft" style={{ animationDelay: "-2s" }} />
+        <div className="absolute right-[30%] bottom-[35%] w-2 h-2 rounded-full bg-tone-300/30 animate-pulse-soft" style={{ animationDelay: "-0.5s" }} />
+        
+        {/* Connection lines */}
+        <svg className="absolute inset-0 w-full h-full">
+          <motion.path 
+            d="M15%,20% Q25%,30% 25%,40%" 
+            className="connection-line" 
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2, delay: 1 }}
+          />
+          <motion.path 
+            d="M25%,40% Q40%,35% 20%,65%" 
+            className="connection-line" 
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2, delay: 1.5 }}
+          />
+          <motion.path 
+            d="M80%,30% Q70%,50% 70%,65%" 
+            className="connection-line" 
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2, delay: 1.8 }}
+          />
+        </svg>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-8 min-h-[200vh]">
-        <div className="h-screen flex items-center justify-center">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ 
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              duration: 1.2
-            }}
-            className="flex gap-6 relative"
+      <div className="relative z-10 container mx-auto px-4 py-8 min-h-[200vh]" ref={scrollRef}>
+        {/* Hero section with 3D typography */}
+        <div className="min-h-screen flex items-center justify-center perspective-1000">
+          <motion.div 
+            style={{ opacity: textOpacity, y: textY }}
+            className="flex flex-col items-center"
           >
-            <div className="absolute inset-0 -z-10 w-full h-full flex items-center justify-center">
-              <div className="w-[80%] max-w-[20rem] aspect-square border border-foreground/5 rounded-full animate-rotate-slow" />
-              <div className="absolute w-[100%] max-w-[25rem] aspect-square border border-foreground/5 rounded-full animate-rotate-slow" style={{ animationDirection: "reverse", animationDuration: "15s" }} />
-              <div className="absolute w-[120%] max-w-[30rem] aspect-square border border-foreground/5 rounded-full animate-pulse-soft" />
-            </div>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.7 }}
-              className="w-24 h-24 rounded-full backdrop-blur-xl bg-foreground/5 border border-foreground/10 p-4 flex items-center justify-center animate-float shadow-lg shadow-black/20 geometric-circle"
-              whileHover={{ scale: 1.05, borderColor: "rgba(155, 109, 255, 0.3)" }}
+            {/* Logo section with 3D effect */}
+            <motion.div
+              initial={{ scale: 0, rotateX: 25 }}
+              animate={{ scale: 1, rotateX: 0 }}
+              transition={{ 
+                type: "spring",
+                stiffness: 100,
+                damping: 15,
+                duration: 1.2
+              }}
+              className="relative mb-12"
+              style={{ transformStyle: "preserve-3d" }}
             >
-              <img
-                src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
-                alt="Fish Logo"
-                className="w-16 h-16 object-contain"
-                loading="eager"
-              />
+              <motion.div 
+                initial={{ opacity: 0, y: -10, z: 0 }}
+                animate={{ opacity: 1, y: 0, z: 30 }}
+                transition={{ delay: 0.6, duration: 0.8 }}
+                className="w-24 h-24 rounded-full backdrop-blur-xl bg-tone-800/50 border border-tone-700/40 p-4 flex items-center justify-center shadow-lg absolute left-0 -translate-x-1/2"
+                style={{ transform: "translateZ(30px)" }}
+              >
+                <img
+                  src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
+                  alt="Fish Logo"
+                  className="w-16 h-16 object-contain"
+                  loading="eager"
+                />
+              </motion.div>
+              
+              <motion.div 
+                initial={{ opacity: 0, z: 0 }}
+                animate={{ opacity: 1, z: 50 }}
+                transition={{ delay: 0.4, duration: 0.8 }}
+                className="w-32 h-32 rounded-full backdrop-blur-xl bg-tone-800/50 border border-tone-700/40 p-4 flex items-center justify-center shadow-lg"
+                style={{ transform: "translateZ(50px)" }}
+              >
+                <img
+                  src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png"
+                  alt="Text Logo"
+                  className="w-24 h-24 object-contain"
+                  loading="eager"
+                />
+              </motion.div>
+              
+              <svg className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-full opacity-20" height="10">
+                <ellipse cx="50%" cy="50%" rx="30%" ry="50%" fill="rgba(255,255,255,0.2)" />
+              </svg>
             </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }}
+
+            {/* Title with 3D depth effect */}
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.7 }}
-              className="w-32 h-32 rounded-full backdrop-blur-xl bg-foreground/5 border border-foreground/10 p-4 flex items-center justify-center animate-float shadow-lg shadow-black/20 geometric-circle"
-              whileHover={{ scale: 1.05, borderColor: "rgba(64, 224, 208, 0.3)" }}
-              style={{ animationDelay: "-2s" }}
+              transition={{ delay: 0.8, duration: 0.8 }}
+              className="display-huge text-depth text-center mb-8"
+              data-text="OUR CREATIVITY"
             >
-              <img
-                src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png"
-                alt="Text Logo"
-                className="w-24 h-24 object-contain"
-                loading="eager"
-              />
+              OUR CREATIVITY
+            </motion.h1>
+
+            {/* Subtitle with elegant typography */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.0, duration: 0.7 }}
+              className="text-lg md:text-xl text-tone-400 max-w-xl text-center mb-12 font-mono relative z-10 mx-auto py-2 px-4"
+            >
+              <span className="relative">
+                Dimana imajinasi bertemu dengan inovasi. Bergabunglah dengan komunitas kreatif kami.
+                <motion.span 
+                  className="absolute bottom-0 left-0 w-full h-[1px] bg-tone-700"
+                  initial={{ width: 0 }}
+                  animate={{ width: "100%" }}
+                  transition={{ delay: 1.5, duration: 1.2 }}
+                />
+              </span>
+            </motion.p>
+            
+            {/* Scroll indicator */}
+            <motion.div
+              initial={{ opacity: 0, y: 0 }}
+              animate={{ opacity: [0, 1, 0], y: [0, 10, 0] }}
+              transition={{ 
+                delay: 2, 
+                duration: 2, 
+                repeat: Infinity,
+                repeatDelay: 1
+              }}
+              className="absolute bottom-20 left-1/2 transform -translate-x-1/2"
+            >
+              <div className="w-6 h-10 rounded-full border-2 border-tone-500/30 flex items-center justify-center">
+                <div className="w-1 h-2 bg-tone-400 rounded-full" />
+              </div>
+              <p className="text-tone-500 text-xs mt-2 text-center font-mono">SCROLL</p>
             </motion.div>
           </motion.div>
         </div>
 
-        <div className="min-h-screen pt-16">
-          <motion.h1
+        {/* Navigation section with topographical elements */}
+        <div className="min-h-screen pt-32">
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.7 }}
-            className="text-5xl md:text-7xl font-serif font-bold mb-6 text-center relative z-10"
+            className="display-medium text-center mb-16 relative"
           >
-            <motion.span 
-              className="inline-block"
-              animate={{ 
-                background: theme === "dark" ? [
-                  "linear-gradient(to right, #fff, #fff)",
-                  "linear-gradient(to right, #fff, #9B6DFF)",
-                  "linear-gradient(to right, #9B6DFF, #FEC6A1)",
-                  "linear-gradient(to right, #FEC6A1, #8A898C)",
-                  "linear-gradient(to right, #8A898C, #33C3F0)",
-                  "linear-gradient(to right, #33C3F0, #fff)"
-                ] : [
-                  "linear-gradient(to right, #333336, #333336)",
-                  "linear-gradient(to right, #333336, #9B6DFF)",
-                  "linear-gradient(to right, #9B6DFF, #FEC6A1)",
-                  "linear-gradient(to right, #FEC6A1, #8A898C)",
-                  "linear-gradient(to right, #8A898C, #33C3F0)",
-                  "linear-gradient(to right, #33C3F0, #333336)"
-                ],
-                backgroundClip: "text",
-                WebkitBackgroundClip: "text",
-                color: "transparent"
-              }}
-              transition={{ 
-                duration: 8, 
-                repeat: Infinity,
-                repeatType: "reverse"
-              }}
-            >
-              OUR CREATIVITY
-            </motion.span>
-          </motion.h1>
+            <span className="text-3d">NAVIGATE</span>
+          </motion.h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.7 }}
-            className="text-lg md:text-xl text-foreground/70 max-w-2xl text-center mb-12 font-serif relative z-10 mx-auto"
-          >
-            <span className="shimmer px-6 py-4 rounded-full">
-              Dimana imajinasi bertemu dengan inovasi. Bergabunglah dengan komunitas kreatif kami.
-            </span>
-          </motion.p>
-
+          {/* Navigation items with topographic elevation */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             style={{ opacity: navOpacity }}
-            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 w-full max-w-5xl mx-auto"
+            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-8 w-full max-w-5xl mx-auto"
           >
-            {navigationItems.map(({ icon: Icon, text, href, color, decorColor }) => (
+            {navigationItems.map(({ icon: Icon, text, href, height }, index) => (
               <motion.div
                 key={text}
                 variants={itemVariants}
-                whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+                whileHover={{ 
+                  scale: 1.05, 
+                  translateZ: 20 + height,
+                  transition: { duration: 0.3 } 
+                }}
                 whileTap={{ scale: 0.95 }}
-                className="relative"
+                className="topo-layer relative"
+                style={{
+                  transform: `perspective(1000px) translateZ(${height}px)`,
+                  transition: 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+                }}
               >
                 <Button
                   onClick={() => navigate(href)}
                   variant="secondary"
-                  className={`w-full h-full min-h-[100px] sm:min-h-[120px] rounded-2xl backdrop-blur-xl bg-foreground/5 border border-foreground/10 flex flex-col items-center justify-center gap-4 transition-all duration-300 group overflow-hidden relative btn-hover-effect`}
+                  className="w-full h-full min-h-[120px] sm:min-h-[140px] rounded-topo bg-tone-900/30 backdrop-blur-sm border border-tone-700/20 flex flex-col items-center justify-center gap-4 relative overflow-hidden"
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-30 transition-opacity duration-300 group-hover:opacity-50`}></div>
+                  <div className="absolute inset-0 contour-pattern opacity-20" />
                   
-                  <span className="absolute inset-0 bg-shimmer-gradient bg-[length:200%_100%] opacity-0 group-hover:opacity-100 group-hover:animate-shimmer" />
-                  
-                  <div className={`absolute -bottom-6 -right-6 w-16 h-16 ${decorColor} rounded-full border opacity-20 group-hover:opacity-30 transition-all duration-500 group-hover:scale-125`} />
-                  <div className={`absolute -top-6 -left-6 w-12 h-12 ${decorColor} rounded-full border opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125`} />
-                  
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-foreground/10 backdrop-blur-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-foreground/20 relative z-10 overflow-hidden">
-                    <Icon className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
-                    <span className="absolute inset-0 border border-foreground/0 group-hover:border-foreground/20 rounded-xl transition-all duration-300"></span>
+                  {/* Elevated icon */}
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-tone-800/50 backdrop-blur-sm z-10 border border-tone-700/30 shadow-lg transform-gpu">
+                    <Icon className="w-6 h-6 text-tone-200" />
                   </div>
                   
-                  <span className="text-sm font-serif transition-all duration-300 group-hover:translate-y-1 relative z-10 group-hover:font-medium">{text}</span>
+                  {/* Label */}
+                  <span className="text-sm font-mono tracking-wide z-10 text-tone-300">{text}</span>
+                  
+                  {/* Connection lines */}
+                  <svg className="absolute -bottom-4 -right-4 w-16 h-16 opacity-30 z-0" viewBox="0 0 100 100">
+                    <motion.path 
+                      d="M100,0 Q50,50 100,100" 
+                      className="connection-line"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 2, delay: 0.5 + index * 0.2 }}
+                    />
+                  </svg>
                 </Button>
               </motion.div>
             ))}
           </motion.div>
         </div>
 
+        {/* Footer with minimalist typography */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
           className="mt-auto pt-16 pb-6 text-center"
         >
-          <div className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-full px-6 py-3 inline-block relative overflow-hidden group hover:border-foreground/20 transition-colors duration-300">
-            <span className="absolute inset-0 bg-gradient-to-r from-amethyst/0 via-amethyst/5 to-amethyst/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
+          <div className="backdrop-blur-sm bg-tone-900/30 border border-tone-800/30 rounded-full px-6 py-3 inline-block relative overflow-hidden group hover:border-tone-700/40 transition-colors duration-300">
+            <span className="absolute inset-0 bg-gradient-to-r from-tone-800/0 via-tone-800/10 to-tone-800/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
             
-            <p className="text-xs text-foreground/50 group-hover:text-foreground/60 transition-colors duration-300">
+            <p className="text-xs text-tone-500 font-mono tracking-wide group-hover:text-tone-400 transition-colors duration-300">
               &copy; 2024 OUR CREATIVITY • Designed by Ardellio S. A.
             </p>
           </div>

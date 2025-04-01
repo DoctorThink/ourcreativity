@@ -15,26 +15,47 @@ const Pengumuman = lazy(() => import("./pages/Pengumuman"));
 const Terms = lazy(() => import("./pages/Terms"));
 const TimKami = lazy(() => import("./pages/TimKami"));
 
-// Enhanced loading component
+// Enhanced loading component with topographical design
 const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-background">
-    <div className="w-20 h-20 relative">
-      {/* Outer ring */}
-      <div className="absolute inset-0 rounded-full border-2 border-t-foreground/20 border-r-foreground/10 border-b-transparent border-l-foreground/10 animate-spin"></div>
+  <div className="min-h-screen flex items-center justify-center bg-background perspective-1000">
+    {/* Topographical background */}
+    <div className="absolute inset-0 contour-pattern opacity-10" />
+    
+    {/* Centered loading indicator */}
+    <div className="w-24 h-24 relative">
+      {/* Animated layers */}
+      <div className="absolute inset-0 rounded-full border-2 border-t-tone-400/20 border-r-tone-400/10 border-b-transparent border-l-tone-400/10 animate-spin"></div>
+      <div className="absolute inset-[4px] rounded-full border-2 border-t-tone-400/30 border-r-transparent border-b-tone-400/10 border-l-transparent animate-spin" style={{ animationDuration: '1.5s', animationDirection: 'reverse' }}></div>
       
-      {/* Middle ring */}
-      <div className="absolute inset-[4px] rounded-full border-2 border-t-foreground/30 border-r-transparent border-b-foreground/10 border-l-transparent animate-spin" style={{ animationDuration: '1.5s', animationDirection: 'reverse' }}></div>
-      
-      {/* Inner content */}
+      {/* Logo container */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-10 h-10 rounded-full bg-foreground/5 backdrop-blur-xl flex items-center justify-center">
+        <div className="w-14 h-14 rounded-full bg-tone-900 backdrop-blur-xl flex items-center justify-center border border-tone-800/50 shadow-lg shadow-black/20">
           <img
             src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
             alt="Logo"
-            className="w-6 h-6 object-contain animate-pulse"
+            className="w-8 h-8 object-contain animate-pulse"
           />
         </div>
       </div>
+      
+      {/* Connection lines */}
+      <svg className="absolute inset-0 w-full h-full">
+        <motion.ellipse 
+          cx="50%" 
+          cy="50%" 
+          rx="45%" 
+          ry="45%" 
+          className="connection-line"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1.5, repeat: Infinity, repeatType: "loop" }}
+        />
+      </svg>
+    </div>
+    
+    {/* Loading text */}
+    <div className="absolute bottom-20 left-0 right-0 text-center">
+      <p className="font-mono text-xs text-tone-500 tracking-widest animate-pulse">LOADING</p>
     </div>
   </div>
 );
@@ -62,7 +83,7 @@ const App = () => {
       // Add a slight delay to ensure smooth animations
       const timer = setTimeout(() => {
         setIsAppReady(true);
-      }, 500);
+      }, 800);
       
       return () => clearTimeout(timer);
     };
