@@ -26,17 +26,13 @@ const TeamMember = ({ name, instagram, role, imageUrl, index }: TeamMemberProps)
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 * index }}
-      className="backdrop-blur-lg bg-foreground/5 border border-foreground/10 rounded-xl p-4 flex items-center gap-4 relative overflow-hidden group"
+      className="bg-surface border border-border rounded-lg p-4 flex items-center gap-4 group hover:border-accent-blue/30 hover:bg-surface-hover transition-all"
     >
-      {/* Animated decorative elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 via-transparent to-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      <div className="absolute -bottom-6 -right-6 w-16 h-16 rounded-full border border-foreground/10 opacity-30 group-hover:scale-125 transition-all duration-500" />
-      
-      <Avatar className="h-14 w-14 border border-foreground/10 shadow-lg">
+      <Avatar className="h-14 w-14 border border-border">
         {imageUrl ? (
           <AvatarImage src={imageUrl} alt={name} />
         ) : (
-          <AvatarFallback className="bg-foreground/10 text-foreground">
+          <AvatarFallback className="bg-surface text-foreground">
             {getInitials(name)}
           </AvatarFallback>
         )}
@@ -47,19 +43,19 @@ const TeamMember = ({ name, instagram, role, imageUrl, index }: TeamMemberProps)
           <h3 className="font-medium">{name}</h3>
           {instagram && (
             <motion.a
-              whileHover={{ scale: 1.1 }}
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href={`https://instagram.com/${instagram.replace('@', '')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground/70 hover:text-foreground transition-colors flex items-center gap-1 text-sm"
+              className="text-foreground-muted hover:text-foreground transition-colors flex items-center gap-1 text-sm"
             >
               <Instagram size={16} />
               <span>{instagram}</span>
             </motion.a>
           )}
         </div>
-        <p className="text-sm text-foreground/60">{role}</p>
+        <p className="text-sm text-foreground-muted">{role}</p>
       </div>
     </motion.div>
   );

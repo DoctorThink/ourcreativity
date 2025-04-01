@@ -1,4 +1,5 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Info, Bell, ScrollText, Users } from "lucide-react";
@@ -10,9 +11,6 @@ const Index = () => {
   const { theme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: scrollRef });
-  
-  const navOpacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
   
   // Handle scroll to reveal navigation
   useEffect(() => {
@@ -25,214 +23,143 @@ const Index = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Enhanced animation variants for staggered animations
+  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
       transition: { 
-        staggerChildren: 0.15,
-        delayChildren: 0.3,
-        duration: 0.8
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+        duration: 0.6
       } 
     }
   };
 
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.6 } }
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
   };
 
-  // Navigation items with updated routing and refined design
+  // Navigation items
   const navigationItems = [
-    { icon: BookOpen, text: "Cerita Kami", href: "/brand-story", color: "from-lavender to-amethyst/50", decorColor: "border-lavender" },
-    { icon: Users, text: "Tim Kami", href: "/tim-kami", color: "from-mint to-turquoise/50", decorColor: "border-mint" },
-    { icon: ScrollText, text: "Syarat & Ketentuan", href: "/terms", color: "from-peach to-coral/50", decorColor: "border-peach" },
-    { icon: Info, text: "Informasi", href: "/informasi", color: "from-softPink to-amber/50", decorColor: "border-softPink" },
-    { icon: Bell, text: "Pengumuman", href: "/pengumuman", color: "from-turquoise to-mint/50", decorColor: "border-turquoise" }
+    { icon: BookOpen, text: "Brand Story", href: "/brand-story" },
+    { icon: Users, text: "Our Team", href: "/tim-kami" },
+    { icon: ScrollText, text: "Terms", href: "/terms" },
+    { icon: Info, text: "Information", href: "/informasi" },
+    { icon: Bell, text: "Announcements", href: "/pengumuman" }
   ];
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-screen overflow-x-hidden overflow-y-auto relative"
-      ref={scrollRef}
-    >
-      <div className="fixed inset-0 bg-background -z-10">
-        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-amethyst/5 -top-[20%] -right-[20%]" />
-        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-turquoise/5 -bottom-[10%] -left-[10%]" />
-        <div className="absolute w-[40vw] h-[40vh] rounded-full blur-[80px] bg-coral/5 bottom-[30%] right-[5%]" />
-        
-        <div className="absolute inset-0 geometric-dot-pattern opacity-30" />
-        <div className="absolute inset-0 geometric-line-pattern opacity-20" />
-        
-        <div className="absolute left-[5%] top-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-transparent via-lavender/20 to-transparent animate-pulse-soft" />
-        <div className="absolute right-[10%] top-[20%] w-[1px] h-[40vh] bg-gradient-to-b from-transparent via-mint/20 to-transparent animate-pulse-soft" />
-        <div className="absolute left-[20%] bottom-[10%] w-[40vw] h-[1px] bg-gradient-to-r from-transparent via-peach/20 to-transparent animate-pulse-soft" />
-        
-        <div className="absolute top-[15%] left-[15%] w-16 h-16 border border-lavender/20 rounded-full animate-float" style={{ animationDelay: "-2s" }} />
-        <div className="absolute bottom-[25%] right-[25%] w-24 h-24 border border-mint/20 rounded-full animate-float" style={{ animationDelay: "-1s" }} />
-        <div className="absolute top-[40%] right-[10%] w-12 h-12 border border-peach/20 morphing-blob animate-float" style={{ animationDelay: "-3s" }} />
-      </div>
-
-      <div className="relative z-10 container mx-auto px-4 py-8 min-h-[200vh]">
-        <div className="h-screen flex items-center justify-center">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ 
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              duration: 1.2
-            }}
-            className="flex gap-6 relative"
+    <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen">
+        {/* Hero Section */}
+        <section className="h-screen flex items-center justify-center">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="text-center"
           >
-            <div className="absolute inset-0 -z-10 w-full h-full flex items-center justify-center">
-              <div className="w-[80%] max-w-[20rem] aspect-square border border-foreground/5 rounded-full animate-rotate-slow" />
-              <div className="absolute w-[100%] max-w-[25rem] aspect-square border border-foreground/5 rounded-full animate-rotate-slow" style={{ animationDirection: "reverse", animationDuration: "15s" }} />
-              <div className="absolute w-[120%] max-w-[30rem] aspect-square border border-foreground/5 rounded-full animate-pulse-soft" />
-            </div>
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20, duration: 0.8 }}
+              className="flex items-center justify-center gap-6 mb-10"
+            >
+              <div className="w-20 h-20 bg-surface rounded-full border border-border p-4 flex items-center justify-center">
+                <img
+                  src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
+                  alt="Fish Logo"
+                  className="w-12 h-12 object-contain"
+                />
+              </div>
+              
+              <div className="w-28 h-28 bg-surface rounded-full border border-border p-4 flex items-center justify-center">
+                <img
+                  src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png"
+                  alt="Text Logo"
+                  className="w-20 h-20 object-contain"
+                />
+              </div>
+            </motion.div>
             
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }}
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.7 }}
-              className="w-24 h-24 rounded-full backdrop-blur-xl bg-foreground/5 border border-foreground/10 p-4 flex items-center justify-center animate-float shadow-lg shadow-black/20 geometric-circle"
-              whileHover={{ scale: 1.05, borderColor: "rgba(155, 109, 255, 0.3)" }}
-            >
-              <img
-                src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
-                alt="Fish Logo"
-                className="w-16 h-16 object-contain"
-                loading="eager"
-              />
-            </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.7 }}
-              className="w-32 h-32 rounded-full backdrop-blur-xl bg-foreground/5 border border-foreground/10 p-4 flex items-center justify-center animate-float shadow-lg shadow-black/20 geometric-circle"
-              whileHover={{ scale: 1.05, borderColor: "rgba(64, 224, 208, 0.3)" }}
-              style={{ animationDelay: "-2s" }}
-            >
-              <img
-                src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png"
-                alt="Text Logo"
-                className="w-24 h-24 object-contain"
-                loading="eager"
-              />
-            </motion.div>
-          </motion.div>
-        </div>
-
-        <div className="min-h-screen pt-16">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.7 }}
-            className="text-5xl md:text-7xl font-serif font-bold mb-6 text-center relative z-10"
-          >
-            <motion.span 
-              className="inline-block"
-              animate={{ 
-                background: theme === "dark" ? [
-                  "linear-gradient(to right, #fff, #fff)",
-                  "linear-gradient(to right, #fff, #9B6DFF)",
-                  "linear-gradient(to right, #9B6DFF, #FEC6A1)",
-                  "linear-gradient(to right, #FEC6A1, #8A898C)",
-                  "linear-gradient(to right, #8A898C, #33C3F0)",
-                  "linear-gradient(to right, #33C3F0, #fff)"
-                ] : [
-                  "linear-gradient(to right, #333336, #333336)",
-                  "linear-gradient(to right, #333336, #9B6DFF)",
-                  "linear-gradient(to right, #9B6DFF, #FEC6A1)",
-                  "linear-gradient(to right, #FEC6A1, #8A898C)",
-                  "linear-gradient(to right, #8A898C, #33C3F0)",
-                  "linear-gradient(to right, #33C3F0, #333336)"
-                ],
-                backgroundClip: "text",
-                WebkitBackgroundClip: "text",
-                color: "transparent"
-              }}
-              transition={{ 
-                duration: 8, 
-                repeat: Infinity,
-                repeatType: "reverse"
-              }}
+              transition={{ delay: 0.3 }}
+              className="text-gradient font-extrabold tracking-tight mb-6"
             >
               OUR CREATIVITY
-            </motion.span>
-          </motion.h1>
+            </motion.h1>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="text-foreground-muted max-w-lg mx-auto mb-12 text-balance"
+            >
+              Where imagination meets innovation. Join our creative community and bring your ideas to life.
+            </motion.p>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.7 }}
-            className="text-lg md:text-xl text-foreground/70 max-w-2xl text-center mb-12 font-serif relative z-10 mx-auto"
-          >
-            <span className="shimmer px-6 py-4 rounded-full">
-              Dimana imajinasi bertemu dengan inovasi. Bergabunglah dengan komunitas kreatif kami.
-            </span>
-          </motion.p>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
+              className="absolute bottom-12 left-1/2 -translate-x-1/2"
+            >
+              <div className="animate-bounce flex flex-col items-center text-foreground-subtle">
+                <span className="block mb-2 text-sm">Scroll to Explore</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 5L12 19M12 19L19 12M12 19L5 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+            </motion.div>
+          </motion.div>
+        </section>
 
+        {/* Navigation Section */}
+        <section className="py-section">
           <motion.div
             variants={containerVariants}
             initial="hidden"
-            animate="visible"
-            style={{ opacity: navOpacity }}
-            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 w-full max-w-5xl mx-auto"
+            animate={isScrolled ? "visible" : "hidden"}
+            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 w-full max-w-5xl mx-auto"
           >
-            {navigationItems.map(({ icon: Icon, text, href, color, decorColor }) => (
+            {navigationItems.map(({ icon: Icon, text, href }) => (
               <motion.div
                 key={text}
                 variants={itemVariants}
-                whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                whileTap={{ scale: 0.95 }}
-                className="relative"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
               >
                 <Button
                   onClick={() => navigate(href)}
-                  variant="secondary"
-                  className={`w-full h-full min-h-[100px] sm:min-h-[120px] rounded-2xl backdrop-blur-xl bg-foreground/5 border border-foreground/10 flex flex-col items-center justify-center gap-4 transition-all duration-300 group overflow-hidden relative btn-hover-effect`}
+                  className="w-full h-24 bg-surface border border-border hover:border-accent-blue/50 hover:bg-surface-hover rounded-lg transition-all flex flex-col items-center justify-center gap-3"
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-30 transition-opacity duration-300 group-hover:opacity-50`}></div>
-                  
-                  <span className="absolute inset-0 bg-shimmer-gradient bg-[length:200%_100%] opacity-0 group-hover:opacity-100 group-hover:animate-shimmer" />
-                  
-                  <div className={`absolute -bottom-6 -right-6 w-16 h-16 ${decorColor} rounded-full border opacity-20 group-hover:opacity-30 transition-all duration-500 group-hover:scale-125`} />
-                  <div className={`absolute -top-6 -left-6 w-12 h-12 ${decorColor} rounded-full border opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125`} />
-                  
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-foreground/10 backdrop-blur-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-foreground/20 relative z-10 overflow-hidden">
-                    <Icon className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
-                    <span className="absolute inset-0 border border-foreground/0 group-hover:border-foreground/20 rounded-xl transition-all duration-300"></span>
+                  <div className="w-10 h-10 rounded-md bg-surface-hover flex items-center justify-center">
+                    <Icon className="w-5 h-5" />
                   </div>
-                  
-                  <span className="text-sm font-serif transition-all duration-300 group-hover:translate-y-1 relative z-10 group-hover:font-medium">{text}</span>
+                  <span className="text-sm font-medium">{text}</span>
                 </Button>
               </motion.div>
             ))}
           </motion.div>
-        </div>
+        </section>
 
-        <motion.div
+        {/* Footer */}
+        <motion.footer
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
-          className="mt-auto pt-16 pb-6 text-center"
+          className="py-6 mt-auto text-center"
         >
-          <div className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-full px-6 py-3 inline-block relative overflow-hidden group hover:border-foreground/20 transition-colors duration-300">
-            <span className="absolute inset-0 bg-gradient-to-r from-amethyst/0 via-amethyst/5 to-amethyst/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
-            
-            <p className="text-xs text-foreground/50 group-hover:text-foreground/60 transition-colors duration-300">
-              &copy; 2024 OUR CREATIVITY • Designed by Ardellio S. A.
-            </p>
+          <div className="inline-block px-4 py-2 rounded-full border border-border text-foreground-subtle text-xs">
+            &copy; 2024 OUR CREATIVITY • Designed by Ardellio S. A.
           </div>
-        </motion.div>
+        </motion.footer>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
