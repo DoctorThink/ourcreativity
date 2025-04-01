@@ -110,7 +110,8 @@
 }
 
 .btn-solid:hover {
-  @apply -translate-y-0.5 shadow-lg shadow-accent-blue/20;
+  @apply -translate-y-0.5 shadow-lg;
+  box-shadow: 0 10px 15px -3px rgba(51, 195, 240, 0.2);
 }
 
 .btn-outline {
@@ -128,7 +129,8 @@
 
 .text-link::after {
   content: '';
-  @apply absolute w-full h-px -bottom-0.5 left-0 bg-accent-blue scale-x-0 origin-bottom-right transition-transform duration-300;
+  @apply absolute w-full h-px -bottom-0.5 left-0 scale-x-0 origin-bottom-right transition-transform duration-300;
+  background-color: var(--accent-blue);
 }
 
 .text-link:hover {
@@ -168,5 +170,6 @@
 }
 
 .hover-lift:hover {
-  @apply -translate-y-1 shadow-lg shadow-accent-blue/10;
+  @apply -translate-y-1;
+  box-shadow: 0 10px 15px -3px rgba(51, 195, 240, 0.1);
 }
