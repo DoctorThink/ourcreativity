@@ -6,19 +6,42 @@ import { BookOpen, Info, Bell, ScrollText, Users, Palette, Feather, Clock, Code 
 const Index = () => {
   const navigate = useNavigate();
 
-  // --- Animation Variants (Keep simplified) ---
-  const gridContainerVariants = { /* ... as before ... */ };
-  const gridItemVariants = { /* ... as before ... */ };
+  // --- Animation Variants ---
+  const gridContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.06,
+        delayChildren: 0.1,
+      }
+    }
+  };
+
+  const gridItemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: [0.25, 0.1, 0.25, 1.0]
+      }
+    }
+  };
 
   // --- Simplified Hover Animation ---
   const interactiveHover = {
     y: -4,
     scale: 1.03,
-    boxShadow: "0 8px 20px -4px rgba(0, 0, 0, 0.35)", // Slightly adjusted shadow
+    boxShadow: "0 8px 20px -4px rgba(0, 0, 0, 0.35)",
     transition: { type: "spring", stiffness: 350, damping: 20 }
   };
 
-  const interactiveTap = { /* ... as before ... */ };
+  const interactiveTap = {
+    scale: 0.98,
+    transition: { type: "spring", stiffness: 400, damping: 25 }
+  };
 
 
   // --- Bento Grid Tile Configuration (Dark Theme Focus, Accent Icon BG) ---
@@ -30,7 +53,20 @@ const Index = () => {
       rowSpan: "row-span-2",
       mdColSpan: "md:col-span-2",
       mdRowSpan: "md:row-span-2",
-      content: ( /* ... Title content as before ... */ ),
+      // **** CORRECTED CONTENT HERE ****
+      content: (
+        <div className="flex flex-col justify-center h-full p-4 md:p-6 text-left">
+          <motion.h1
+            className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold mb-2 md:mb-3 text-foreground leading-tight home-title" // Using CSS class for gradient
+          >
+            OUR CREATIVITY
+          </motion.h1>
+          <p className="text-sm sm:text-base lg:text-lg text-foreground/70 font-sans max-w-md">
+            Dimana imajinasi bertemu dengan inovasi. Bergabunglah dengan komunitas kreatif kami.
+          </p>
+        </div>
+      ),
+      // *******************************
       bgColor: "bg-secondary", // Consistent dark background
       isInteractive: false,
     },
@@ -103,7 +139,22 @@ const Index = () => {
     { // Logo Visual Accent
       id: "logo-visual",
       colSpan: "col-span-1", rowSpan: "row-span-1", mdColSpan: "md:col-span-1", mdRowSpan: "md:row-span-1",
-      content: ( /* ... Logo visual content as before ... */ ),
+      // **** CORRECTED CONTENT HERE ****
+      content: (
+         <div className="flex items-center justify-center h-full relative overflow-hidden">
+            {/* Simplified background elements */}
+            <div className="absolute inset-0 bg-gradient-radial from-lavender/10 via-transparent to-transparent opacity-50 blur-md"></div>
+            <motion.img
+              src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" // Fish logo
+              alt="Logo Icon"
+              className="w-12 h-12 md:w-16 md:h-16 object-contain relative z-10"
+              loading="eager"
+              whileHover={{ scale: 1.1, rotate: 3 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            />
+         </div>
+      ),
+      // *******************************
       bgColor: "bg-foreground/5", // Keep slightly different dark bg
       isInteractive: false,
     },
@@ -111,7 +162,16 @@ const Index = () => {
      {
       id: "designer-credit",
       colSpan: "col-span-2 sm:col-span-2", rowSpan: "row-span-1", mdColSpan: "md:col-span-4", mdRowSpan: "md:row-span-1",
-      content: ( /* ... Designer credit content as before ... */ ),
+      // **** CORRECTED CONTENT HERE ****
+      content: (
+         <div className="flex items-center justify-center h-full text-center p-3 md:p-4">
+           <p className="text-xs sm:text-sm text-foreground/50 font-sans flex items-center gap-2">
+             <Code size={14} className="opacity-70"/> {/* Slightly smaller icon */}
+             <span>© 2024 OUR CREATIVITY • Designed by Ardellio S. A.</span>
+           </p>
+         </div>
+      ),
+       // *******************************
       bgColor: "bg-secondary", // Consistent dark bg
       isInteractive: false,
     },
@@ -124,7 +184,7 @@ const Index = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen h-screen overflow-hidden relative bg-background flex flex-col"
     >
-      {/* --- Simplified Static Background (Keep as is) --- */}
+      {/* --- Simplified Static Background --- */}
       <div className="fixed inset-0 -z-10 opacity-90">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-secondary to-background"></div>
         <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-amethyst/5 -top-[10%] -right-[10%] opacity-60"></div>
@@ -142,10 +202,10 @@ const Index = () => {
           animate="visible"
         >
           {bentoTiles.map((tile) => {
-            // Destructure new props
+            // Destructure props
             const { id, colSpan, rowSpan, mdColSpan, mdRowSpan, content, bgColor, textColor, accentColorClass, iconColorClass, icon: Icon, text, href, isInteractive, comingSoon, isWidget } = tile;
 
-            const MotionComponent = motion.div;
+            const MotionComponent = motion.div; // Use motion.div for layout
 
             return (
               <MotionComponent
@@ -176,15 +236,14 @@ const Index = () => {
                     ) : isWidget ? (
                        // Widget Layout with Accent Icon Background
                        <>
-                         {/* Accent Background for Icon */}
                          <div className={`mb-2 md:mb-3 p-2.5 md:p-3 ${accentColorClass} rounded-lg shadow-md transition-transform duration-300 group-hover:scale-110`}>
                            <Icon className={`w-5 h-5 md:w-6 md:h-6 ${iconColorClass || 'text-background'}`} />
                          </div>
                          <span className={`text-xs md:text-sm font-serif font-medium ${textColor || 'text-foreground'}`}>{text}</span>
                        </>
-                    ) : content ? ( // Handle custom content (Title, Logo Visual, Designer Credit)
+                    ) : content ? ( // Handle custom content
                        <div className="h-full w-full flex"> {content} </div>
-                     ) : null /* Fallback for tiles without content defined */
+                     ) : null // Fallback
                     }
                  </div>
               </MotionComponent>
