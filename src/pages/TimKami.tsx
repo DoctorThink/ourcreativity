@@ -74,7 +74,7 @@ const teamData = [
    {
     title: "Meme Creator",
     icon: Smile,
-    imageSrc: null,
+    imageSrc: "/lovable-uploads/meme.png",
     accent: "emerald",
     members: [
       { name: "Daffa/deploid", instagram: "", role: "Meme Creator" },
@@ -118,7 +118,7 @@ const teamData = [
   {
     title: "Bot Developer",
     icon: Bot,
-    imageSrc: null,
+    imageSrc: "/lovable-uploads/bot.png",
     accent: "orangeLight",
     members: [
       { name: "Rappal", instagram: "raffal_arz", role: "Bot Developer" },
