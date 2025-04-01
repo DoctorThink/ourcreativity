@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layouts/PageLayout";
-import TeamMember from "@/components/TeamMember"; // Assuming this component exists and renders member details
+// import TeamMember from "@/components/TeamMember"; // We will create a new card component below
 import { cn } from "@/lib/utils";
-import { Film, Palette, Feather, Bot, ShieldCheck, Smile, Gamepad2 } from 'lucide-react'; // Added Gamepad2
+import { Film, Palette, Feather, Bot, ShieldCheck, Smile, Gamepad2, Instagram, User } from 'lucide-react';
+import React from "react";
 
 /**
  * FILES/FOLDERS TO CHECK/ENSURE EXIST AND ARE CONFIGURED:
@@ -10,68 +11,71 @@ import { Film, Palette, Feather, Bot, ShieldCheck, Smile, Gamepad2 } from 'lucid
  * 1.  `src/components/layouts/PageLayout.tsx`: (Assumed consistent with PageLayout.tsx (1).txt)
  *     - Provides page structure, header, background effects, ScrollArea.
  *
- * 2.  `src/components/TeamMember.tsx`:
- *     - Renders individual team member info. Assumed to accept className or be styled appropriately internally.
- *     *Example Assumption:* Handles display of name, role, optional Instagram link. Styling ideally minimal or accepts `className`.
+ * 2.  `public/lovable-uploads/`: (Paths checked based on previous request)
+ *     - Must contain: `video.png`, `design.png`, `karyatulis.png`, `game.png`.
  *
- * 3.  `public/lovable-uploads/`:
- *     - Must contain the specified PNG images: `video.png`, `design.png`, `karyatulis.png`, `game.png`. Ensure paths are correct relative to the `public` directory.
+ * 3.  `src/index.css`: (Assumed consistent with index (4).css)
+ *     - Defines CSS variables, font families, Tailwind directives. Needs utility classes used below.
  *
- * 4.  `src/index.css`: (Assumed consistent with index (4).css)
- *     - Defines CSS variables, font families, Tailwind directives.
+ * 4.  `tailwind.config.ts`: (Assumed consistent with tailwind.config (1).ts.txt)
+ *     - Defines necessary accent colors (coral, emerald, blueLight, amethyst, grayMid, orangeLight).
  *
- * 5.  `tailwind.config.ts`: (Assumed consistent with tailwind.config (1).ts.txt)
- *     - Defines necessary accent colors used in `accentStyles` map (coral, emerald, blueLight, amethyst, grayMid, orangeLight). Checked against provided config - these should exist.
- *
- * 6.  `src/lib/utils.ts`: (Assumed consistent with utils.ts.txt)
+ * 5.  `src/lib/utils.ts`: (Assumed consistent with utils.ts.txt)
  *     - Provides the `cn` utility function.
  *
- * 7.  `lucide-react` (dependency): Assumed installed.
- * 8.  `framer-motion` (dependency): Assumed installed.
+ * 6.  `lucide-react` (dependency): Assumed installed.
+ * 7.  `framer-motion` (dependency): Assumed installed.
  */
 
-// --- Animation Variants (Consistent with BrandStory/iOS Style) ---
+// --- Animation Variants ---
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+    transition: { staggerChildren: 0.12, delayChildren: 0.1 }, // Slightly slower stagger for sections
   },
 };
 
 const sectionCardVariants = {
-  hidden: { opacity: 0, y: 25, scale: 0.97 },
+  hidden: { opacity: 0, y: 30, scale: 0.95 }, // More emphasis on entrance
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.45, ease: [0.3, 0.0, 0.3, 1.0] },
+    transition: { duration: 0.55, ease: [0.2, 0.0, 0.2, 1.0] },
   },
 };
 
-const cardHover = {
-  scale: 1.02,
-  boxShadow: "0px 10px 20px -8px rgba(0, 0, 0, 0.2)",
-  transition: { type: "spring", stiffness: 400, damping: 25 },
+const memberListVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: { staggerChildren: 0.06, delayChildren: 0.2 } // Stagger members appearing
+    }
 };
 
-// --- Team Data Structure (Updated with Images, Icons, and Accents) ---
+const memberCardVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } }
+};
+
+// --- Team Data Structure (Remains the same) ---
 const teamData = [
   {
     title: "Video Editing",
     icon: Film,
-    imageSrc: "/lovable-uploads/video.png", // Path relative to public folder
-    accent: "coral", // Merah -> Coral/OrangeDark from config
+    imageSrc: "/lovable-uploads/video.png",
+    accent: "coral",
     members: [
       { name: "Kevin/Zyu", instagram: "Zyu.", role: "Video Editor" },
       { name: "Aljaan", instagram: "@snhrrr", role: "Video Editor" }
     ]
   },
    {
-    title: "Meme Creator", // Changed title to match request
+    title: "Meme Creator",
     icon: Smile,
-    imageSrc: null, // No specific image mentioned
-    accent: "emerald", // Ijo -> Emerald from config
+    imageSrc: null,
+    accent: "emerald",
     members: [
       { name: "Daffa/deploid", instagram: "", role: "Meme Creator" },
       { name: "Kevin/Zyu", instagram: "Zyu.", role: "Meme Creator" }
@@ -81,18 +85,17 @@ const teamData = [
     title: "Game Konten",
     icon: Gamepad2,
     imageSrc: "/lovable-uploads/game.png",
-    accent: "blueLight", // Biru -> blueLight from config
+    accent: "blueLight",
     members: [
-      // Add actual members here if known, using placeholders for now
       { name: "PlayerOne", instagram: "player.one", role: "Content Creator" },
       { name: "GamerX", instagram: "thegamerx", role: "Streamer" },
     ]
   },
   {
-    title: "Design Grafis", // Changed title to match request
+    title: "Design Grafis",
     icon: Palette,
     imageSrc: "/lovable-uploads/design.png",
-    accent: "amethyst", // Purple -> Amethyst from config
+    accent: "amethyst",
     members: [
       { name: "Ashtrozz", instagram: "damz.snyther", role: "Designer" },
       { name: "nexx4sure", instagram: "@mhmmdmhb_", role: "Designer" },
@@ -105,7 +108,7 @@ const teamData = [
     title: "Karya Tulis",
     icon: Feather,
     imageSrc: "/lovable-uploads/karyatulis.png",
-    accent: "grayMid", // Grey -> grayMid from config
+    accent: "grayMid",
     members: [
       { name: "Kevin", instagram: "kv.ein_", role: "Writer" },
       { name: "Senku", instagram: "Senkuphotograph", role: "Writer" },
@@ -113,10 +116,10 @@ const teamData = [
     ]
   },
   {
-    title: "Bot Developer", // Changed title
+    title: "Bot Developer",
     icon: Bot,
-    imageSrc: null, // No specific image mentioned (E. BOT was text)
-    accent: "orangeLight", // Oren -> orangeLight from config
+    imageSrc: null,
+    accent: "orangeLight",
     members: [
       { name: "Rappal", instagram: "raffal_arz", role: "Bot Developer" },
       { name: "Flores", instagram: "flores.gold", role: "Bot Developer" }
@@ -125,32 +128,109 @@ const teamData = [
   {
     title: "Admin Discord",
     icon: ShieldCheck,
-    imageSrc: null, // No specific image mentioned
-    accent: "grayMid", // No color specified, using Grey
+    imageSrc: null,
+    accent: "grayMid",
     members: [
       { name: "Aljaan", instagram: "@snhrrr", role: "Discord Admin" }
     ]
   }
 ];
 
-// --- Accent Color Mapping (Tailwind Classes - Ensure colors exist in config) ---
-// Assuming tailwind.config.ts has: coral, emerald, blueLight, amethyst, grayMid, orangeLight
-const accentStyles: Record<string, { bg: string; border: string; text: string; iconText: string; shadow: string }> = {
-  coral: { bg: "bg-coral/10", border: "border-coral/40", text: "text-coral", iconText: "text-coral", shadow: "shadow-coral/5" },
-  emerald: { bg: "bg-emerald/10", border: "border-emerald/40", text: "text-emerald", iconText: "text-emerald", shadow: "shadow-emerald/5" },
-  blueLight: { bg: "bg-blueLight/10", border: "border-blueLight/40", text: "text-blueLight", iconText: "text-blueLight", shadow: "shadow-blueLight/5" },
-  amethyst: { bg: "bg-amethyst/10", border: "border-amethyst/40", text: "text-amethyst", iconText: "text-amethyst", shadow: "shadow-amethyst/5" },
-  grayMid: { bg: "bg-grayMid/10", border: "border-grayMid/40", text: "text-grayMid", iconText: "text-grayMid", shadow: "shadow-grayMid/5" },
-  orangeLight: { bg: "bg-orangeLight/10", border: "border-orangeLight/40", text: "text-orangeLight", iconText: "text-orangeLight", shadow: "shadow-orangeLight/5" },
-  // Fallback default style
-  default: { bg: "bg-neutral-800/20", border: "border-neutral-700/40", text: "text-neutral-400", iconText: "text-neutral-300", shadow: "shadow-black/10" },
+// --- Accent Color Mapping (Adding more specific classes) ---
+const accentStyles: Record<string, {
+    bg: string; border: string; text: string; iconText: string; shadow: string; accentLine: string; avatarBorder: string;
+}> = {
+  coral: { bg: "bg-coral/10", border: "border-coral/40", text: "text-coral", iconText: "text-coral", shadow: "shadow-coral/10", accentLine: "bg-coral", avatarBorder: "border-coral/70" },
+  emerald: { bg: "bg-emerald/10", border: "border-emerald/40", text: "text-emerald", iconText: "text-emerald", shadow: "shadow-emerald/10", accentLine: "bg-emerald", avatarBorder: "border-emerald/70" },
+  blueLight: { bg: "bg-blueLight/10", border: "border-blueLight/40", text: "text-blueLight", iconText: "text-blueLight", shadow: "shadow-blueLight/10", accentLine: "bg-blueLight", avatarBorder: "border-blueLight/70" },
+  amethyst: { bg: "bg-amethyst/10", border: "border-amethyst/40", text: "text-amethyst", iconText: "text-amethyst", shadow: "shadow-amethyst/10", accentLine: "bg-amethyst", avatarBorder: "border-amethyst/70" },
+  grayMid: { bg: "bg-grayMid/10", border: "border-grayMid/40", text: "text-grayMid", iconText: "text-grayMid", shadow: "shadow-grayMid/10", accentLine: "bg-grayMid", avatarBorder: "border-grayMid/70" },
+  orangeLight: { bg: "bg-orangeLight/10", border: "border-orangeLight/40", text: "text-orangeLight", iconText: "text-orangeLight", shadow: "shadow-orangeLight/10", accentLine: "bg-orangeLight", avatarBorder: "border-orangeLight/70" },
+  default: { bg: "bg-neutral-800/20", border: "border-neutral-700/40", text: "text-neutral-400", iconText: "text-neutral-300", shadow: "shadow-black/10", accentLine: "bg-neutral-500", avatarBorder: "border-neutral-500/70" },
 };
 
 const getAccentStyle = (accentKey: string | undefined) => {
     return accentStyles[accentKey || 'default'] || accentStyles.default;
 };
 
+// --- Helper Function for Initials ---
+const getInitials = (name: string): string => {
+    if (!name) return "?";
+    const nameParts = name.split(/[\s/]+/); // Split by space or slash
+    if (nameParts.length === 1) return name.charAt(0).toUpperCase();
+    return (nameParts[0].charAt(0) + nameParts[1].charAt(0)).toUpperCase();
+};
 
+// --- NEW Team Member Card Component ---
+interface TeamMemberCardProps {
+  name: string;
+  role: string;
+  instagram?: string | null;
+  accentColor?: string; // Pass the accent key like 'coral', 'emerald'
+}
+
+const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ name, role, instagram, accentColor }) => {
+    const accent = getAccentStyle(accentColor);
+    const initials = getInitials(name);
+    const instaUser = instagram?.replace('@', '');
+    const instaLink = instaUser ? `https://instagram.com/${instaUser}` : null;
+
+    return (
+        <motion.div
+            variants={memberCardVariants}
+            whileHover={{ scale: 1.03, transition: { type: 'spring', stiffness: 300, damping: 15 } }}
+            className={cn(
+                "flex items-center gap-4 p-4 rounded-2xl border relative overflow-hidden", // Changed to rounded-2xl
+                "bg-neutral-800/50 backdrop-blur-sm", // Slightly different background
+                "border-neutral-700/60 hover:border-neutral-600 transition-colors duration-200"
+            )}
+        >
+            {/* Circular Avatar */}
+            <motion.div
+                className={cn(
+                    "w-14 h-14 md:w-16 md:h-16 rounded-full border-2 flex-shrink-0 flex items-center justify-center relative overflow-hidden",
+                    "bg-gradient-to-br from-neutral-700 to-neutral-800", // Gradient background for avatar
+                    accent.avatarBorder // Use accent color for border
+                )}
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+            >
+                <span className="text-xl md:text-2xl font-semibold font-sans text-white/80 z-10">{initials}</span>
+                {/* Optional subtle pattern inside avatar */}
+                 <div className={cn("absolute inset-0 opacity-10 blur-[1px]", accent.bg.replace('/10','/30'))}></div>
+            </motion.div>
+
+            {/* Text Info */}
+            <div className="flex-grow">
+                <h3 className="text-md md:text-lg font-semibold font-serif text-foreground leading-tight">{name}</h3>
+                <p className="text-xs md:text-sm text-neutral-400 font-sans">{role}</p>
+            </div>
+
+            {/* Instagram Link */}
+            {instaLink && (
+                <motion.a
+                    href={instaLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-xs text-neutral-400 hover:text-white transition-colors"
+                    whileHover={{ x: -2 }}
+                    title={`@${instaUser}`}
+                >
+                    <Instagram size={14} />
+                    <span className="hidden sm:inline truncate max-w-[80px]">{instaUser}</span> {/* Hide text on small screens */}
+                </motion.a>
+            )}
+            {/* Decorative Corner Arc */}
+            <div className={cn(
+                "absolute bottom-0 right-0 w-12 h-12 border-l border-t rounded-tl-full opacity-20",
+                 accent.border
+            )}></div>
+        </motion.div>
+    );
+};
+
+
+// --- Main TimKami Component ---
 const TimKami = () => {
   return (
     <PageLayout
@@ -161,73 +241,72 @@ const TimKami = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-8 md:space-y-10"
+        className="space-y-10 md:space-y-12" // Increased spacing
       >
         {teamData.map((section) => {
           const SectionIcon = section.icon;
           const accent = getAccentStyle(section.accent);
 
           return (
-            <motion.div
+            <motion.section // Use section element
               key={section.title}
               variants={sectionCardVariants}
-              whileHover={cardHover}
+              // Removed hover from main section card to focus interaction on members
               className={cn(
-                "rounded-3xl border relative overflow-hidden shadow-md",
-                "bg-secondary/60 backdrop-blur-md",
-                accent.border,
+                "rounded-[28px] border-2 relative overflow-hidden shadow-xl", // More rounded, thicker border
+                "bg-gradient-to-b from-secondary/50 to-secondary/70 backdrop-blur-lg", // Section card gradient
+                accent.border, // Use accent border
                 accent.shadow
               )}
             >
-              {/* Header for the Section */}
-              <div className={cn("p-4 border-b", accent.border, accent.bg)}>
-                <div className="flex items-center gap-3">
-                   {/* Conditionally render Image or Icon */}
+              {/* Header */}
+              <div className={cn(
+                  "p-4 flex items-center gap-3 relative",
+                   accent.bg // Subtle accent bg in header
+                )}>
                    {section.imageSrc ? (
                      <motion.img
                        src={section.imageSrc}
                        alt={`${section.title} logo`}
-                       className="w-6 h-6 object-contain rounded-sm flex-shrink-0" // Style the image
+                       className="w-7 h-7 object-contain rounded flex-shrink-0 bg-black/10 p-0.5" // Slightly larger, bg padding
                        initial={{ scale: 0.8, opacity: 0 }}
                        animate={{ scale: 1, opacity: 1 }}
                        transition={{ delay: 0.1 }}
                      />
                    ) : (
-                     <SectionIcon className={cn("w-5 h-5 flex-shrink-0", accent.iconText)} />
+                     <SectionIcon className={cn("w-6 h-6 flex-shrink-0", accent.iconText)} />
                    )}
-                   <h2 className="text-lg font-semibold font-serif text-foreground">
+                   <h2 className="text-xl font-semibold font-serif text-foreground tracking-tight">
                      {section.title} ({section.members.length})
                    </h2>
-                </div>
+                   {/* Colored Accent Line Below Header */}
+                   <div className={cn("absolute bottom-0 left-0 h-[3px] w-full", accent.accentLine)}></div>
+                   {/* Subtle noise in header */}
+                   <div className="absolute inset-0 noise-pattern opacity-[0.01]"></div>
               </div>
 
-              {/* Grid for Team Members */}
-              <div className="p-4 md:p-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+              {/* Member List */}
+              <motion.div
+                 variants={memberListVariants} // Apply stagger to this container
+                 initial="hidden"
+                 animate="visible"
+                 className="p-4 md:p-5 space-y-3 md:space-y-4" // Vertical list with spacing
+               >
                   {section.members.map((member, index) => (
-                    <motion.div
+                    <TeamMemberCard
                        key={`${section.title}-${member.name}-${index}`}
-                       initial={{ opacity: 0, scale: 0.9 }}
-                       animate={{ opacity: 1, scale: 1 }}
-                       transition={{ delay: 0.1 + index * 0.03, duration: 0.3 }}
-                       className={cn(
-                           "bg-neutral-800/40 p-3 rounded-xl border border-neutral-700/50 shadow-sm hover:bg-neutral-700/50 transition-colors duration-200"
-                       )}
-                    >
-                        <TeamMember
-                          name={member.name}
-                          instagram={member.instagram}
-                          role={member.role}
-                          // className="text-center" // Optional: If TeamMember accepts it
-                        />
-                     </motion.div>
+                       name={member.name}
+                       role={member.role}
+                       instagram={member.instagram}
+                       accentColor={section.accent} // Pass accent color key
+                    />
                   ))}
-                </div>
-              </div>
+              </motion.div>
 
-               {/* Optional subtle background element */}
-               <div className={cn("absolute -bottom-8 -left-8 w-24 h-24 rounded-full opacity-[0.05] blur-lg", accent.bg.replace('/10','/80'))}></div>
-            </motion.div>
+               {/* Subtle layered effect behind members */}
+               <div className={cn("absolute inset-x-0 bottom-0 h-1/2 rounded-t-3xl opacity-[0.03] blur-xl", accent.bg.replace('/10','/80'))}></div>
+
+            </motion.section>
           );
         })}
       </motion.div>
