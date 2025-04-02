@@ -73,6 +73,9 @@ export default {
       borderRadius: {
         'ios': '1.25rem',
       },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+      },
       keyframes: {
         "glow": {
           "0%, 100%": { textShadow: "0 0 10px rgba(229,222,255,0.8), 0 0 20px rgba(229,222,255,0.8)" },
@@ -123,6 +126,12 @@ export default {
         "shimmer-gradient": "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%)",
         "gradient-purple-orange": "linear-gradient(to right, var(--tw-gradient-stops))",
         "gradient-blue-cyan": "linear-gradient(to right, var(--tw-gradient-stops))",
+      },
+      boxShadow: {
+        'glow-sm': '0 0 10px 1px var(--tile-glow-color, rgba(255,255,255,0.1))',
+        'glow-md': '0 0 20px 3px var(--tile-glow-color, rgba(255,255,255,0.15))',
+        'glow-lg': '0 0 30px 5px var(--tile-glow-color, rgba(255,255,255,0.2))',
+        'inner-subtle': 'inset 0 0 15px 0 rgba(0, 0, 0, 0.1)',
       }
     },
   },

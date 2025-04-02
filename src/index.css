@@ -1,3 +1,4 @@
+
 /* src/index.css */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
@@ -108,8 +109,13 @@
     opacity: 0.5; /* Make noise slightly more visible */
 }
 
-/* Removed unused patterns/effects */
-/* .geometric-dot-pattern removed */
+/* Background Grid Pattern */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
 
 /* Scrollbar Styles */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -126,9 +132,9 @@
 /* ----------------------------------------------- */
 @layer utilities {
 
-  /* Shimmer Effect (Subtle) */
+  /* Shimmer Effect (Enhanced) */
   .bg-shimmer-gradient {
-    background-image: linear-gradient( -75deg, rgba(255, 255, 255, 0) 35%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0) 65% ); /* Narrower shimmer */
+    background-image: linear-gradient( -75deg, rgba(255, 255, 255, 0) 35%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0) 65% ); /* Slightly brighter shimmer */
     background-size: 200% 100%;
     pointer-events: none;
   }
@@ -136,13 +142,84 @@
   .animate-shimmer { animation: shimmer 2.5s infinite linear; } /* Faster shimmer */
 
   /* Glow Effect for Interactive Tiles */
+  .glow-card {
+    transition: box-shadow 0.5s ease, transform 0.3s ease;
+  }
+
   .interactive-tile:hover {
      /* Apply glow using the CSS variable set in the TSX component */
      /* Fallback to default glow if variable is not set */
      box-shadow: 0 0 25px 6px var(--tile-glow-color, var(--default-glow)), 0 10px 25px -5px rgba(0, 0, 0, 0.4);
      /* Combine glow with existing shadow from hover variant */
    }
+   
+  /* Outer glow effect for cards */
+  .outer-glow {
+    box-shadow: 0 0 20px 5px var(--tile-glow-color, var(--default-glow));
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  
+  /* Icon glow effect */
+  .icon-glow {
+    box-shadow: 0 0 12px 0px var(--tile-glow-color, var(--default-glow));
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  
+  .icon-glow:hover {
+    box-shadow: 0 0 18px 2px var(--tile-glow-color, var(--default-glow));
+  }
+  
+  /* Inner shadow for depth */
+  .shadow-inner-subtle {
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Floating animations for background elements */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+  }
+  
+  @keyframes float-reverse {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(20px); }
+  }
+  
+  @keyframes float-slow-reverse {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(15px); }
+  }
+  
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.05); }
+  }
+  
+  .animate-float {
+    animation: float 15s ease-in-out infinite;
+  }
+  
+  .animate-float-slow {
+    animation: float-slow 20s ease-in-out infinite;
+  }
+  
+  .animate-float-reverse {
+    animation: float-reverse 18s ease-in-out infinite;
+  }
+  
+  .animate-float-slow-reverse {
+    animation: float-slow-reverse 22s ease-in-out infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse-slow 10s ease-in-out infinite;
+  }
 
 } /* End of @layer utilities */
 
-/* Removed unused animations like float, pulse, etc. */

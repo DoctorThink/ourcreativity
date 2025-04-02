@@ -1,3 +1,4 @@
+
 // src/pages/Index.tsx
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -177,7 +178,7 @@ const Index = () => {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-foreground/80 hover:text-foreground hover:underline transition-colors duration-200 group"
              >
-                 Ardellio S. A.
+                 @ardel.yo
                  <Instagram size={12} className="opacity-70 group-hover:opacity-100 transition-opacity"/>
              </a>
            </p>
@@ -196,16 +197,25 @@ const Index = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen h-screen overflow-hidden relative bg-background flex flex-col"
     >
-      {/* --- Enhanced Background --- */}
+      {/* --- Enhanced Animated Background --- */}
       <div className="fixed inset-0 -z-20 overflow-hidden bg-background">
-         {/* Blurred Gradient Layer */}
+        {/* Animated Gradient Backgrounds */}
         <div className="absolute inset-0 opacity-60">
-             <div className="absolute w-[60vw] h-[60vh] rounded-full bg-gradient-radial from-amethyst/20 via-amethyst/5 to-transparent -top-[15%] -right-[15%] filter blur-[100px]"></div>
-             <div className="absolute w-[50vw] h-[50vh] rounded-full bg-gradient-radial from-turquoise/20 via-turquoise/5 to-transparent -bottom-[15%] -left-[15%] filter blur-[100px]"></div>
-             <div className="absolute w-[40vw] h-[40vh] rounded-full bg-gradient-radial from-coral/15 via-coral/5 to-transparent -bottom-[5%] -right-[5%] filter blur-[90px] opacity-70"></div>
+          {/* Primary moving gradients */}
+          <div className="absolute w-[80vw] h-[80vh] rounded-full bg-gradient-radial from-amethyst/20 via-amethyst/5 to-transparent -top-[15%] -right-[15%] filter blur-[120px] animate-float"></div>
+          <div className="absolute w-[70vw] h-[70vh] rounded-full bg-gradient-radial from-turquoise/20 via-turquoise/5 to-transparent -bottom-[15%] -left-[15%] filter blur-[150px] animate-float-slow"></div>
+          <div className="absolute w-[60vw] h-[60vh] rounded-full bg-gradient-radial from-coral/15 via-coral/5 to-transparent -bottom-[5%] -right-[5%] filter blur-[130px] opacity-70 animate-float-reverse"></div>
+          
+          {/* Secondary subtle gradients */}
+          <div className="absolute w-[40vw] h-[40vh] rounded-full bg-gradient-radial from-softPink/10 via-softPink/3 to-transparent top-[10%] left-[15%] filter blur-[100px] opacity-50 animate-float-slow-reverse"></div>
+          <div className="absolute w-[35vw] h-[35vh] rounded-full bg-gradient-radial from-mint/15 via-mint/3 to-transparent bottom-[20%] right-[20%] filter blur-[90px] opacity-60 animate-pulse-slow"></div>
         </div>
-         {/* Noise Layer */}
-        <div className="absolute inset-0 noise-pattern opacity-[0.04]"></div>
+        
+        {/* Noise Overlay */}
+        <div className="absolute inset-0 noise-pattern opacity-[0.04] z-10"></div>
+        
+        {/* Subtle grid overlay */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] z-0"></div>
       </div>
 
       {/* --- Main Content Area: Bento Grid --- */}
@@ -237,7 +247,7 @@ const Index = () => {
                     colSpan, rowSpan, mdColSpan || colSpan, mdRowSpan || rowSpan,
                     bgColor, textColor || 'text-foreground',
                     comingSoon ? 'opacity-70 filter grayscale-[50%]' : '', // Slightly less grayscale
-                    isInteractive && !comingSoon ? 'cursor-pointer interactive-tile' : 'cursor-default',
+                    isInteractive && !comingSoon ? 'cursor-pointer interactive-tile glow-card' : 'cursor-default',
                     backdropBlur ? 'backdrop-blur-lg' : '' // Apply backdrop blur if specified
                 )}
                 whileHover={isInteractive && !comingSoon ? interactiveHover : {}}
@@ -246,8 +256,11 @@ const Index = () => {
                 // Apply glow effect using CSS variable defined inline
                 style={isInteractive && !comingSoon && glowColorVar ? { '--tile-glow-color': `var(${glowColorVar})` } as React.CSSProperties : {}}
               >
-                 {/* Inner content container */}
-                 <div className="relative z-10 h-full w-full p-3 md:p-4 flex flex-col justify-center items-center text-center">
+                {/* Outer glow effect that appears on hover for all cards */}
+                <div className="absolute inset-0 -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl md:rounded-3xl outer-glow"></div>
+                
+                {/* Inner Content Container */}
+                <div className="relative z-10 h-full w-full p-3 md:p-4 flex flex-col justify-center items-center text-center">
                     {comingSoon ? (
                       // Coming Soon Layout
                       <>
@@ -259,12 +272,12 @@ const Index = () => {
                         </span>
                       </>
                     ) : isWidget ? (
-                       // Widget Layout
+                       // Widget Layout with Enhanced Icon
                        <>
-                         {/* Icon Container with subtle scale effect */}
+                         {/* Icon Container with glow effect */}
                          <motion.div
                              className={cn(
-                                `mb-2 md:mb-3 p-2.5 md:p-3 rounded-xl shadow-md`, // Slightly softer radius
+                                `mb-2 md:mb-3 p-2.5 md:p-3 rounded-xl shadow-md icon-glow`, // Added icon-glow class
                                 accentColorClass
                               )}
                               whileHover={{ scale: 1.1 }}
@@ -284,13 +297,15 @@ const Index = () => {
                        <div className="h-full w-full flex"> {content} </div>
                      ) : null // Fallback
                     }
-                 </div>
+                </div>
 
-                 {/* Optional: Add subtle shimmer on hover for interactive tiles */}
-                  {isInteractive && !comingSoon && (
-                      <div className="absolute inset-0 bg-shimmer-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-shimmer"></div>
-                  )}
-
+                {/* Enhanced shimmer on hover for interactive tiles */}
+                {isInteractive && !comingSoon && (
+                  <div className="absolute inset-0 bg-shimmer-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-shimmer"></div>
+                )}
+                
+                {/* Subtle inner shadow for depth */}
+                <div className="absolute inset-0 rounded-2xl md:rounded-3xl shadow-inner-subtle pointer-events-none"></div>
               </MotionComponent>
             );
           })}
