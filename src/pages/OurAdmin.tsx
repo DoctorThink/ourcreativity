@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
-import { LogOut, Bell, Users, ScrollText, Info, ArrowUpRight, BarChart2, Settings } from "lucide-react";
+import { LogOut, Bell, Users, ScrollText, Info, ArrowUpRight, BarChart2, Settings, LayoutGrid } from "lucide-react"; // Added LayoutGrid here
 import ContentEditor from "@/components/admin/ContentEditor";
 import TeamEditor from "@/components/admin/TeamEditor";
 import AnnouncementEditor from "@/components/admin/AnnouncementEditor";
@@ -46,7 +46,7 @@ const OurAdmin = () => {
     {
       id: "dashboard", // Special item to represent the overview/grid itself
       title: "Dashboard",
-      icon: LayoutGrid, // Using a generic grid icon here
+      icon: LayoutGrid, // Using the imported LayoutGrid icon
       colSpan: "col-span-2 sm:col-span-1",
       rowSpan: "row-span-1",
       bgColorClass: "bg-[#9B6DFF]", // Primary Accent
@@ -239,7 +239,7 @@ const OurAdmin = () => {
               >
                 {/* Subtle glow effect on hover/active */}
                 <div className={cn(
-                    "absolute -inset-px rounded-3xl transition-opacity duration-300 opacity-0 group-hover:opacity-70",
+                    "absolute -inset-px rounded-3xl transition-opacity duration-300 opacity-0 group-hover:opacity-70 pointer-events-none", // Added pointer-events-none
                     isActive ? "opacity-100" : ""
                  )} style={isActive || null ? glowStyle : {}} />
 
