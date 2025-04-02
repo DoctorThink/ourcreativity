@@ -1,13 +1,14 @@
 
 import { Suspense, lazy, useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
+import { PageTransition } from "@/components/PageTransition";
 
 // Improved lazy loading with dynamic imports
 const Index = lazy(() => import("./pages/Index"));
@@ -43,6 +44,32 @@ const LoadingFallback = () => (
     </div>
   </div>
 );
+
+// AnimatedRoutes component for handling route transitions
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/brand-story" element={<PageTransition><BrandStory /></PageTransition>} />
+        <Route path="/informasi" element={<PageTransition><Informasi /></PageTransition>} />
+        <Route path="/pengumuman" element={<PageTransition><Pengumuman /></PageTransition>} />
+        <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
+        <Route path="/tim-kami" element={<PageTransition><TimKami /></PageTransition>} />
+        <Route path="/admin-login" element={<PageTransition><AdminLogin /></PageTransition>} />
+        <Route path="/our-admin" element={
+          <PageTransition>
+            <RequireAuth>
+              <OurAdmin />
+            </RequireAuth>
+          </PageTransition>
+        } />
+      </Routes>
+    </AnimatePresence>
+  );
+};
 
 // Create a single QueryClient instance with optimized settings
 const queryClient = new QueryClient({
@@ -85,20 +112,7 @@ const App = () => {
             <BrowserRouter>
               {isAppReady ? (
                 <Suspense fallback={<LoadingFallback />}>
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/brand-story" element={<BrandStory />} />
-                    <Route path="/informasi" element={<Informasi />} />
-                    <Route path="/pengumuman" element={<Pengumuman />} />
-                    <Route path="/terms" element={<Terms />} />
-                    <Route path="/tim-kami" element={<TimKami />} />
-                    <Route path="/admin-login" element={<AdminLogin />} />
-                    <Route path="/our-admin" element={
-                      <RequireAuth>
-                        <OurAdmin />
-                      </RequireAuth>
-                    } />
-                  </Routes>
+                  <AnimatedRoutes />
                 </Suspense>
               ) : (
                 <LoadingFallback />
