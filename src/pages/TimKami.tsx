@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layouts/PageLayout";
-// import TeamMember from "@/components/TeamMember"; // We will create a new card component below
 import { cn } from "@/lib/utils";
 import { Film, Palette, Feather, Bot, ShieldCheck, Smile, Gamepad2, Instagram, User } from 'lucide-react';
 import React from "react";
@@ -11,14 +10,15 @@ import React from "react";
  * 1.  `src/components/layouts/PageLayout.tsx`: (Assumed consistent with PageLayout.tsx (1).txt)
  *     - Provides page structure, header, background effects, ScrollArea.
  *
- * 2.  `public/lovable-uploads/`: (Paths checked based on previous request)
- *     - Must contain: `video.png`, `design.png`, `karyatulis.png`, `game.png`.
+ * 2.  `public/lovable-uploads/`: (UPDATED - CHECK THESE FILES ARE PRESENT)
+ *     - Must contain: `video.png`, `design.png`, `karyatulis.png`, `game.png`, `meme.png`, `bot.png`.
+ *       **NEW IMAGES: `meme.png`, `bot.png` - ENSURE THESE ARE ADDED TO THIS FOLDER.**
  *
  * 3.  `src/index.css`: (Assumed consistent with index (4).css)
- *     - Defines CSS variables, font families, Tailwind directives. Needs utility classes used below.
+ *     - Defines CSS variables, font families, Tailwind directives.
  *
  * 4.  `tailwind.config.ts`: (Assumed consistent with tailwind.config (1).ts.txt)
- *     - Defines necessary accent colors (coral, emerald, blueLight, amethyst, grayMid, orangeLight).
+ *     - Defines necessary accent colors.
  *
  * 5.  `src/lib/utils.ts`: (Assumed consistent with utils.ts.txt)
  *     - Provides the `cn` utility function.
@@ -27,7 +27,7 @@ import React from "react";
  * 7.  `framer-motion` (dependency): Assumed installed.
  */
 
-// --- Animation Variants ---
+// --- Animation Variants (No changes needed) ---
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -59,7 +59,7 @@ const memberCardVariants = {
     visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } }
 };
 
-// --- Team Data Structure (Remains the same) ---
+// --- Team Data Structure (Updated with meme.png and bot.png paths) ---
 const teamData = [
   {
     title: "Video Editing",
@@ -74,7 +74,7 @@ const teamData = [
    {
     title: "Meme Creator",
     icon: Smile,
-    imageSrc: null,
+    imageSrc: "/lovable-uploads/meme.png", // ADDED meme.png path
     accent: "emerald",
     members: [
       { name: "Daffa/deploid", instagram: "", role: "Meme Creator" },
@@ -118,7 +118,7 @@ const teamData = [
   {
     title: "Bot Developer",
     icon: Bot,
-    imageSrc: null,
+    imageSrc: "/lovable-uploads/bot.png", // ADDED bot.png path
     accent: "orangeLight",
     members: [
       { name: "Rappal", instagram: "raffal_arz", role: "Bot Developer" },
@@ -136,7 +136,7 @@ const teamData = [
   }
 ];
 
-// --- Accent Color Mapping (Adding more specific classes) ---
+// --- Accent Color Mapping (No changes needed) ---
 const accentStyles: Record<string, {
     bg: string; border: string; text: string; iconText: string; shadow: string; accentLine: string; avatarBorder: string;
 }> = {
@@ -153,7 +153,7 @@ const getAccentStyle = (accentKey: string | undefined) => {
     return accentStyles[accentKey || 'default'] || accentStyles.default;
 };
 
-// --- Helper Function for Initials ---
+// --- Helper Function for Initials (No changes needed) ---
 const getInitials = (name: string): string => {
     if (!name) return "?";
     const nameParts = name.split(/[\s/]+/);
@@ -161,7 +161,7 @@ const getInitials = (name: string): string => {
     return (nameParts[0].charAt(0) + nameParts[1].charAt(0)).toUpperCase();
 };
 
-// --- NEW Team Member Card Component ---
+// --- Team Member Card Component (No changes needed) ---
 interface TeamMemberCardProps {
   name: string;
   role: string;
@@ -185,7 +185,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ name, role, instagram, 
                 "border-neutral-700/60 hover:border-neutral-600 transition-colors duration-200"
             )}
         >
-            {/* Circular Avatar */}
+            {/* Circular Avatar (No changes needed here, already circular) */}
             <motion.div
                 className={cn(
                     "w-14 h-14 md:w-16 md:h-16 rounded-full border-2 flex-shrink-0 flex items-center justify-center relative overflow-hidden",
@@ -199,13 +199,13 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ name, role, instagram, 
                  <div className={cn("absolute inset-0 opacity-10 blur-[1px]", accent.bg.replace('/10','/30'))}></div>
             </motion.div>
 
-            {/* Text Info */}
+            {/* Text Info (No changes needed) */}
             <div className="flex-grow">
                 <h3 className="text-md md:text-lg font-semibold font-serif text-foreground leading-tight">{name}</h3>
                 <p className="text-xs md:text-sm text-neutral-400 font-sans">{role}</p>
             </div>
 
-            {/* Instagram Link */}
+            {/* Instagram Link (No changes needed) */}
             {instaLink && (
                 <motion.a
                     href={instaLink}
@@ -219,7 +219,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ name, role, instagram, 
                     <span className="hidden sm:inline truncate max-w-[80px]">{instaUser}</span>
                 </motion.a>
             )}
-            {/* Decorative Corner Arc */}
+            {/* Decorative Corner Arc (No changes needed) */}
             <div className={cn(
                 "absolute bottom-0 right-0 w-12 h-12 border-l border-t rounded-tl-full opacity-20",
                  accent.border
@@ -258,21 +258,18 @@ const TimKami = () => {
               )}
             >
               {/* Header */}
-              <div className={cn(
-                  "p-4 flex items-center gap-3 relative",
-                   accent.bg
-                )}>
+              <div className={cn("p-4 flex items-center gap-3 relative", accent.bg)}>
                    {section.imageSrc ? (
                      <motion.img
                        src={section.imageSrc}
                        alt={`${section.title} logo`}
-                       className="w-14 h-14 object-contain rounded flex-shrink-0 bg-black/10 p-0.5" // ENLARGED: w-14 h-14
+                       className="w-24 h-24 object-contain rounded-full flex-shrink-0 bg-black/10 p-1 md:p-1.5" // ENLARGED SIZE TO w-24 h-24 and rounded-full
                        initial={{ scale: 0.8, opacity: 0 }}
                        animate={{ scale: 1, opacity: 1 }}
                        transition={{ delay: 0.1 }}
                      />
                    ) : (
-                     <SectionIcon className={cn("w-12 h-12 flex-shrink-0", accent.iconText)} /> // ENLARGED: w-12 h-12
+                     <SectionIcon className={cn("w-6 h-6 flex-shrink-0", accent.iconText)} />
                    )}
                    <h2 className="text-xl font-semibold font-serif text-foreground tracking-tight">
                      {section.title} ({section.members.length})
