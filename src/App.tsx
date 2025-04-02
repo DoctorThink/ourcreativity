@@ -21,15 +21,15 @@ const OurAdmin = lazy(() => import("./pages/OurAdmin"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const RequireAuth = lazy(() => import("./components/admin/RequireAuth"));
 
-// Enhanced loading component
+// Enhanced loading component with optimized animations
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
-    <div className="w-20 h-20 relative">
+    <div className="w-20 h-20 relative gpu-accelerated">
       {/* Outer ring */}
-      <div className="absolute inset-0 rounded-full border-2 border-t-foreground/20 border-r-foreground/10 border-b-transparent border-l-foreground/10 animate-spin"></div>
+      <div className="absolute inset-0 rounded-full border-2 border-t-foreground/20 border-r-foreground/10 border-b-transparent border-l-foreground/10 animate-spin will-change-transform"></div>
       
       {/* Middle ring */}
-      <div className="absolute inset-[4px] rounded-full border-2 border-t-foreground/30 border-r-transparent border-b-foreground/10 border-l-transparent animate-spin" style={{ animationDuration: '1.5s', animationDirection: 'reverse' }}></div>
+      <div className="absolute inset-[4px] rounded-full border-2 border-t-foreground/30 border-r-transparent border-b-foreground/10 border-l-transparent animate-spin will-change-transform" style={{ animationDuration: '1.5s', animationDirection: 'reverse' }}></div>
       
       {/* Inner content */}
       <div className="absolute inset-0 flex items-center justify-center">
@@ -38,6 +38,7 @@ const LoadingFallback = () => (
             src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
             alt="Logo"
             className="w-6 h-6 object-contain animate-pulse"
+            loading="eager"
           />
         </div>
       </div>
@@ -45,12 +46,12 @@ const LoadingFallback = () => (
   </div>
 );
 
-// AnimatedRoutes component for handling route transitions
+// AnimatedRoutes component for handling route transitions with performance optimizations
 const AnimatedRoutes = () => {
   const location = useLocation();
   
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageTransition><Index /></PageTransition>} />
         <Route path="/brand-story" element={<PageTransition><BrandStory /></PageTransition>} />
@@ -77,8 +78,8 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       retry: 1,
-      staleTime: 1000 * 60 * 5,
-      gcTime: 1000 * 60 * 30,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 30,   // 30 minutes
     },
   },
 });
@@ -91,10 +92,10 @@ const App = () => {
   useEffect(() => {
     // Preload essential assets
     const preloadAssets = async () => {
-      // Add a slight delay to ensure smooth animations
+      // Add a short delay to ensure smooth animations
       const timer = setTimeout(() => {
         setIsAppReady(true);
-      }, 500);
+      }, 300);
       
       return () => clearTimeout(timer);
     };
@@ -109,15 +110,17 @@ const App = () => {
           <TooltipProvider>
             <Toaster />
             <Sonner />
-            <BrowserRouter>
-              {isAppReady ? (
-                <Suspense fallback={<LoadingFallback />}>
-                  <AnimatedRoutes />
-                </Suspense>
-              ) : (
-                <LoadingFallback />
-              )}
-            </BrowserRouter>
+            <div className="app-container gpu-accelerated">
+              <BrowserRouter>
+                {isAppReady ? (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <AnimatedRoutes />
+                  </Suspense>
+                ) : (
+                  <LoadingFallback />
+                )}
+              </BrowserRouter>
+            </div>
           </TooltipProvider>
         </ThemeProvider>
       </AdminAuthProvider>

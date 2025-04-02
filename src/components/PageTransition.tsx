@@ -23,8 +23,8 @@ const pageVariants = {
 
 const pageTransition = {
   type: "tween",
-  ease: "anticipate",
-  duration: 0.4
+  ease: "easeInOut", // Changed from "anticipate" for smoother motion
+  duration: 0.5 // Slightly increased duration
 };
 
 export const PageTransition = ({ children }: PageTransitionProps) => {
@@ -35,7 +35,7 @@ export const PageTransition = ({ children }: PageTransitionProps) => {
       exit="out"
       variants={pageVariants}
       transition={pageTransition}
-      className="page-transition"
+      className="page-transition will-change-transform"
     >
       {children}
     </motion.div>
