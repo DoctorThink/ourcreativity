@@ -1,4 +1,4 @@
-
+// --- START OF FILE TeamMemberBio.tsx ---
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp, Award } from "lucide-react";
@@ -33,18 +33,19 @@ const TeamMemberBio: React.FC<TeamMemberBioProps> = ({ bio, achievements, accent
     gold: { bg: "bg-amber/10", text: "text-amber", buttonHover: "hover:bg-amber/20" },
     default: { bg: "bg-neutral-800/20", text: "text-neutral-400", buttonHover: "hover:bg-neutral-700/30" },
   };
-  
+
   const accent = accentStyles[accentColor] || accentStyles.default;
 
   return (
-    <div className="mt-2 w-full">
+    // Added relative and z-index to ensure it's above potential siblings from parent card decorations
+    <div className="mt-2 w-full relative z-10">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "flex w-full items-center justify-between px-3 py-2 rounded-md text-xs",
           "bg-foreground/5",
           accent.buttonHover,
-          "transition-colors duration-200 cursor-pointer"
+          "transition-colors duration-200 cursor-pointer relative z-20" // Ensure button itself is clickable
         )}
         aria-expanded={isOpen}
         aria-controls="bio-content"
@@ -61,7 +62,8 @@ const TeamMemberBio: React.FC<TeamMemberBioProps> = ({ bio, achievements, accent
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-hidden gpu-accelerated"
+            // Removed gpu-accelerated as it's unlikely needed and could potentially interfere
+            className="overflow-hidden" 
           >
             <div className={cn(
               "pt-3 pb-2 px-3 text-xs space-y-2 backdrop-blur-sm mt-2 rounded-md border border-foreground/10",
