@@ -1,101 +1,147 @@
-
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layouts/PageLayout";
-import { Check, Shield, AlertTriangle, FileText, Bookmark, User, FileCode, Lock, Users, Palette, Video, MessageSquare, Heart } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { Check, Shield, AlertTriangle, User, FileCode, Users, Heart, Bookmark } from "lucide-react"; // Removed unused icons
+import React from "react";
+
+/**
+ * FILES/FOLDERS TO CHECK/ENSURE EXIST AND ARE CONFIGURED:
+ * (Consistency Check - Assumed same as previous examples)
+ *
+ * 1.  `src/components/layouts/PageLayout.tsx`: Provides page structure, header, background.
+ * 2.  `src/index.css`: Defines CSS variables, fonts, base styles, Tailwind directives.
+ * 3.  `tailwind.config.ts`: Defines accent colors, fonts, plugins.
+ * 4.  `src/lib/utils.ts`: Provides the `cn` utility function.
+ * 5.  `lucide-react` (dependency): Installed.
+ * 6.  `framer-motion` (dependency): Installed.
+ */
+
+// --- Animation Variants ---
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20, scale: 0.98 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.45, ease: [0.25, 0.1, 0.25, 1.0] },
+  },
+};
+
+const cardHover = {
+  scale: 1.02,
+  boxShadow: "0px 10px 20px -8px rgba(0, 0, 0, 0.2)",
+  transition: { type: "spring", stiffness: 350, damping: 20 },
+};
+
+const listItemVariants = {
+    hidden: { opacity: 0, x: -10 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } }
+};
+
+// --- Terms Data (Simplified and Structured for Cards) ---
+const termsSections = [
+  {
+    id: "membership",
+    title: "Keanggotaan",
+    icon: User,
+    accent: "lavender",
+    description: "Syarat dasar menjadi anggota komunitas.",
+    rules: [
+      "Terbuka untuk semua peminat bidang kreatif.",
+      "Wajib mematuhi kode etik & peraturan komunitas.",
+      "Diharapkan partisipasi aktif dalam diskusi & kegiatan.",
+      "Dapat mengundurkan diri kapan saja dengan pemberitahuan.",
+    ],
+  },
+  {
+    id: "content",
+    title: "Konten & Karya",
+    icon: FileCode,
+    accent: "mint",
+    description: "Aturan berbagi konten dan hasil karya.",
+    rules: [
+      "Karya harus asli atau memiliki izin yang jelas.",
+      "Dilarang melanggar hak cipta & kekayaan intelektual.",
+      "Konten harus sesuai norma & nilai positif.",
+      "Komunitas berhak menampilkan karya untuk promosi (dengan kredit).",
+    ],
+  },
+  {
+    id: "interaction",
+    title: "Interaksi Komunitas",
+    icon: Users,
+    accent: "peach",
+    description: "Panduan komunikasi antar anggota.",
+    rules: [
+      "Jaga kesopanan & saling menghormati.",
+      "Tidak ada toleransi untuk pelecehan & diskriminasi.",
+      "Kritik bersifat konstruktif, fokus pada karya.",
+      "Pelanggaran berulang dapat berakibat sanksi.",
+    ],
+  },
+  {
+    id: "groups",
+    title: "Fokus Grup",
+    icon: Heart, // Representing interests/focus
+    accent: "softPink",
+    description: "Ketentuan mengenai grup minat kreatif.",
+    rules: [
+      "Bebas bergabung lebih dari satu grup (Desain, Video, Meme, Tulis).",
+      "Diskusi & konten harus relevan dengan topik grup.",
+      "Kolaborasi antar grup sangat didorong.",
+      "Setiap grup memiliki pedoman tambahan jika diperlukan.",
+    ],
+  }
+];
+
+const intro = {
+    title: "Tentang Syarat & Ketentuan",
+    icon: Shield,
+    accent: "default", // Use default style
+    text: "Syarat dan ketentuan ini dirancang untuk memastikan pengalaman yang positif, aman, dan produktif bagi semua anggota komunitas. Dengan bergabung atau berpartisipasi dalam OurCreativity, Anda dianggap telah membaca, memahami, dan setuju untuk mematuhi semua aturan ini."
+};
+
+const warning = {
+    title: "Pelanggaran Ketentuan",
+    icon: AlertTriangle,
+    accent: "coral", // Use a distinct accent for warning
+    text: "Pelanggaran terhadap syarat dan ketentuan ini dapat berakibat pada peringatan, pembatasan akses, atau pengakhiran keanggotaan, tergantung tingkat keparahan. Komunitas berhak mengubah ketentuan ini dari waktu ke waktu dengan pemberitahuan wajar kepada anggota."
+};
+
+const agreement = {
+    title: "Persetujuan",
+    icon: Bookmark,
+    accent: "default",
+    text: "Partisipasi Anda dalam komunitas ini adalah bentuk persetujuan terhadap semua syarat dan ketentuan yang berlaku.",
+    note: "Ketentuan ini berlaku efektif sejak Juni 2024."
+};
+
+// --- Accent Color Mapping (No changes needed) ---
+const accentStyles: Record<string, { bg: string; border: string; text: string; iconText: string; shadow: string; iconBg: string; bulletBg: string }> = {
+  lavender: { bg: "bg-lavender/10", border: "border-lavender/40", text: "text-lavender", iconText: "text-lavender", shadow: "shadow-lavender/5", iconBg: "bg-lavender/20", bulletBg: "bg-lavender/70" },
+  mint: { bg: "bg-mint/10", border: "border-mint/40", text: "text-mint", iconText: "text-mint", shadow: "shadow-mint/5", iconBg: "bg-mint/20", bulletBg: "bg-mint/70" },
+  peach: { bg: "bg-peach/10", border: "border-peach/40", text: "text-peach", iconText: "text-peach", shadow: "shadow-peach/5", iconBg: "bg-peach/20", bulletBg: "bg-peach/70" },
+  softPink: { bg: "bg-softPink/10", border: "border-softPink/40", text: "text-softPink", iconText: "text-softPink", shadow: "shadow-softPink/5", iconBg: "bg-softPink/20", bulletBg: "bg-softPink/70" },
+  coral: { bg: "bg-coral/10", border: "border-coral/50", text: "text-coral", iconText: "text-coral", shadow: "shadow-coral/10", iconBg: "bg-coral/20", bulletBg: "bg-coral/70" }, // Warning accent
+  default: { bg: "bg-neutral-800/20", border: "border-neutral-700/40", text: "text-neutral-400", iconText: "text-neutral-300", shadow: "shadow-black/10", iconBg: "bg-neutral-700/50", bulletBg: "bg-neutral-500" },
+};
+
+const getAccentStyle = (accentKey: string | undefined) => {
+    return accentStyles[accentKey || 'default'] || accentStyles.default;
+};
+
 
 const Terms = () => {
-  // Enhanced animation variants for staggered animations
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { 
-        staggerChildren: 0.15,
-        delayChildren: 0.3,
-      } 
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-  };
-
-  // Enhanced terms sections with rules and regulations
-  const termsSections = [
-    {
-      id: "membership",
-      title: "Keanggotaan",
-      description: "Syarat dan ketentuan untuk menjadi anggota komunitas OurCreativity.",
-      icon: <User className="w-5 h-5" />,
-      rules: [
-        "Keanggotaan terbuka untuk semua yang tertarik berkarya di bidang kreatif",
-        "Setiap anggota wajib mematuhi kode etik komunitas",
-        "Anggota didorong untuk berpartisipasi aktif dalam diskusi dan kegiatan",
-        "Anggota dapat mengundurkan diri kapan saja dengan pemberitahuan"
-      ],
-      decoration: (
-        <div className="absolute top-0 right-0 w-24 h-24 rounded-bl-3xl border-l border-b border-foreground/10" style={{ opacity: 0.1 }} />
-      )
-    },
-    {
-      id: "content",
-      title: "Konten & Karya",
-      description: "Aturan terkait konten dan karya yang dibagikan dalam komunitas.",
-      icon: <FileCode className="w-5 h-5" />,
-      rules: [
-        "Semua karya yang dibagikan harus merupakan karya asli atau memiliki izin",
-        "Konten tidak boleh melanggar hak cipta atau hak kekayaan intelektual",
-        "Karya harus sesuai dengan norma-norma dan nilai positif",
-        "Komunitas memiliki hak untuk menampilkan karya Anda untuk keperluan promosi"
-      ],
-      decoration: (
-        <div className="absolute bottom-0 left-0 w-32 h-32 rounded-tr-3xl border-t border-r border-foreground/5" style={{ opacity: 0.1 }} />
-      )
-    },
-    {
-      id: "interaction",
-      title: "Interaksi & Komunikasi",
-      description: "Panduan untuk berinteraksi dengan anggota lain dalam komunitas.",
-      icon: <Users className="w-5 h-5" />,
-      rules: [
-        "Interaksi antar anggota harus tetap sopan dan menghormati",
-        "Pelecehan, ujaran kebencian, dan diskriminasi tidak akan ditoleransi",
-        "Kritik harus bersifat konstruktif dan fokus pada karya, bukan pribadi",
-        "Pelanggaran berulang dapat mengakibatkan pembekuan atau pengakhiran keanggotaan"
-      ],
-      decoration: (
-        <div className="absolute top-10 left-10 w-16 h-16 rotate-45 border border-foreground/10" style={{ opacity: 0.1 }} />
-      )
-    },
-    {
-      id: "groups",
-      title: "Pengelompokan Jenis",
-      description: "Informasi tentang 4 jenis grup dalam komunitas.",
-      icon: <Heart className="w-5 h-5" />,
-      rules: [
-        "Anggota dapat bergabung di lebih dari satu grup (Desain Grafis, Video Editing, Meme Creator, Karya Tulis)",
-        "Setiap grup memiliki forum diskusi khusus untuk topik terkait",
-        "Konten yang dibagikan harus relevan dengan grup tempat dibagikan",
-        "Kolaborasi antar anggota dari grup berbeda sangat dianjurkan"
-      ],
-      decoration: (
-        <div className="absolute bottom-10 right-10 w-20 h-20 rounded-md border border-foreground/10" style={{ opacity: 0.1 }} />
-      )
-    }
-  ];
-
-  // Group icons
-  const groupIcons = [
-    { icon: <Palette className="w-5 h-5" />, title: "Desain Grafis" },
-    { icon: <Video className="w-5 h-5" />, title: "Video Editing" },
-    { icon: <MessageSquare className="w-5 h-5" />, title: "Meme Creator" },
-    { icon: <FileText className="w-5 h-5" />, title: "Karya Tulis" }
-  ];
-
   return (
-    <PageLayout 
+    <PageLayout
       title="SYARAT & KETENTUAN"
       subtitle="Panduan dan peraturan untuk menjaga kualitas dan integritas komunitas OurCreativity"
     >
@@ -103,149 +149,134 @@ const Terms = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-8"
+        className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 relative z-10 pb-12"
       >
-        {/* Introduction section with enhanced design */}
-        <motion.div 
-          variants={itemVariants}
-          className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-3xl p-8 relative overflow-hidden"
+        {/* --- Introduction Card --- */}
+        <motion.div
+            variants={cardVariants}
+            className={cn(
+                "md:col-span-2 p-6 rounded-3xl border relative overflow-hidden shadow-lg",
+                "bg-secondary/70 backdrop-blur-xl",
+                getAccentStyle(intro.accent).border,
+                getAccentStyle(intro.accent).shadow
+            )}
         >
-          {/* Geometric background elements */}
-          <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent opacity-50" />
-          <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-foreground/5 blur-3xl" />
-          <div className="absolute -bottom-24 -left-24 w-48 h-48 rounded-full bg-foreground/5 blur-3xl" />
-          <div className="absolute inset-0 geometric-hexagon-pattern opacity-5" />
-          
-          <div className="relative z-10 space-y-4">
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full backdrop-blur-md bg-foreground/5 border border-foreground/10 flex items-center justify-center">
-                <Shield className="w-5 h-5 text-foreground/80" />
-              </div>
-              <div>
-                <h2 className="text-xl font-serif font-semibold text-foreground">
-                  Tentang Syarat & Ketentuan
-                </h2>
-                <p className="text-foreground/70 mt-2">
-                  Syarat dan ketentuan berikut dirancang untuk memastikan pengalaman yang positif dan produktif bagi semua anggota komunitas. Dengan bergabung dengan OurCreativity, Anda setuju untuk mematuhi aturan-aturan ini.
-                </p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Group Icons Section */}
-        <motion.div 
-          variants={itemVariants}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4"
-        >
-          {groupIcons.map((group, index) => (
-            <div 
-              key={index}
-              className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-xl p-4 text-center relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent opacity-50" />
-              <div className="flex flex-col items-center gap-3 relative z-10">
-                <div className="w-12 h-12 rounded-xl backdrop-blur-md bg-foreground/5 border border-foreground/10 flex items-center justify-center">
-                  {group.icon}
+                <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-1", getAccentStyle(intro.accent).iconBg)}>
+                    <intro.icon className={cn("w-5 h-5", getAccentStyle(intro.accent).iconText)} />
                 </div>
-                <p className="text-foreground/70 text-sm font-medium">Edisi {group.title}</p>
-              </div>
-            </div>
-          ))}
-        </motion.div>
-        
-        {/* Grid layout for terms sections */}
-        <div className="grid grid-cols-1 gap-8">
-          {termsSections.map((section) => (
-            <motion.div
-              key={section.id}
-              variants={itemVariants}
-              className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-3xl p-8 relative overflow-hidden"
-            >
-              {/* Dynamic geometric decorations */}
-              {section.decoration}
-              <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent opacity-50" />
-              
-              <div className="relative z-10 space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl backdrop-blur-md bg-foreground/5 border border-foreground/10 flex items-center justify-center">
-                    {section.icon}
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-serif font-semibold text-foreground">
-                      {section.title}
+                <div>
+                    <h2 className="text-lg font-semibold font-serif text-foreground mb-1.5">
+                        {intro.title}
                     </h2>
-                    <p className="text-foreground/50 text-sm mt-1">
-                      {section.description}
+                    <p className="font-sans text-sm text-foreground/80 leading-relaxed text-readable">
+                        {intro.text}
                     </p>
-                  </div>
                 </div>
-                
-                <Separator className="bg-foreground/10" />
-                
-                <ul className="space-y-4">
-                  {section.rules.map((rule, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
-                      <div className="min-w-6 h-6 rounded-full backdrop-blur-md bg-foreground/5 border border-foreground/10 flex items-center justify-center mt-0.5">
-                        <Check className="w-3.5 h-3.5 text-foreground/80" />
-                      </div>
-                      <p className="text-foreground/70">{rule}</p>
-                    </li>
-                  ))}
+            </div>
+             <div className={cn("absolute -bottom-8 -right-8 w-24 h-24 rounded-full opacity-[0.05] blur-lg", getAccentStyle(intro.accent).bg.replace('/20','/80'))}></div>
+        </motion.div>
+
+
+        {/* --- Terms Section Cards --- */}
+        {termsSections.map((section) => {
+            const accent = getAccentStyle(section.accent);
+            const Icon = section.icon;
+            return (
+             <motion.div
+               key={section.id}
+               variants={cardVariants}
+               whileHover={cardHover}
+               className={cn(
+                 "p-6 rounded-3xl border relative overflow-hidden shadow-lg flex flex-col", // Ensure flex column for potential height differences
+                 "bg-secondary/70 backdrop-blur-xl",
+                 accent.border,
+                 accent.shadow
+               )}
+             >
+                {/* Card Header */}
+                <div className="flex items-start gap-3.5 mb-4">
+                    <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0", accent.iconBg)}>
+                        <Icon className={cn("w-5 h-5", accent.iconText)} />
+                    </div>
+                    <div>
+                        <h2 className="text-lg font-semibold font-serif text-foreground tracking-tight">
+                        {section.title}
+                        </h2>
+                        <p className="text-xs text-neutral-400 font-sans mt-0.5">{section.description}</p>
+                    </div>
+                </div>
+
+                {/* Rules List */}
+                <ul className="space-y-3 font-sans text-sm text-foreground/80 leading-relaxed list-none pl-1 flex-grow"> {/* flex-grow helps with alignment */}
+                   {section.rules.map((rule, index) => (
+                     <motion.li
+                        key={index}
+                        variants={listItemVariants}
+                        className="flex items-start gap-3"
+                      >
+                         <span className={cn(
+                            "mt-[5px] w-2 h-2 rounded-full flex-shrink-0", // Bullet styling
+                            accent.bulletBg
+                          )}
+                          />
+                         <span className="flex-1">{rule}</span> {/* Ensure text wraps */}
+                     </motion.li>
+                   ))}
                 </ul>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+                <div className={cn("absolute -bottom-8 -left-8 w-24 h-24 rounded-full opacity-[0.06] blur-lg", accent.bg.replace('/10','/80'))}></div>
+             </motion.div>
+            );
+        })}
 
-        {/* Warning Section */}
+         {/* --- Warning Card --- */}
         <motion.div
-          variants={itemVariants}
-          className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-3xl p-6 relative overflow-hidden"
+            variants={cardVariants}
+            className={cn(
+                "md:col-span-2 p-6 rounded-3xl border-2 relative overflow-hidden shadow-lg", // Stronger border for warning
+                "bg-secondary/80 backdrop-blur-xl", // Slightly more opaque
+                getAccentStyle(warning.accent).border, // Use warning accent border
+                "shadow-lg", getAccentStyle(warning.accent).shadow // Use warning accent shadow
+            )}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent opacity-50" />
-          
-          <div className="flex items-start gap-4 relative z-10">
-            <div className="min-w-10 h-10 rounded-full backdrop-blur-md bg-foreground/5 border border-foreground/10 flex items-center justify-center">
-              <AlertTriangle className="w-5 h-5 text-foreground/80" />
+            <div className="flex items-start gap-4">
+                <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-1", getAccentStyle(warning.accent).iconBg)}>
+                    <warning.icon className={cn("w-5 h-5", getAccentStyle(warning.accent).iconText)} />
+                </div>
+                <div>
+                    <h2 className="text-lg font-semibold font-serif text-foreground mb-1.5">
+                        {warning.title}
+                    </h2>
+                    <p className="font-sans text-sm text-foreground/80 leading-relaxed text-readable">
+                        {warning.text}
+                    </p>
+                </div>
             </div>
-            <div>
-              <h3 className="text-lg font-serif font-semibold text-foreground mb-2">
-                Pelanggaran Ketentuan
-              </h3>
-              <p className="text-foreground/70">
-                Pelanggaran terhadap syarat dan ketentuan ini dapat berakibat pada peringatan, pembatasan akses, atau pengakhiran keanggotaan, tergantung pada tingkat keparahan. Kami berhak untuk mengubah ketentuan ini dari waktu ke waktu, dengan pemberitahuan kepada seluruh anggota.
-              </p>
-            </div>
-          </div>
         </motion.div>
 
-        {/* Agreement section with enhanced design */}
+        {/* --- Agreement Card --- */}
         <motion.div
-          variants={itemVariants}
-          className="text-center space-y-4 p-8 backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-3xl relative overflow-hidden"
+            variants={cardVariants}
+            className={cn(
+                "md:col-span-2 p-6 rounded-3xl border relative overflow-hidden shadow-lg text-center",
+                "bg-secondary/70 backdrop-blur-xl",
+                getAccentStyle(agreement.accent).border,
+                getAccentStyle(agreement.accent).shadow
+            )}
         >
-          {/* Geometric background elements */}
-          <div className="absolute inset-0 bg-gradient-to-r from-foreground/5 via-foreground/3 to-foreground/5 opacity-50" />
-          <div className="absolute inset-0 geometric-hexagon-pattern opacity-5" />
-          <div className="absolute w-60 h-60 rounded-full bg-foreground/5 blur-[60px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-          
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-10 h-10 rounded-full backdrop-blur-md bg-foreground/5 border border-foreground/10 flex items-center justify-center">
-              <Bookmark className="w-5 h-5 text-foreground/80" />
+            <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center mx-auto mb-3", getAccentStyle(agreement.accent).iconBg)}>
+                <agreement.icon className={cn("w-5 h-5", getAccentStyle(agreement.accent).iconText)} />
             </div>
-          </div>
-          
-          <p className="text-foreground/80 relative z-10 font-medium">
-            Dengan berpartisipasi dalam komunitas OurCreativity, Anda mengakui bahwa telah membaca, memahami, dan setuju untuk mematuhi semua syarat dan ketentuan yang telah ditetapkan.
-          </p>
-          
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-foreground/30 to-transparent mx-auto my-4" />
-          
-          <p className="text-sm text-foreground/50 italic relative z-10">
-            Ketentuan ini berlaku sejak 2024 dan dapat berubah sewaktu-waktu dengan pemberitahuan kepada seluruh anggota.
-          </p>
+            <p className="font-sans text-sm text-foreground/85 leading-relaxed max-w-xl mx-auto mb-3">
+                {agreement.text}
+            </p>
+            <p className="font-sans text-xs text-neutral-500 italic">
+                 {agreement.note}
+            </p>
+             <div className="absolute inset-0 geometric-dot-pattern opacity-[0.02] mix-blend-overlay"></div>
         </motion.div>
+
+
       </motion.div>
     </PageLayout>
   );
