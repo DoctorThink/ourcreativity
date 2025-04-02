@@ -8,7 +8,16 @@
     <meta name="author" content="Lovable" />
     <meta property="og:image" content="/og-image.png" />
 
-    <!-- Insert the Matomo tracking code snippet here -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JHML4QN0CL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-JHML4QN0CL');
+    </script>
+
     <!-- Matomo -->
     <script>
       var _paq = window._paq = window._paq || [];
@@ -24,11 +33,25 @@
       })();
     </script>
     <!-- End Matomo Code -->
+
+    <!-- Note: If you have CSS files, they would typically be linked here as well -->
+    <!-- <link rel="stylesheet" href="/path/to/your/styles.css"> -->
+
   </head>
 
   <body>
-    <div id="root"></div>
+    <!-- This div is likely where your React/Vue/Svelte/etc. app mounts -->
+    <div id="root">
+      <!-- Content will be rendered here by JavaScript -->
+      <!-- You might want some fallback content for non-JS users or initial load -->
+      <p>Loading application...</p>
+    </div>
+
+    <!-- GPT Engineer script (presumably for development/generation purposes) -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+
+    <!-- Main application script (likely compiled from TypeScript/JSX) -->
     <script type="module" src="/src/main.tsx"></script>
+
   </body>
 </html>
