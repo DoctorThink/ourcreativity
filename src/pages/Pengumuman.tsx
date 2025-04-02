@@ -50,7 +50,7 @@ const timelineItemVariants = {
 const majorUpdateAnnouncement = {
   id: 1,
   title: "Major Update 3.5: Wajah Baru OurCreativity!",
-  date: "Juni 2024",
+  date: "2 April 2024",
   icon: Zap,
   accent: "amethyst",
   tag: "Pembaruan",
