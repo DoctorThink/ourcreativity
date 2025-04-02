@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layouts/PageLayout";
 import { cn } from "@/lib/utils";
-import { Info, Sparkles, Users, Target, Palette, Video, FileText, MessageSquare, Quote as QuoteIcon } from "lucide-react"; // Renamed Quote to QuoteIcon
+import { Info, Sparkles, Users, Target, Quote as QuoteIcon } from "lucide-react"; // Removed unused icons
 import React from "react";
 
 /**
@@ -9,75 +9,90 @@ import React from "react";
  * (Consistency Check - Assumed same as previous)
  *
  * 1.  `src/components/layouts/PageLayout.tsx`: Provides page structure, header, background.
- * 2.  `src/index.css`: Defines CSS variables, fonts, base styles, Tailwind directives.
- * 3.  `tailwind.config.ts`: Defines accent colors, fonts, plugins.
- * 4.  `src/lib/utils.ts`: Provides the `cn` utility function.
- * 5.  `lucide-react` (dependency): Installed.
- * 6.  `framer-motion` (dependency): Installed.
+ * 2.  `public/lovable-uploads/`: (CONFIRM THESE IMAGES EXIST)
+ *     - `design.png`
+ *     - `video.png`
+ *     - `karyatulis.png`
+ *     - `meme.png`
+ * 3.  `src/index.css`: Defines CSS variables, fonts, base styles, Tailwind directives.
+ * 4.  `tailwind.config.ts`: Defines accent colors, fonts, plugins.
+ * 5.  `src/lib/utils.ts`: Provides the `cn` utility function.
+ * 6.  `lucide-react` (dependency): Installed.
+ * 7.  `framer-motion` (dependency): Installed.
  */
 
-// --- Animation Variants (Consistent) ---
+// --- Animation Variants (Refined for smoother feel) ---
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+    transition: { staggerChildren: 0.07, delayChildren: 0.1 }, // Slightly adjusted stagger
   },
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 25, scale: 0.97 },
+  hidden: { opacity: 0, y: 20, scale: 0.98 }, // Less dramatic entrance
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.45, ease: [0.3, 0.0, 0.3, 1.0] },
+    transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1.0] }, // Standard smooth ease
   },
 };
 
 const cardHover = {
-  scale: 1.025,
-  boxShadow: "0px 12px 24px -8px rgba(0, 0, 0, 0.25)",
-  transition: { type: "spring", stiffness: 400, damping: 25 },
+  scale: 1.02, // Very subtle scale on hover
+  boxShadow: "0px 10px 20px -8px rgba(0, 0, 0, 0.2)", // Softer shadow
+  transition: { type: "spring", stiffness: 350, damping: 20 },
 };
 
-// --- Data Sections (Minor adjustments for consistency) ---
+const textContentVariants = {
+    hidden: { opacity: 0, y: 5 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut", delay: 0.1 } }
+};
+
+const bulletVariants = {
+    hidden: { scale: 0, opacity: 0 },
+    visible: { scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 400, damping: 15, delay: 0.2 } }
+};
+
+// --- Data Sections (Updated communityGroups with imageSrc) ---
 const infoSections = [
   {
     id: "about",
     title: "Tentang Kami",
     icon: Info,
-    accent: "lavender", // Assign accents for styling
+    accent: "lavender",
     content: [
-      "Komunitas kreatif berdiri sejak 2024, bertujuan memberi manfaat luas.",
-      "Misi kami: mencetak lebih banyak anak muda kreatif di Indonesia.",
-      "Wadah bertanya & belajar untuk mengembangkan kreativitas.",
-      "Anggota dapat bertanya, belajar, sekaligus menghasilkan karya.",
+      "Komunitas kreatif sejak 2024, bertujuan memberi manfaat.",
+      "Misi kami: mencetak talenta kreatif muda Indonesia.",
+      "Wadah bertanya & belajar untuk kembangkan kreativitas.",
+      "Anggota bisa bertanya, belajar, sekaligus berkarya.",
     ],
   },
   {
     id: "vision",
     title: "Visi Komunitas",
-    icon: Target, // Changed icon for variety
+    icon: Target,
     accent: "mint",
     content: [
       "Mengembangkan jiwa kreatif anak muda Indonesia.",
-      "Wadah diskusi, kolaborasi, dan penghasil karya.",
-      "Membantu mengasah bakat di Karya Tulis, Desain Grafis, & Video Editing.",
+      "Wadah diskusi, kolaborasi, & penghasil karya.",
+      "Membantu mengasah bakat tulis, desain, & video editing.",
       "Memberi kesempatan publikasi karya agar dikenal luas.",
     ],
   },
   {
     id: "mission",
     title: "Misi Kami",
-    icon: Sparkles, // Changed icon for variety
+    icon: Sparkles,
     accent: "peach",
     content: [
-      "Menghubungkan talenta muda via media sosial untuk bergabung.",
-      "Menyediakan platform diskusi & kolaborasi berbagi ilmu.",
-      "Mempublikasikan karya anggota via media sosial untuk apresiasi.",
-      "Menyelenggarakan program gratis (diskusi, event, proyek).",
-      "Mendorong penguasaan berbagai bidang kreatif.",
+      "Menghubungkan talenta muda via media sosial.",
+      "Menyediakan platform diskusi & kolaborasi.",
+      "Mempublikasikan karya anggota untuk apresiasi.",
+      "Menyelenggarakan program gratis (diskusi, event, dll).",
+      "Mendorong penguasaan bidang kreatif.",
     ],
   }
 ];
@@ -85,27 +100,27 @@ const infoSections = [
 const communityGroups = [
   {
     title: "Desain Grafis",
-    icon: Palette,
-    description: "Fokus pada pengembangan skill desain visual digital & cetak.",
-    accent: "amethyst" // Using amethyst to match TimKami
+    imageSrc: "/lovable-uploads/design.png", // Replaced icon with imageSrc
+    description: "Fokus pengembangan skill desain visual digital & cetak.",
+    accent: "amethyst"
   },
   {
     title: "Video Editing",
-    icon: Video,
-    description: "Belajar & berkarya dalam editing & produksi konten video kreatif.",
-    accent: "coral" // Using coral to match TimKami
+    imageSrc: "/lovable-uploads/video.png", // Replaced icon with imageSrc
+    description: "Belajar & berkarya dalam editing & produksi video kreatif.",
+    accent: "coral"
   },
   {
     title: "Meme Creator",
-    icon: MessageSquare, // Using MessageSquare to match data, could use Smile
+    imageSrc: "/lovable-uploads/meme.png", // Replaced icon with imageSrc
     description: "Mengembangkan konten kreatif & meme untuk media sosial.",
-    accent: "emerald" // Using emerald to match TimKami
+    accent: "emerald"
   },
   {
     title: "Karya Tulis",
-    icon: FileText,
+    imageSrc: "/lovable-uploads/karyatulis.png", // Replaced icon with imageSrc
     description: "Menulis & mengembangkan konten tertulis kreatif & bermanfaat.",
-    accent: "softPink" // Using softPink
+    accent: "softPink"
   }
 ];
 
@@ -120,7 +135,7 @@ const closing = {
     author: "Admin"
 };
 
-// --- Accent Color Mapping (Using consistent mapping) ---
+// --- Accent Color Mapping (No changes needed) ---
 const accentStyles: Record<string, { bg: string; border: string; text: string; iconText: string; shadow: string }> = {
   lavender: { bg: "bg-lavender/10", border: "border-lavender/40", text: "text-lavender", iconText: "text-lavender", shadow: "shadow-lavender/5" },
   mint: { bg: "bg-mint/10", border: "border-mint/40", text: "text-mint", iconText: "text-mint", shadow: "shadow-mint/5" },
@@ -139,14 +154,14 @@ const getAccentStyle = (accentKey: string | undefined) => {
 const Informasi = () => {
   return (
     <PageLayout
-      title="Informasi Komunitas" // Adjusted title
-      subtitle="Tujuan, visi, misi, dan fokus grup kreatif di OurCreativity" // Adjusted subtitle
+      title="Informasi Komunitas"
+      subtitle="Tujuan, visi, misi, dan fokus grup kreatif di OurCreativity"
     >
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 relative z-10"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 relative z-10 pb-12" // Added padding bottom
       >
         {/* --- Info Section Cards --- */}
         {infoSections.map((section) => {
@@ -158,29 +173,53 @@ const Informasi = () => {
                variants={cardVariants}
                whileHover={cardHover}
                className={cn(
-                 "p-5 rounded-3xl border relative overflow-hidden shadow-md",
-                 "bg-secondary/60 backdrop-blur-md",
+                 "p-6 rounded-3xl border relative overflow-hidden shadow-lg", // Increased padding slightly
+                 "bg-secondary/70 backdrop-blur-xl", // Slightly more opaque bg
                  accent.border,
                  accent.shadow
                )}
              >
-               <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Icon className={cn("w-5 h-5 flex-shrink-0", accent.iconText)} />
-                    <h2 className="text-lg font-semibold font-serif text-foreground">
+               {/* Use motion for inner content animation */}
+               <motion.div
+                  variants={textContentVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="relative z-10"
+                >
+                  <div className="flex items-center gap-3.5 mb-4"> {/* Slightly more gap */}
+                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0", accent.bg)}> {/* Icon background */}
+                        <Icon className={cn("w-4 h-4", accent.iconText)} />
+                    </div>
+                    <h2 className="text-lg font-semibold font-serif text-foreground tracking-tight"> {/* Tracking tight */}
                       {section.title}
                     </h2>
                   </div>
-                  <ul className="space-y-2 font-sans text-sm text-foreground/75 leading-normal list-none pl-1"> {/* Use list-none for custom feel */}
+                  <ul className="space-y-2.5 font-sans text-[13.5px] text-foreground/80 leading-relaxed list-none pl-1"> {/* Adjusted text size & leading */}
                      {section.content.map((item, index) => (
-                       <li key={index} className="relative pl-4">
-                           <span className={cn("absolute left-0 top-[0.4em] w-1.5 h-1.5 rounded-full", accent.bg.replace('/10', '/80'))}></span> {/* Custom bullet */}
+                       <motion.li
+                          key={index}
+                          className="relative pl-5" // Increased padding for bullet
+                          initial="hidden"
+                          animate="visible"
+                          custom={index} // Pass index for stagger animation if needed on list items
+                          variants={{
+                             hidden: { opacity: 0, x: -10 },
+                             visible: { opacity: 1, x: 0, transition: { delay: 0.2 + index * 0.05 } }
+                          }}
+                        >
+                           <motion.span
+                              variants={bulletVariants}
+                              className={cn(
+                                "absolute left-0 top-[0.45em] w-2 h-2 rounded-full", // Slightly larger bullet
+                                accent.bg.replace('/10', '/80') // Use accent bg for bullet
+                              )}
+                            />
                            {item}
-                       </li>
+                       </motion.li>
                      ))}
                   </ul>
-               </div>
-               <div className={cn("absolute -bottom-8 -right-8 w-24 h-24 rounded-full opacity-[0.07] blur-lg", accent.bg.replace('/10','/80'))}></div>
+               </motion.div>
+               <div className={cn("absolute -bottom-8 -right-8 w-24 h-24 rounded-full opacity-[0.08] blur-lg", accent.bg.replace('/10','/80'))}></div>
              </motion.div>
             );
         })}
@@ -188,12 +227,12 @@ const Informasi = () => {
         {/* --- Divider / Title for Groups --- */}
          <motion.div
             variants={cardVariants} // Use card variants for entrance
-            className="md:col-span-2 lg:col-span-3 mt-6 mb-0 flex items-center gap-3"
+            className="md:col-span-2 lg:col-span-3 mt-8 mb-2 flex items-center gap-3" // Adjusted margin
          >
             <div className="w-8 h-8 rounded-lg bg-neutral-700/50 border border-neutral-700 flex items-center justify-center flex-shrink-0">
                 <Users className="w-4 h-4 text-neutral-300" />
             </div>
-            <h2 className="text-xl font-semibold font-serif text-foreground">
+            <h2 className="text-xl font-semibold font-serif text-foreground tracking-tight">
                 Fokus Grup Kreatif Kami
             </h2>
         </motion.div>
@@ -201,33 +240,43 @@ const Informasi = () => {
         {/* --- Community Group Cards --- */}
         {communityGroups.map((group) => {
           const accent = getAccentStyle(group.accent);
-          const Icon = group.icon;
+          // Removed Icon definition as we use imageSrc now
           return (
             <motion.div
               key={group.title}
               variants={cardVariants}
               whileHover={cardHover}
-              // Adjusting grid span: 2 groups per row on md+, 3 groups per row on lg+ might be too tight unless the grid has 4 columns
-              // Assuming 3 columns on lg: span 1, last one might span more or leave empty space. For now, span 1.
               className={cn(
-                "lg:col-span-1 p-5 rounded-3xl border relative overflow-hidden shadow-md flex flex-col", // flex-col
-                "bg-secondary/60 backdrop-blur-md",
+                "lg:col-span-1 p-5 rounded-3xl border relative overflow-hidden shadow-lg flex flex-col",
+                "bg-secondary/70 backdrop-blur-xl",
                 accent.border,
                 accent.shadow
               )}
             >
-              <div className="relative z-10 flex-grow flex flex-col">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Icon className={cn("w-5 h-5 flex-shrink-0", accent.iconText)} />
-                    <h3 className="text-base font-semibold font-serif text-foreground">
-                       {group.title} {/* Removed "Edisi" */}
+              {/* Use motion for inner content animation */}
+              <motion.div
+                  variants={textContentVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="relative z-10 flex-grow flex flex-col"
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    {/* Use img tag for imageSrc */}
+                    <img
+                        src={group.imageSrc}
+                        alt={`${group.title} Icon`}
+                        className="w-10 h-10 object-contain flex-shrink-0 bg-black/10 rounded-lg p-1" // Added bg and padding
+                        loading="lazy" // Lazy load images
+                      />
+                    <h3 className="text-base font-semibold font-serif text-foreground tracking-tight">
+                       {group.title}
                     </h3>
                   </div>
-                  <p className="font-sans text-[13px] text-foreground/70 leading-normal flex-grow">
+                  <p className="font-sans text-sm text-foreground/75 leading-relaxed flex-grow"> {/* Adjusted text style */}
                     {group.description}
                   </p>
-              </div>
-              <div className={cn("absolute -bottom-5 -left-5 w-20 h-20 rounded-full opacity-[0.08] blur-md", accent.bg.replace('/10','/80'))}></div>
+              </motion.div>
+              <div className={cn("absolute -bottom-5 -left-5 w-20 h-20 rounded-full opacity-[0.09] blur-md", accent.bg.replace('/10','/80'))}></div>
             </motion.div>
           );
         })}
@@ -236,21 +285,26 @@ const Informasi = () => {
         <motion.div
           variants={cardVariants}
           whileHover={cardHover}
-          // Span across columns for emphasis, adjust as needed for layout (e.g., 2 on md, 3 on lg)
           className={cn(
-            "md:col-span-2 lg:col-span-3 p-6 rounded-3xl border relative overflow-hidden shadow-md flex flex-col justify-center items-center text-center",
-            "bg-gradient-to-br from-secondary/60 to-secondary/70 backdrop-blur-md",
-            "border-neutral-700/40 shadow-black/10"
+            "md:col-span-2 lg:col-span-3 mt-4 p-8 rounded-3xl border relative overflow-hidden shadow-xl flex flex-col justify-center items-center text-center", // Added shadow-xl
+            "bg-gradient-to-br from-secondary/70 to-secondary/80 backdrop-blur-xl",
+            "border-neutral-700/50" // Slightly stronger border
           )}
         >
-           <QuoteIcon className="absolute left-4 top-4 w-6 h-6 text-neutral-600 opacity-60" aria-hidden="true"/>
-            <blockquote className="relative z-10 max-w-xl"> {/* Limit max width */}
-              <p className="text-lg md:text-xl font-serif italic text-foreground/85 leading-relaxed mb-2">
+           <QuoteIcon className="absolute left-4 top-4 w-8 h-8 text-neutral-600 opacity-50" aria-hidden="true"/>
+            {/* Use motion for inner content animation */}
+            <motion.blockquote
+                variants={textContentVariants}
+                initial="hidden"
+                animate="visible"
+                className="relative z-10 max-w-xl"
+             >
+              <p className="text-lg md:text-xl font-serif italic text-foreground/90 leading-relaxed mb-3"> {/* Increased line height */}
                 "{quote.text}"
               </p>
-              <footer className="font-sans text-xs text-foreground/60">— {quote.author}</footer>
-            </blockquote>
-           <QuoteIcon className="absolute right-4 bottom-4 w-6 h-6 text-neutral-600 opacity-60 transform rotate-180" aria-hidden="true"/>
+              <footer className="font-sans text-[13px] text-foreground/60">— {quote.author}</footer>
+            </motion.blockquote>
+           <QuoteIcon className="absolute right-4 bottom-4 w-8 h-8 text-neutral-600 opacity-50 transform rotate-180" aria-hidden="true"/>
         </motion.div>
 
          {/* --- Closing Card --- */}
@@ -258,23 +312,35 @@ const Informasi = () => {
           variants={cardVariants}
           whileHover={cardHover}
           className={cn(
-            "md:col-span-2 lg:col-span-3 p-6 rounded-3xl border relative overflow-hidden shadow-md text-center", // Span full width
-            "bg-secondary/60 backdrop-blur-md",
-            "border-amethyst/40 shadow-amethyst/5" // Use primary accent color
+            "md:col-span-2 lg:col-span-3 p-8 rounded-3xl border relative overflow-hidden shadow-xl text-center", // Added shadow-xl
+            "bg-secondary/70 backdrop-blur-xl",
+            "border-amethyst/50 shadow-amethyst/10" // Slightly stronger border/shadow
           )}
         >
-            <div className="relative z-10 space-y-3">
-                <Sparkles className="w-6 h-6 text-amethyst mx-auto mb-2" />
-                <p className="text-base text-foreground/80 max-w-2xl mx-auto leading-relaxed">
+             {/* Use motion for inner content animation */}
+            <motion.div
+                variants={textContentVariants}
+                initial="hidden"
+                animate="visible"
+                className="relative z-10 space-y-4" // Increased spacing
+            >
+                <Sparkles className="w-7 h-7 text-amethyst mx-auto mb-1" /> {/* Slightly larger icon */}
+                <p className="text-base text-foreground/85 max-w-2xl mx-auto leading-relaxed"> {/* Adjusted opacity/leading */}
                     {closing.text}
                 </p>
-                <p className="text-lg font-semibold font-serif text-foreground">
+                {/* Added subtle glow animation to emphasis text */}
+                <motion.p
+                    className="text-lg font-semibold font-serif text-foreground"
+                    initial={{ opacity: 0.8 }}
+                    animate={{ opacity: 1, textShadow: "0 0 8px rgba(155,109,255,0.4)" }}
+                    transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+                 >
                     "{closing.emphasis}"
-                </p>
-                <p className="font-sans text-xs text-foreground/60 italic pt-1">— {closing.author}</p>
-            </div>
-             <div className={cn("absolute -top-10 -left-10 w-28 h-28 rounded-full opacity-[0.07] blur-lg bg-amethyst/80")}></div>
-             <div className={cn("absolute -bottom-10 -right-10 w-28 h-28 rounded-full opacity-[0.07] blur-lg bg-amethyst/80")}></div>
+                </motion.p>
+                <p className="font-sans text-[13px] text-foreground/60 italic pt-1">— {closing.author}</p>
+            </motion.div>
+             <div className={cn("absolute -top-10 -left-10 w-32 h-32 rounded-full opacity-[0.08] blur-xl bg-amethyst/80")}></div>
+             <div className={cn("absolute -bottom-10 -right-10 w-32 h-32 rounded-full opacity-[0.08] blur-xl bg-amethyst/80")}></div>
         </motion.div>
 
       </motion.div>
