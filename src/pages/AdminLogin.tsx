@@ -1,4 +1,4 @@
-
+// --- START OF FILE AdminLogin.tsx ---
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +21,7 @@ const AdminLogin = () => {
 
     try {
       const success = await login(password);
-      
+
       if (success) {
         toast({
           title: "Login successful",
@@ -47,30 +47,32 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-foreground/5 -top-[20%] -right-[20%]" />
-        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-foreground/3 -bottom-[10%] -left-[10%]" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
+    <div className="min-h-screen flex items-center justify-center bg-[#1a1a1c] text-white overflow-hidden">
+      <div className="absolute inset-0 -z-10 opacity-60">
+        {/* Enhanced background blobs inspired by logo */}
+        <div className="absolute w-[60vw] h-[60vh] rounded-full blur-[110px] bg-[#E54646]/10 -top-[15%] -right-[15%]" />
+        <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-[#3ECAC4]/10 -bottom-[10%] -left-[10%]" />
+         <div className="absolute w-[40vw] h-[40vh] rounded-full blur-[90px] bg-[#FFA83E]/5 bottom-[20%] right-[5%]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-md p-8 space-y-8 backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-3xl"
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full max-w-md p-8 space-y-8 backdrop-blur-2xl bg-[#2a2a2e]/60 border border-[#444448]/70 rounded-3xl shadow-2xl shadow-black/30"
       >
         <div className="flex justify-center">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-foreground/5 backdrop-blur-xl border border-foreground/10">
-            <Lock className="w-8 h-8" />
+          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-[#2a2a2e]/80 backdrop-blur-xl border border-[#444448]">
+            <Lock className="w-8 h-8 text-[#A855F7]" /> {/* Purple Icon */}
           </div>
         </div>
 
-        <h2 className="text-2xl font-bold text-center text-foreground">Admin Access</h2>
-        
+        <h2 className="text-2xl font-bold text-center text-neutral-100">Admin Access</h2>
+
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium text-foreground/70">
+            <label htmlFor="password" className="text-sm font-medium text-neutral-300">
               Password
             </label>
             <Input
@@ -79,25 +81,25 @@ const AdminLogin = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter admin password"
-              className="w-full bg-foreground/5 border-foreground/10"
+              className="w-full bg-[#1a1a1c]/80 border-[#444448] text-white placeholder:text-neutral-500 focus:border-[#A855F7] focus:ring-[#A855F7]/50 rounded-lg"
               required
             />
           </div>
 
-          <Button 
-            type="submit" 
-            disabled={isLoading} 
-            className="w-full bg-foreground text-background hover:bg-foreground/90"
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-[#A855F7] text-white hover:bg-[#A855F7]/90 rounded-lg transition-colors duration-200 font-semibold"
           >
             {isLoading ? "Authenticating..." : "Login"}
           </Button>
         </form>
 
         <div className="text-center">
-          <Button 
-            variant="link" 
+          <Button
+            variant="link"
             onClick={() => navigate("/")}
-            className="text-foreground/70"
+            className="text-neutral-400 hover:text-[#A855F7]"
           >
             Return to homepage
           </Button>
