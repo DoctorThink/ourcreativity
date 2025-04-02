@@ -1,17 +1,18 @@
+// src/pages/TimKami.tsx
 
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layouts/PageLayout";
 import { cn } from "@/lib/utils";
-import { Film, Palette, Feather, Bot, ShieldCheck, Smile, Gamepad2, User, Crown } from 'lucide-react';
+import { Film, Palette, Feather, Bot, ShieldCheck, Smile, Gamepad2, User, Crown, Award } from 'lucide-react'; // Added Award
 import React from "react";
-import TeamMemberCard from "@/components/TeamMemberCard";
+import TeamMemberCard from "@/components/TeamMemberCard"; // Import the updated component
 
-// --- Animation Variants (Optimized for smoother transitions) ---
+// --- Animation Variants ---
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { 
+    transition: {
       staggerChildren: 0.08, // Reduced stagger for smoother appearance
       delayChildren: 0.05,
       ease: "easeOut"
@@ -25,8 +26,8 @@ const sectionCardVariants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { 
-      duration: 0.5, 
+    transition: {
+      duration: 0.5,
       ease: [0.25, 0.1, 0.25, 1.0] // More natural easing
     },
   },
@@ -36,8 +37,8 @@ const memberListVariants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        transition: { 
-          staggerChildren: 0.04,
+        transition: {
+          staggerChildren: 0.05, // Faster stagger within list
           delayChildren: 0.1,
           ease: "easeOut"
         }
@@ -45,27 +46,17 @@ const memberListVariants = {
 };
 
 // --- Team Data Structure with updated names and bios ---
+// Use the provided data structure
 const founderData = {
   name: "Muhammad Syahid Al Haqi",
   role: "Founder",
-  imageSrc: null,
+  imageSrc: null, // No specific image provided for founder card itself
   accent: "gold",
-  bio: "M. Syahid Al-Haqi Seorang Remaja Penggemar Sastra Yang Berdomisili Di Lampung, telah meraih berbagai prestasi dari hasil karyanya. M. Syahid Al - Haqi yang berstatus sebagai siswa kelas X SMAN 9 Bandar Lampung, merupakan Putra Pertama dari Ibu Septiyana Natalia S.Pd dan Bapak Sigit Jatmiko. Dimana selain berstatus sebagai pelajar, Haqi Juga menyalurkan minat Bakatnya pada Perusahaan Penerbitan sebagai Desainer Grafis Dan Penulis.",
-  achievements: [
-    "Mendapatkan langsung Reward Umroh yang diserahkan langsung oleh Walikota Bandar Lampung, di acara DPD KNPI.",
-    "Juara 1 lomba baca Puisi nasional di Universitas Brawijaya Malang.",
-    "Juara 1 Lomba Cipta Baca Puisi Nasional di KGLL Lampung.",
-    "Juara 3 Lomba Baca Puisi BEM FKIP UNILA.",
-    "Juara 3 Lomba Baca Puisi UNUSA Surabaya.",
-    "Juara 2 Lomba Baca Puisi KMNU UNILA.",
-    "Juara 3 Lomba Baca Puisi Regional.",
-    "Juara 3 Lomba Baca Puisi SBS HMPJ Universitas Lampung 2023.",
-    "Dalam Acara AMUSE AL KAUTSAR 2023."
-  ],
   members: [
     {
       name: "Muhammad Syahid Al Haqi",
       role: "Founder",
+      instagram: null, // Add instagram if available
       bio: "M. Syahid Al-Haqi Seorang Remaja Penggemar Sastra Yang Berdomisili Di Lampung, telah meraih berbagai prestasi dari hasil karyanya. M. Syahid Al - Haqi yang berstatus sebagai siswa kelas X SMAN 9 Bandar Lampung, merupakan Putra Pertama dari Ibu Septiyana Natalia S.Pd dan Bapak Sigit Jatmiko. Dimana selain berstatus sebagai pelajar, Haqi Juga menyalurkan minat Bakatnya pada Perusahaan Penerbitan sebagai Desainer Grafis Dan Penulis.",
       achievements: [
         "Mendapatkan langsung Reward Umroh yang diserahkan langsung oleh Walikota Bandar Lampung, di acara DPD KNPI.",
@@ -162,7 +153,7 @@ const teamData = [
   {
     title: "Admin Discord",
     icon: ShieldCheck,
-    imageSrc: null,
+    imageSrc: null, // No specific image
     accent: "grayMid",
     members: [
       { name: "Aljaan", instagram: "@snhrrr", role: "Discord Admin", bio: "Nanti ditambah" }
@@ -170,7 +161,7 @@ const teamData = [
   }
 ];
 
-// --- Accent Color Mapping ---
+// --- Accent Color Mapping (Copied from TeamMemberCard) ---
 const accentStyles: Record<string, {
     bg: string; border: string; text: string; iconText: string; shadow: string; accentLine: string; avatarBorder: string;
 }> = {
@@ -188,8 +179,11 @@ const getAccentStyle = (accentKey: string | undefined) => {
     return accentStyles[accentKey || 'default'] || accentStyles.default;
 };
 
+
 // --- Main TimKami Component ---
 const TimKami = () => {
+  const founderAccent = getAccentStyle(founderData.accent); // Get founder accent style
+
   return (
     <PageLayout
       title="Tim Kami"
@@ -199,50 +193,62 @@ const TimKami = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-10 md:space-y-12 gpu-accelerated"
+        className="space-y-10 md:space-y-12 gpu-accelerated" // Add gpu-accelerated for potential performance boost
       >
-        {/* Founder Section */}
+        {/* --- Founder Section --- */}
         <motion.section
           variants={sectionCardVariants}
           className={cn(
-            "rounded-[28px] border-2 relative overflow-hidden shadow-xl gpu-accelerated",
-            "bg-gradient-to-br from-amber/5 via-amber/10 to-orange-500/5 backdrop-blur-lg",
-            "border-amber/40",
-            "shadow-amber/10"
+            "rounded-[28px] border-2 relative overflow-hidden shadow-xl gpu-accelerated", // Rounded corners consistent with iOS style
+            "bg-gradient-to-br from-amber-900/20 via-amber-800/10 to-neutral-900/20 backdrop-blur-lg", // Premium gold-ish gradient
+            founderAccent.border, // Gold border
+            founderAccent.shadow // Gold shadow
           )}
         >
           {/* Header */}
           <div className={cn(
-            "p-4 flex items-center gap-3 relative",
-            "bg-gradient-to-r from-amber/30 to-amber/5"
+            "p-4 flex items-center gap-3.5 relative border-b", // Added border-b
+            founderAccent.border // Gold border bottom for header
           )}>
-            <Crown className="w-8 h-8 text-amber" />
-            <h2 className="text-xl font-semibold font-serif text-foreground tracking-tight text-sharp">
+             {/* Icon/Image Placeholder */}
+            <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0", founderAccent.iconBg)}>
+                 <Crown className={cn("w-6 h-6", founderAccent.iconText)} />
+            </div>
+            <h2 className="text-xl md:text-2xl font-semibold font-serif text-foreground tracking-tight text-shadow-sm"> {/* Added text shadow */}
               Founder
             </h2>
-            <div className="absolute bottom-0 left-0 h-[3px] w-full bg-gradient-to-r from-amber via-orange-500/50 to-amber/30"></div>
+            {/* Optional: Subtle accent line instead of border-b if preferred */}
+            {/* <div className={cn("absolute bottom-0 left-0 h-[2px] w-full", founderAccent.accentLine)}></div> */}
           </div>
 
-          {/* Member List */}
+          {/* Member Card (Only one founder) */}
           <motion.div
-            variants={memberListVariants}
-            initial="hidden"
-            animate="visible"
-            className="p-4 md:p-5 gpu-accelerated"
-          >
+             // No memberListVariants needed for single item
+             initial="hidden" // Apply animation directly
+             animate="visible"
+             variants={{ // Simple fade-in for single card
+                hidden: { opacity: 0, y: 10 },
+                visible: { opacity: 1, y: 0, transition: { delay: 0.1, duration: 0.4 } }
+             }}
+             className="p-4 md:p-5 gpu-accelerated"
+           >
             <TeamMemberCard
               name={founderData.members[0].name}
               role={founderData.members[0].role}
-              accentColor="gold"
+              instagram={founderData.members[0].instagram}
+              accentColor={founderData.accent}
               bio={founderData.members[0].bio}
               achievements={founderData.members[0].achievements}
             />
           </motion.div>
 
-          <div className="absolute inset-x-0 bottom-0 h-1/2 rounded-t-3xl opacity-[0.03] bg-gradient-to-t from-amber to-amber/5"></div>
+          {/* Background Element */}
+          <div className={cn(
+              "absolute inset-x-0 bottom-0 h-1/2 rounded-t-3xl opacity-[0.05] bg-gradient-to-t from-amber-500/30 to-transparent pointer-events-none"
+           )}></div>
         </motion.section>
 
-        {/* Team Sections */}
+        {/* --- Team Sections --- */}
         {teamData.map((section) => {
           const SectionIcon = section.icon;
           const accent = getAccentStyle(section.accent);
@@ -252,31 +258,41 @@ const TimKami = () => {
               key={section.title}
               variants={sectionCardVariants}
               className={cn(
-                "rounded-[28px] border-2 relative overflow-hidden shadow-xl gpu-accelerated",
-                "bg-gradient-to-b from-secondary/50 to-secondary/70 backdrop-blur-lg",
+                "rounded-[28px] border relative overflow-hidden shadow-lg gpu-accelerated", // Consistent rounded corners
+                "bg-gradient-to-b from-secondary/60 to-secondary/80 backdrop-blur-lg", // Standard section background
                 accent.border,
                 accent.shadow
               )}
             >
               {/* Header */}
-              <div className={cn("p-4 flex items-center gap-3 relative", accent.bg)}>
+              <div className={cn(
+                  "p-4 flex items-center gap-3.5 relative border-b", // Added border-b
+                  accent.border // Use accent color for border
+              )}>
+                {/* Section Image/Icon */}
                 {section.imageSrc ? (
                   <motion.img
                     src={section.imageSrc}
                     alt={`${section.title} logo`}
-                    className="w-24 h-24 object-contain rounded-full flex-shrink-0 bg-black/10 p-1 md:p-1.5"
+                    className="w-16 h-16 md:w-20 md:h-20 object-contain rounded-full flex-shrink-0 bg-black/20 p-1 border border-neutral-700 shadow-sm" // Adjusted size, added border
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.05 }}
-                    loading="lazy"
+                    transition={{ delay: 0.05, type: "spring", stiffness: 200 }}
+                    loading="lazy" // Lazy load team section images
                   />
                 ) : (
-                  <SectionIcon className={cn("w-6 h-6 flex-shrink-0", accent.iconText)} />
+                  // Fallback icon if no image
+                  <div className={cn("w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center flex-shrink-0 bg-neutral-800/50 border border-neutral-700", accent.iconBg)}>
+                      <SectionIcon className={cn("w-8 h-8 md:w-10 md:h-10", accent.iconText)} />
+                   </div>
                 )}
-                <h2 className="text-xl font-semibold font-serif text-foreground tracking-tight text-sharp">
-                  {section.title} ({section.members.length})
+                {/* Section Title */}
+                <h2 className="text-xl md:text-2xl font-semibold font-serif text-foreground tracking-tight text-shadow-sm">
+                  {section.title} <span className="text-base font-sans text-neutral-400">({section.members.length})</span>
                 </h2>
-                <div className={cn("absolute bottom-0 left-0 h-[3px] w-full", accent.accentLine)}></div>
+                {/* Optional Accent Line */}
+                {/* <div className={cn("absolute bottom-0 left-0 h-[2px] w-full", accent.accentLine)}></div> */}
+                 <div className="absolute inset-0 noise-pattern opacity-[0.01]"></div> {/* Subtle noise in header */}
               </div>
 
               {/* Member List */}
@@ -299,9 +315,10 @@ const TimKami = () => {
                 ))}
               </motion.div>
 
+              {/* Background Element */}
               <div className={cn(
-                "absolute inset-x-0 bottom-0 h-1/2 rounded-t-3xl opacity-[0.03]", 
-                accent.bg.replace('/10','/80')
+                "absolute inset-x-0 bottom-0 h-1/2 rounded-t-3xl opacity-[0.04] pointer-events-none",
+                accent.bg.replace('/10','/80') // Use accent bg for the glow
               )}></div>
             </motion.section>
           );
