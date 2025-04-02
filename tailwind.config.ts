@@ -75,6 +75,10 @@ export default {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'shimmer-gradient': "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%)",
+        'gradient-purple-orange': "linear-gradient(to right, var(--tw-gradient-stops))",
+        'gradient-blue-cyan': "linear-gradient(to right, var(--tw-gradient-stops))",
+        'founder-gradient': "linear-gradient(135deg, #FFBF00 0%, #FFA500 50%, #FF8C00 100%)",
       },
       keyframes: {
         "glow": {
@@ -121,11 +125,6 @@ export default {
         "shimmer": "shimmer 3s ease-in-out infinite",
         "gradient-cycle": "gradient-cycle 8s ease-in-out infinite",
         "theme-fade": "theme-fade 0.5s ease-in-out",
-      },
-      backgroundImage: {
-        "shimmer-gradient": "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%)",
-        "gradient-purple-orange": "linear-gradient(to right, var(--tw-gradient-stops))",
-        "gradient-blue-cyan": "linear-gradient(to right, var(--tw-gradient-stops))",
       },
       boxShadow: {
         'glow-sm': '0 0 10px 1px var(--tile-glow-color, rgba(255,255,255,0.1))',
