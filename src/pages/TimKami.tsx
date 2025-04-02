@@ -1,3 +1,4 @@
+// --- START OF FILE TimKami.tsx (3) ---
 // src/pages/TimKami.tsx
 
 import { motion } from "framer-motion";
@@ -161,18 +162,18 @@ const teamData = [
   }
 ];
 
-// --- Accent Color Mapping (Copied from TeamMemberCard) ---
+// --- Accent Color Mapping (Copied from TeamMemberCard for consistency) ---
 const accentStyles: Record<string, {
-    bg: string; border: string; text: string; iconText: string; shadow: string; accentLine: string; avatarBorder: string;
+    bg: string; border: string; text: string; iconText: string; shadow: string; accentLine: string; avatarBorder: string; iconBg?: string; // Added optional iconBg
 }> = {
-  coral: { bg: "bg-coral/10", border: "border-coral/40", text: "text-coral", iconText: "text-coral", shadow: "shadow-coral/10", accentLine: "bg-coral", avatarBorder: "border-coral/70" },
-  emerald: { bg: "bg-emerald/10", border: "border-emerald/40", text: "text-emerald", iconText: "text-emerald", shadow: "shadow-emerald/10", accentLine: "bg-emerald", avatarBorder: "border-emerald/70" },
-  blueLight: { bg: "bg-blueLight/10", border: "border-blueLight/40", text: "text-blueLight", iconText: "text-blueLight", shadow: "shadow-blueLight/10", accentLine: "bg-blueLight", avatarBorder: "border-blueLight/70" },
-  amethyst: { bg: "bg-amethyst/10", border: "border-amethyst/40", text: "text-amethyst", iconText: "text-amethyst", shadow: "shadow-amethyst/10", accentLine: "bg-amethyst", avatarBorder: "border-amethyst/70" },
-  grayMid: { bg: "bg-grayMid/10", border: "border-grayMid/40", text: "text-grayMid", iconText: "text-grayMid", shadow: "shadow-grayMid/10", accentLine: "bg-grayMid", avatarBorder: "border-grayMid/70" },
-  orangeLight: { bg: "bg-orangeLight/10", border: "border-orangeLight/40", text: "text-orangeLight", iconText: "text-orangeLight", shadow: "shadow-orangeLight/10", accentLine: "bg-orangeLight", avatarBorder: "border-orangeLight/70" },
-  gold: { bg: "bg-amber/10", border: "border-amber/40", text: "text-amber", iconText: "text-amber", shadow: "shadow-amber/10", accentLine: "bg-amber", avatarBorder: "border-amber/70" },
-  default: { bg: "bg-neutral-800/20", border: "border-neutral-700/40", text: "text-neutral-400", iconText: "text-neutral-300", shadow: "shadow-black/10", accentLine: "bg-neutral-500", avatarBorder: "border-neutral-500/70" },
+  coral: { bg: "bg-coral/10", border: "border-coral/40", text: "text-coral", iconText: "text-coral", shadow: "shadow-coral/10", accentLine: "bg-coral", avatarBorder: "border-coral/70", iconBg: "bg-coral/10" },
+  emerald: { bg: "bg-emerald/10", border: "border-emerald/40", text: "text-emerald", iconText: "text-emerald", shadow: "shadow-emerald/10", accentLine: "bg-emerald", avatarBorder: "border-emerald/70", iconBg: "bg-emerald/10" },
+  blueLight: { bg: "bg-blueLight/10", border: "border-blueLight/40", text: "text-blueLight", iconText: "text-blueLight", shadow: "shadow-blueLight/10", accentLine: "bg-blueLight", avatarBorder: "border-blueLight/70", iconBg: "bg-blueLight/10" },
+  amethyst: { bg: "bg-amethyst/10", border: "border-amethyst/40", text: "text-amethyst", iconText: "text-amethyst", shadow: "shadow-amethyst/10", accentLine: "bg-amethyst", avatarBorder: "border-amethyst/70", iconBg: "bg-amethyst/10" },
+  grayMid: { bg: "bg-grayMid/10", border: "border-grayMid/40", text: "text-grayMid", iconText: "text-grayMid", shadow: "shadow-grayMid/10", accentLine: "bg-grayMid", avatarBorder: "border-grayMid/70", iconBg: "bg-grayMid/10" },
+  orangeLight: { bg: "bg-orangeLight/10", border: "border-orangeLight/40", text: "text-orangeLight", iconText: "text-orangeLight", shadow: "shadow-orangeLight/10", accentLine: "bg-orangeLight", avatarBorder: "border-orangeLight/70", iconBg: "bg-orangeLight/10" },
+  gold: { bg: "bg-amber/10", border: "border-amber/40", text: "text-amber", iconText: "text-amber-400", shadow: "shadow-amber/15", accentLine: "bg-amber", avatarBorder: "border-amber/70", iconBg: "bg-amber-900/30" }, // Adjusted gold icon text/bg for better contrast
+  default: { bg: "bg-neutral-800/20", border: "border-neutral-700/40", text: "text-neutral-400", iconText: "text-neutral-300", shadow: "shadow-black/10", accentLine: "bg-neutral-500", avatarBorder: "border-neutral-500/70", iconBg: "bg-neutral-800/50" },
 };
 
 const getAccentStyle = (accentKey: string | undefined) => {
@@ -193,13 +194,13 @@ const TimKami = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-10 md:space-y-12 gpu-accelerated" // Add gpu-accelerated for potential performance boost
+        className="space-y-10 md:space-y-12" // Removed gpu-accelerated from container
       >
         {/* --- Founder Section --- */}
         <motion.section
           variants={sectionCardVariants}
           className={cn(
-            "rounded-[28px] border-2 relative overflow-hidden shadow-xl gpu-accelerated", // Rounded corners consistent with iOS style
+            "rounded-[28px] border-2 relative overflow-hidden shadow-xl", // Consistent rounded corners, removed gpu-accelerated
             "bg-gradient-to-br from-amber-900/20 via-amber-800/10 to-neutral-900/20 backdrop-blur-lg", // Premium gold-ish gradient
             founderAccent.border, // Gold border
             founderAccent.shadow // Gold shadow
@@ -219,6 +220,8 @@ const TimKami = () => {
             </h2>
             {/* Optional: Subtle accent line instead of border-b if preferred */}
             {/* <div className={cn("absolute bottom-0 left-0 h-[2px] w-full", founderAccent.accentLine)}></div> */}
+             {/* Subtle noise pattern */}
+             <div className="absolute inset-0 noise-pattern opacity-[0.02] pointer-events-none"></div>
           </div>
 
           {/* Member Card (Only one founder) */}
@@ -230,7 +233,7 @@ const TimKami = () => {
                 hidden: { opacity: 0, y: 10 },
                 visible: { opacity: 1, y: 0, transition: { delay: 0.1, duration: 0.4 } }
              }}
-             className="p-4 md:p-5 gpu-accelerated"
+             className="p-4 md:p-5" // removed gpu-accelerated
            >
             <TeamMemberCard
               name={founderData.members[0].name}
@@ -244,7 +247,7 @@ const TimKami = () => {
 
           {/* Background Element */}
           <div className={cn(
-              "absolute inset-x-0 bottom-0 h-1/2 rounded-t-3xl opacity-[0.05] bg-gradient-to-t from-amber-500/30 to-transparent pointer-events-none"
+              "absolute inset-x-0 bottom-0 h-1/2 rounded-t-3xl opacity-[0.05] bg-gradient-to-t from-amber-500/30 to-transparent pointer-events-none z-0" // Ensure it's behind content
            )}></div>
         </motion.section>
 
@@ -258,7 +261,7 @@ const TimKami = () => {
               key={section.title}
               variants={sectionCardVariants}
               className={cn(
-                "rounded-[28px] border relative overflow-hidden shadow-lg gpu-accelerated", // Consistent rounded corners
+                "rounded-[28px] border relative overflow-hidden shadow-lg", // Consistent rounded corners, removed gpu-accelerated
                 "bg-gradient-to-b from-secondary/60 to-secondary/80 backdrop-blur-lg", // Standard section background
                 accent.border,
                 accent.shadow
@@ -282,7 +285,7 @@ const TimKami = () => {
                   />
                 ) : (
                   // Fallback icon if no image
-                  <div className={cn("w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center flex-shrink-0 bg-neutral-800/50 border border-neutral-700", accent.iconBg)}>
+                  <div className={cn("w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center flex-shrink-0 border border-neutral-700", accent.iconBg || 'bg-neutral-800/50')}>
                       <SectionIcon className={cn("w-8 h-8 md:w-10 md:h-10", accent.iconText)} />
                    </div>
                 )}
@@ -292,7 +295,7 @@ const TimKami = () => {
                 </h2>
                 {/* Optional Accent Line */}
                 {/* <div className={cn("absolute bottom-0 left-0 h-[2px] w-full", accent.accentLine)}></div> */}
-                 <div className="absolute inset-0 noise-pattern opacity-[0.01]"></div> {/* Subtle noise in header */}
+                 <div className="absolute inset-0 noise-pattern opacity-[0.01] pointer-events-none"></div> {/* Subtle noise in header */}
               </div>
 
               {/* Member List */}
@@ -300,7 +303,7 @@ const TimKami = () => {
                 variants={memberListVariants}
                 initial="hidden"
                 animate="visible"
-                className="p-4 md:p-5 space-y-3 md:space-y-4 gpu-accelerated"
+                className="p-4 md:p-5 space-y-3 md:space-y-4" // removed gpu-accelerated
               >
                 {section.members.map((member, index) => (
                   <TeamMemberCard
@@ -317,7 +320,7 @@ const TimKami = () => {
 
               {/* Background Element */}
               <div className={cn(
-                "absolute inset-x-0 bottom-0 h-1/2 rounded-t-3xl opacity-[0.04] pointer-events-none",
+                "absolute inset-x-0 bottom-0 h-1/2 rounded-t-3xl opacity-[0.04] pointer-events-none z-0", // Ensure it's behind content
                 accent.bg.replace('/10','/80') // Use accent bg for the glow
               )}></div>
             </motion.section>
