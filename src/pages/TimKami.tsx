@@ -32,12 +32,12 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.1 }, // Slightly slower stagger for sections
+    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
   },
 };
 
 const sectionCardVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 }, // More emphasis on entrance
+  hidden: { opacity: 0, y: 30, scale: 0.95 },
   visible: {
     opacity: 1,
     y: 0,
@@ -50,7 +50,7 @@ const memberListVariants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        transition: { staggerChildren: 0.06, delayChildren: 0.2 } // Stagger members appearing
+        transition: { staggerChildren: 0.06, delayChildren: 0.2 }
     }
 };
 
@@ -74,7 +74,7 @@ const teamData = [
    {
     title: "Meme Creator",
     icon: Smile,
-    imageSrc: "/lovable-uploads/meme.png",
+    imageSrc: null,
     accent: "emerald",
     members: [
       { name: "Daffa/deploid", instagram: "", role: "Meme Creator" },
@@ -118,7 +118,7 @@ const teamData = [
   {
     title: "Bot Developer",
     icon: Bot,
-    imageSrc: "/lovable-uploads/bot.png",
+    imageSrc: null,
     accent: "orangeLight",
     members: [
       { name: "Rappal", instagram: "raffal_arz", role: "Bot Developer" },
@@ -156,7 +156,7 @@ const getAccentStyle = (accentKey: string | undefined) => {
 // --- Helper Function for Initials ---
 const getInitials = (name: string): string => {
     if (!name) return "?";
-    const nameParts = name.split(/[\s/]+/); // Split by space or slash
+    const nameParts = name.split(/[\s/]+/);
     if (nameParts.length === 1) return name.charAt(0).toUpperCase();
     return (nameParts[0].charAt(0) + nameParts[1].charAt(0)).toUpperCase();
 };
@@ -166,7 +166,7 @@ interface TeamMemberCardProps {
   name: string;
   role: string;
   instagram?: string | null;
-  accentColor?: string; // Pass the accent key like 'coral', 'emerald'
+  accentColor?: string;
 }
 
 const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ name, role, instagram, accentColor }) => {
@@ -180,8 +180,8 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ name, role, instagram, 
             variants={memberCardVariants}
             whileHover={{ scale: 1.03, transition: { type: 'spring', stiffness: 300, damping: 15 } }}
             className={cn(
-                "flex items-center gap-4 p-4 rounded-2xl border relative overflow-hidden", // Changed to rounded-2xl
-                "bg-neutral-800/50 backdrop-blur-sm", // Slightly different background
+                "flex items-center gap-4 p-4 rounded-2xl border relative overflow-hidden",
+                "bg-neutral-800/50 backdrop-blur-sm",
                 "border-neutral-700/60 hover:border-neutral-600 transition-colors duration-200"
             )}
         >
@@ -189,14 +189,13 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ name, role, instagram, 
             <motion.div
                 className={cn(
                     "w-14 h-14 md:w-16 md:h-16 rounded-full border-2 flex-shrink-0 flex items-center justify-center relative overflow-hidden",
-                    "bg-gradient-to-br from-neutral-700 to-neutral-800", // Gradient background for avatar
-                    accent.avatarBorder // Use accent color for border
+                    "bg-gradient-to-br from-neutral-700 to-neutral-800",
+                    accent.avatarBorder
                 )}
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
             >
                 <span className="text-xl md:text-2xl font-semibold font-sans text-white/80 z-10">{initials}</span>
-                {/* Optional subtle pattern inside avatar */}
                  <div className={cn("absolute inset-0 opacity-10 blur-[1px]", accent.bg.replace('/10','/30'))}></div>
             </motion.div>
 
@@ -217,7 +216,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ name, role, instagram, 
                     title={`@${instaUser}`}
                 >
                     <Instagram size={14} />
-                    <span className="hidden sm:inline truncate max-w-[80px]">{instaUser}</span> {/* Hide text on small screens */}
+                    <span className="hidden sm:inline truncate max-w-[80px]">{instaUser}</span>
                 </motion.a>
             )}
             {/* Decorative Corner Arc */}
@@ -241,56 +240,53 @@ const TimKami = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-10 md:space-y-12" // Increased spacing
+        className="space-y-10 md:space-y-12"
       >
         {teamData.map((section) => {
           const SectionIcon = section.icon;
           const accent = getAccentStyle(section.accent);
 
           return (
-            <motion.section // Use section element
+            <motion.section
               key={section.title}
               variants={sectionCardVariants}
-              // Removed hover from main section card to focus interaction on members
               className={cn(
-                "rounded-[28px] border-2 relative overflow-hidden shadow-xl", // More rounded, thicker border
-                "bg-gradient-to-b from-secondary/50 to-secondary/70 backdrop-blur-lg", // Section card gradient
-                accent.border, // Use accent border
+                "rounded-[28px] border-2 relative overflow-hidden shadow-xl",
+                "bg-gradient-to-b from-secondary/50 to-secondary/70 backdrop-blur-lg",
+                accent.border,
                 accent.shadow
               )}
             >
               {/* Header */}
               <div className={cn(
                   "p-4 flex items-center gap-3 relative",
-                   accent.bg // Subtle accent bg in header
+                   accent.bg
                 )}>
                    {section.imageSrc ? (
                      <motion.img
                        src={section.imageSrc}
                        alt={`${section.title} logo`}
-                       className="w-7 h-7 object-contain rounded flex-shrink-0 bg-black/10 p-0.5" // Slightly larger, bg padding
+                       className="w-14 h-14 object-contain rounded flex-shrink-0 bg-black/10 p-0.5" // ENLARGED: w-14 h-14
                        initial={{ scale: 0.8, opacity: 0 }}
                        animate={{ scale: 1, opacity: 1 }}
                        transition={{ delay: 0.1 }}
                      />
                    ) : (
-                     <SectionIcon className={cn("w-6 h-6 flex-shrink-0", accent.iconText)} />
+                     <SectionIcon className={cn("w-12 h-12 flex-shrink-0", accent.iconText)} /> // ENLARGED: w-12 h-12
                    )}
                    <h2 className="text-xl font-semibold font-serif text-foreground tracking-tight">
                      {section.title} ({section.members.length})
                    </h2>
-                   {/* Colored Accent Line Below Header */}
                    <div className={cn("absolute bottom-0 left-0 h-[3px] w-full", accent.accentLine)}></div>
-                   {/* Subtle noise in header */}
                    <div className="absolute inset-0 noise-pattern opacity-[0.01]"></div>
               </div>
 
               {/* Member List */}
               <motion.div
-                 variants={memberListVariants} // Apply stagger to this container
+                 variants={memberListVariants}
                  initial="hidden"
                  animate="visible"
-                 className="p-4 md:p-5 space-y-3 md:space-y-4" // Vertical list with spacing
+                 className="p-4 md:p-5 space-y-3 md:space-y-4"
                >
                   {section.members.map((member, index) => (
                     <TeamMemberCard
@@ -298,12 +294,11 @@ const TimKami = () => {
                        name={member.name}
                        role={member.role}
                        instagram={member.instagram}
-                       accentColor={section.accent} // Pass accent color key
+                       accentColor={section.accent}
                     />
                   ))}
               </motion.div>
 
-               {/* Subtle layered effect behind members */}
                <div className={cn("absolute inset-x-0 bottom-0 h-1/2 rounded-t-3xl opacity-[0.03] blur-xl", accent.bg.replace('/10','/80'))}></div>
 
             </motion.section>
