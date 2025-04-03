@@ -1,3 +1,4 @@
+```markdown
 # OUR CREATIVITY - Website Repository
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -70,143 +71,98 @@ Selamat datang di repositori resmi untuk website **OUR CREATIVITY**. Platform di
 tailwind.config.ts        # Konfigurasi Tailwind CSS
 vite.config.ts            # Konfigurasi Vite bundler
 ...                       # File konfigurasi lainnya (tsconfig, postcss, eslint)
+```
 
-🚀 Memulai (Getting Started)
+## 🚀 Memulai (Getting Started)
 
 Untuk menjalankan proyek ini secara lokal:
 
-Clone repositori:
+1.  **Clone repositori:**
+    ```bash
+    git clone https://github.com/USERNAME/REPO_NAME.git # Ganti USERNAME/REPO_NAME
+    cd REPO_NAME
+    ```
 
-git clone https://github.com/USERNAME/REPO_NAME.git # Ganti USERNAME/REPO_NAME
-cd REPO_NAME
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    # atau
+    yarn install
+    ```
 
-Install dependencies:
+3.  **(Jika Diperlukan) Setup Environment Variables:**
+    Jika proyek menggunakan layanan seperti Supabase, buat file `.env` di root proyek dan tambahkan variabel yang diperlukan (misal: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`). Lihat file `.env.example` jika tersedia.
 
-npm install
-# atau
-yarn install
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
+4.  **Jalankan development server:**
+    ```bash
+    npm run dev
+    # atau
+    yarn dev
+    ```
 
-(Jika Diperlukan) Setup Environment Variables:
-Jika proyek menggunakan layanan seperti Supabase, buat file .env di root proyek dan tambahkan variabel yang diperlukan (misal: VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY). Lihat file .env.example jika tersedia.
+5.  Buka browser Anda dan navigasi ke `http://localhost:5173` (atau port lain yang ditampilkan di terminal).
 
-Jalankan development server:
+## 🔒 Admin Section
 
-npm run dev
-# atau
-yarn dev
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
+*   Akses panel admin tersedia di route `/our-admin`.
+*   Login dilindungi dengan password (dikelola via `AdminAuthContext`).
+*   Fitur saat ini memungkinkan pengelolaan pengumuman dan anggota tim. Fitur pengelolaan konten halaman lain mungkin sedang dalam pengembangan.
 
-Buka browser Anda dan navigasi ke http://localhost:5173 (atau port lain yang ditampilkan di terminal).
+## ✨ Branding & Desain
 
-🔒 Admin Section
+Website ini mengimplementasikan konsep **"Creative Constellations"**:
 
-Akses panel admin tersedia di route /our-admin.
+*   **Tema:** Dominan gelap (`#1C1C1E`, `#2C2C2E`) dengan teks putih/abu-abu cerah.
+*   **Warna Aksen:** Lavender (`#9B6DFF`), Mint/Teal (`#40E0D0`), Coral/Peach (`#FF7F50`), Soft Pink, Amber digunakan secara strategis untuk highlight, kategori, dan efek visual (glow).
+*   **Visual:** Terinspirasi iOS (kartu rounded, `backdrop-blur`), motif lingkaran, gradien halus, animasi dinamis, ikonografi konsisten (Lucide).
+*   **Tipografi:** Judul menggunakan font Serif (Playfair Display), teks tubuh menggunakan font Sans-serif (Inter) untuk keseimbangan antara keanggunan dan keterbacaan.
+*   **Tujuan:** Menciptakan ruang digital yang imersif, modern, fungsional, dan mencerminkan semangat komunitas kreatif muda Indonesia.
 
-Login dilindungi dengan password (dikelola via AdminAuthContext).
+## 📜 Changelog (Perubahan Terbaru)
 
-Fitur saat ini memungkinkan pengelolaan pengumuman dan anggota tim. Fitur pengelolaan konten halaman lain mungkin sedang dalam pengembangan.
+*   **v3.5.x (April 2024 - Ongoing)**
+    *   Implementasi kartu "Bergabung dengan Komunitas Kami" yang disempurnakan di halaman Informasi.
+        *   Menggabungkan Linktree dan link WhatsApp langsung.
+        *   Menambahkan animasi glow pada judul dan tombol.
+        *   Menambahkan animasi pada ikon dan elemen dekoratif.
+        *   Memperbaiki layout footer agar lebih mobile-friendly.
+        *   Memperbarui link designer credit ke `bit.ly/Ardelyo`.
+        *   Menambahkan efek hover lebih menarik pada link WhatsApp.
+    *   Pengembangan awal panel Admin (`/our-admin`) dengan fitur login dan tab dasar (Pengumuman, Tim, Konten, Info).
+    *   Integrasi data anggota tim lengkap dengan bio dan prestasi ke dalam `TeamMemberCard` dan `TimKami.tsx`.
+    *   Perbaikan interaktivitas dropdown bio di kartu anggota tim.
 
-✨ Branding & Desain
+*   **v3.5.0 (Awal April 2024) - Wajah Baru OurCreativity**
+    *   **Desain Ulang Total:** Mengimplementasikan konsep desain "Creative Constellations".
+    *   **Homepage Baru:** Mengadopsi layout Bento Grid yang dinamis.
+    *   **UI Kit:** Migrasi ke Shadcn UI untuk komponen dasar.
+    *   **Animasi Lanjutan:** Integrasi Framer Motion untuk transisi halaman dan animasi elemen yang lebih kaya.
+    *   **Background Dinamis:** Menambahkan latar belakang animasi dengan gradien bergerak, blur, dan efek parallax.
+    *   **Styling Terpusat:** Pemanfaatan CSS Variables secara ekstensif di `index.css` untuk theming dan efek (termasuk glow).
+    *   **Komponen Baru:** Pembuatan `PageLayout` yang lebih canggih, `TeamMemberCard`, `TeamMemberBio`.
+    *   **Peningkatan Struktur Kode:** Refactoring komponen dan layout.
 
-Website ini mengimplementasikan konsep "Creative Constellations":
+*   **Versi Sebelumnya (Contoh)**
+    *   Penambahan Halaman `/tim-kami` dan `/informasi` dasar.
+    *   Implementasi awal komponen `TeamMember`.
+    *   Setup dasar proyek dengan React, Vite, dan Tailwind.
 
-Tema: Dominan gelap (#1C1C1E, #2C2C2E) dengan teks putih/abu-abu cerah.
+## 🤝 Berkontribusi
 
-Warna Aksen: Lavender (#9B6DFF), Mint/Teal (#40E0D0), Coral/Peach (#FF7F50), Soft Pink, Amber digunakan secara strategis untuk highlight, kategori, dan efek visual (glow).
-
-Visual: Terinspirasi iOS (kartu rounded, backdrop-blur), motif lingkaran, gradien halus, animasi dinamis, ikonografi konsisten (Lucide).
-
-Tipografi: Judul menggunakan font Serif (Playfair Display), teks tubuh menggunakan font Sans-serif (Inter) untuk keseimbangan antara keanggunan dan keterbacaan.
-
-Tujuan: Menciptakan ruang digital yang imersif, modern, fungsional, dan mencerminkan semangat komunitas kreatif muda Indonesia.
-
-📜 Changelog (Perubahan Terbaru)
-
-v3.5.x (April 2024 - Ongoing)
-
-Implementasi kartu "Bergabung dengan Komunitas Kami" yang disempurnakan di halaman Informasi.
-
-Menggabungkan Linktree dan link WhatsApp langsung.
-
-Menambahkan animasi glow pada judul dan tombol.
-
-Menambahkan animasi pada ikon dan elemen dekoratif.
-
-Memperbaiki layout footer agar lebih mobile-friendly.
-
-Memperbarui link designer credit ke bit.ly/Ardelyo.
-
-Menambahkan efek hover lebih menarik pada link WhatsApp.
-
-Pengembangan awal panel Admin (/our-admin) dengan fitur login dan tab dasar (Pengumuman, Tim, Konten, Info).
-
-Integrasi data anggota tim lengkap dengan bio dan prestasi ke dalam TeamMemberCard dan TimKami.tsx.
-
-Perbaikan interaktivitas dropdown bio di kartu anggota tim.
-
-v3.5.0 (Awal April 2024) - Wajah Baru OurCreativity
-
-Desain Ulang Total: Mengimplementasikan konsep desain "Creative Constellations".
-
-Homepage Baru: Mengadopsi layout Bento Grid yang dinamis.
-
-UI Kit: Migrasi ke Shadcn UI untuk komponen dasar.
-
-Animasi Lanjutan: Integrasi Framer Motion untuk transisi halaman dan animasi elemen yang lebih kaya.
-
-Background Dinamis: Menambahkan latar belakang animasi dengan gradien bergerak, blur, dan efek parallax.
-
-Styling Terpusat: Pemanfaatan CSS Variables secara ekstensif di index.css untuk theming dan efek (termasuk glow).
-
-Komponen Baru: Pembuatan PageLayout yang lebih canggih, TeamMemberCard, TeamMemberBio.
-
-Peningkatan Struktur Kode: Refactoring komponen dan layout.
-
-Versi Sebelumnya (Contoh)
-
-Penambahan Halaman /tim-kami dan /informasi dasar.
-
-Implementasi awal komponen TeamMember.
-
-Setup dasar proyek dengan React, Vite, dan Tailwind.
-
-🤝 Berkontribusi
-
-Kontribusi dipersilakan! Silakan buka issue untuk melaporkan bug atau mengusulkan fitur baru. Jika Anda ingin berkontribusi kode, silakan fork repositori ini dan buat pull request.
+Kontribusi dipersilakan! Silakan buka *issue* untuk melaporkan bug atau mengusulkan fitur baru. Jika Anda ingin berkontribusi kode, silakan *fork* repositori ini dan buat *pull request*.
 
 <!-- (Optional) > Lihat panduan kontribusi kami di `CONTRIBUTING.md` untuk detail lebih lanjut. -->
 
-📄 Lisensi
+## 📄 Lisensi
 
-Proyek ini dilisensikan di bawah MIT License.
+Proyek ini dilisensikan di bawah [MIT License](LICENSE).
 
-📞 Kontak & Kredit
+## 📞 Kontak & Kredit
 
-Desain oleh: @ardel.yo
+*   **Desain oleh:** [@ardel.yo](https://bit.ly/Ardelyo)
+*   **Hubungi Komunitas:** [Linktree OUR CREATIVITY](https://linktr.ee/ourcreativity.ofc)
 
-Hubungi Komunitas: Linktree OUR CREATIVITY
+---
 
-README ini dibuat berdasarkan analisis kode dan informasi yang tersedia. Silakan sesuaikan detail seperti link live site, screenshot, dan platform deployment.
-
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-IGNORE_WHEN_COPYING_END
+*README ini dibuat berdasarkan analisis kode dan informasi yang tersedia. Silakan sesuaikan detail seperti link live site, screenshot, dan platform deployment.*
+```
