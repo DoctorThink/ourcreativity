@@ -1,14 +1,11 @@
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
-import { LogOut, Bell, Users, ScrollText, Info, ArrowUpRight, BarChart2, Settings, LayoutGrid } from "lucide-react";
-import ContentEditor from "@/components/admin/ContentEditor";
-import TeamEditor from "@/components/admin/TeamEditor";
-import AnnouncementEditor from "@/components/admin/AnnouncementEditor";
+import { LogOut, Bell, Users, ScrollText, Info, ArrowUpRight, Settings, LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Define the type for admin sections
@@ -111,71 +108,12 @@ const OurAdmin = () => {
       textColorClass: "text-neutral-300",
       accentColor: "#CCCCCC", // Light gray glow
     },
-     // Example: Larger Card (if needed for visual balance)
-    // {
-    //   id: "analytics", // Placeholder
-    //   title: "Site Analytics",
-    //   icon: BarChart2,
-    //   stat: "1.2k",
-    //   subStat: "Visits Today",
-    //   colSpan: "col-span-2",
-    //   rowSpan: "row-span-1",
-    //   bgColorClass: "bg-[#333]",
-    //   textColorClass: "text-white",
-    //   accentColor: "#FFD1DC", // Pink
-    // },
   ];
 
   const cardVariants = {
     initial: { opacity: 0, scale: 0.95, y: 10 },
     animate: { opacity: 1, scale: 1, y: 0 },
     exit: { opacity: 0, scale: 0.95 },
-  };
-
-  const contentVariants = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeInOut" } },
-    exit: { opacity: 0, y: -10, transition: { duration: 0.2, ease: "easeOut" } }
-  }
-
-  const renderContent = () => {
-    switch (selectedSection) {
-      case "announcements":
-        return <AnnouncementEditor />;
-      case "team":
-        return <TeamEditor />;
-      case "content":
-        return <ContentEditor />;
-      case "info":
-         return (
-             <div className="text-neutral-300">
-                <h2 className="text-xl font-serif font-semibold mb-4 text-white">Admin Instructions</h2>
-                <p className="text-sm font-sans mb-4 text-neutral-400 leading-relaxed">
-                    Welcome! Use the dashboard widgets above to navigate and manage different sections of the OUR CREATIVITY website. Click any widget to access its specific editor or information panel below.
-                </p>
-                <ul className="list-disc list-inside space-y-2 text-sm font-sans text-neutral-400 mb-6 pl-2">
-                  <li><strong>Announcements:</strong> Create, update, or remove news items.</li>
-                  <li><strong>Team Members:</strong> Manage public profiles for the team.</li>
-                  <li><strong>Page Content:</strong> Edit text on informational pages.</li>
-                  <li><strong>Settings:</strong> (Future implementation) Adjust site configurations.</li>
-                </ul>
-                <div className="p-3 bg-black/30 rounded-lg border border-white/10">
-                  <p className="text-xs font-sans text-neutral-500">
-                    <strong className="text-neutral-400">Remember:</strong> Most changes are reflected live. Please review carefully.
-                  </p>
-                </div>
-              </div>
-          );
-      case "settings":
-         return <div className="text-center text-neutral-400 font-sans p-8">Settings section coming soon...</div>;
-      case "dashboard": // Show instructions when dashboard is selected but no specific item
-      default:
-          return (
-              <div className="text-center text-neutral-400 font-sans p-8 h-64 flex items-center justify-center">
-                  <p>Select a widget above to start managing content.</p>
-              </div>
-          );
-    }
   };
 
   return (
@@ -297,34 +235,9 @@ const OurAdmin = () => {
           })}
         </motion.div>
 
-        {/* Content Area Below Grid - Conditionally Rendered */}
-        <div className="mt-6 sm:mt-8 min-h-[300px]">
-           <AnimatePresence mode="wait">
-              {selectedSection !== "dashboard" && (
-                 <motion.div
-                    key={selectedSection} // Key change triggers animation
-                    variants={contentVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    className="bg-[#252527]/50 border border-white/10 rounded-3xl backdrop-blur-sm p-4 sm:p-6" // Container for editors
-                 >
-                    {renderContent()}
-                 </motion.div>
-              )}
-              {selectedSection === "dashboard" && ( // Show default message when no section selected
-                   <motion.div
-                      key="dashboard-placeholder"
-                      variants={contentVariants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      className="flex items-center justify-center h-48 text-center text-neutral-500 font-sans p-8 rounded-3xl bg-[#252527]/30 border border-dashed border-white/10"
-                    >
-                       <p>Select an item from the dashboard above to manage its content.</p>
-                   </motion.div>
-              )}
-           </AnimatePresence>
+        {/* Message about functionality coming soon */}
+        <div className="mt-12 text-center text-neutral-400 font-sans">
+          <p>Admin functionality coming soon...</p>
         </div>
       </main>
     </div>
