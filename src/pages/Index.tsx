@@ -1,8 +1,7 @@
-
 // src/pages/Index.tsx
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Info, Bell, ScrollText, Users, Palette, Feather, Clock, Code, Instagram } from "lucide-react";
+import { BookOpen, Info, Bell, ScrollText, Users, Palette, Feather, Clock, Code, Instagram, ExternalLink } from "lucide-react"; // Added ExternalLink
 import { cn } from "@/lib/utils"; // Assuming utils.ts is in src/lib
 
 const Index = () => {
@@ -34,7 +33,6 @@ const Index = () => {
   };
 
   // --- Enhanced Hover Animation with Glow ---
-  // Note: Specific glow color will be applied via inline style or conditional class
   const interactiveHover = {
     y: -5, // Slightly more lift
     scale: 1.04, // Slightly more scale
@@ -173,13 +171,14 @@ const Index = () => {
              <Code size={14} className="opacity-80"/>
              <span>© 2024 OUR CREATIVITY • Designed by</span>
              <a
-                href="https://instagram.com/ardel.yo"
+                href="https://bit.ly/Ardelyo" // <<<<<<<<<<<< CHANGED LINK HERE
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-foreground/80 hover:text-foreground hover:underline transition-colors duration-200 group"
              >
                  @ardel.yo
-                 <Instagram size={12} className="opacity-70 group-hover:opacity-100 transition-opacity"/>
+                 {/* Replaced Instagram icon with generic ExternalLink icon */}
+                 <ExternalLink size={12} className="opacity-70 group-hover:opacity-100 transition-opacity"/>
              </a>
            </p>
          </div>
@@ -205,15 +204,15 @@ const Index = () => {
           <div className="absolute w-[80vw] h-[80vh] rounded-full bg-gradient-radial from-amethyst/20 via-amethyst/5 to-transparent -top-[15%] -right-[15%] filter blur-[120px] animate-float"></div>
           <div className="absolute w-[70vw] h-[70vh] rounded-full bg-gradient-radial from-turquoise/20 via-turquoise/5 to-transparent -bottom-[15%] -left-[15%] filter blur-[150px] animate-float-slow"></div>
           <div className="absolute w-[60vw] h-[60vh] rounded-full bg-gradient-radial from-coral/15 via-coral/5 to-transparent -bottom-[5%] -right-[5%] filter blur-[130px] opacity-70 animate-float-reverse"></div>
-          
+
           {/* Secondary subtle gradients */}
           <div className="absolute w-[40vw] h-[40vh] rounded-full bg-gradient-radial from-softPink/10 via-softPink/3 to-transparent top-[10%] left-[15%] filter blur-[100px] opacity-50 animate-float-slow-reverse"></div>
           <div className="absolute w-[35vw] h-[35vh] rounded-full bg-gradient-radial from-mint/15 via-mint/3 to-transparent bottom-[20%] right-[20%] filter blur-[90px] opacity-60 animate-pulse-slow"></div>
         </div>
-        
+
         {/* Noise Overlay */}
         <div className="absolute inset-0 noise-pattern opacity-[0.04] z-10"></div>
-        
+
         {/* Subtle grid overlay */}
         <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] z-0"></div>
       </div>
@@ -258,7 +257,7 @@ const Index = () => {
               >
                 {/* Outer glow effect that appears on hover for all cards */}
                 <div className="absolute inset-0 -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl md:rounded-3xl outer-glow"></div>
-                
+
                 {/* Inner Content Container */}
                 <div className="relative z-10 h-full w-full p-3 md:p-4 flex flex-col justify-center items-center text-center">
                     {comingSoon ? (
@@ -303,7 +302,7 @@ const Index = () => {
                 {isInteractive && !comingSoon && (
                   <div className="absolute inset-0 bg-shimmer-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-shimmer"></div>
                 )}
-                
+
                 {/* Subtle inner shadow for depth */}
                 <div className="absolute inset-0 rounded-2xl md:rounded-3xl shadow-inner-subtle pointer-events-none"></div>
               </MotionComponent>
