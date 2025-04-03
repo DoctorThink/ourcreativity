@@ -1,3 +1,4 @@
+// --- START OF FILE PageLayout.tsx ---
 
 import { motion } from "framer-motion";
 import { ReactNode, useEffect, useState } from "react";
@@ -5,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowLeft, Instagram, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils"; // Ensure cn utility is imported
 
 interface PageLayoutProps {
   title: string;
@@ -13,7 +15,7 @@ interface PageLayoutProps {
   showBackButton?: boolean;
 }
 
-const PageLayout = ({ 
+const PageLayout = ({
   title,
   subtitle,
   children,
@@ -21,18 +23,22 @@ const PageLayout = ({
 }: PageLayoutProps) => {
   const navigate = useNavigate();
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [isDesignerLinkActive, setIsDesignerLinkActive] = useState(false); // State for glowing effect
   const isMobile = useIsMobile();
 
   // Track scroll position for parallax effects
   useEffect(() => {
     const handleScroll = (event: any) => {
       const target = event.target;
-      setScrollPosition(target.scrollTop);
+      // Ensure target and scrollTop exist
+      if (target && typeof target.scrollTop === 'number') {
+        setScrollPosition(target.scrollTop);
+      }
     };
 
     const scrollContainer = document.querySelector('.scroll-container');
     if (scrollContainer) {
-      scrollContainer.addEventListener('scroll', handleScroll);
+      scrollContainer.addEventListener('scroll', handleScroll, { passive: true }); // Use passive listener
       return () => scrollContainer.removeEventListener('scroll', handleScroll);
     }
   }, []);
@@ -64,58 +70,63 @@ const PageLayout = ({
     animate: { width: "4rem", transition: { duration: 0.8, delay: 0.3, ease: "easeOut" } }
   };
 
+  // Event handlers for designer link glow
+  const handleDesignerLinkActivate = () => setIsDesignerLinkActive(true);
+  const handleDesignerLinkDeactivate = () => setIsDesignerLinkActive(false);
+
+
   return (
     <motion.div
       initial="initial"
       animate="animate"
       exit="exit"
       variants={pageVariants}
-      className="min-h-screen overflow-hidden relative perspective-1000 gpu-accelerated"
+      className="min-h-screen overflow-hidden relative perspective-1000 gpu-accelerated bg-background" // Added bg-background here
     >
       {/* Enhanced Dynamic Background with improved visual quality */}
       <div className="fixed inset-0 bg-background -z-10">
         {/* Improved blurred elements */}
-        <motion.div 
+        <motion.div
           className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-foreground/3 -top-[20%] -right-[20%]"
           style={{
             y: -scrollPosition * 0.03, // Reduced parallax for smoother effect
             willChange: "transform"
           }}
         />
-        <motion.div 
+        <motion.div
           className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-foreground/2 -bottom-[10%] -left-[10%]"
           style={{
             y: scrollPosition * 0.03, // Reduced parallax for smoother effect
             willChange: "transform"
           }}
         />
-        
+
         {/* Removed noisy topographic pattern and replaced with subtle gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-foreground/[0.015] to-transparent opacity-30" />
-        
+
         {/* Improved grid overlay with better blending */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" 
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"
           style={{
             transform: `translateY(${scrollPosition * 0.01}px)` // Reduced movement for smoother effect
           }}
         />
-        
+
         {/* Subtle 3D layered lines - optimized */}
-        <motion.div 
+        <motion.div
           className="absolute left-[5%] top-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-transparent via-foreground/5 to-transparent gpu-accelerated"
           style={{
             y: -scrollPosition * 0.04,
             opacity: 1 - (scrollPosition * 0.0005)
           }}
         />
-        <motion.div 
+        <motion.div
           className="absolute right-[10%] top-[20%] w-[1px] h-[40vh] bg-gradient-to-b from-transparent via-foreground/3 to-transparent gpu-accelerated"
           style={{
             y: -scrollPosition * 0.06,
             opacity: 1 - (scrollPosition * 0.0008)
           }}
         />
-        <motion.div 
+        <motion.div
           className="absolute left-[20%] bottom-[10%] w-[40vw] h-[1px] bg-gradient-to-r from-transparent via-foreground/5 to-transparent gpu-accelerated"
           style={{
             y: scrollPosition * 0.03,
@@ -123,12 +134,12 @@ const PageLayout = ({
           }}
         />
       </div>
-      
+
       {/* Enhanced Header with Logo - optimized */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/40 p-4 border-b border-foreground/5 shadow-md shadow-black/10">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           {showBackButton && (
-            <motion.button 
+            <motion.button
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
@@ -141,7 +152,7 @@ const PageLayout = ({
               <span>Kembali</span>
             </motion.button>
           )}
-          
+
           <div className="flex items-center gap-2 ml-auto">
             <motion.div
               initial={{ scale: 0 }}
@@ -178,14 +189,16 @@ const PageLayout = ({
       <ScrollArea className="h-[calc(100vh-72px)] scroll-container perspective-1000">
         <div className="max-w-4xl mx-auto px-4 py-12">
           <motion.div
-            variants={contentVariants}
+            variants={contentVariants} // Apply content variants to the container for staggering if needed
+            initial="initial" // Use the variants defined above
+            animate="animate"
             className="space-y-12"
           >
             {/* Title Section with enhanced typography and depth */}
             {(title || subtitle) && (
               <div className="text-center space-y-4">
                 {title && (
-                  <motion.h1 
+                  <motion.h1
                     className="text-4xl md:text-6xl font-serif font-bold tracking-tight text-foreground text-shadow-lg gpu-accelerated text-sharp"
                     variants={titleVariants}
                     style={{ textShadow: '0px 4px 8px rgba(0,0,0,0.5)' }}
@@ -193,18 +206,18 @@ const PageLayout = ({
                     {title}
                   </motion.h1>
                 )}
-                
+
                 {subtitle && (
-                  <motion.p 
+                  <motion.p
                     className="text-lg md:text-xl text-foreground/70 leading-relaxed max-w-3xl mx-auto text-readable text-sharp"
                     variants={subtitleVariants}
                   >
                     {subtitle}
                   </motion.p>
                 )}
-                
+
                 {/* Decorative line with animation */}
-                <motion.div 
+                <motion.div
                   className="w-16 h-[1px] bg-gradient-to-r from-transparent via-foreground/30 to-transparent mx-auto mt-8 gpu-accelerated"
                   variants={decorativeLineVariants}
                 />
@@ -213,7 +226,7 @@ const PageLayout = ({
 
             {/* Main Content with enhanced depth */}
             <motion.div
-              variants={contentVariants}
+              // Removed variants from here to apply to parent if staggering is desired
               className="perspective-1000 gpu-accelerated"
             >
               {children}
@@ -227,24 +240,35 @@ const PageLayout = ({
             transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
             className="mt-24 mb-8 text-center gpu-accelerated"
           >
-            <motion.div 
+            <motion.div
               className="bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-full px-4 py-2.5 inline-block relative overflow-hidden group shadow-lg shadow-black/10"
               whileHover={{ scale: 1.03, boxShadow: "0 10px 25px rgba(0,0,0,0.2)" }}
               transition={{ duration: 0.2 }}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-amethyst/5 via-emerald/5 to-amethyst/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.08),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-              
+
               <p className={`text-xs ${isMobile ? 'flex flex-col items-center gap-1' : 'flex items-center justify-center gap-1'} text-foreground/60`}>
-                <span>&copy; 2024 OUR CREATIVITY</span>
-                <span className={isMobile ? 'mx-0 my-0.5' : 'mx-1'}>•</span>
+                <span>© 2024 OUR CREATIVITY</span>
+                <span className={isMobile ? 'mx-0 my-0.5 block h-[1px] w-4 bg-foreground/20' : 'mx-1'}>{!isMobile && '•'}</span> {/* Divider for mobile */}
                 <span className="flex items-center gap-1.5">
                   Designed by
-                  <a 
-                    href="https://bit.ly/ardelyo" 
-                    target="_blank" 
+                  <a
+                    href="https://bit.ly/ardelyo"
+                    target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 hover:text-foreground/90 transition-colors border-b border-transparent hover:border-foreground/40 group-hover:text-amethyst/80"
+                    className={cn(
+                        "flex items-center gap-1 hover:text-foreground/90 transition-colors duration-200 border-b border-transparent hover:border-foreground/40 group-hover:text-amethyst/80",
+                        // Apply glowing effect conditionally based on state
+                        isDesignerLinkActive && "text-shadow-[0_0_8px_rgba(255,255,255,0.9)] text-white"
+                    )}
+                    // Event handlers to toggle the glow state
+                    onMouseDown={handleDesignerLinkActivate}
+                    onMouseUp={handleDesignerLinkDeactivate}
+                    onMouseLeave={handleDesignerLinkDeactivate} // Deactivate if mouse leaves while pressed
+                    onTouchStart={handleDesignerLinkActivate}
+                    onTouchEnd={handleDesignerLinkDeactivate}
+                    onTouchCancel={handleDesignerLinkDeactivate} // Handle touch cancellation
                   >
                     <span>@ardel.yo</span>
                     <ExternalLink size={10} className="inline-block opacity-70" />
