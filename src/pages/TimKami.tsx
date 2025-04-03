@@ -96,16 +96,6 @@ const teamData = [
     ]
   },
   {
-    title: "Game Konten",
-    icon: Gamepad2,
-    imageSrc: "/lovable-uploads/game.png",
-    accent: "blueLight",
-    members: [
-      { name: "PlayerOne", instagram: "player.one", role: "Content Creator", bio: "Nanti ditambah" },
-      { name: "GamerX", instagram: "thegamerx", role: "Streamer", bio: "Nanti ditambah" }
-    ]
-  },
-  {
     title: "Design Grafis",
     icon: Palette,
     imageSrc: "/lovable-uploads/design.png",
