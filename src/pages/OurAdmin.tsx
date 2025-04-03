@@ -1,14 +1,15 @@
+
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
-import { LogOut, Bell, Users, ScrollText, Info, ArrowUpRight, BarChart2, Settings, LayoutGrid } from "lucide-react"; // Added LayoutGrid here
+import { LogOut, Bell, Users, ScrollText, Info, ArrowUpRight, BarChart2, Settings, LayoutGrid } from "lucide-react";
 import ContentEditor from "@/components/admin/ContentEditor";
 import TeamEditor from "@/components/admin/TeamEditor";
 import AnnouncementEditor from "@/components/admin/AnnouncementEditor";
-import { cn } from "@/lib/utils"; // Assuming you have this utility
+import { cn } from "@/lib/utils";
 
 // Define the type for admin sections
 type AdminSectionId = "dashboard" | "announcements" | "team" | "content" | "settings" | "info";
@@ -46,7 +47,7 @@ const OurAdmin = () => {
     {
       id: "dashboard", // Special item to represent the overview/grid itself
       title: "Dashboard",
-      icon: LayoutGrid, // Using the imported LayoutGrid icon
+      icon: LayoutGrid, 
       colSpan: "col-span-2 sm:col-span-1",
       rowSpan: "row-span-1",
       bgColorClass: "bg-[#9B6DFF]", // Primary Accent
@@ -180,17 +181,17 @@ const OurAdmin = () => {
   return (
     // Use a dark background consistent with branding
     <div className="min-h-screen bg-[#1C1C1E] text-white font-sans">
-       {/* Subtle background glows */}
-       <div className="absolute inset-0 -z-10 overflow-hidden">
-         <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[130px] bg-[#9B6DFF]/10 -top-[10%] -right-[20%]" />
-         <div className="absolute w-[60vw] h-[60vh] rounded-full blur-[120px] bg-[#40E0D0]/5 -bottom-[15%] -left-[15%]" />
-       </div>
+      {/* Subtle background glows */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute w-[70vw] h-[70vh] rounded-full blur-[130px] bg-[#9B6DFF]/10 -top-[10%] -right-[20%]" />
+        <div className="absolute w-[60vw] h-[60vh] rounded-full blur-[120px] bg-[#40E0D0]/5 -bottom-[15%] -left-[15%]" />
+      </div>
 
       <header className="border-b border-white/10 backdrop-blur-lg bg-[#1C1C1E]/70 sticky top-0 z-50">
         <div className="container mx-auto flex h-16 items-center justify-between py-4 px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <img
-              src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" // Ensure this path is correct
+              src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
               alt="Logo Icon"
               className="w-7 h-7"
             />
@@ -261,7 +262,7 @@ const OurAdmin = () => {
                           <item.icon className="h-5 w-5 sm:h-6 sm:w-6" />
                        </div>
                        {/* Arrow indicator */}
-                        <ArrowUpRight className="h-4 w-4 text-current/50 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
+                       <ArrowUpRight className="h-4 w-4 text-current/50 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
                     </div>
                     {/* Use Serif for card titles */}
                     <CardTitle className={cn(
