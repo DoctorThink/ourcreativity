@@ -60,8 +60,7 @@ const closing = { text: "Bergabunglah dengan OurCreativity dan jadilah bagian da
 
 // --- WhatsApp Group Data ---
 const whatsappGroups = [
-    { name: "Update Gate", url: "https://chat.whatsapp.com/CHTz0dzUQq9K3XGfRknYim", color: "text-blue-400" }, // Assuming text-blue-400 exists
-    { name: "O.C Kartul", url: "https://chat.whatsapp.com/KAp4AjCxmVYCGF504eykaG", color: "text-gray-400" }, // Using a standard gray
+    { name: "O.C Kartul", url: "https://chat.whatsapp.com/CHTz0dzUQq9K3XGfRknYim", color: "text-gray-400" }, // Using a standard gray
     { name: "O.C Community", url: "https://chat.whatsapp.com/KAp4AjCxmVYCGF504eykaG", color: "text-emerald" }, // Correct link? Using distinct color
     { name: "O.C Meme", url: "https://chat.whatsapp.com/BVTsqKqYa9UL2CykAsMmJZ", color: "text-coral" },
 ];
