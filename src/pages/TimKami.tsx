@@ -57,7 +57,7 @@ const founderData = {
     {
       name: "Muhammad Syahid Al Haqi",
       role: "Founder",
-      instagram: hakyyofficial, // Add instagram if available
+      instagram: "hakyyofficial", // Add instagram if available
       bio: "M. Syahid Al-Haqi Seorang Remaja Penggemar Sastra Yang Berdomisili Di Lampung, telah meraih berbagai prestasi dari hasil karyanya. M. Syahid Al - Haqi yang berstatus sebagai siswa kelas X SMAN 9 Bandar Lampung, merupakan Putra Pertama dari Ibu Septiyana Natalia S.Pd dan Bapak Sigit Jatmiko. Dimana selain berstatus sebagai pelajar, Haqi Juga menyalurkan minat Bakatnya pada Perusahaan Penerbitan sebagai Desainer Grafis Dan Penulis.",
       achievements: [
         "Mendapatkan langsung Reward Umroh yang diserahkan langsung oleh Walikota Bandar Lampung, di acara DPD KNPI.",
