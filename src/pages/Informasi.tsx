@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layouts/PageLayout";
 import { cn } from "@/lib/utils";
-import { Info, Sparkles, Users, Target, Quote as QuoteIcon, ArrowRight, Instagram, MessageCircle, Link as LinkIcon } from "lucide-react";
+import { Info, Sparkles, Users, Target, Quote as QuoteIcon, ArrowRight, Instagram, MessageCircle, Link as LinkIcon } from "lucide-react"; // Added MessageCircle, LinkIcon
 import React from "react";
 
 // --- Animation Variants ---
@@ -60,8 +60,7 @@ const closing = { text: "Bergabunglah dengan OurCreativity dan jadilah bagian da
 
 // --- WhatsApp Group Data ---
 const whatsappGroups = [
-    { name: "Update Gate", url: "https://chat.whatsapp.com/CHTz0dzUQq9K3XGfRknYim", color: "text-blue-400" }, // Assuming text-blue-400 exists
-    { name: "O.C Kartul", url: "https://chat.whatsapp.com/KAp4AjCxmVYCGF504eykaG", color: "text-gray-400" }, // Using a standard gray
+    { name: "O.C Kartul", url: "https://chat.whatsapp.com/CHTz0dzUQq9K3XGfRknYim", color: "text-gray-400" }, // Using a standard gray
     { name: "O.C Community", url: "https://chat.whatsapp.com/KAp4AjCxmVYCGF504eykaG", color: "text-emerald" }, // Correct link? Using distinct color
     { name: "O.C Meme", url: "https://chat.whatsapp.com/BVTsqKqYa9UL2CykAsMmJZ", color: "text-coral" },
 ];
@@ -274,56 +273,30 @@ const Informasi = () => {
              <div className={cn("absolute -bottom-10 -right-10 w-32 h-32 rounded-full opacity-[0.08] blur-xl bg-amethyst/80")}></div>
         </motion.div>
 
-        {/* --- ENHANCED: Combined Join Us Card --- */}
+        {/* --- NEW: Combined Join Us Card --- */}
         <motion.section
           variants={cardVariants}
-        //   whileHover={cardHover} // Keep hover on individual elements inside instead
+          whileHover={cardHover}
           className={cn(
             "md:col-span-2 lg:col-span-3 rounded-3xl border relative overflow-hidden shadow-xl p-6 md:p-8 mt-4",
-            "bg-gradient-to-tr from-secondary/60 via-secondary/80 to-secondary/70 backdrop-blur-xl", // Slightly different gradient
-            "border-neutral-700/50 shadow-black/15" // Slightly stronger shadow
+            "bg-gradient-to-tr from-secondary/70 to-secondary/80 backdrop-blur-xl",
+            "border-neutral-700/50 shadow-black/10"
           )}
         >
-            {/* Animated Decorative Circles */}
-            <motion.div
-                className="absolute w-24 h-24 bg-emerald/10 rounded-full -top-8 -left-8 blur-xl opacity-70 pointer-events-none"
-                animate={{ scale: [1, 1.1, 1], x: [-10, 10, -10], y: [5, -5, 5] }}
-                transition={{ duration: 15, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-            />
-            <motion.div
-                className="absolute w-20 h-20 bg-blue-400/5 rounded-full -bottom-5 -right-5 blur-lg opacity-60 pointer-events-none"
-                animate={{ scale: [1, 0.9, 1], x: [8, -8, 8] }}
-                transition={{ duration: 12, repeat: Infinity, repeatType: "reverse", ease: "linear", delay: 2 }}
-            />
-             <motion.div
-                className="absolute w-16 h-16 bg-white/5 rounded-full top-10 right-10 blur-md opacity-40 pointer-events-none"
-                animate={{ y: [0, 15, 0] }}
-                transition={{ duration: 10, repeat: Infinity, repeatType: "reverse", ease: "easeInOut", delay: 1 }}
-            />
-
             <motion.div
                 variants={textContentVariants}
                 initial="hidden"
                 animate="visible"
-                className="relative z-10 space-y-6 md:space-y-8" // Increased spacing
+                className="relative z-10 space-y-6"
             >
-                 {/* Card Title with Animated Icon & Glow */}
+                 {/* Card Title */}
                 <div className="flex items-center justify-center gap-3 mb-4 text-center">
-                    <motion.div
-                         className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-emerald/10 border border-emerald/30 flex items-center justify-center"
-                         animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.05, 1] }}
-                         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                         >
-                        <Users className="w-5 h-5 md:w-6 md:h-6 text-emerald" />
-                    </motion.div>
-                    {/* Glowing Title */}
-                    <motion.h3
-                        className="text-xl md:text-2xl font-semibold font-serif text-foreground"
-                        animate={{ textShadow: ["0 0 4px rgba(64, 224, 208, 0.3)", "0 0 12px rgba(64, 224, 208, 0.6)", "0 0 4px rgba(64, 224, 208, 0.3)"] }}
-                        transition={{ duration: 2.5, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-                        >
+                    <div className="w-10 h-10 rounded-xl bg-emerald/10 border border-emerald/30 flex items-center justify-center">
+                        <Users className="w-5 h-5 text-emerald" />
+                    </div>
+                    <h3 className="text-xl md:text-2xl font-semibold font-serif text-foreground">
                         Bergabung dengan Komunitas Kami
-                    </motion.h3>
+                    </h3>
                 </div>
 
                 {/* Introduction Text */}
@@ -331,36 +304,29 @@ const Informasi = () => {
                     Terhubung dengan 3000+ kreator muda! Pilih cara bergabung yang paling cocok untukmu di bawah ini.
                 </p>
 
-                 {/* Option 1: Linktree (Primary - Enhanced Button) */}
-                <div className="text-center border-t border-neutral-700/50 pt-6 md:pt-8">
-                     <p className="text-sm text-neutral-400 mb-4">Lihat semua platform & media sosial kami:</p>
-                     {/* Enhanced Button */}
+                 {/* Option 1: Linktree (Primary) */}
+                <div className="text-center border-t border-neutral-700/50 pt-6">
+                     <p className="text-sm text-neutral-400 mb-3">Lihat semua platform & media sosial kami:</p>
                      <motion.button
                         onClick={() => window.open("https://linktr.ee/ourcreativity.ofc", "_blank")}
                         className={cn(
-                            "inline-flex items-center justify-center px-7 py-3.5 rounded-full text-sm font-medium transition-all duration-300 relative overflow-hidden", // Added overflow-hidden
-                            "bg-gradient-to-r from-neutral-100 via-white to-neutral-100 text-neutral-900 hover:from-white hover:to-neutral-200", // Gradient background
-                            "shadow-lg hover:shadow-xl", // Slightly stronger shadow
+                            "inline-flex items-center justify-center px-6 py-3 rounded-full text-sm font-medium transition-all duration-300",
+                            "bg-neutral-200 text-neutral-900 hover:bg-white shadow-md hover:shadow-lg", // Light mode button style
                             "group"
                         )}
-                        whileHover={{ scale: 1.05, y: -2, boxShadow: "0 12px 25px -5px rgba(255, 255, 255, 0.2)" }} // Added glow on hover
-                        whileTap={{ scale: 0.97 }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.98 }}
                     >
-                         {/* Shimmer Effect on Hover */}
-                        <div className="absolute inset-0 bg-shimmer-gradient opacity-0 group-hover:opacity-80 transition-opacity duration-500 group-hover:animate-shimmer z-0"></div>
-                        {/* Button Content */}
-                        <span className="relative z-10 flex items-center">
-                            <LinkIcon className="mr-2 w-4 h-4"/>
-                            Kunjungi Linktree Kami
-                            <ArrowRight className="ml-2 w-4 h-4 transition-transform duration-200 group-hover:translate-x-1.5" /> {/* Slightly more movement */}
-                        </span>
+                        <LinkIcon className="mr-2 w-4 h-4"/>
+                        Kunjungi Linktree Kami
+                        <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                     </motion.button>
                 </div>
 
-                {/* Option 2: Direct WhatsApp Links (Enhanced Hover) */}
-                <div className="border-t border-neutral-700/50 pt-6 md:pt-8">
+                {/* Option 2: Direct WhatsApp Links */}
+                <div className="border-t border-neutral-700/50 pt-6">
                     <p className="text-sm text-neutral-400 mb-4 text-center">Atau gabung langsung ke grup diskusi spesifik:</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 max-w-lg mx-auto">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 max-w-lg mx-auto">
                          {whatsappGroups.map((group) => (
                             <motion.a
                                 key={group.name}
@@ -368,42 +334,28 @@ const Informasi = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={cn(
-                                    "flex items-center gap-3 p-3.5 rounded-xl border transition-all duration-300", // Slightly larger padding, rounded-xl
-                                    "bg-secondary/50 border-neutral-700/60",
-                                    "group" // Add group class for potential inner animation
+                                    "flex items-center gap-3 p-3 rounded-lg border transition-colors duration-200",
+                                    "bg-secondary/50 border-neutral-700/60 hover:bg-secondary/80 hover:border-neutral-600"
                                 )}
-                                whileHover={{
-                                    y: -5, // More pronounced lift (float)
-                                    scale: 1.03,
-                                    backgroundColor: "rgba(var(--secondary-rgb), 0.8)", // Darken bg slightly on hover
-                                    borderColor: "rgba(var(--foreground-rgb), 0.2)", // Brighter border
-                                    boxShadow: "0 8px 15px -3px rgba(0, 0, 0, 0.3)"
-                                }}
-                                transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                                whileHover={{ y: -2, scale: 1.02 }}
                              >
                                  <MessageCircle className={cn("w-5 h-5 flex-shrink-0", group.color)} />
-                                <span className="text-sm font-medium text-neutral-200 flex-grow">{group.name}</span> {/* Added flex-grow */}
-                                <motion.div
-                                    initial={{ x: 0 }}
-                                    whileHover={{ x: 2 }} // Subtle arrow nudge on card hover
-                                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                                >
-                                    <ArrowRight className="w-4 h-4 text-neutral-500 group-hover:text-neutral-300 transition-colors" />
-                                </motion.div>
+                                <span className="text-sm font-medium text-neutral-200">{group.name}</span>
+                                <ArrowRight className="ml-auto w-4 h-4 text-neutral-500" />
                              </motion.a>
                          ))}
                     </div>
                      {/* Important Note */}
-                     <p className="text-xs text-neutral-500 mt-5 text-center px-4"> {/* Increased margin */}
-                        <Info size={12} className="inline mr-1.5 align-middle"/> {/* Increased margin */}
+                     <p className="text-xs text-neutral-500 mt-4 text-center px-4">
+                        <Info size={12} className="inline mr-1 align-middle"/>
                         {whatsappNote}
                     </p>
                 </div>
 
             </motion.div>
-             {/* Enhanced Decorative background elements */}
-             <div className="absolute -bottom-16 -right-16 w-52 h-52 rounded-full bg-emerald/5 opacity-60 blur-2xl pointer-events-none animate-pulse-slow"></div>
-             <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-blue-400/5 opacity-50 blur-2xl pointer-events-none animate-float-slow-reverse"></div>
+             {/* Decorative background elements */}
+             <div className="absolute -bottom-12 -right-12 w-40 h-40 rounded-full bg-emerald/5 opacity-50 blur-xl pointer-events-none"></div>
+             <div className="absolute -top-12 -left-12 w-32 h-32 rounded-full bg-emerald/5 opacity-40 blur-xl pointer-events-none"></div>
         </motion.section>
 
       </motion.div>
