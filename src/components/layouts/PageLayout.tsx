@@ -2,8 +2,9 @@
 import { motion } from "framer-motion";
 import { ReactNode, useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowLeft, Instagram } from "lucide-react";
+import { ArrowLeft, Instagram, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PageLayoutProps {
   title: string;
@@ -20,6 +21,7 @@ const PageLayout = ({
 }: PageLayoutProps) => {
   const navigate = useNavigate();
   const [scrollPosition, setScrollPosition] = useState(0);
+  const isMobile = useIsMobile();
 
   // Track scroll position for parallax effects
   useEffect(() => {
@@ -218,27 +220,38 @@ const PageLayout = ({
             </motion.div>
           </motion.div>
 
-          {/* Enhanced Credits Footer with depth effect */}
+          {/* Enhanced Credits Footer with depth effect and mobile responsiveness */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
             className="mt-24 mb-8 text-center gpu-accelerated"
           >
-            <div className="bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-full px-4 py-2 inline-block relative overflow-hidden group hover:bg-foreground/10 transition-colors shadow-lg shadow-black/10">
-              <p className="text-xs text-foreground/50 flex items-center justify-center gap-1">
-                &copy; 2024 OUR CREATIVITY • Designed by 
-                <a 
-                  href="https://instagram.com/ardel.yo" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1 hover:text-foreground/80 transition-colors"
-                >
-                  @ardel.yo
-                  <Instagram size={12} className="inline-block animate-pulse-soft" />
-                </a>
+            <motion.div 
+              className="bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-full px-4 py-2.5 inline-block relative overflow-hidden group shadow-lg shadow-black/10"
+              whileHover={{ scale: 1.03, boxShadow: "0 10px 25px rgba(0,0,0,0.2)" }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-amethyst/5 via-emerald/5 to-amethyst/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.08),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              
+              <p className={`text-xs ${isMobile ? 'flex flex-col items-center gap-1' : 'flex items-center justify-center gap-1'} text-foreground/60`}>
+                <span>&copy; 2024 OUR CREATIVITY</span>
+                <span className={isMobile ? 'mx-0 my-0.5' : 'mx-1'}>•</span>
+                <span className="flex items-center gap-1.5">
+                  Designed by
+                  <a 
+                    href="https://bit.ly/ardelyo" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 hover:text-foreground/90 transition-colors border-b border-transparent hover:border-foreground/40 group-hover:text-amethyst/80"
+                  >
+                    <span>@ardel.yo</span>
+                    <ExternalLink size={10} className="inline-block opacity-70" />
+                  </a>
+                </span>
               </p>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </ScrollArea>
