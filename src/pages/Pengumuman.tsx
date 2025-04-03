@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layouts/PageLayout";
 import { cn } from "@/lib/utils";
@@ -225,48 +226,6 @@ const Pengumuman = () => {
                 </div>
             </motion.div>
              <div className="absolute inset-0 geometric-dot-pattern opacity-[0.02] mix-blend-overlay"></div>
-        </motion.section>
-
-        {/* --- Call to Action Card --- */}
-        <motion.section
-          variants={cardVariants}
-          whileHover={cardHover}
-          className={cn(
-            "rounded-3xl border relative overflow-hidden shadow-xl p-6 md:p-8 text-center",
-            "bg-gradient-to-tr from-secondary/70 to-secondary/80 backdrop-blur-xl", // Different gradient
-            "border-neutral-700/50 shadow-black/10"
-          )}
-        >
-             <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 }}
-                className="relative z-10"
-            >
-                <div className="w-12 h-12 rounded-xl bg-neutral-700/50 border border-neutral-600 flex items-center justify-center mx-auto mb-4">
-                    <Instagram className="w-6 h-6 text-neutral-300" />
-                </div>
-                <h3 className="text-xl md:text-2xl font-semibold font-serif text-foreground mb-3">
-                    Bergabung dengan OurCreativity
-                </h3>
-                <p className="text-sm md:text-base text-neutral-300 max-w-lg mx-auto mb-6 leading-relaxed">
-                    Jadilah bagian dari 3000+ anak muda kreatif. Kunjungi media sosial kami via Linktree dan mulai berkarya bersama.
-                </p>
-                <motion.button
-                    onClick={() => window.open("https://linktr.ee/ourcreativity.ofc", "_blank")}
-                    className={cn(
-                        "inline-flex items-center justify-center px-6 py-3 rounded-full text-sm font-medium transition-all duration-300",
-                        "bg-neutral-200 text-neutral-900 hover:bg-white shadow-md hover:shadow-lg", // Light mode button style
-                        "group"
-                    )}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                >
-                    Kunjungi Linktree
-                    <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </motion.button>
-            </motion.div>
-             <div className="absolute -bottom-12 -right-12 w-40 h-40 rounded-full bg-neutral-700/10 opacity-50 blur-xl"></div>
         </motion.section>
 
         {/* --- Important Info Card --- */}
