@@ -301,7 +301,7 @@ const Informasi = () => {
 
                 {/* Introduction Text */}
                  <p className="text-sm md:text-base text-neutral-300 text-center max-w-xl mx-auto leading-relaxed">
-                    Terhubung dengan 3000+ kreator muda! Pilih cara bergabung yang paling cocok untukmu di bawah ini.
+                    Terhubung dengan 100+ kreator muda! Pilih cara bergabung yang paling cocok untukmu di bawah ini.
                 </p>
 
                  {/* Option 1: Linktree (Primary) */}
