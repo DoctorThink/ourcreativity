@@ -15,14 +15,13 @@ const KaryaGallery = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
-  // Updated breakpoints for better responsiveness
+  // Updated breakpoints for better responsiveness, reducing max columns
   const breakpointColumnsObj = {
-    default: 4, // Extra large screens
-    1536: 3,   // xl breakpoint
-    1280: 3,   // lg breakpoint
-    1024: 2,   // md breakpoint
-    768: 2,    // sm breakpoint
-    640: 1     // xs breakpoint
+    default: 3, // Max 3 columns for very large screens
+    1280: 3,   // lg breakpoint (3 columns)
+    1024: 2,   // md breakpoint (2 columns)
+    768: 2,    // sm breakpoint (2 columns)
+    640: 1     // xs breakpoint (1 column)
   };
 
   const { data: karya, isLoading, error, refetch } = useQuery({

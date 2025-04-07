@@ -21,6 +21,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     'meme': '/lovable-uploads/meme.png',
   };
 
+  // Preload image to get its dimensions
   useEffect(() => {
     const img = new Image();
     img.src = karya.image_url;
@@ -33,41 +34,29 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   return (
     <Card 
       onClick={onClick}
-      className="group relative w-full overflow-hidden bg-secondary-dark border border-grayMid/30 rounded-3xl transition-all duration-300 cursor-pointer hover:border-grayMid/60 hover:shadow-lg"
+      className="group relative flex flex-col bg-secondary-dark border border-grayMid/30 rounded-3xl transition-all duration-300 cursor-pointer hover:border-grayMid/60 hover:shadow-lg"
     >
-      {/* Image container */}
-      <div 
-        className="relative w-full overflow-hidden"
-        style={{ 
-          paddingBottom: `${(1 / imageAspectRatio) * 100}%`,
-          minHeight: '200px',
-          maxHeight: '400px'
-        }}
-      >
+      {/* Image container with padding-bottom trick for aspect ratio */}
+      <div className="relative w-full" style={{ paddingBottom: `${(1 / imageAspectRatio) * 100}%` }}>
         <img
           src={karya.image_url}
           alt={karya.title}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-            imageLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
           loading="lazy"
         />
       </div>
 
       {/* Gradient overlay */}
-      <div 
-        className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        aria-hidden="true"
-      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
       
       {/* Content overlay */}
       <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-        <div className="flex justify-between items-end gap-2">
-          <div className="flex-1 min-w-0">
-            <h3 className="text-base sm:text-lg font-semibold truncate">{karya.title}</h3>
-            <p className="text-foreground/80 text-xs truncate">{karya.creator_name}</p>
+        <div className="flex justify-between items-end">
+          <div>
+            <h3 className="text-lg font-semibold line-clamp-1">{karya.title}</h3>
+            <p className="text-foreground/80 text-xs">{karya.creator_name}</p>
           </div>
-          <div className="flex items-center gap-1 text-foreground/70 flex-shrink-0">
+          <div className="flex items-center gap-1 text-foreground/70">
             <Heart className="h-4 w-4" />
             <span className="text-xs">{karya.likes_count || 0}</span>
           </div>
@@ -75,14 +64,11 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
       </div>
 
       {/* Category Icon */}
-      <div 
-        className="absolute top-3 right-3 bg-white/90 p-1.5 rounded-full opacity-0 scale-90 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300"
-        aria-label={`Category: ${karya.category}`}
-      >
+      <div className="absolute top-3 right-3 bg-white/90 p-1.5 rounded-full opacity-0 scale-90 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300">
         <img
           src={categoryIcons[karya.category] || '/lovable-uploads/design.png'}
           alt={karya.category}
-          className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
+          className="w-6 h-6 object-contain"
         />
       </div>
     </Card>

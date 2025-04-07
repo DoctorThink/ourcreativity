@@ -276,45 +276,24 @@
   .text-sharp {
     text-rendering: optimizeLegibility;
   }
+  }
 
 } /* End of @layer utilities */
+
+
 
 /* Masonry Grid Styles */
 .my-masonry-grid {
   display: flex;
-  width: 100%;
-  margin-left: -1rem;
-  margin-right: -1rem;
+  margin-left: -24px; /* negative gap */
+  width: auto;
 }
-
 .my-masonry-grid_column {
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 24px; /* gap */
   background-clip: padding-box;
 }
 
-/* Consistent spacing between items */
-.my-masonry-grid_column > * {
-  margin-bottom: 2rem;
-  break-inside: avoid;
-  transform: translateZ(0);
-  will-change: transform;
-  width: 100%;
-}
-
-/* Responsive adjustments */
-@media screen and (max-width: 640px) {
-  .my-masonry-grid {
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
-  }
-  
-  .my-masonry-grid_column {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-  
-  .my-masonry-grid_column > * {
-    margin-bottom: 1rem;
-  }
+/* Style items within columns */
+.my-masonry-grid_column > div {
+  margin-bottom: 24px; /* gap */
 }
