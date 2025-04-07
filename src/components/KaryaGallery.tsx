@@ -15,24 +15,23 @@ const KaryaGallery = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
-  // Optimized breakpoints for better layout across all screen sizes
+  // Updated breakpoints for better responsiveness
   const breakpointColumnsObj = {
-    default: 4,    // >= 1536px: 4 columns
-    1536: 3,       // 1280px - 1535px: 3 columns
-    1280: 3,       // 1024px - 1279px: 3 columns
-    1024: 2,       // 768px - 1023px: 2 columns
-    768: 2,        // 640px - 767px: 2 columns
-    640: 1         // < 640px: 1 column
+    default: 4, // Extra large screens
+    1536: 3,   // xl breakpoint
+    1280: 3,   // lg breakpoint
+    1024: 2,   // md breakpoint
+    768: 2,    // sm breakpoint
+    640: 1     // xs breakpoint
   };
 
-  // Query with error boundary and loading state
   const { data: karya, isLoading, error, refetch } = useQuery({
     queryKey: ['karya'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('karya')
         .select('*')
-        .eq('status', 'approved')
+        .eq('status', 'approved') // Only show approved karya
         .order('created_at', { ascending: false });
       
       if (error) throw error;
@@ -49,22 +48,24 @@ const KaryaGallery = () => {
     activeCategory === 'all' || item.category === activeCategory
   );
 
-  // Loading skeletons optimized for masonry layout
+  // Loading skeletons - adjusted for masonry item structure
   const SkeletonCards = () => (
     <>
-      {Array.from({ length: 8 }).map((_, i) => (
-        <div 
-          key={i} 
-          className="mb-6 rounded-3xl overflow-hidden bg-secondary-dark border border-grayMid/30"
-        >
-          <div className="relative">
-            <div className="w-full" style={{ paddingBottom: `${Math.random() * 30 + 70}%` }}>
-              <Skeleton className="absolute inset-0" />
-            </div>
-          </div>
-          <div className="p-4">
+      {Array.from({ length: 6 }).map((_, i) => (
+        // Each skeleton is now a direct child for Masonry
+        <div key={i} className="rounded-3xl overflow-hidden h-fit flex flex-col bg-secondary-dark border border-grayMid/30 mb-6"> {/* Use updated colors and add bottom margin */}
+          <Skeleton className="aspect-[4/3] w-full" /> {/* Adjust aspect ratio if needed */}
+          <div className="p-4 pb-2"> {/* Adjusted padding */}
             <Skeleton className="h-5 w-3/4 mb-2" />
             <Skeleton className="h-4 w-1/2" />
+          </div>
+          <div className="px-4 py-2"> {/* Adjusted padding */}
+            <Skeleton className="h-4 w-full mb-2" />
+            <Skeleton className="h-4 w-2/3" />
+          </div>
+          <div className="px-4 pb-4 pt-2 flex justify-between"> {/* Adjusted padding */}
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-4 w-12" />
           </div>
         </div>
       ))}
@@ -72,9 +73,10 @@ const KaryaGallery = () => {
   );
 
   return (
-    <div className="container max-w-[1920px] py-12">
-      <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory}>
+    <div className="container py-12">
+      <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory} className="w-full">
         <div className="flex justify-center mb-8">
+          {/* Updated TabsList styling */}
           <TabsList className="bg-gradient-to-b from-grayMid/10 to-grayDark/20 border border-grayLight/10 backdrop-blur-md rounded-full p-1.5 shadow-inner shadow-black/20">
             <TabsTrigger value="all" className="rounded-full px-5 py-1.5 text-sm data-[state=active]:bg-white/10 data-[state=active]:text-white hover:bg-grayMid/10 transition-colors">Semua</TabsTrigger>
             <TabsTrigger value="design" className="rounded-full px-5 py-1.5 text-sm data-[state=active]:bg-white/10 data-[state=active]:text-white hover:bg-grayMid/10 transition-colors">Design</TabsTrigger>
@@ -84,18 +86,17 @@ const KaryaGallery = () => {
           </TabsList>
         </div>
 
-        <TabsContent value={activeCategory} className="mt-0 focus-visible:outline-none">
+        <TabsContent value={activeCategory} className="mt-0">
           {error ? (
-            <div className="text-center py-12">
-              <div className="max-w-md mx-auto p-4 rounded-lg bg-rose-500/10 border border-rose-500/20">
-                <p className="text-rose-500">Terjadi kesalahan saat memuat karya. Silakan coba lagi nanti.</p>
-              </div>
+            <div className="text-center py-12 text-rose-500">
+              <p>Terjadi kesalahan saat memuat karya. Silakan coba lagi nanti.</p>
             </div>
           ) : (
+            /* Masonry layout replaces the previous grid */
             <Masonry
               breakpointCols={breakpointColumnsObj}
-              className="my-masonry-grid"
-              columnClassName="my-masonry-grid_column"
+              className="my-masonry-grid" /* Add styles for this class in index.css */
+              columnClassName="my-masonry-grid_column" /* Add styles for this class in index.css */
             >
               {isLoading ? (
                 <SkeletonCards />
@@ -108,7 +109,9 @@ const KaryaGallery = () => {
                   />
                 ))
               ) : (
-                <div className="col-span-full text-center py-12">
+                /* Display message when no karya found in the category */
+                /* Note: This will render inside the Masonry container. Consider moving it outside if needed. */
+                <div className="text-center py-12 w-full col-span-full"> {/* Ensure it spans columns if needed, though Masonry handles placement */}
                   <p className="text-muted-foreground">Belum ada karya dalam kategori ini.</p>
                 </div>
               )}
@@ -117,6 +120,7 @@ const KaryaGallery = () => {
         </TabsContent>
       </Tabs>
 
+      {/* Conditional rendering for the detail dialog */}
       {selectedKarya && (
         <KaryaDetailDialog
           karya={selectedKarya}
