@@ -322,13 +322,13 @@
   background-clip: padding-box;
 }
 
-/* Consistent spacing between items */
+/* Consistent spacing between items - Enhanced */
 .my-masonry-grid_column > * {
-  margin-bottom: 2rem;
-  break-inside: avoid;
-  transform: translateZ(0);
-  will-change: transform;
-  width: 100%;
+  display: block; /* Ensure items are block-level */
+  margin-bottom: 2.5rem; /* Increased bottom margin */
+  break-inside: avoid; /* Prevent items breaking across columns */
+  width: 100%; /* Ensure item fills column width */
+  /* Removed transform/will-change as they might interfere */
 }
 
 /* Responsive adjustments */
@@ -344,6 +344,6 @@
   }
   
   .my-masonry-grid_column > * {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem; /* Increased bottom margin for mobile */
   }
 }

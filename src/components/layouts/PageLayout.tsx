@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ReactNode, useEffect, useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+// Removed ScrollArea import
 import { ArrowLeft, Instagram, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile"; // Assuming this hook exists and works
@@ -25,23 +25,15 @@ const PageLayout = ({
   const [scrollPosition, setScrollPosition] = useState(0);
   const isMobile = useIsMobile();
 
-  // Track scroll position for parallax effects
+  // Track scroll position for parallax effects - Now using window scroll
   useEffect(() => {
-    const handleScroll = (event: any) => {
-      // Use event.currentTarget instead of querying DOM each time if possible
-      // Or ensure the selector is efficient if querying is needed
-      const target = event.currentTarget || document.querySelector('.scroll-container');
-      if (target) {
-        setScrollPosition(target.scrollTop);
-      }
+    const handleScroll = () => {
+      setScrollPosition(window.scrollY);
     };
 
-    const scrollContainer = document.querySelector('.scroll-container');
-    if (scrollContainer) {
-      // Use passive listener for better scroll performance
-      scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
-      return () => scrollContainer.removeEventListener('scroll', handleScroll);
-    }
+    // Use passive listener for better scroll performance on the window
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Enhanced animated variants with smoother transitions
@@ -182,12 +174,12 @@ const PageLayout = ({
         </div>
       </header>
 
-      {/* Added data-lenis-prevent to ScrollArea if using Lenis smooth scroll library */}
-      <ScrollArea className="h-[calc(100vh-72px)] scroll-container perspective-1000" data-lenis-prevent>
-        <div className="max-w-4xl mx-auto px-4 pt-12 pb-4 sm:pb-8"> {/* Adjusted padding */}
-          <motion.div
-            variants={contentVariants}
-            initial="initial" // Apply content variants here too
+      {/* Content flows directly, removed ScrollArea */}
+      {/* Increased max-width for content area */}
+      <div className="max-w-7xl mx-auto px-4 pt-12 pb-4 sm:pb-8"> {/* Increased max-w */}
+        <motion.div
+          variants={contentVariants}
+          initial="initial"
             animate="animate"
             exit="exit" // Add exit animation for content as well if desired
             className="space-y-12"
@@ -223,12 +215,8 @@ const PageLayout = ({
             )}
 
             {/* Main Content */}
-            <motion.div
-              variants={contentVariants} // Apply variants to children container
-              className="perspective-1000 gpu-accelerated"
-            >
-              {children}
-            </motion.div>
+            {/* Removed extra motion.div wrapper around children */}
+            {children}
           </motion.div>
 
           {/* Enhanced Credits Footer */}
@@ -276,8 +264,8 @@ const PageLayout = ({
               </p>
             </motion.div>
           </motion.div>
-        </div>
-      </ScrollArea>
+        {/* Removed closing div for the previous ScrollArea content wrapper */}
+      </div> {/* Closing div for max-w-7xl container */}
     </motion.div>
   );
 };

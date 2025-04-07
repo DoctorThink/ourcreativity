@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; // Re-added useState, useEffect
 import { Heart } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Database } from '@/integrations/supabase/types';
@@ -11,8 +11,8 @@ interface KaryaCardProps {
 }
 
 const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageAspectRatio, setImageAspectRatio] = useState(1);
+  const [imageLoaded, setImageLoaded] = useState(false); // Re-added imageLoaded state
+  const [imageAspectRatio, setImageAspectRatio] = useState(1); // Re-added imageAspectRatio state
 
   const categoryIcons: Record<string, string> = {
     'design': '/lovable-uploads/design.png',
@@ -21,6 +21,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     'meme': '/lovable-uploads/meme.png',
   };
 
+  // Re-added useEffect for image loading and aspect ratio calculation
   useEffect(() => {
     const img = new Image();
     img.src = karya.image_url;
@@ -28,30 +29,48 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
       setImageAspectRatio(img.width / img.height);
       setImageLoaded(true);
     };
+    // Add error handling or default aspect ratio if needed
+    img.onerror = () => {
+      setImageAspectRatio(1); // Default to 1:1 or another ratio on error
+      setImageLoaded(true); // Still mark as loaded to remove skeleton/placeholder
+    };
   }, [karya.image_url]);
 
   return (
-    <Card 
+    <Card
       onClick={onClick}
       className="group relative w-full overflow-hidden bg-secondary-dark border border-grayMid/30 rounded-3xl transition-all duration-300 cursor-pointer hover:border-grayMid/60 hover:shadow-lg"
     >
-      {/* Image container */}
-      <div 
+      {/* Image container - Reverted to using paddingBottom for aspect ratio */}
+      <div
         className="relative w-full overflow-hidden"
-        style={{ 
-          paddingBottom: `${(1 / imageAspectRatio) * 100}%`,
-          minHeight: '200px',
-          maxHeight: '400px'
+        style={{
+          // Calculate paddingBottom based on aspect ratio to reserve space
+          // Added fallback for aspect ratio 0 or NaN
+          paddingBottom: `${(1 / (imageAspectRatio || 1)) * 100}%`,
+          // Optional: Add min/max height constraints if desired
+          // minHeight: '150px',
+          // maxHeight: '500px',
+          // Add a background color for loading state
+          backgroundColor: 'rgba(255, 255, 255, 0.05)' // Example placeholder color
         }}
       >
+        {/* Image - Absolutely positioned to fill the container */}
         <img
           src={karya.image_url}
           alt={karya.title}
+          // Apply transition for smooth appearance
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-            imageLoaded ? 'opacity-100' : 'opacity-0'
+            imageLoaded ? 'opacity-100' : 'opacity-0' // Fade in when loaded
           }`}
           loading="lazy"
+          // Consider adding onError handler for the image tag itself if needed
+          // onError={(e) => e.currentTarget.style.display = 'none'} // Example: hide broken image
         />
+        {/* Optional: Skeleton/Placeholder while loading */}
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-secondary animate-pulse"></div>
+        )}
       </div>
 
       {/* Gradient overlay */}
