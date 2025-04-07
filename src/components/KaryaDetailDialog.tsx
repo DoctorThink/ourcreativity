@@ -37,7 +37,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden rounded-3xl bg-secondary border-border/40">
+      <DialogContent className="p-0 overflow-hidden rounded-3xl bg-secondary border-border/40"> {/* Removed max-w constraint for responsiveness */}
         <div className="relative w-full aspect-[16/9] bg-black">
           <img 
             src={karya.image_url}
