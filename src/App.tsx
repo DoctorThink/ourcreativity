@@ -17,6 +17,7 @@ const Informasi = lazy(() => import("./pages/Informasi"));
 const Pengumuman = lazy(() => import("./pages/Pengumuman"));
 const Terms = lazy(() => import("./pages/Terms"));
 const TimKami = lazy(() => import("./pages/TimKami"));
+const KaryaKami = lazy(() => import("./pages/KaryaKami"));
 const OurAdmin = lazy(() => import("./pages/OurAdmin"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const RequireAuth = lazy(() => import("./components/admin/RequireAuth"));
@@ -59,6 +60,7 @@ const AnimatedRoutes = () => {
         <Route path="/pengumuman" element={<PageTransition><Pengumuman /></PageTransition>} />
         <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
         <Route path="/tim-kami" element={<PageTransition><TimKami /></PageTransition>} />
+        <Route path="/karya-kami" element={<PageTransition><KaryaKami /></PageTransition>} />
         <Route path="/admin-login" element={<PageTransition><AdminLogin /></PageTransition>} />
         <Route path="/our-admin" element={
           <PageTransition>
