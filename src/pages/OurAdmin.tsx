@@ -1,8 +1,5 @@
 
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { Database } from '@/integrations/supabase/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AnnouncementEditor from '@/components/admin/AnnouncementEditor';
 import ContentEditor from '@/components/admin/ContentEditor';

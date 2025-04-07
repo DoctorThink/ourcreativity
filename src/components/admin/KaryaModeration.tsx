@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, X, Trash2, Clock } from 'lucide-react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -36,7 +36,7 @@ const KaryaModeration = () => {
 
   // Mutation to update karya status
   const updateKaryaStatus = useMutation({
-    mutationFn: async ({ id, status }: { id: string, status: 'approved' | 'rejected' | 'pending' }) => {
+    mutationFn: async ({ id, status }: { id: string, status: string }) => {
       const { error } = await supabase
         .from('karya')
         .update({ status })
@@ -118,7 +118,7 @@ const KaryaModeration = () => {
       
       <Tabs defaultValue="pending" value={viewMode} onValueChange={(value) => setViewMode(value as 'pending' | 'approved' | 'rejected')}>
         <TabsList className="mb-6">
-          <TabsTrigger value="pending">Menunggu ({isLoading ? '...' : karya?.filter(k => k.status === 'pending').length || 0})</TabsTrigger>
+          <TabsTrigger value="pending">Menunggu ({isLoading ? '...' : karya?.length || 0})</TabsTrigger>
           <TabsTrigger value="approved">Disetujui</TabsTrigger>
           <TabsTrigger value="rejected">Ditolak</TabsTrigger>
         </TabsList>
