@@ -115,6 +115,17 @@
 ::-webkit-scrollbar-thumb:hover { background-color: rgba(var(--foreground-rgb), 0.3); }
 * { scrollbar-width: thin; scrollbar-color: rgba(var(--foreground-rgb), 0.2) rgba(var(--background-rgb), 0.5); }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 /* Text Styles */
 .text-readable { letter-spacing: 0.01em; line-height: 1.65; } /* Slightly increased line-height */
 
