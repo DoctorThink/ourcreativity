@@ -227,7 +227,7 @@ export function KaryaUploadForm() {
               <FormLabel className="block text-foreground-dark">Gambar Karya</FormLabel>
               <div className="flex flex-col items-center justify-center gap-4">
                 {imagePreview ? (
-                  <div className="relative w-full aspect-square max-w-[300px] mx-auto overflow-hidden rounded-xl border border-amethyst/30 shadow-glow-sm" style={{"--tile-glow-color": "rgba(155, 109, 255, 0.15)"}}>
+                  <div className="relative w-full aspect-square max-w-[300px] mx-auto overflow-hidden rounded-xl border border-amethyst/30 shadow-glow-sm" style={{["--tile-glow-color" as string]: "rgba(155, 109, 255, 0.15)"}}>
                     <img 
                       src={imagePreview} 
                       alt="Preview" 
