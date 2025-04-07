@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import Masonry from 'react-masonry-css';
@@ -8,7 +8,14 @@ import KaryaDetailDialog from './KaryaDetailDialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -30,7 +37,16 @@ const KaryaGallery = () => {
   const [selectedKarya, setSelectedKarya] = useState<KaryaType | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const breakpointColumnsObj = {
     default: 4,
@@ -82,49 +98,43 @@ const KaryaGallery = () => {
     </>
   );
 
-  const handleScroll = (direction: 'left' | 'right') => {
-    const container = document.getElementById('category-container');
-    if (container) {
-      const scrollAmount = 200;
-      const newPosition = direction === 'left' 
-        ? Math.max(0, scrollPosition - scrollAmount)
-        : Math.min(container.scrollWidth - container.clientWidth, scrollPosition + scrollAmount);
-      
-      container.scrollTo({
-        left: newPosition,
-        behavior: 'smooth'
-      });
-      setScrollPosition(newPosition);
-    }
-  };
-
   return (
     <div className="container py-12">
-      {/* Modern Category Selector with Navigation Arrows */}
-      <div className="flex justify-center mb-8 relative px-4 sm:px-6 md:px-8">
-        {/* Left scroll button */}
-        <button
-          onClick={() => handleScroll('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 p-1 rounded-full bg-black/20 backdrop-blur-sm border border-white/10 text-white/70 hover:text-white hover:bg-black/30 transition-all z-10 hidden sm:flex items-center justify-center"
-          aria-label="Scroll left"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-
-        {/* Scrollable container */}
-        <div className="relative w-full max-w-3xl overflow-hidden">
-          <div 
-            id="category-container"
-            className="overflow-x-auto scrollbar-hide py-2"
-            style={{ WebkitOverflowScrolling: 'touch' }}
-          >
-            <div className="flex space-x-2 px-4 mx-auto bg-gradient-to-b from-grayMid/10 to-grayDark/20 border border-grayLight/10 backdrop-blur-md rounded-full p-1.5 shadow-inner shadow-black/20 min-w-max">
+      {/* Responsive Category Selector */}
+      <div className="mb-8">
+        {isMobile ? (
+          <div className="px-4">
+            <Select value={activeCategory} onValueChange={setActiveCategory}>
+              <SelectTrigger className="w-full bg-gradient-to-b from-grayMid/10 to-grayDark/20 border-grayLight/10 backdrop-blur-md text-white hover:bg-grayMid/20 transition-colors">
+                <SelectValue>
+                  {categories.find(cat => cat.value === activeCategory)?.label || 'Pilih Kategori'}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent className="bg-secondary border-grayLight/10 backdrop-blur-md">
+                {categories.map(category => (
+                  <SelectItem
+                    key={category.value}
+                    value={category.value}
+                    className="text-foreground hover:bg-grayMid/20 focus:bg-grayMid/20"
+                  >
+                    <div className="flex items-center gap-2">
+                      <img src={category.icon} alt="" className="w-4 h-4 object-contain" />
+                      <span>{category.label}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        ) : (
+          <div className="flex justify-center">
+            <div className="inline-flex bg-gradient-to-b from-grayMid/10 to-grayDark/20 border border-grayLight/10 backdrop-blur-md rounded-full p-1.5 shadow-inner shadow-black/20">
               {categories.map((category) => (
                 <motion.button
                   key={category.value}
                   onClick={() => setActiveCategory(category.value)}
                   className={cn(
-                    "relative px-4 sm:px-5 py-2 rounded-full transition-all duration-300 font-medium text-sm whitespace-nowrap",
+                    "relative px-5 py-2 rounded-full transition-all duration-300 font-medium text-sm",
                     "hover:text-white focus:outline-none focus:ring-2 focus:ring-grayLight/50 focus:ring-offset-1 focus:ring-offset-transparent"
                   )}
                   whileHover={{ scale: 1.05 }}
@@ -158,16 +168,7 @@ const KaryaGallery = () => {
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Right scroll button */}
-        <button
-          onClick={() => handleScroll('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 p-1 rounded-full bg-black/20 backdrop-blur-sm border border-white/10 text-white/70 hover:text-white hover:bg-black/30 transition-all z-10 hidden sm:flex items-center justify-center"
-          aria-label="Scroll right"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
+        )}
       </div>
 
       {/* Gallery Content */}
