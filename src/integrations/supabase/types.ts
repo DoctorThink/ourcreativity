@@ -19,6 +19,7 @@ export type Database = {
           id: string
           image_url: string
           likes_count: number | null
+          status: string
           title: string
           updated_at: string
         }
@@ -31,6 +32,7 @@ export type Database = {
           id?: string
           image_url: string
           likes_count?: number | null
+          status?: string
           title: string
           updated_at?: string
         }
@@ -43,6 +45,7 @@ export type Database = {
           id?: string
           image_url?: string
           likes_count?: number | null
+          status?: string
           title?: string
           updated_at?: string
         }

@@ -33,6 +33,7 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogClose,
+  DialogDescription,
 } from '@/components/ui/dialog';
 
 type KaryaInsert = Database['public']['Tables']['karya']['Insert'];
@@ -141,7 +142,7 @@ export function KaryaUploadForm() {
       // For this example, we'll use the original URL field (assuming direct link to image)
       const imageUrl = values.image_url || 'https://via.placeholder.com/400x400?text=No+Image';
 
-      // Step 2: Insert record into Supabase
+      // Step 2: Insert record into Supabase with status set to 'pending'
       const { data, error } = await supabase.from('karya').insert({
         title: values.title,
         creator_name: values.creator_name,
@@ -149,13 +150,14 @@ export function KaryaUploadForm() {
         description: values.description || null,
         content_url: values.content_url || null,
         image_url: imageUrl,
+        status: 'pending', // Set the status to pending for admin review
       });
 
       if (error) throw error;
 
       toast({
         title: 'Karya berhasil diunggah!',
-        description: 'Karya Anda telah ditambahkan ke galeri',
+        description: 'Karya Anda sedang menunggu persetujuan admin',
       });
 
       // Close dialog and reset form
@@ -177,7 +179,7 @@ export function KaryaUploadForm() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button 
-          className="gap-2 bg-[#9B6DFF] hover:bg-[#8A5AEE] text-white rounded-full" 
+          className="gap-2 bg-gradient-to-b from-grayMid to-grayDark text-white rounded-full shadow-md border border-grayLight/20 backdrop-blur-sm hover:shadow-lg transition-all hover:from-grayMid/90 hover:to-grayDark/90 hover:scale-[1.03]" 
           size="lg"
         >
           <Plus className="h-5 w-5" /> Unggah Karya
@@ -186,6 +188,9 @@ export function KaryaUploadForm() {
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-serif">Unggah Karya Baru</DialogTitle>
+          <DialogDescription className="text-center text-muted-foreground">
+            Karya yang diunggah akan dimoderasi oleh admin sebelum ditampilkan
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-2">
@@ -344,7 +349,7 @@ export function KaryaUploadForm() {
               <Button 
                 type="submit" 
                 disabled={isUploading}
-                className="bg-[#9B6DFF] hover:bg-[#8A5AEE]"
+                className="bg-gradient-to-b from-grayMid to-grayDark hover:from-grayMid/90 hover:to-grayDark/90"
               >
                 {isUploading ? (
                   <>

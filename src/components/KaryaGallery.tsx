@@ -21,6 +21,7 @@ const KaryaGallery = () => {
       const { data, error } = await supabase
         .from('karya')
         .select('*')
+        .eq('status', 'approved') // Only show approved karya
         .order('created_at', { ascending: false });
       
       if (error) throw error;
