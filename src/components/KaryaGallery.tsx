@@ -5,9 +5,10 @@ import Masonry from 'react-masonry-css';
 import { Database } from '@/integrations/supabase/types';
 import KaryaCard from './KaryaCard';
 import KaryaDetailDialog from './KaryaDetailDialog';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -29,8 +30,8 @@ const KaryaGallery = () => {
   const [selectedKarya, setSelectedKarya] = useState<KaryaType | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [scrollPosition, setScrollPosition] = useState(0);
 
-  // Updated breakpoints for better responsiveness
   const breakpointColumnsObj = {
     default: 4,
     1536: 3,
@@ -63,7 +64,6 @@ const KaryaGallery = () => {
     activeCategory === 'all' || item.category === activeCategory
   );
 
-  // Loading skeletons for the masonry layout
   const SkeletonCards = () => (
     <>
       {Array.from({ length: 6 }).map((_, i) => (
@@ -82,50 +82,92 @@ const KaryaGallery = () => {
     </>
   );
 
+  const handleScroll = (direction: 'left' | 'right') => {
+    const container = document.getElementById('category-container');
+    if (container) {
+      const scrollAmount = 200;
+      const newPosition = direction === 'left' 
+        ? Math.max(0, scrollPosition - scrollAmount)
+        : Math.min(container.scrollWidth - container.clientWidth, scrollPosition + scrollAmount);
+      
+      container.scrollTo({
+        left: newPosition,
+        behavior: 'smooth'
+      });
+      setScrollPosition(newPosition);
+    }
+  };
+
   return (
     <div className="container py-12">
-      {/* Modern Category Selector */}
-      <div className="flex justify-center mb-8 relative">
-        {/* Scrollable container for mobile */}
-        <div className="overflow-x-auto max-w-full pb-4 px-4 -mx-4 scrollbar-hide">
-          <div className="flex space-x-2 min-w-max mx-auto bg-gradient-to-b from-grayMid/10 to-grayDark/20 border border-grayLight/10 backdrop-blur-md rounded-full p-1.5 shadow-inner shadow-black/20">
-            {categories.map((category) => (
-              <motion.button
-                key={category.value}
-                onClick={() => setActiveCategory(category.value)}
-                className={cn(
-                  "relative px-5 py-2 rounded-full transition-all duration-200 font-medium text-sm",
-                  "hover:text-white focus:outline-none focus:ring-2 focus:ring-grayLight/50 focus:ring-offset-1 focus:ring-offset-transparent",
-                  activeCategory === category.value
-                    ? "text-white"
-                    : "text-gray-400 hover:text-gray-300"
-                )}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <motion.span
-                  className="relative z-10"
-                  initial={false}
-                  animate={{
-                    color: activeCategory === category.value ? "#FFFFFF" : "#9CA3AF"
-                  }}
+      {/* Modern Category Selector with Navigation Arrows */}
+      <div className="flex justify-center mb-8 relative px-4 sm:px-6 md:px-8">
+        {/* Left scroll button */}
+        <button
+          onClick={() => handleScroll('left')}
+          className="absolute left-0 top-1/2 -translate-y-1/2 p-1 rounded-full bg-black/20 backdrop-blur-sm border border-white/10 text-white/70 hover:text-white hover:bg-black/30 transition-all z-10 hidden sm:flex items-center justify-center"
+          aria-label="Scroll left"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+
+        {/* Scrollable container */}
+        <div className="relative w-full max-w-3xl overflow-hidden">
+          <div 
+            id="category-container"
+            className="overflow-x-auto scrollbar-hide py-2"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            <div className="flex space-x-2 px-4 mx-auto bg-gradient-to-b from-grayMid/10 to-grayDark/20 border border-grayLight/10 backdrop-blur-md rounded-full p-1.5 shadow-inner shadow-black/20 min-w-max">
+              {categories.map((category) => (
+                <motion.button
+                  key={category.value}
+                  onClick={() => setActiveCategory(category.value)}
+                  className={cn(
+                    "relative px-4 sm:px-5 py-2 rounded-full transition-all duration-300 font-medium text-sm whitespace-nowrap",
+                    "hover:text-white focus:outline-none focus:ring-2 focus:ring-grayLight/50 focus:ring-offset-1 focus:ring-offset-transparent"
+                  )}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  {category.label}
-                </motion.span>
-                
-                {/* Active pill background */}
-                {activeCategory === category.value && (
-                  <motion.div
-                    layoutId="activeBackground"
-                    className="absolute inset-0 bg-gradient-to-b from-white/15 to-white/5 rounded-full shadow-lg border border-white/20"
-                    initial={false}
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
-              </motion.button>
-            ))}
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeCategory === category.value ? 'active' : 'inactive'}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className={cn(
+                        "absolute inset-0 rounded-full",
+                        activeCategory === category.value 
+                          ? "bg-gradient-to-b from-white/15 to-white/5 border border-white/20 shadow-lg"
+                          : "bg-transparent"
+                      )}
+                    />
+                  </AnimatePresence>
+                  
+                  <span className={cn(
+                    "relative z-10 transition-colors duration-200",
+                    activeCategory === category.value 
+                      ? "text-white font-semibold"
+                      : "text-gray-400 hover:text-gray-300"
+                  )}>
+                    {category.label}
+                  </span>
+                </motion.button>
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* Right scroll button */}
+        <button
+          onClick={() => handleScroll('right')}
+          className="absolute right-0 top-1/2 -translate-y-1/2 p-1 rounded-full bg-black/20 backdrop-blur-sm border border-white/10 text-white/70 hover:text-white hover:bg-black/30 transition-all z-10 hidden sm:flex items-center justify-center"
+          aria-label="Scroll right"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
       </div>
 
       {/* Gallery Content */}
