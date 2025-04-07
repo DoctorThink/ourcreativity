@@ -311,39 +311,52 @@
 /* Masonry Grid Styles */
 .my-masonry-grid {
   display: flex;
-  width: 100%;
-  margin-left: -1rem;
-  margin-right: -1rem;
+  width: auto;
+  margin-left: -1.5rem; /* Increased gap */
+  margin-right: -1.5rem;
 }
 
 .my-masonry-grid_column {
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 1.5rem; /* Match the margin */
+  padding-right: 1.5rem;
   background-clip: padding-box;
 }
 
-/* Consistent spacing between items - Enhanced */
+/* Consistent spacing between items */
 .my-masonry-grid_column > * {
-  display: block; /* Ensure items are block-level */
-  margin-bottom: 2.5rem; /* Increased bottom margin */
-  break-inside: avoid; /* Prevent items breaking across columns */
-  width: 100%; /* Ensure item fills column width */
-  /* Removed transform/will-change as they might interfere */
+  display: block;
+  margin-bottom: 2rem;
+  break-inside: avoid;
+  width: 100%;
+  transform: translateZ(0); /* Force GPU acceleration */
+  contain: content; /* Improve scrolling performance */
 }
 
 /* Responsive adjustments */
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 1024px) {
   .my-masonry-grid {
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
+    margin-left: -1rem;
+    margin-right: -1rem;
   }
   
   .my-masonry-grid_column {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .my-masonry-grid {
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+  }
+  
+  .my-masonry-grid_column {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
   
   .my-masonry-grid_column > * {
-    margin-bottom: 1.5rem; /* Increased bottom margin for mobile */
+    margin-bottom: 1.5rem;
   }
 }

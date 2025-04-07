@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // Re-added useState, useEffect
+import React, { useState, useEffect } from 'react';
 import { Heart } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Database } from '@/integrations/supabase/types';
@@ -11,8 +11,8 @@ interface KaryaCardProps {
 }
 
 const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
-  const [imageLoaded, setImageLoaded] = useState(false); // Re-added imageLoaded state
-  const [imageAspectRatio, setImageAspectRatio] = useState(1); // Re-added imageAspectRatio state
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageAspectRatio, setImageAspectRatio] = useState(1);
 
   const categoryIcons: Record<string, string> = {
     'design': '/lovable-uploads/design.png',
@@ -21,18 +21,19 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     'meme': '/lovable-uploads/meme.png',
   };
 
-  // Re-added useEffect for image loading and aspect ratio calculation
   useEffect(() => {
     const img = new Image();
     img.src = karya.image_url;
     img.onload = () => {
-      setImageAspectRatio(img.width / img.height);
+      // Calculate and constrain aspect ratio between 0.75 (3:4) and 1.5 (3:2)
+      const rawRatio = img.width / img.height;
+      const constrainedRatio = Math.max(0.75, Math.min(1.5, rawRatio));
+      setImageAspectRatio(constrainedRatio);
       setImageLoaded(true);
     };
-    // Add error handling or default aspect ratio if needed
     img.onerror = () => {
-      setImageAspectRatio(1); // Default to 1:1 or another ratio on error
-      setImageLoaded(true); // Still mark as loaded to remove skeleton/placeholder
+      setImageAspectRatio(1);
+      setImageLoaded(true);
     };
   }, [karya.image_url]);
 
@@ -41,33 +42,28 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
       onClick={onClick}
       className="group relative w-full overflow-hidden bg-secondary-dark border border-grayMid/30 rounded-3xl transition-all duration-300 cursor-pointer hover:border-grayMid/60 hover:shadow-lg"
     >
-      {/* Image container - Reverted to using paddingBottom for aspect ratio */}
+      {/* Image container with constrained aspect ratio */}
       <div
         className="relative w-full overflow-hidden"
         style={{
-          // Calculate paddingBottom based on aspect ratio to reserve space
-          // Added fallback for aspect ratio 0 or NaN
-          paddingBottom: `${(1 / (imageAspectRatio || 1)) * 100}%`,
-          // Optional: Add min/max height constraints if desired
-          // minHeight: '150px',
-          // maxHeight: '500px',
-          // Add a background color for loading state
-          backgroundColor: 'rgba(255, 255, 255, 0.05)' // Example placeholder color
+          paddingBottom: `${(1 / imageAspectRatio) * 100}%`,
+          minHeight: '200px',
+          maxHeight: '400px',
+          backgroundColor: 'rgba(255, 255, 255, 0.05)'
         }}
       >
-        {/* Image - Absolutely positioned to fill the container */}
         <img
           src={karya.image_url}
           alt={karya.title}
-          // Apply transition for smooth appearance
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-            imageLoaded ? 'opacity-100' : 'opacity-0' // Fade in when loaded
+          className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ${
+            imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
           }`}
           loading="lazy"
-          // Consider adding onError handler for the image tag itself if needed
-          // onError={(e) => e.currentTarget.style.display = 'none'} // Example: hide broken image
+          onError={(e) => {
+            e.currentTarget.src = '/placeholder.svg';
+            e.currentTarget.classList.add('object-contain', 'p-4');
+          }}
         />
-        {/* Optional: Skeleton/Placeholder while loading */}
         {!imageLoaded && (
           <div className="absolute inset-0 bg-secondary animate-pulse"></div>
         )}
@@ -95,7 +91,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
 
       {/* Category Icon */}
       <div 
-        className="absolute top-3 right-3 bg-white/90 p-1.5 rounded-full opacity-0 scale-90 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300"
+        className="absolute top-3 right-3 bg-white/90 p-1.5 rounded-full opacity-0 scale-90 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 shadow-lg"
         aria-label={`Category: ${karya.category}`}
       >
         <img
