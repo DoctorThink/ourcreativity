@@ -216,18 +216,17 @@ export function KaryaUploadForm() {
             <div className="space-y-2">
               <FormLabel className="block text-foreground-dark">Gambar Karya</FormLabel>
               <div className="flex flex-col items-center justify-center gap-4">
+                {/* Conditional Rendering for Image Preview / Upload Area */}
                 {imagePreview ? (
-                  <div 
-                    // Removed amethyst border/glow, using standard monochrome border
-                    className="relative w-full aspect-square max-w-[300px] mx-auto overflow-hidden rounded-xl border border-grayMid/30"
-                  >
-                    <img 
-                      src={imagePreview} 
-                      alt="Preview" 
+                  // Display Image Preview
+                  <div className="relative w-full aspect-square max-w-[300px] mx-auto overflow-hidden rounded-xl border border-grayMid/30">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-2 right-2 bg-grayDark/80 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 backdrop-blur-sm">
-                      <Check className="h-3 w-3 text-white" /> Terpilih {/* Changed check color to white */}
+                      <Check className="h-3 w-3 text-white" /> Terpilih
                     </div>
                     <Button
                       type="button"
@@ -244,16 +243,17 @@ export function KaryaUploadForm() {
                     </Button>
                   </div>
                 ) : (
-                  {/* Removed amethyst hover effects, using standard monochrome */}
+                  // Display Upload Input Label
                   <label className="flex flex-col items-center justify-center w-full aspect-square max-w-[300px] rounded-xl border-2 border-dashed border-grayMid/40 hover:border-grayMid/70 bg-secondary-dark/50 cursor-pointer transition-all duration-300 hover:bg-secondary-dark/80 group">
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <div className="bg-grayDark/50 p-3 rounded-full mb-3 group-hover:bg-grayDark/70 transition-colors">
                         <Upload className="w-8 h-8 text-grayLight group-hover:text-white transition-colors" />
                       </div>
                       <p className="mb-2 text-base text-foreground-dark font-medium">Klik untuk unggah gambar</p>
-                      <p className="text-xs text-muted-foreground">PNG, JPG, WEBP, GIF (Max 1MB)</p> {/* Updated size limit text */}
+                      <p className="text-xs text-muted-foreground">PNG, JPG, WEBP, GIF (Max 1MB)</p>
                     </div>
                     <input
+                      id="file-upload" // Added id for label association (optional but good practice)
                       type="file"
                       className="hidden"
                       accept="image/png, image/jpeg, image/webp, image/gif"
@@ -261,10 +261,11 @@ export function KaryaUploadForm() {
                     />
                   </label>
                 )}
+                {/* Validation Message */}
+                {!imageFile && !imagePreview && (
+                  <p className="text-xs text-center text-destructive font-medium">Gambar wajib diupload</p>
+                )}
               </div>
-              {!imageFile && (
-                <p className="text-xs text-center text-destructive font-medium">Gambar wajib diupload</p>
-              )}
             </div>
 
             {/* Title */}
