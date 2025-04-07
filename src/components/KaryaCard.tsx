@@ -4,9 +4,9 @@ import { motion } from 'framer-motion';
 import { Heart } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tables } from '@/integrations/supabase/types';
+import { Database } from '@/integrations/supabase/types';
 
-type KaryaType = Tables<'karya'>;
+type KaryaType = Database['public']['Tables']['karya']['Row'];
 
 interface KaryaCardProps {
   karya: KaryaType;

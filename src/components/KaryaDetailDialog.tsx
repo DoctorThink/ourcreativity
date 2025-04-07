@@ -10,10 +10,9 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Heart, Share2, ExternalLink } from 'lucide-react';
-import { Tables } from '@/integrations/supabase/types';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Database } from '@/integrations/supabase/types';
 
-type KaryaType = Tables<'karya'>;
+type KaryaType = Database['public']['Tables']['karya']['Row'];
 
 interface KaryaDetailDialogProps {
   karya: KaryaType;

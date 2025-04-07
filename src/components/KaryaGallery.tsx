@@ -2,13 +2,13 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Tables } from '@/integrations/supabase/types';
+import { Database } from '@/integrations/supabase/types';
 import KaryaCard from './KaryaCard';
 import KaryaDetailDialog from './KaryaDetailDialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 
-type KaryaType = Tables<'karya'>;
+type KaryaType = Database['public']['Tables']['karya']['Row'];
 
 const KaryaGallery = () => {
   const [selectedKarya, setSelectedKarya] = useState<KaryaType | null>(null);
