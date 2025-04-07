@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Heart } from 'lucide-react';
@@ -31,7 +30,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
       >
         {/* Image container */}
         {/* Image container with fixed aspect ratio */}
-        <div className="w-full overflow-hidden aspect-square">
+        <div className="w-full overflow-hidden">
           <img
             src={karya.image_url}
             alt={karya.title}
