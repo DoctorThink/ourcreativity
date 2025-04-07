@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,12 +15,14 @@ const KaryaGallery = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
-  // Masonry breakpoints
+  // Updated breakpoints for better responsiveness
   const breakpointColumnsObj = {
-    default: 3,
-    1100: 3, // lg
-    700: 2,  // sm
-    500: 1   // xs
+    default: 4, // Extra large screens
+    1536: 3,   // xl breakpoint
+    1280: 3,   // lg breakpoint
+    1024: 2,   // md breakpoint
+    768: 2,    // sm breakpoint
+    640: 1     // xs breakpoint
   };
 
   const { data: karya, isLoading, error, refetch } = useQuery({

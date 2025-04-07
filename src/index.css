@@ -282,27 +282,39 @@
 /* Masonry Grid Styles */
 .my-masonry-grid {
   display: flex;
-  width: auto;
-  margin-left: -1.5rem;
+  width: 100%;
+  margin-left: -1rem;
+  margin-right: -1rem;
 }
 
 .my-masonry-grid_column {
-  padding-left: 1.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   background-clip: padding-box;
 }
 
-/* Ensure consistent spacing between items */
+/* Consistent spacing between items */
 .my-masonry-grid_column > * {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   break-inside: avoid;
-  transform: translateZ(0); /* Force GPU acceleration for smoother transitions */
-  will-change: transform; /* Optimize for animations */
+  transform: translateZ(0);
+  will-change: transform;
+  width: 100%;
 }
 
-/* Optimize image loading */
-.my-masonry-grid img {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform: translateZ(0);
-  -webkit-font-smoothing: subpixel-antialiased;
+/* Responsive adjustments */
+@media screen and (max-width: 640px) {
+  .my-masonry-grid {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+  
+  .my-masonry-grid_column {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .my-masonry-grid_column > * {
+    margin-bottom: 1rem;
+  }
 }
