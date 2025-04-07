@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Database } from '@/integrations/supabase/types';
-import { Plus, Upload, Loader2 } from 'lucide-react';
+import { Plus, Upload, Loader2, Check, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import {
@@ -46,7 +46,7 @@ const formSchema = z.object({
   }),
   description: z.string().optional(),
   content_url: z.string().url('URL konten tidak valid').optional().or(z.literal('')),
-  image_url: z.string().min(1, 'Gambar wajib diupload'),
+  image_url: z.string().optional(), // Make this optional as we'll validate the imageFile separately
 });
 
 export function KaryaUploadForm() {
@@ -99,7 +99,11 @@ export function KaryaUploadForm() {
     // Create preview
     const reader = new FileReader();
     reader.onload = (e) => {
-      setImagePreview(e.target?.result as string);
+      const result = e.target?.result as string;
+      setImagePreview(result);
+      
+      // Important: Set the image_url field value to ensure form validation passes
+      form.setValue('image_url', result);
     };
     reader.readAsDataURL(file);
   };
@@ -129,20 +133,42 @@ export function KaryaUploadForm() {
       const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
       const filePath = `karya/${fileName}`;
 
-      // Step 1: Upload image to Supabase storage if you have it set up
-      // If not, you can use a direct URL in values.image_url
-      // For now, we'll simulate by creating a data URL
+      // Upload image to Supabase storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('karya-images')
+        .upload(filePath, imageFile);
       
-      // In a real implementation with Supabase Storage, you'd do:
-      // const { data: uploadData, error: uploadError } = await supabase.storage
-      //   .from('karya-images')
-      //   .upload(filePath, imageFile);
+      if (uploadError) {
+        console.error('Error uploading to storage:', uploadError);
+        // If storage bucket doesn't exist or permission issue, fallback to using the data URL
+        const imageUrl = imagePreview;
+        
+        // Step 2: Insert record into Supabase with status set to 'pending'
+        const { data, error } = await supabase.from('karya').insert({
+          title: values.title,
+          creator_name: values.creator_name,
+          category: values.category,
+          description: values.description || null,
+          content_url: values.content_url || null,
+          image_url: imageUrl,
+          status: 'pending', // Set the status to pending for admin review
+        });
+
+        if (error) throw error;
+
+        toast({
+          title: 'Karya berhasil diunggah!',
+          description: 'Karya Anda sedang menunggu persetujuan admin',
+        });
+
+        // Close dialog and reset form
+        setIsOpen(false);
+        resetForm();
+        return;
+      }
       
-      // if (uploadError) throw uploadError;
-      // const imageUrl = `https://nmjakogetnzrfluicvdh.supabase.co/storage/v1/object/public/karya-images/${filePath}`;
-      
-      // For this example, we'll use the original URL field (assuming direct link to image)
-      const imageUrl = values.image_url || 'https://via.placeholder.com/400x400?text=No+Image';
+      // Get the public URL for the uploaded image
+      const imageUrl = `https://nmjakogetnzrfluicvdh.supabase.co/storage/v1/object/public/karya-images/${filePath}`;
 
       // Step 2: Insert record into Supabase with status set to 'pending'
       const { data, error } = await supabase.from('karya').insert({
@@ -187,9 +213,9 @@ export function KaryaUploadForm() {
           <Plus className="h-5 w-5" /> Unggah Karya
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto bg-background-dark border-grayMid/30">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl font-serif">Unggah Karya Baru</DialogTitle>
+          <DialogTitle className="text-center text-2xl font-serif text-foreground-dark">Unggah Karya Baru</DialogTitle>
           <DialogDescription className="text-center text-muted-foreground">
             Karya yang diunggah akan dimoderasi oleh admin sebelum ditampilkan
           </DialogDescription>
@@ -198,15 +224,18 @@ export function KaryaUploadForm() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-2">
             {/* Image Upload */}
             <div className="space-y-2">
-              <FormLabel className="block">Gambar Karya</FormLabel>
+              <FormLabel className="block text-foreground-dark">Gambar Karya</FormLabel>
               <div className="flex flex-col items-center justify-center gap-4">
                 {imagePreview ? (
-                  <div className="relative w-full aspect-square max-w-[300px] mx-auto overflow-hidden rounded-xl border border-border">
+                  <div className="relative w-full aspect-square max-w-[300px] mx-auto overflow-hidden rounded-xl border border-amethyst/30 shadow-glow-sm" style={{"--tile-glow-color": "rgba(155, 109, 255, 0.15)"}}>
                     <img 
                       src={imagePreview} 
                       alt="Preview" 
                       className="w-full h-full object-cover"
                     />
+                    <div className="absolute top-2 right-2 bg-grayDark/80 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 backdrop-blur-sm">
+                      <Check className="h-3 w-3 text-emerald" /> Terpilih
+                    </div>
                     <Button
                       type="button"
                       variant="destructive"
@@ -215,16 +244,19 @@ export function KaryaUploadForm() {
                       onClick={() => {
                         setImageFile(null);
                         setImagePreview(null);
+                        form.setValue('image_url', '');
                       }}
                     >
                       Hapus
                     </Button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center w-full aspect-square max-w-[300px] rounded-xl border-2 border-dashed border-border hover:border-primary/50 bg-muted/50 cursor-pointer transition-colors">
+                  <label className="flex flex-col items-center justify-center w-full aspect-square max-w-[300px] rounded-xl border-2 border-dashed border-grayMid/40 hover:border-primary/50 bg-secondary-dark/50 cursor-pointer transition-all duration-300 hover:bg-secondary-dark/80 hover:shadow-glow-sm group">
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <Upload className="w-10 h-10 text-muted-foreground mb-2" />
-                      <p className="mb-2 text-sm text-muted-foreground">Klik untuk unggah gambar</p>
+                      <div className="bg-grayDark/50 p-3 rounded-full mb-3 group-hover:bg-amethyst/20 transition-colors">
+                        <Upload className="w-8 h-8 text-grayLight group-hover:text-amethyst transition-colors" />
+                      </div>
+                      <p className="mb-2 text-base text-foreground-dark font-medium">Klik untuk unggah gambar</p>
                       <p className="text-xs text-muted-foreground">PNG, JPG, WEBP, GIF (Max 5MB)</p>
                     </div>
                     <input
@@ -244,6 +276,9 @@ export function KaryaUploadForm() {
               {form.formState.errors.image_url && (
                 <p className="text-sm font-medium text-destructive">{form.formState.errors.image_url.message}</p>
               )}
+              {!imagePreview && !form.formState.errors.image_url && (
+                <p className="text-xs text-center text-amethyst">Gambar wajib diupload</p>
+              )}
             </div>
 
             {/* Title */}
@@ -252,9 +287,13 @@ export function KaryaUploadForm() {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Judul Karya</FormLabel>
+                  <FormLabel className="text-foreground-dark">Judul Karya</FormLabel>
                   <FormControl>
-                    <Input placeholder="Masukkan judul karya" {...field} />
+                    <Input 
+                      placeholder="Masukkan judul karya" 
+                      {...field} 
+                      className="bg-secondary-dark/70 border-grayMid/30 focus:border-amethyst/50 text-foreground-dark placeholder:text-grayMid/70"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -267,9 +306,13 @@ export function KaryaUploadForm() {
               name="creator_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nama Creator</FormLabel>
+                  <FormLabel className="text-foreground-dark">Nama Creator</FormLabel>
                   <FormControl>
-                    <Input placeholder="Nama Anda" {...field} />
+                    <Input 
+                      placeholder="Nama Anda" 
+                      {...field} 
+                      className="bg-secondary-dark/70 border-grayMid/30 focus:border-amethyst/50 text-foreground-dark placeholder:text-grayMid/70"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -282,21 +325,22 @@ export function KaryaUploadForm() {
               name="category"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Kategori</FormLabel>
+                  <FormLabel className="text-foreground-dark">Kategori</FormLabel>
                   <Select 
                     onValueChange={field.onChange} 
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-secondary-dark/70 border-grayMid/30 text-foreground-dark focus:ring-amethyst/30 focus:border-amethyst/50">
                         <SelectValue placeholder="Pilih kategori karya" />
+                        <ChevronDown className="text-grayMid/70" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="design">Design</SelectItem>
-                      <SelectItem value="video">Video</SelectItem>
-                      <SelectItem value="writing">Karya Tulis</SelectItem>
-                      <SelectItem value="meme">Meme</SelectItem>
+                    <SelectContent className="bg-secondary-dark border-grayMid/30 text-foreground-dark">
+                      <SelectItem value="design" className="focus:bg-amethyst/20 focus:text-foreground-dark">Design</SelectItem>
+                      <SelectItem value="video" className="focus:bg-amethyst/20 focus:text-foreground-dark">Video</SelectItem>
+                      <SelectItem value="writing" className="focus:bg-amethyst/20 focus:text-foreground-dark">Karya Tulis</SelectItem>
+                      <SelectItem value="meme" className="focus:bg-amethyst/20 focus:text-foreground-dark">Meme</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -310,12 +354,12 @@ export function KaryaUploadForm() {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Deskripsi (Opsional)</FormLabel>
+                  <FormLabel className="text-foreground-dark">Deskripsi (Opsional)</FormLabel>
                   <FormControl>
                     <Textarea 
                       placeholder="Jelaskan tentang karya Anda" 
                       {...field} 
-                      className="resize-none"
+                      className="resize-none bg-secondary-dark/70 border-grayMid/30 focus:border-amethyst/50 text-foreground-dark placeholder:text-grayMid/70"
                       rows={3}
                     />
                   </FormControl>
@@ -330,12 +374,13 @@ export function KaryaUploadForm() {
               name="content_url"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Link Konten (Opsional)</FormLabel>
+                  <FormLabel className="text-foreground-dark">Link Konten (Opsional)</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="https://..." 
                       {...field} 
                       value={field.value || ''}
+                      className="bg-secondary-dark/70 border-grayMid/30 focus:border-amethyst/50 text-foreground-dark placeholder:text-grayMid/70"
                     />
                   </FormControl>
                   <FormMessage />
@@ -344,14 +389,20 @@ export function KaryaUploadForm() {
             />
 
             {/* Submit Button */}
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-3 pt-2">
               <DialogClose asChild>
-                <Button type="button" variant="outline">Batal</Button>
+                <Button 
+                  type="button" 
+                  variant="outline"
+                  className="border-grayMid/30 hover:bg-grayDark/30 text-foreground-dark"
+                >
+                  Batal
+                </Button>
               </DialogClose>
               <Button 
                 type="submit" 
                 disabled={isUploading}
-                className="bg-gradient-to-b from-grayMid to-grayDark hover:from-grayMid/90 hover:to-grayDark/90"
+                className="bg-gradient-to-b from-grayMid to-grayDark hover:from-grayMid/90 hover:to-grayDark/90 text-white border border-grayLight/10 shadow-md hover:shadow-lg transition-all"
               >
                 {isUploading ? (
                   <>

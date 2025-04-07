@@ -1,1 +1,64 @@
-project_id = "nmjakogetnzrfluicvdh"
+
+# This file is used by Supabase CLI to manage resources
+
+[project]
+# Project reference ID
+id = "nmjakogetnzrfluicvdh"
+
+[api]
+# Port number for the API URL
+port = 54321
+# Schemas to expose in your API
+schemas = ["public", "storage", "auth"]
+# Extra schemas to add to the search_path of every request
+extra_search_path = ["public", "extensions"]
+# Max rows returns from a view, table, or stored procedure. Limits payload size for accidental or malicious requests.
+max_rows = 1000
+
+[db]
+# Port number for the database URL
+port = 5432
+# Database major version. Used to generate a matching Docker image.
+major_version = 15
+
+[studio]
+# Port number for Supabase Studio
+port = 54323
+# External URL of the API server that frontend connects to
+api_url = "http://localhost:54321"
+
+# Configures storage for the project
+[storage]
+# The maximum file size allowed (e.g. "5MB", "500KB")
+file_size_limit = "5MB"
+
+[[storage.buckets]]
+name = "karya-images"
+public = true
+file_size_limit = "5MB"
+
+[auth]
+# The base URL of your website. Used as an allow-list for redirects and for constructing URLs used in emails.
+site_url = "http://localhost:3000"
+# The JWT secret to use for the JWT token. If not set, a random secret is generated.
+jwt_secret = ""
+# Allow/disallow new user signups to your project.
+enable_signup = true
+
+[auth.email]
+# Allow/disallow new user signups via email to your project.
+enable_signup = true
+# If enabled, a user will be required to confirm any email change on both the old, and new email addresses. If disabled, only the new email is required to confirm.
+double_confirm_changes = true
+# If enabled, users need to confirm their email address before signing in.
+enable_confirmations = false
+
+# Use an external OAuth provider. The full list of providers are: "apple", "azure", "bitbucket", "discord", "facebook", "github", "gitlab", "google", "keycloak", "linkedin", "notion", "twitch", "twitter", "slack", "spotify", "workos", "zoom"
+[auth.external.apple]
+enabled = false
+client_id = ""
+secret = ""
+# Overrides the default auth redirectUrl.
+redirect_uri = ""
+# Overrides the default auth provider URL. Used to support self-hosted gitlab, single-tenant Azure, or any other third-party OIDC providers.
+url = ""
