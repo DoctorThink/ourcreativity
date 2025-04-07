@@ -64,6 +64,27 @@ const KaryaModeration = () => {
   // Mutation to delete karya
   const deleteKarya = useMutation({
     mutationFn: async (id: string) => {
+      // First try to delete the image from storage
+      try {
+        // Extract filename from the URL
+        const imageUrl = selectedKarya?.image_url || '';
+        const urlParts = imageUrl.split('/');
+        const filePathWithBucket = urlParts[urlParts.length - 1];
+        const filePath = filePathWithBucket.startsWith('karya-images/') 
+          ? filePathWithBucket.substring('karya-images/'.length) 
+          : filePathWithBucket;
+        
+        if (filePath) {
+          await supabase.storage
+            .from('karya-images')
+            .remove([filePath]);
+        }
+      } catch (error) {
+        console.error('Error deleting image:', error);
+        // Continue with record deletion even if image deletion fails
+      }
+
+      // Then delete the record
       const { error } = await supabase
         .from('karya')
         .delete()

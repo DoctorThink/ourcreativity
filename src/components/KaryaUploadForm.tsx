@@ -46,7 +46,8 @@ const formSchema = z.object({
   }),
   description: z.string().optional(),
   content_url: z.string().url('URL konten tidak valid').optional().or(z.literal('')),
-  image_url: z.string().optional(), // Make this optional as we'll validate the imageFile separately
+  image_file: z.instanceof(File, { message: 'Gambar wajib diupload' }).optional(),
+  image_url: z.string().optional(),
 });
 
 export function KaryaUploadForm() {
@@ -95,15 +96,13 @@ export function KaryaUploadForm() {
     }
 
     setImageFile(file);
+    form.setValue('image_file', file);
     
     // Create preview
     const reader = new FileReader();
     reader.onload = (e) => {
       const result = e.target?.result as string;
       setImagePreview(result);
-      
-      // Important: Set the image_url field value to ensure form validation passes
-      form.setValue('image_url', result);
     };
     reader.readAsDataURL(file);
   };
@@ -140,37 +139,19 @@ export function KaryaUploadForm() {
       
       if (uploadError) {
         console.error('Error uploading to storage:', uploadError);
-        // If storage bucket doesn't exist or permission issue, fallback to using the data URL
-        const imageUrl = imagePreview;
-        
-        // Step 2: Insert record into Supabase with status set to 'pending'
-        const { data, error } = await supabase.from('karya').insert({
-          title: values.title,
-          creator_name: values.creator_name,
-          category: values.category,
-          description: values.description || null,
-          content_url: values.content_url || null,
-          image_url: imageUrl,
-          status: 'pending', // Set the status to pending for admin review
-        });
-
-        if (error) throw error;
-
         toast({
-          title: 'Karya berhasil diunggah!',
-          description: 'Karya Anda sedang menunggu persetujuan admin',
+          title: 'Gagal mengunggah gambar',
+          description: uploadError.message,
+          variant: 'destructive',
         });
-
-        // Close dialog and reset form
-        setIsOpen(false);
-        resetForm();
+        setIsUploading(false);
         return;
       }
       
       // Get the public URL for the uploaded image
       const imageUrl = `https://nmjakogetnzrfluicvdh.supabase.co/storage/v1/object/public/karya-images/${filePath}`;
 
-      // Step 2: Insert record into Supabase with status set to 'pending'
+      // Insert record into Supabase with status set to 'pending'
       const { data, error } = await supabase.from('karya').insert({
         title: values.title,
         creator_name: values.creator_name,
@@ -181,7 +162,16 @@ export function KaryaUploadForm() {
         status: 'pending', // Set the status to pending for admin review
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error uploading karya:', error);
+        toast({
+          title: 'Gagal menyimpan karya',
+          description: error.message,
+          variant: 'destructive',
+        });
+        setIsUploading(false);
+        return;
+      }
 
       toast({
         title: 'Karya berhasil diunggah!',
@@ -227,7 +217,10 @@ export function KaryaUploadForm() {
               <FormLabel className="block text-foreground-dark">Gambar Karya</FormLabel>
               <div className="flex flex-col items-center justify-center gap-4">
                 {imagePreview ? (
-                  <div className="relative w-full aspect-square max-w-[300px] mx-auto overflow-hidden rounded-xl border border-amethyst/30 shadow-glow-sm" style={{["--tile-glow-color" as string]: "rgba(155, 109, 255, 0.15)"}}>
+                  <div 
+                    className="relative w-full aspect-square max-w-[300px] mx-auto overflow-hidden rounded-xl border border-amethyst/30 shadow-glow-sm" 
+                    style={{ "--tile-glow-color": "rgba(155, 109, 255, 0.15)" } as React.CSSProperties}
+                  >
                     <img 
                       src={imagePreview} 
                       alt="Preview" 
@@ -244,7 +237,7 @@ export function KaryaUploadForm() {
                       onClick={() => {
                         setImageFile(null);
                         setImagePreview(null);
-                        form.setValue('image_url', '');
+                        form.setValue('image_file', undefined);
                       }}
                     >
                       Hapus
@@ -268,16 +261,8 @@ export function KaryaUploadForm() {
                   </label>
                 )}
               </div>
-              <input 
-                type="hidden" 
-                {...form.register('image_url')}
-                value={imagePreview || ''}
-              />
-              {form.formState.errors.image_url && (
-                <p className="text-sm font-medium text-destructive">{form.formState.errors.image_url.message}</p>
-              )}
-              {!imagePreview && !form.formState.errors.image_url && (
-                <p className="text-xs text-center text-amethyst">Gambar wajib diupload</p>
+              {!imageFile && (
+                <p className="text-xs text-center text-destructive font-medium">Gambar wajib diupload</p>
               )}
             </div>
 
@@ -331,16 +316,17 @@ export function KaryaUploadForm() {
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger className="bg-secondary-dark/70 border-grayMid/30 text-foreground-dark focus:ring-amethyst/30 focus:border-amethyst/50">
+                      <SelectTrigger 
+                        className="bg-secondary-dark/70 border-grayMid/30 text-foreground-dark focus:ring-amethyst/30 focus:border-amethyst/50 h-12 rounded-xl"
+                      >
                         <SelectValue placeholder="Pilih kategori karya" />
-                        <ChevronDown className="text-grayMid/70" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-secondary-dark border-grayMid/30 text-foreground-dark">
-                      <SelectItem value="design" className="focus:bg-amethyst/20 focus:text-foreground-dark">Design</SelectItem>
-                      <SelectItem value="video" className="focus:bg-amethyst/20 focus:text-foreground-dark">Video</SelectItem>
-                      <SelectItem value="writing" className="focus:bg-amethyst/20 focus:text-foreground-dark">Karya Tulis</SelectItem>
-                      <SelectItem value="meme" className="focus:bg-amethyst/20 focus:text-foreground-dark">Meme</SelectItem>
+                    <SelectContent className="bg-secondary-dark border-grayMid/30 text-foreground-dark rounded-xl backdrop-blur-lg">
+                      <SelectItem value="design" className="focus:bg-amethyst/20 focus:text-foreground-dark hover:bg-amethyst/10 py-2">Design</SelectItem>
+                      <SelectItem value="video" className="focus:bg-amethyst/20 focus:text-foreground-dark hover:bg-amethyst/10 py-2">Video</SelectItem>
+                      <SelectItem value="writing" className="focus:bg-amethyst/20 focus:text-foreground-dark hover:bg-amethyst/10 py-2">Karya Tulis</SelectItem>
+                      <SelectItem value="meme" className="focus:bg-amethyst/20 focus:text-foreground-dark hover:bg-amethyst/10 py-2">Meme</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -359,7 +345,7 @@ export function KaryaUploadForm() {
                     <Textarea 
                       placeholder="Jelaskan tentang karya Anda" 
                       {...field} 
-                      className="resize-none bg-secondary-dark/70 border-grayMid/30 focus:border-amethyst/50 text-foreground-dark placeholder:text-grayMid/70"
+                      className="resize-none bg-secondary-dark/70 border-grayMid/30 focus:border-amethyst/50 text-foreground-dark placeholder:text-grayMid/70 rounded-xl min-h-[100px]"
                       rows={3}
                     />
                   </FormControl>
@@ -380,7 +366,7 @@ export function KaryaUploadForm() {
                       placeholder="https://..." 
                       {...field} 
                       value={field.value || ''}
-                      className="bg-secondary-dark/70 border-grayMid/30 focus:border-amethyst/50 text-foreground-dark placeholder:text-grayMid/70"
+                      className="bg-secondary-dark/70 border-grayMid/30 focus:border-amethyst/50 text-foreground-dark placeholder:text-grayMid/70 rounded-xl"
                     />
                   </FormControl>
                   <FormMessage />
@@ -394,7 +380,7 @@ export function KaryaUploadForm() {
                 <Button 
                   type="button" 
                   variant="outline"
-                  className="border-grayMid/30 hover:bg-grayDark/30 text-foreground-dark"
+                  className="border-grayMid/30 hover:bg-grayDark/30 text-foreground-dark rounded-xl"
                 >
                   Batal
                 </Button>
@@ -402,7 +388,7 @@ export function KaryaUploadForm() {
               <Button 
                 type="submit" 
                 disabled={isUploading}
-                className="bg-gradient-to-b from-grayMid to-grayDark hover:from-grayMid/90 hover:to-grayDark/90 text-white border border-grayLight/10 shadow-md hover:shadow-lg transition-all"
+                className="bg-gradient-to-b from-grayMid to-grayDark hover:from-grayMid/90 hover:to-grayDark/90 text-white border border-grayLight/10 shadow-md hover:shadow-lg transition-all rounded-xl"
               >
                 {isUploading ? (
                   <>
