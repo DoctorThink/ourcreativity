@@ -85,11 +85,11 @@ export function KaryaUploadForm() {
       return;
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
+    // Validate file size (max 1MB)
+    if (file.size > 1 * 1024 * 1024) {
       toast({
         title: 'Ukuran terlalu besar',
-        description: 'Ukuran maksimal gambar adalah 5MB',
+        description: 'Ukuran maksimal gambar adalah 1MB',
         variant: 'destructive',
       });
       return;
@@ -218,8 +218,8 @@ export function KaryaUploadForm() {
               <div className="flex flex-col items-center justify-center gap-4">
                 {imagePreview ? (
                   <div 
-                    className="relative w-full aspect-square max-w-[300px] mx-auto overflow-hidden rounded-xl border border-amethyst/30 shadow-glow-sm" 
-                    style={{ "--tile-glow-color": "rgba(155, 109, 255, 0.15)" } as React.CSSProperties}
+                    // Removed amethyst border/glow, using standard monochrome border
+                    className="relative w-full aspect-square max-w-[300px] mx-auto overflow-hidden rounded-xl border border-grayMid/30"
                   >
                     <img 
                       src={imagePreview} 
@@ -227,7 +227,7 @@ export function KaryaUploadForm() {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-2 right-2 bg-grayDark/80 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 backdrop-blur-sm">
-                      <Check className="h-3 w-3 text-emerald" /> Terpilih
+                      <Check className="h-3 w-3 text-white" /> Terpilih {/* Changed check color to white */}
                     </div>
                     <Button
                       type="button"
@@ -244,13 +244,14 @@ export function KaryaUploadForm() {
                     </Button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center w-full aspect-square max-w-[300px] rounded-xl border-2 border-dashed border-grayMid/40 hover:border-primary/50 bg-secondary-dark/50 cursor-pointer transition-all duration-300 hover:bg-secondary-dark/80 hover:shadow-glow-sm group">
+                  {/* Removed amethyst hover effects, using standard monochrome */}
+                  <label className="flex flex-col items-center justify-center w-full aspect-square max-w-[300px] rounded-xl border-2 border-dashed border-grayMid/40 hover:border-grayMid/70 bg-secondary-dark/50 cursor-pointer transition-all duration-300 hover:bg-secondary-dark/80 group">
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <div className="bg-grayDark/50 p-3 rounded-full mb-3 group-hover:bg-amethyst/20 transition-colors">
-                        <Upload className="w-8 h-8 text-grayLight group-hover:text-amethyst transition-colors" />
+                      <div className="bg-grayDark/50 p-3 rounded-full mb-3 group-hover:bg-grayDark/70 transition-colors">
+                        <Upload className="w-8 h-8 text-grayLight group-hover:text-white transition-colors" />
                       </div>
                       <p className="mb-2 text-base text-foreground-dark font-medium">Klik untuk unggah gambar</p>
-                      <p className="text-xs text-muted-foreground">PNG, JPG, WEBP, GIF (Max 5MB)</p>
+                      <p className="text-xs text-muted-foreground">PNG, JPG, WEBP, GIF (Max 1MB)</p> {/* Updated size limit text */}
                     </div>
                     <input
                       type="file"
@@ -277,7 +278,7 @@ export function KaryaUploadForm() {
                     <Input 
                       placeholder="Masukkan judul karya" 
                       {...field} 
-                      className="bg-secondary-dark/70 border-grayMid/30 focus:border-amethyst/50 text-foreground-dark placeholder:text-grayMid/70"
+                      className="bg-secondary-dark/70 border-grayMid/30 focus:border-grayLight/80 text-foreground-dark placeholder:text-grayMid/70" // Changed focus border
                     />
                   </FormControl>
                   <FormMessage />
@@ -296,7 +297,7 @@ export function KaryaUploadForm() {
                     <Input 
                       placeholder="Nama Anda" 
                       {...field} 
-                      className="bg-secondary-dark/70 border-grayMid/30 focus:border-amethyst/50 text-foreground-dark placeholder:text-grayMid/70"
+                      className="bg-secondary-dark/70 border-grayMid/30 focus:border-grayLight/80 text-foreground-dark placeholder:text-grayMid/70" // Changed focus border
                     />
                   </FormControl>
                   <FormMessage />
@@ -317,16 +318,17 @@ export function KaryaUploadForm() {
                   >
                     <FormControl>
                       <SelectTrigger 
-                        className="bg-secondary-dark/70 border-grayMid/30 text-foreground-dark focus:ring-amethyst/30 focus:border-amethyst/50 h-12 rounded-xl"
+                        // Changed focus ring/border and removed amethyst from items
+                        className="bg-secondary-dark/70 border-grayMid/30 text-foreground-dark focus:ring-grayLight/50 focus:border-grayLight/80 h-12 rounded-xl"
                       >
                         <SelectValue placeholder="Pilih kategori karya" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-secondary-dark border-grayMid/30 text-foreground-dark rounded-xl backdrop-blur-lg">
-                      <SelectItem value="design" className="focus:bg-amethyst/20 focus:text-foreground-dark hover:bg-amethyst/10 py-2">Design</SelectItem>
-                      <SelectItem value="video" className="focus:bg-amethyst/20 focus:text-foreground-dark hover:bg-amethyst/10 py-2">Video</SelectItem>
-                      <SelectItem value="writing" className="focus:bg-amethyst/20 focus:text-foreground-dark hover:bg-amethyst/10 py-2">Karya Tulis</SelectItem>
-                      <SelectItem value="meme" className="focus:bg-amethyst/20 focus:text-foreground-dark hover:bg-amethyst/10 py-2">Meme</SelectItem>
+                      <SelectItem value="design" className="focus:bg-grayMid/20 focus:text-foreground-dark hover:bg-grayMid/10 py-2">Design</SelectItem>
+                      <SelectItem value="video" className="focus:bg-grayMid/20 focus:text-foreground-dark hover:bg-grayMid/10 py-2">Video</SelectItem>
+                      <SelectItem value="writing" className="focus:bg-grayMid/20 focus:text-foreground-dark hover:bg-grayMid/10 py-2">Karya Tulis</SelectItem>
+                      <SelectItem value="meme" className="focus:bg-grayMid/20 focus:text-foreground-dark hover:bg-grayMid/10 py-2">Meme</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -345,7 +347,7 @@ export function KaryaUploadForm() {
                     <Textarea 
                       placeholder="Jelaskan tentang karya Anda" 
                       {...field} 
-                      className="resize-none bg-secondary-dark/70 border-grayMid/30 focus:border-amethyst/50 text-foreground-dark placeholder:text-grayMid/70 rounded-xl min-h-[100px]"
+                      className="resize-none bg-secondary-dark/70 border-grayMid/30 focus:border-grayLight/80 text-foreground-dark placeholder:text-grayMid/70 rounded-xl min-h-[100px]" // Changed focus border
                       rows={3}
                     />
                   </FormControl>
@@ -366,7 +368,7 @@ export function KaryaUploadForm() {
                       placeholder="https://..." 
                       {...field} 
                       value={field.value || ''}
-                      className="bg-secondary-dark/70 border-grayMid/30 focus:border-amethyst/50 text-foreground-dark placeholder:text-grayMid/70 rounded-xl"
+                      className="bg-secondary-dark/70 border-grayMid/30 focus:border-grayLight/80 text-foreground-dark placeholder:text-grayMid/70 rounded-xl" // Changed focus border
                     />
                   </FormControl>
                   <FormMessage />

@@ -21,80 +21,55 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     'meme': '/lovable-uploads/meme.png',
   };
 
-  // Card animation variants
-  const cardVariants = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.3 } },
-    hover: {
-      scale: 1.02,
-      // Removed complex boxShadow for a simpler look
-      transition: { duration: 0.2 }
-    }
-  };
-
+  // Removed motion variants, hover effect handled by CSS group-hover now
   return (
-    <motion.div
-      initial="initial"
-      animate="animate"
-      whileHover="hover"
-      variants={cardVariants}
-      className="h-full"
-    >
+    // Removed motion.div wrapper
       <Card 
         onClick={onClick}
-        className="overflow-hidden h-full flex flex-col bg-secondary-dark border border-grayMid/30 rounded-3xl transition-all duration-300 cursor-pointer hover:border-grayMid/60" // Updated bg, border, and added subtle border hover
+        // Added group class for hover effects on children
+        className="group overflow-hidden relative h-full flex flex-col bg-secondary-dark border border-grayMid/30 rounded-3xl transition-all duration-300 cursor-pointer hover:border-grayMid/60"
       >
-        <div className="aspect-square w-full overflow-hidden">
-          <img 
-            src={karya.image_url} 
+        {/* Image container */}
+        <div className="w-full overflow-hidden">
+          <img
+            src={karya.image_url}
             alt={karya.title}
-            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+            // Removed hover:scale-105 from image itself
+            className="w-full h-auto object-cover transition-transform duration-500 block" // Use h-auto, let image define aspect ratio
             loading="lazy"
           />
         </div>
+        {/* Overlay revealed on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
         
-        <CardHeader className="pb-2">
-          <div className="flex justify-between items-start">
+        {/* Content container - initially hidden, revealed on hover */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 pointer-events-none">
+          <div className="flex justify-between items-end">
+            {/* Title and Creator */}
             <div>
-              <h3 className="text-xl font-semibold line-clamp-1">{karya.title}</h3>
-              <p className="text-muted-foreground text-sm">{karya.creator_name}</p>
+              <h3 className="text-lg font-semibold line-clamp-1">{karya.title}</h3>
+              <p className="text-foreground/80 text-xs">{karya.creator_name}</p>
             </div>
-            {/* Updated category icon background */}
-            <div className="bg-grayDark/50 backdrop-blur-sm p-1.5 rounded-full border border-grayLight/10">
-              <img
-                src={categoryIcons[karya.category] || '/lovable-uploads/design.png'}
-                alt={karya.category}
-                className="w-6 h-6 object-contain"
-              />
+            {/* Likes - Monochrome */}
+            <div className="flex items-center gap-1 text-foreground/70">
+               <Heart className="h-4 w-4" />
+               <span className="text-xs">{karya.likes_count || 0}</span>
             </div>
           </div>
-        </CardHeader>
+        </div>
+
+        {/* Category Icon - Larger and positioned top-right */}
+        <div className="absolute top-3 right-3 bg-grayDark/60 backdrop-blur-sm p-2 rounded-full border border-grayLight/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <img
+            src={categoryIcons[karya.category] || '/lovable-uploads/design.png'}
+            alt={karya.category}
+            className="w-8 h-8 object-contain" /* Increased size */
+          />
+        </div>
         
-        <CardContent className="pb-3 flex-grow">
-          {karya.description && (
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {karya.description}
-            </p>
-          )}
-        </CardContent>
-        
-        <CardFooter className="pt-0">
-          <div className="flex justify-between items-center w-full">
-            <span className="text-xs text-muted-foreground">
-              {new Date(karya.created_at).toLocaleDateString('id-ID', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-              })}
-            </span>
-            <Button variant="ghost" size="sm" className="gap-1 text-rose-400 hover:text-rose-500 hover:bg-rose-500/10">
-              <Heart className="h-4 w-4" />
-              <span>{karya.likes_count || 0}</span>
-            </Button>
-          </div>
-        </CardFooter>
+        {/* Removed CardHeader, CardContent, CardFooter as content is now overlaid */}
       </Card>
-    </motion.div>
+    // Removed closing motion.div - Line removed
   );
 };
 

@@ -77,11 +77,11 @@ const KaryaGallery = () => {
         <div className="flex justify-center mb-8">
           {/* Updated TabsList styling */}
           <TabsList className="bg-gradient-to-b from-grayMid/10 to-grayDark/20 border border-grayLight/10 backdrop-blur-md rounded-full p-1.5 shadow-inner shadow-black/20">
-            <TabsTrigger value="all" className="rounded-full px-5 py-1.5 text-sm data-[state=active]:bg-amethyst/20 data-[state=active]:text-white hover:bg-grayMid/10 transition-colors">Semua</TabsTrigger>
-            <TabsTrigger value="design" className="rounded-full px-5 py-1.5 text-sm data-[state=active]:bg-amethyst/20 data-[state=active]:text-white hover:bg-grayMid/10 transition-colors">Design</TabsTrigger>
-            <TabsTrigger value="video" className="rounded-full px-5 py-1.5 text-sm data-[state=active]:bg-amethyst/20 data-[state=active]:text-white hover:bg-grayMid/10 transition-colors">Video</TabsTrigger>
-            <TabsTrigger value="writing" className="rounded-full px-5 py-1.5 text-sm data-[state=active]:bg-amethyst/20 data-[state=active]:text-white hover:bg-grayMid/10 transition-colors">Karya Tulis</TabsTrigger>
-            <TabsTrigger value="meme" className="rounded-full px-5 py-1.5 text-sm data-[state=active]:bg-amethyst/20 data-[state=active]:text-white hover:bg-grayMid/10 transition-colors">Meme</TabsTrigger>
+            <TabsTrigger value="all" className="rounded-full px-5 py-1.5 text-sm data-[state=active]:bg-white/10 data-[state=active]:text-white hover:bg-grayMid/10 transition-colors">Semua</TabsTrigger>
+            <TabsTrigger value="design" className="rounded-full px-5 py-1.5 text-sm data-[state=active]:bg-white/10 data-[state=active]:text-white hover:bg-grayMid/10 transition-colors">Design</TabsTrigger>
+            <TabsTrigger value="video" className="rounded-full px-5 py-1.5 text-sm data-[state=active]:bg-white/10 data-[state=active]:text-white hover:bg-grayMid/10 transition-colors">Video</TabsTrigger>
+            <TabsTrigger value="writing" className="rounded-full px-5 py-1.5 text-sm data-[state=active]:bg-white/10 data-[state=active]:text-white hover:bg-grayMid/10 transition-colors">Karya Tulis</TabsTrigger>
+            <TabsTrigger value="meme" className="rounded-full px-5 py-1.5 text-sm data-[state=active]:bg-white/10 data-[state=active]:text-white hover:bg-grayMid/10 transition-colors">Meme</TabsTrigger>
           </TabsList>
         </div>
 
