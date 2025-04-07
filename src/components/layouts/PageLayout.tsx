@@ -70,14 +70,14 @@ const PageLayout = ({
     >
       {/* Layered Background Effects */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        {/* New Fluid Animation Layer */}
-        <div className="opacity-40">
+        {/* Fluid Animation Layer - Adjusted opacity */}
+        <div className="opacity-60">
           <AnimatedBackground />
         </div>
 
-        {/* Existing Background Effects */}
+        {/* Existing Background Effects with adjusted opacity */}
         <motion.div
-          className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-foreground/3 -top-[20%] -right-[20%]"
+          className="absolute w-[70vw] h-[70vh] rounded-full blur-[120px] bg-foreground/2 -top-[20%] -right-[20%]"
           style={{
             y: -scrollPosition * 0.03,
             willChange: "transform"
