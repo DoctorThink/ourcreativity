@@ -30,12 +30,12 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
         className="group overflow-hidden relative h-full flex flex-col bg-secondary-dark border border-grayMid/30 rounded-3xl transition-all duration-300 cursor-pointer hover:border-grayMid/60"
       >
         {/* Image container */}
-        <div className="w-full overflow-hidden">
+        {/* Image container with fixed aspect ratio */}
+        <div className="w-full overflow-hidden aspect-square">
           <img
             src={karya.image_url}
             alt={karya.title}
-            // Removed hover:scale-105 from image itself
-            className="w-full h-auto object-cover transition-transform duration-500 block" // Use h-auto, let image define aspect ratio
+            className="w-full h-full object-cover transition-transform duration-500 block" // Fill container, cover maintains aspect ratio
             loading="lazy"
           />
         </div>
@@ -43,7 +43,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
         
         {/* Content container - initially hidden, revealed on hover */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 pointer-events-none">
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 pointer-events-none"> {/* Added invisible / group-hover:visible */}
           <div className="flex justify-between items-end">
             {/* Title and Creator */}
             <div>
@@ -59,11 +59,12 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
         </div>
 
         {/* Category Icon - Larger and positioned top-right */}
-        <div className="absolute top-3 right-3 bg-grayDark/60 backdrop-blur-sm p-2 rounded-full border border-grayLight/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        {/* Increased padding and icon size */}
+        <div className="absolute top-3 right-3 bg-grayDark/60 backdrop-blur-sm p-2.5 rounded-full border border-grayLight/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-300"> {/* Added invisible / group-hover:visible */}
           <img
             src={categoryIcons[karya.category] || '/lovable-uploads/design.png'}
             alt={karya.category}
-            className="w-8 h-8 object-contain" /* Increased size */
+            className="w-10 h-10 object-contain" /* Further increased size */
           />
         </div>
         
