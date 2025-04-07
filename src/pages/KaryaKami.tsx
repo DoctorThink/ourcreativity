@@ -3,6 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import PageLayout from '@/components/layouts/PageLayout';
 import KaryaGallery from '@/components/KaryaGallery';
+import { KaryaUploadForm } from '@/components/KaryaUploadForm';
 
 const KaryaKami = () => {
   // Animation variants
@@ -33,6 +34,14 @@ const KaryaKami = () => {
         variants={containerVariants}
         className="min-h-screen"
       >
+        {/* Upload Button */}
+        <motion.div 
+          variants={childVariants}
+          className="container flex justify-center py-6"
+        >
+          <KaryaUploadForm />
+        </motion.div>
+
         {/* Gallery Section */}
         <motion.section 
           variants={childVariants}

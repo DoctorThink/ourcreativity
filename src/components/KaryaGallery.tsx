@@ -15,7 +15,7 @@ const KaryaGallery = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
-  const { data: karya, isLoading, error } = useQuery({
+  const { data: karya, isLoading, error, refetch } = useQuery({
     queryKey: ['karya'],
     queryFn: async () => {
       const { data, error } = await supabase
