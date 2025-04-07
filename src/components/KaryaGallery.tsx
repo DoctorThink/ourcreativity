@@ -72,7 +72,7 @@ const KaryaGallery = () => {
   );
 
   return (
-    <div className="container py-12">
+    <div className="py-12 px-6"> {/* Removed 'container', added px-6 */}
       <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory} className="w-full">
         <div className="flex justify-center mb-8">
           {/* Updated TabsList styling */}
