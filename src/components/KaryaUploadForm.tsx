@@ -69,6 +69,7 @@ export function KaryaUploadForm() {
   });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('handleImageChange called', e.target.files);
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -110,6 +111,7 @@ export function KaryaUploadForm() {
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log('onSubmit called', values);
     if (!imageFile) {
       toast({
         title: 'Gambar diperlukan',
