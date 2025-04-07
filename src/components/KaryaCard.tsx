@@ -25,9 +25,9 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   const cardVariants = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0, transition: { duration: 0.3 } },
-    hover: { 
-      scale: 1.02, 
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
+    hover: {
+      scale: 1.02,
+      // Removed complex boxShadow for a simpler look
       transition: { duration: 0.2 }
     }
   };
@@ -42,7 +42,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     >
       <Card 
         onClick={onClick}
-        className="overflow-hidden h-full flex flex-col bg-secondary border-border/40 rounded-3xl transition-all duration-300 cursor-pointer"
+        className="overflow-hidden h-full flex flex-col bg-secondary-dark border border-grayMid/30 rounded-3xl transition-all duration-300 cursor-pointer hover:border-grayMid/60" // Updated bg, border, and added subtle border hover
       >
         <div className="aspect-square w-full overflow-hidden">
           <img 
@@ -59,9 +59,10 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
               <h3 className="text-xl font-semibold line-clamp-1">{karya.title}</h3>
               <p className="text-muted-foreground text-sm">{karya.creator_name}</p>
             </div>
-            <div className="bg-black/10 backdrop-blur-md p-1.5 rounded-full">
-              <img 
-                src={categoryIcons[karya.category] || '/lovable-uploads/design.png'} 
+            {/* Updated category icon background */}
+            <div className="bg-grayDark/50 backdrop-blur-sm p-1.5 rounded-full border border-grayLight/10">
+              <img
+                src={categoryIcons[karya.category] || '/lovable-uploads/design.png'}
                 alt={karya.category}
                 className="w-6 h-6 object-contain"
               />
