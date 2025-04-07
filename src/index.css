@@ -8,36 +8,24 @@
 
 @layer base {
   :root {
-    /* Core Theme Colors */
-    --background: #1C1C1E;
+    /* Core Theme Colors - Monochrome */
+    --background: #0A0A0A;
     --foreground: #FFFFFF;
-    --secondary: #2C2C2E; /* Slightly lighter dark grey */
+    --secondary: #1A1A1A;
     --secondary-foreground: #FFFFFF;
-    --border: #3a3a3c; /* Default subtle border */
-    --input: #2C2C2E;
-    --ring: #9B6DFF; /* Amethyst for focus rings */
+    --border: #2A2A2A;
+    --input: #1A1A1A;
+    --ring: #404040;
 
     /* RGB versions */
     --foreground-rgb: 255, 255, 255;
-    --background-rgb: 28, 28, 30;
-    --secondary-rgb: 44, 44, 46;
+    --background-rgb: 10, 10, 10;
+    --secondary-rgb: 26, 26, 26;
 
-    /* Accent Color RGB values (Mainly for Glow) */
-    --color-amethyst-rgb: 155, 109, 255; /* #9B6DFF */
-    --color-turquoise-rgb: 64, 224, 208; /* #40E0D0 */
-    --color-coral-rgb: 255, 127, 80;    /* #FF7F50 */
-    --color-softPink-rgb: 255, 182, 193; /* #FFB6C1 */
-    --color-mint-rgb: 152, 245, 225;    /* #98F5E1 */
-    --color-amber-rgb: 255, 191, 0;     /* #FFBF00 */
-
-    /* Glow Variables (rgba format for box-shadow) */
-    --color-amethyst-glow: rgba(var(--color-amethyst-rgb), 0.35);
-    --color-turquoise-glow: rgba(var(--color-turquoise-rgb), 0.4);
-    --color-coral-glow: rgba(var(--color-coral-rgb), 0.35);
-    --color-softPink-glow: rgba(var(--color-softPink-rgb), 0.4);
-    --color-mint-glow: rgba(var(--color-mint-rgb), 0.4);
-    --color-amber-glow: rgba(var(--color-amber-rgb), 0.3); /* Amber needs less alpha */
-    --default-glow: rgba(var(--foreground-rgb), 0.1); /* Subtle white glow */
+    /* Monochrome Glow Variables */
+    --glow-white: rgba(255, 255, 255, 0.15);
+    --glow-bright: rgba(255, 255, 255, 0.3);
+    --default-glow: rgba(255, 255, 255, 0.1);
   }
 
   *, *::before, *::after {
@@ -275,6 +263,47 @@
   /* Improve text rendering */
   .text-sharp {
     text-rendering: optimizeLegibility;
+  }
+
+  /* Glossy Button Effects */
+  .btn-glossy {
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.05) 50%,
+      rgba(0, 0, 0, 0.05) 50%,
+      rgba(0, 0, 0, 0.1)
+    );
+    box-shadow: 
+      inset 0 1px rgba(255, 255, 255, 0.15),
+      inset 0 -1px rgba(0, 0, 0, 0.15),
+      0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-glossy:hover {
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(0, 0, 0, 0.08) 50%,
+      rgba(0, 0, 0, 0.15)
+    );
+    box-shadow: 
+      inset 0 1px rgba(255, 255, 255, 0.2),
+      inset 0 -1px rgba(0, 0, 0, 0.2),
+      0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  .btn-glow {
+    transition: all 0.3s ease;
+  }
+
+  .btn-glow:hover {
+    box-shadow: 0 0 15px var(--glow-white);
+  }
+
+  .btn-glow-bright:hover {
+    box-shadow: 0 0 20px var(--glow-bright);
   }
 
 } /* End of @layer utilities */

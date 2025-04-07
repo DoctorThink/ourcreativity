@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Dialog, 
@@ -37,7 +36,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 overflow-hidden rounded-3xl bg-secondary border-border/40"> {/* Removed max-w constraint for responsiveness */}
+      <DialogContent className="p-0 overflow-hidden rounded-3xl bg-secondary border-border/40 max-h-[90vh]">
         <div className="relative w-full aspect-[16/9] bg-black">
           <img 
             src={karya.image_url}
@@ -46,7 +45,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
           />
         </div>
         
-        <div className="p-6">
+        <div className="p-6 overflow-y-auto">
           <DialogHeader className="pb-4">
             <div className="flex justify-between items-center">
               <div>
@@ -92,20 +91,31 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
             </p>
           </div>
           
-          <DialogFooter className="flex sm:flex-row justify-between gap-4">
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="gap-2">
+          <DialogFooter className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-4">
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2 flex-1 sm:flex-initial hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-shadow bg-gradient-to-b from-gray-600 to-gray-800"
+              >
                 <Heart className="h-4 w-4" />
                 <span>{karya.likes_count || 0} Suka</span>
               </Button>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2 flex-1 sm:flex-initial hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-shadow bg-gradient-to-b from-gray-600 to-gray-800"
+              >
                 <Share2 className="h-4 w-4" />
                 <span>Bagikan</span>
               </Button>
             </div>
             
             {karya.content_url && (
-              <Button className="gap-2" size="sm">
+              <Button 
+                className="gap-2 w-full sm:w-auto shadow-[0_0_10px_rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-shadow bg-gradient-to-b from-gray-100 to-gray-300 text-black" 
+                size="sm"
+              >
                 <ExternalLink className="h-4 w-4" />
                 <span>Lihat Karya Lengkap</span>
               </Button>
