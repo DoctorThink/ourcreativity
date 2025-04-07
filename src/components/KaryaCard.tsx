@@ -60,11 +60,12 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
 
         {/* Category Icon - Larger and positioned top-right */}
         {/* Increased padding and icon size */}
-        <div className="absolute top-3 right-3 bg-grayDark/60 backdrop-blur-sm p-2.5 rounded-full border border-grayLight/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-300"> {/* Added invisible / group-hover:visible */}
+        {/* Reverted padding, changed background to matte white, removed blur/border */}
+        <div className="absolute top-3 right-3 bg-white p-2 rounded-full opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-300">
           <img
             src={categoryIcons[karya.category] || '/lovable-uploads/design.png'}
             alt={karya.category}
-            className="w-10 h-10 object-contain" /* Further increased size */
+            className="w-10 h-10 object-contain" /* Kept increased image size */
           />
         </div>
         
