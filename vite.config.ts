@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: undefined, // Disable manual chunk splitting for now
-        // Ensure consistent casing in file names
+        // Ensure consistent casing in file names (all lowercase)
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]'
@@ -34,7 +34,7 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-    // This will preserve the exact case of the import paths
-    preserveSymlinks: true
+    // Allow case-sensitive imports
+    preserveSymlinks: false
   },
 }));

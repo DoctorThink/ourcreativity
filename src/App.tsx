@@ -10,8 +10,8 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { PageTransition } from "@/components/PageTransition";
 
-// Fix the import path to match the exact case of the file name
-const Index = lazy(() => import("./pages/Index"));
+// Fix capitalization to match exactly the file name
+const index = lazy(() => import("./pages/Index"));
 const BrandStory = lazy(() => import("./pages/BrandStory"));
 const Informasi = lazy(() => import("./pages/Informasi"));
 const Pengumuman = lazy(() => import("./pages/Pengumuman"));
@@ -47,7 +47,7 @@ const AnimatedRoutes = () => {
   return (
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/" element={<PageTransition><index /></PageTransition>} />
         <Route path="/brand-story" element={<PageTransition><BrandStory /></PageTransition>} />
         <Route path="/informasi" element={<PageTransition><Informasi /></PageTransition>} />
         <Route path="/pengumuman" element={<PageTransition><Pengumuman /></PageTransition>} />
