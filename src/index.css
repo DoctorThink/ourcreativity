@@ -1,4 +1,3 @@
-
 /* src/index.css */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
@@ -384,6 +383,26 @@
 
   .btn-glow-bright:hover {
     box-shadow: 0 0 20px var(--glow-bright);
+  }
+
+  /* Smooth snap scrolling */
+  .scroll-snap-type-x {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .scroll-snap-align-start {
+    scroll-snap-align: start;
+  }
+
+  /* Enable touch panning */
+  .touch-pan-x {
+    touch-action: pan-x;
+  }
+
+  /* Prevent text selection during drag */
+  .cursor-grabbing {
+    user-select: none;
   }
 }
 
