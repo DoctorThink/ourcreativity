@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChevronDown, Heart } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -59,7 +59,7 @@ const KaryaGallery = () => {
     640: 1
   };
 
-  const { data: karya, isLoading, error, refetch } = useQuery({
+  const { data: karya, isLoading, error } = useQuery({
     queryKey: ['karya'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -73,30 +73,16 @@ const KaryaGallery = () => {
     },
   });
 
-  // Handle like count updates
-  const handleLikeUpdate = (id: string, newCount: number) => {
-    // Update spotlight items if needed
-    setSpotlightItems(prev => 
-      prev.map(item => item.id === id ? { ...item, likes_count: newCount } : item)
-    );
-  };
-
-  // Set spotlight items based on category
+  // Set spotlight items based on is_spotlight flag and category
   useEffect(() => {
     if (!karya) return;
     
-    // Get top 3 most liked items for the current category
-    let filteredItems = [...karya];
+    let filteredItems = [...karya].filter(item => item.is_spotlight);
     if (activeCategory !== 'all') {
       filteredItems = filteredItems.filter(item => item.category === activeCategory);
     }
     
-    // Sort by likes and take top 3
-    const topItems = filteredItems
-      .sort((a, b) => (b.likes_count || 0) - (a.likes_count || 0))
-      .slice(0, 3);
-    
-    setSpotlightItems(topItems);
+    setSpotlightItems(filteredItems);
   }, [karya, activeCategory]);
 
   const handleKaryaClick = (item: KaryaType) => {
@@ -111,15 +97,11 @@ const KaryaGallery = () => {
   const SkeletonCards = () => (
     <>
       {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="rounded-3xl overflow-hidden h-fit flex flex-col bg-secondary border border-border/40 shadow-lg mb-6">
+        <div key={i} className="rounded-3xl overflow-hidden h-fit flex flex-col bg-secondary/80 backdrop-blur-md border border-border/40 shadow-lg mb-6">
           <Skeleton className="aspect-[4/3] w-full" />
           <div className="p-4 pb-2">
             <Skeleton className="h-5 w-3/4 mb-2" />
             <Skeleton className="h-4 w-1/2" />
-          </div>
-          <div className="px-4 py-2">
-            <Skeleton className="h-4 w-full mb-2" />
-            <Skeleton className="h-4 w-2/3" />
           </div>
         </div>
       ))}
@@ -138,11 +120,10 @@ const KaryaGallery = () => {
         >
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold font-serif tracking-tight text-foreground">
-              {activeCategory === 'all' ? 'Spotlight Karya' : `Spotlight ${categories.find(c => c.value === activeCategory)?.label}`}
+              {activeCategory === 'all' ? 'Karya Spotlight' : `Spotlight ${categories.find(c => c.value === activeCategory)?.label}`}
             </h2>
             <div className="flex items-center gap-2 text-sm text-foreground/60">
-              <Heart className="w-4 h-4 text-foreground/60" />
-              <span>Paling disukai</span>
+              <span>Featured works</span>
             </div>
           </div>
           
@@ -153,11 +134,20 @@ const KaryaGallery = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
+                className="spotlight-item"
+                style={{
+                  '--tile-glow-color': item.category === 'design' 
+                    ? 'rgba(152, 245, 225, 0.2)' 
+                    : item.category === 'video' 
+                    ? 'rgba(155, 109, 255, 0.2)' 
+                    : item.category === 'meme' 
+                    ? 'rgba(254, 198, 161, 0.2)' 
+                    : 'rgba(255, 209, 220, 0.2)'
+                } as React.CSSProperties}
               >
                 <KaryaCard 
                   karya={item} 
                   onClick={() => handleKaryaClick(item)}
-                  onLikeUpdate={handleLikeUpdate}
                 />
               </motion.div>
             ))}
@@ -176,7 +166,7 @@ const KaryaGallery = () => {
               <SelectTrigger className="w-full bg-secondary/80 border border-border/40 backdrop-blur-md rounded-2xl text-foreground hover:bg-secondary/90 transition-colors shadow-md">
                 <SelectValue>
                   <div className="flex items-center gap-2">
-                    <div className="bg-white/80 p-1 rounded-full">
+                    <div className="bg-white/90 p-1 rounded-full">
                       <img 
                         src={categories.find(cat => cat.value === activeCategory)?.icon || categories[0].icon} 
                         alt="" 
@@ -188,7 +178,7 @@ const KaryaGallery = () => {
                 </SelectValue>
               </SelectTrigger>
               <SelectContent 
-                className="bg-secondary border-border/40 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden"
+                className="bg-secondary/90 border-border/40 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden"
                 position="popper"
                 sideOffset={5}
               >
@@ -206,7 +196,7 @@ const KaryaGallery = () => {
                       className="text-foreground hover:bg-foreground/10 focus:bg-foreground/10 rounded-xl my-1"
                     >
                       <div className="flex items-center gap-2">
-                        <div className="bg-white/80 p-1 rounded-full">
+                        <div className="bg-white/90 p-1 rounded-full">
                           <img src={category.icon} alt="" className="w-4 h-4 object-contain" />
                         </div>
                         <span>{category.label}</span>
@@ -249,7 +239,7 @@ const KaryaGallery = () => {
                       ? "text-foreground font-semibold"
                       : "text-foreground/60 hover:text-foreground/80"
                   )}>
-                    <div className="bg-white/80 p-1 rounded-full">
+                    <div className="bg-white/90 p-1 rounded-full">
                       <img src={category.icon} alt="" className="w-4 h-4 object-contain" />
                     </div>
                     {category.label}
@@ -285,7 +275,6 @@ const KaryaGallery = () => {
                   key={item.id}
                   karya={item}
                   onClick={() => handleKaryaClick(item)}
-                  onLikeUpdate={handleLikeUpdate}
                 />
               ))
             ) : (
@@ -303,11 +292,6 @@ const KaryaGallery = () => {
           karya={selectedKarya}
           isOpen={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
-          onLikeUpdate={(id, newCount) => {
-            handleLikeUpdate(id, newCount);
-            // Also update the selectedKarya
-            setSelectedKarya(prev => prev ? {...prev, likes_count: newCount} : null);
-          }}
         />
       )}
     </div>

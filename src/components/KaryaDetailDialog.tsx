@@ -9,11 +9,16 @@ import {
   DialogFooter 
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Heart, Share2, ExternalLink, X } from 'lucide-react';
+import { ChevronDown, ExternalLink, X } from 'lucide-react';
 import { Database } from '@/integrations/supabase/types';
-import { motion } from 'framer-motion';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -21,14 +26,11 @@ interface KaryaDetailDialogProps {
   karya: KaryaType;
   isOpen: boolean;
   onClose: () => void;
-  onLikeUpdate?: (id: string, newCount: number) => void;
 }
 
-const KaryaDetailDialog = ({ karya, isOpen, onClose, onLikeUpdate }: KaryaDetailDialogProps) => {
-  const [isLiking, setIsLiking] = useState(false);
-  const [likesCount, setLikesCount] = useState(karya.likes_count || 0);
-  const { toast } = useToast();
-  
+const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) => {
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+
   const categoryIcons: Record<string, string> = {
     'design': '/lovable-uploads/design.png',
     'video': '/lovable-uploads/video.png',
@@ -43,78 +45,19 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose, onLikeUpdate }: KaryaDetail
     'meme': 'Meme',
   };
 
-  const handleLike = async () => {
-    if (isLiking) return;
-    
-    setIsLiking(true);
-    const newCount = likesCount + 1;
-    
-    try {
-      const { error } = await supabase
-        .from('karya')
-        .update({ likes_count: newCount })
-        .eq('id', karya.id);
-      
-      if (error) throw error;
-      
-      setLikesCount(newCount);
-      if (onLikeUpdate) onLikeUpdate(karya.id, newCount);
-      
-      toast({
-        title: "Terima kasih!",
-        description: "Anda telah menyukai karya ini",
-      });
-    } catch (error) {
-      console.error('Error liking karya:', error);
-      toast({
-        title: "Gagal menyukai",
-        description: "Terjadi kesalahan saat menyukai karya",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLiking(false);
-    }
-  };
-
-  const handleShare = async () => {
-    // Create share data
-    const shareData = {
-      title: `${karya.title} - OUR CREATIVITY`,
-      text: `Karya oleh ${karya.creator_name} - OUR CREATIVITY`,
-      url: window.location.href,
-    };
-    
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-        toast({
-          title: "Berhasil dibagikan!",
-          description: "Karya telah dibagikan",
-        });
-      } else {
-        // Fallback for browsers that don't support share API
-        navigator.clipboard.writeText(window.location.href);
-        toast({
-          title: "Link disalin!",
-          description: "Link karya telah disalin ke clipboard",
-        });
-      }
-    } catch (error) {
-      console.error('Error sharing:', error);
-      toast({
-        variant: "destructive",
-        title: "Gagal membagikan",
-        description: "Terjadi kesalahan saat membagikan karya",
-      });
-    }
-  };
-
-  const isVideo = karya.category === 'video' && karya.content_url?.match(/\.(mp4|webm|ogg)$/i);
+  const isVideo = (url: string) => url?.match(/\.(mp4|webm|ogg)$/i);
   const isText = karya.category === 'writing' && karya.description;
+  
+  // Use the media_urls array if it exists and has items, otherwise fallback to image_url
+  const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
+
+  const toggleDescription = () => {
+    setIsDescriptionExpanded(!isDescriptionExpanded);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 overflow-hidden rounded-3xl bg-secondary border-border/40 max-h-[90vh] backdrop-blur-lg shadow-xl">
+      <DialogContent className="p-0 overflow-hidden rounded-3xl bg-secondary/90 border-border/40 max-h-[90vh] backdrop-blur-xl shadow-xl">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -124,15 +67,9 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose, onLikeUpdate }: KaryaDetail
           <span className="sr-only">Close</span>
         </button>
 
-        {/* Content preview with support for video and text */}
-        <div className="relative w-full aspect-[16/9] bg-black/70">
-          {isVideo ? (
-            <video 
-              src={karya.content_url} 
-              controls
-              className="w-full h-full object-contain"
-            />
-          ) : isText ? (
+        {/* Content preview with support for media carousel */}
+        <div className="relative w-full aspect-video bg-black/50 overflow-hidden">
+          {isText ? (
             <div className="w-full h-full overflow-auto p-8 bg-secondary/60 flex items-center justify-center">
               <div className="max-w-3xl prose prose-invert">
                 <p className="text-foreground/90 whitespace-pre-wrap">
@@ -140,16 +77,50 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose, onLikeUpdate }: KaryaDetail
                 </p>
               </div>
             </div>
+          ) : mediaUrls.length > 1 ? (
+            <Carousel className="w-full h-full">
+              <CarouselContent className="h-full">
+                {mediaUrls.map((url, index) => (
+                  <CarouselItem key={index} className="h-full flex items-center justify-center">
+                    {isVideo(url) ? (
+                      <video 
+                        src={url} 
+                        controls
+                        className="w-full h-full object-contain max-h-[70vh]"
+                      />
+                    ) : (
+                      <img 
+                        src={url}
+                        alt={`${karya.title} - slide ${index + 1}`}
+                        className="w-full h-full object-contain max-h-[70vh]"
+                      />
+                    )}
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="absolute left-4 z-10" />
+              <CarouselNext className="absolute right-4 z-10" />
+            </Carousel>
           ) : (
-            <img 
-              src={karya.image_url}
-              alt={karya.title}
-              className="w-full h-full object-contain"
-            />
+            <>
+              {isVideo(mediaUrls[0]) ? (
+                <video 
+                  src={mediaUrls[0]} 
+                  controls
+                  className="w-full h-full object-contain max-h-[70vh]"
+                />
+              ) : (
+                <img 
+                  src={mediaUrls[0]}
+                  alt={karya.title}
+                  className="w-full h-full object-contain max-h-[70vh]"
+                />
+              )}
+            </>
           )}
         </div>
         
-        <div className="p-8 overflow-y-auto">
+        <div className="p-8 overflow-y-auto bg-gradient-to-b from-secondary/90 to-background/90">
           <DialogHeader className="pb-4 border-b border-border/20">
             <div className="flex justify-between items-start">
               <div>
@@ -159,7 +130,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose, onLikeUpdate }: KaryaDetail
                 </DialogDescription>
               </div>
               <div className="flex items-center gap-2 bg-secondary/60 backdrop-blur-sm py-1.5 px-3 rounded-full border border-border/30">
-                <div className="bg-white/80 p-1 rounded-full">
+                <div className="bg-white/90 p-1.5 rounded-full">
                   <img 
                     src={categoryIcons[karya.category] || '/lovable-uploads/design.png'} 
                     alt={karya.category}
@@ -173,17 +144,31 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose, onLikeUpdate }: KaryaDetail
             </div>
           </DialogHeader>
           
-          {!isText && (
+          {!isText && karya.description && (
             <div className="py-6">
-              {karya.description ? (
+              <div 
+                className={`relative overflow-hidden transition-all duration-300 ${
+                  isDescriptionExpanded ? 'max-h-[800px]' : 'max-h-[100px]'
+                }`}
+              >
                 <p className="text-foreground/90 leading-relaxed text-readable whitespace-pre-wrap">
                   {karya.description}
                 </p>
-              ) : (
-                <p className="text-foreground/60 italic text-readable">
-                  Tidak ada deskripsi untuk karya ini.
-                </p>
-              )}
+                {!isDescriptionExpanded && (
+                  <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-background/90 to-transparent pointer-events-none"></div>
+                )}
+              </div>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={toggleDescription}
+                className="mt-2 text-foreground/60 hover:text-foreground hover:bg-foreground/5 gap-1"
+              >
+                {isDescriptionExpanded ? 'Show Less' : 'Read More'}
+                <ChevronDown 
+                  className={`h-4 w-4 transition-transform ${isDescriptionExpanded ? 'rotate-180' : ''}`} 
+                />
+              </Button>
             </div>
           )}
           
@@ -197,35 +182,13 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose, onLikeUpdate }: KaryaDetail
             </p>
           </div>
           
-          <DialogFooter className="flex flex-col sm:flex-row justify-between gap-4">
-            <div className="flex gap-3 w-full sm:w-auto">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="gap-2 flex-1 sm:flex-initial rounded-full backdrop-blur-sm border-border/40 bg-gradient-to-b from-secondary/80 to-background/80 hover:bg-foreground/5"
-                onClick={handleLike}
-                disabled={isLiking}
-              >
-                <Heart className="h-4 w-4" />
-                <span>{likesCount} Suka</span>
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="gap-2 flex-1 sm:flex-initial rounded-full backdrop-blur-sm border-border/40 bg-gradient-to-b from-secondary/80 to-background/80 hover:bg-foreground/5"
-                onClick={handleShare}
-              >
-                <Share2 className="h-4 w-4" />
-                <span>Bagikan</span>
-              </Button>
-            </div>
-            
-            {karya.content_url && !isVideo && (
+          <DialogFooter className="flex flex-col sm:flex-row justify-end gap-4">
+            {karya.link_url && (
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button 
-                  className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-b from-amethyst to-purpleDark text-white" 
+                  className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-b from-lavender to-purpleLight text-white" 
                   size="sm"
-                  onClick={() => window.open(karya.content_url, '_blank')}
+                  onClick={() => window.open(karya.link_url, '_blank')}
                 >
                   <ExternalLink className="h-4 w-4" />
                   <span>Lihat Karya Lengkap</span>

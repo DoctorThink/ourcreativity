@@ -1,3 +1,4 @@
+
 /* src/index.css */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
@@ -170,6 +171,60 @@
   backface-visibility: hidden;
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
+}
+
+/* New Glass Morphism Effects */
+.glass-card {
+  background: rgba(44, 44, 46, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.glass-button {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Spotlight Effect for Cards */
+.spotlight-card {
+  position: relative;
+}
+
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  background: linear-gradient(
+    45deg,
+    rgba(229, 222, 255, 0.4),
+    rgba(152, 245, 225, 0),
+    rgba(254, 198, 161, 0.3),
+    rgba(255, 209, 220, 0)
+  );
+  border-radius: 30px;
+  z-index: -1;
+  opacity: 0.6;
+  filter: blur(8px);
+  animation: rotateGradient 10s linear infinite;
+}
+
+@keyframes rotateGradient {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 300% 300%;
+  }
 }
 
 @layer utilities {
