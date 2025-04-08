@@ -1,3 +1,4 @@
+
 import React, { Suspense, lazy, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Toaster } from "@/components/ui/toaster";
@@ -9,6 +10,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { PageTransition } from "@/components/PageTransition";
 
+// Fix the import path to match the exact case of the file name
 const Index = lazy(() => import("./pages/Index"));
 const BrandStory = lazy(() => import("./pages/BrandStory"));
 const Informasi = lazy(() => import("./pages/Informasi"));
