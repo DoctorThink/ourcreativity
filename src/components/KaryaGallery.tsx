@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ChevronDown, Heart } from 'lucide-react';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -38,6 +39,7 @@ const KaryaGallery = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [isMobile, setIsMobile] = useState(false);
+  const [spotlightItems, setSpotlightItems] = useState<KaryaType[]>([]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -57,7 +59,7 @@ const KaryaGallery = () => {
     640: 1
   };
 
-  const { data: karya, isLoading, error } = useQuery({
+  const { data: karya, isLoading, error, refetch } = useQuery({
     queryKey: ['karya'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -70,6 +72,32 @@ const KaryaGallery = () => {
       return data as KaryaType[];
     },
   });
+
+  // Handle like count updates
+  const handleLikeUpdate = (id: string, newCount: number) => {
+    // Update spotlight items if needed
+    setSpotlightItems(prev => 
+      prev.map(item => item.id === id ? { ...item, likes_count: newCount } : item)
+    );
+  };
+
+  // Set spotlight items based on category
+  useEffect(() => {
+    if (!karya) return;
+    
+    // Get top 3 most liked items for the current category
+    let filteredItems = [...karya];
+    if (activeCategory !== 'all') {
+      filteredItems = filteredItems.filter(item => item.category === activeCategory);
+    }
+    
+    // Sort by likes and take top 3
+    const topItems = filteredItems
+      .sort((a, b) => (b.likes_count || 0) - (a.likes_count || 0))
+      .slice(0, 3);
+    
+    setSpotlightItems(topItems);
+  }, [karya, activeCategory]);
 
   const handleKaryaClick = (item: KaryaType) => {
     setSelectedKarya(item);
@@ -99,37 +127,93 @@ const KaryaGallery = () => {
   );
 
   return (
-    <div className="container py-12">
-      {/* Modernized Category Selector */}
+    <div className="container py-8">
+      {/* Spotlight Section */}
+      {spotlightItems.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-16"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold font-serif tracking-tight text-foreground">
+              {activeCategory === 'all' ? 'Spotlight Karya' : `Spotlight ${categories.find(c => c.value === activeCategory)?.label}`}
+            </h2>
+            <div className="flex items-center gap-2 text-sm text-foreground/60">
+              <Heart className="w-4 h-4 text-foreground/60" />
+              <span>Paling disukai</span>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {spotlightItems.map((item, index) => (
+              <motion.div 
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
+                <KaryaCard 
+                  karya={item} 
+                  onClick={() => handleKaryaClick(item)}
+                  onLikeUpdate={handleLikeUpdate}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+      
+      {/* Improved Category Selector */}
       <div className="mb-10">
         {isMobile ? (
           <div className="px-4">
-            <Select value={activeCategory} onValueChange={setActiveCategory}>
+            <Select 
+              value={activeCategory} 
+              onValueChange={setActiveCategory}
+            >
               <SelectTrigger className="w-full bg-secondary/80 border border-border/40 backdrop-blur-md rounded-2xl text-foreground hover:bg-secondary/90 transition-colors shadow-md">
                 <SelectValue>
                   <div className="flex items-center gap-2">
-                    <img 
-                      src={categories.find(cat => cat.value === activeCategory)?.icon || categories[0].icon} 
-                      alt="" 
-                      className="w-4 h-4 object-contain"
-                    />
+                    <div className="bg-white/80 p-1 rounded-full">
+                      <img 
+                        src={categories.find(cat => cat.value === activeCategory)?.icon || categories[0].icon} 
+                        alt="" 
+                        className="w-4 h-4 object-contain"
+                      />
+                    </div>
                     <span>{categories.find(cat => cat.value === activeCategory)?.label || 'Pilih Kategori'}</span>
                   </div>
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="bg-secondary border-border/40 backdrop-blur-md rounded-2xl shadow-lg">
-                {categories.map(category => (
-                  <SelectItem
-                    key={category.value}
-                    value={category.value}
-                    className="text-foreground hover:bg-foreground/10 focus:bg-foreground/10 rounded-xl"
-                  >
-                    <div className="flex items-center gap-2">
-                      <img src={category.icon} alt="" className="w-4 h-4 object-contain" />
-                      <span>{category.label}</span>
-                    </div>
-                  </SelectItem>
-                ))}
+              <SelectContent 
+                className="bg-secondary border-border/40 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden"
+                position="popper"
+                sideOffset={5}
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="py-1"
+                >
+                  {categories.map(category => (
+                    <SelectItem
+                      key={category.value}
+                      value={category.value}
+                      className="text-foreground hover:bg-foreground/10 focus:bg-foreground/10 rounded-xl my-1"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="bg-white/80 p-1 rounded-full">
+                          <img src={category.icon} alt="" className="w-4 h-4 object-contain" />
+                        </div>
+                        <span>{category.label}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </motion.div>
               </SelectContent>
             </Select>
           </div>
@@ -165,7 +249,9 @@ const KaryaGallery = () => {
                       ? "text-foreground font-semibold"
                       : "text-foreground/60 hover:text-foreground/80"
                   )}>
-                    <img src={category.icon} alt="" className="w-4 h-4 object-contain" />
+                    <div className="bg-white/80 p-1 rounded-full">
+                      <img src={category.icon} alt="" className="w-4 h-4 object-contain" />
+                    </div>
                     {category.label}
                   </span>
                 </motion.button>
@@ -199,6 +285,7 @@ const KaryaGallery = () => {
                   key={item.id}
                   karya={item}
                   onClick={() => handleKaryaClick(item)}
+                  onLikeUpdate={handleLikeUpdate}
                 />
               ))
             ) : (
@@ -216,6 +303,11 @@ const KaryaGallery = () => {
           karya={selectedKarya}
           isOpen={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
+          onLikeUpdate={(id, newCount) => {
+            handleLikeUpdate(id, newCount);
+            // Also update the selectedKarya
+            setSelectedKarya(prev => prev ? {...prev, likes_count: newCount} : null);
+          }}
         />
       )}
     </div>

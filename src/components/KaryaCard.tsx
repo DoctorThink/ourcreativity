@@ -1,20 +1,26 @@
 
 import React, { useState, useEffect } from 'react';
-import { Heart } from 'lucide-react';
+import { Heart, Share2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Database } from '@/integrations/supabase/types';
 import { motion } from 'framer-motion';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
 interface KaryaCardProps {
   karya: KaryaType;
   onClick?: () => void;
+  onLikeUpdate?: (id: string, newCount: number) => void;
 }
 
-const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
+const KaryaCard = ({ karya, onClick, onLikeUpdate }: KaryaCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageAspectRatio, setImageAspectRatio] = useState(1);
+  const [isLiking, setIsLiking] = useState(false);
+  const [likesCount, setLikesCount] = useState(karya.likes_count || 0);
+  const { toast } = useToast();
 
   const categoryIcons: Record<string, string> = {
     'design': '/lovable-uploads/design.png',
@@ -36,6 +42,84 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     };
   }, [karya.image_url]);
 
+  // Update local likes count when props change
+  useEffect(() => {
+    setLikesCount(karya.likes_count || 0);
+  }, [karya.likes_count]);
+
+  const handleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent opening the card detail
+    
+    if (isLiking) return;
+    
+    setIsLiking(true);
+    const newCount = likesCount + 1;
+    
+    try {
+      const { error } = await supabase
+        .from('karya')
+        .update({ likes_count: newCount })
+        .eq('id', karya.id);
+      
+      if (error) throw error;
+      
+      setLikesCount(newCount);
+      if (onLikeUpdate) onLikeUpdate(karya.id, newCount);
+      
+      toast({
+        title: "Terima kasih!",
+        description: "Anda telah menyukai karya ini",
+      });
+    } catch (error) {
+      console.error('Error liking karya:', error);
+      toast({
+        title: "Gagal menyukai",
+        description: "Terjadi kesalahan saat menyukai karya",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLiking(false);
+    }
+  };
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent opening the card detail
+    
+    // Create share data
+    const shareData = {
+      title: `${karya.title} - OUR CREATIVITY`,
+      text: `Karya oleh ${karya.creator_name} - OUR CREATIVITY`,
+      url: window.location.href,
+    };
+    
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        toast({
+          title: "Berhasil dibagikan!",
+          description: "Karya telah dibagikan",
+        });
+      } else {
+        // Fallback for browsers that don't support share API
+        navigator.clipboard.writeText(window.location.href);
+        toast({
+          title: "Link disalin!",
+          description: "Link karya telah disalin ke clipboard",
+        });
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+      toast({
+        variant: "destructive",
+        title: "Gagal membagikan",
+        description: "Terjadi kesalahan saat membagikan karya",
+      });
+    }
+  };
+
+  const isVideo = karya.category === 'video' && karya.content_url?.match(/\.(mp4|webm|ogg)$/i);
+  const isText = karya.category === 'writing' && karya.description;
+
   return (
     <motion.div
       whileHover={{ y: -5 }}
@@ -45,24 +129,40 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
         onClick={onClick}
         className="group relative w-full overflow-hidden bg-secondary border border-border/40 rounded-3xl transition-all duration-300 cursor-pointer hover:border-border/60 hover:shadow-xl"
       >
-        {/* Image container */}
+        {/* Content Preview Container */}
         <div
           className="relative w-full overflow-hidden"
           style={{
-            paddingBottom: `${(1 / (imageAspectRatio || 1)) * 100}%`,
+            paddingBottom: isText ? '100%' : `${(1 / (imageAspectRatio || 1)) * 100}%`,
             backgroundColor: 'rgba(255, 255, 255, 0.05)'
           }}
         >
-          <img
-            src={karya.image_url}
-            alt={karya.title}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-              imageLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
-            loading="lazy"
-          />
-          {!imageLoaded && (
-            <div className="absolute inset-0 bg-secondary animate-pulse"></div>
+          {isVideo ? (
+            <video
+              src={karya.content_url}
+              className="absolute inset-0 w-full h-full object-cover"
+              preload="metadata"
+            />
+          ) : isText ? (
+            <div className="absolute inset-0 p-4 flex items-center justify-center bg-gradient-to-br from-secondary to-background overflow-hidden">
+              <p className="text-foreground/80 text-sm line-clamp-6 text-center font-serif">
+                {karya.description}
+              </p>
+            </div>
+          ) : (
+            <>
+              <img
+                src={karya.image_url}
+                alt={karya.title}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                  imageLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                loading="lazy"
+              />
+              {!imageLoaded && (
+                <div className="absolute inset-0 bg-secondary animate-pulse"></div>
+              )}
+            </>
           )}
         </div>
 
@@ -79,16 +179,33 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
               <h3 className="text-base sm:text-lg font-semibold truncate tracking-tight">{karya.title}</h3>
               <p className="text-foreground/80 text-xs sm:text-sm truncate mt-1">{karya.creator_name}</p>
             </div>
-            <div className="flex items-center gap-1.5 text-foreground/70 flex-shrink-0 bg-background/50 backdrop-blur-sm rounded-full px-2.5 py-1">
-              <Heart className="h-3.5 w-3.5" />
-              <span className="text-xs font-medium">{karya.likes_count || 0}</span>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={handleShare}
+                className="flex items-center gap-1 text-foreground/70 bg-background/50 backdrop-blur-sm rounded-full px-2.5 py-1 hover:bg-background/70 transition-colors"
+                aria-label="Bagikan karya"
+              >
+                <Share2 className="h-3.5 w-3.5" />
+              </motion.button>
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={handleLike}
+                className="flex items-center gap-1.5 text-foreground/70 bg-background/50 backdrop-blur-sm rounded-full px-2.5 py-1 hover:bg-background/70 transition-colors"
+                aria-label={`Suka karya ini (${likesCount})`}
+              >
+                <Heart className="h-3.5 w-3.5" />
+                <span className="text-xs font-medium">{likesCount}</span>
+              </motion.button>
             </div>
           </div>
         </div>
 
-        {/* Category Icon - Modernized with glassy effect */}
+        {/* Category Icon - Improved with white background */}
         <div 
-          className="absolute top-3 right-3 bg-background/60 backdrop-blur-md p-2 rounded-full opacity-0 scale-90 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 border border-white/10 shadow-lg"
+          className="absolute top-3 right-3 bg-white/80 backdrop-blur-md p-2 rounded-full opacity-90 scale-100 transition-all duration-300 border border-white/20 shadow-lg"
           aria-label={`Category: ${karya.category}`}
         >
           <img
