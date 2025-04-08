@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import Masonry from 'react-masonry-css';
@@ -40,8 +40,6 @@ const KaryaGallery = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [isMobile, setIsMobile] = useState(false);
   const [spotlightItems, setSpotlightItems] = useState<KaryaType[]>([]);
-  const [columnWidths, setColumnWidths] = useState<Record<number, number>>({});
-  const masonryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkMobile = () => {

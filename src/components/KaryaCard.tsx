@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Database } from '@/integrations/supabase/types';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
@@ -17,29 +17,11 @@ type KaryaType = Database['public']['Tables']['karya']['Row'];
 interface KaryaCardProps {
   karya: KaryaType;
   onClick?: () => void;
-  columnWidth?: number; // Width of the masonry column
 }
 
-const KaryaCard = ({ karya, onClick, columnWidth }: KaryaCardProps) => {
+const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
-  // Calculate aspect ratio based on media dimensions
-  const aspectRatio = useMemo(() => {
-    // If we have explicit media dimensions, use them
-    if (karya.media_width && karya.media_height) {
-      return karya.media_width / karya.media_height;
-    }
-    
-    // Default aspect ratio if dimensions are not available
-    return 4/3; // Matches the default aspect-[4/3] in the original component
-  }, [karya.media_width, karya.media_height]);
-  
-  // Calculate height based on column width and aspect ratio
-  const calculatedHeight = useMemo(() => {
-    if (!columnWidth) return undefined;
-    return `${columnWidth / aspectRatio}px`;
-  }, [columnWidth, aspectRatio]);
   
   const categoryIcons: Record<string, string> = {
     'design': '/lovable-uploads/design.png',
@@ -59,7 +41,7 @@ const KaryaCard = ({ karya, onClick, columnWidth }: KaryaCardProps) => {
     setImageLoaded(true);
   };
 
-  const stopPropagation = (e: React.MouseEvent | React.TouchEvent) => {
+  const stopPropagation = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
 
@@ -76,12 +58,9 @@ const KaryaCard = ({ karya, onClick, columnWidth }: KaryaCardProps) => {
         }`}
       >
         {/* Content Preview Container */}
-        <div 
-          className="relative w-full overflow-hidden rounded-t-2xl"
-          style={calculatedHeight ? { height: calculatedHeight } : undefined}
-        >
+        <div className="relative w-full overflow-hidden rounded-t-2xl">
           {isText ? (
-            <div className="h-full p-6 flex items-center justify-center bg-gradient-to-br from-secondary to-background/80 overflow-hidden">
+            <div className="aspect-[4/3] p-6 flex items-center justify-center bg-gradient-to-br from-secondary to-background/80 overflow-hidden">
               <p className="text-foreground/80 text-sm line-clamp-6 text-center font-serif">
                 {karya.description}
               </p>
@@ -89,7 +68,7 @@ const KaryaCard = ({ karya, onClick, columnWidth }: KaryaCardProps) => {
           ) : mediaUrls.length > 1 ? (
             // Carousel for multiple media
             <Carousel 
-              className="w-full h-full"
+              className="w-full aspect-[4/3]"
               onMouseDown={stopPropagation} 
               onTouchStart={stopPropagation}
             >
@@ -99,14 +78,14 @@ const KaryaCard = ({ karya, onClick, columnWidth }: KaryaCardProps) => {
                     {isVideo(url) ? (
                       <video
                         src={url}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover aspect-[4/3]"
                         preload="metadata"
                       />
                     ) : (
                       <img
                         src={url}
                         alt={`${karya.title} - slide ${index + 1}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover aspect-[4/3]"
                         onLoad={handleImageLoad}
                         loading="lazy"
                       />
@@ -129,14 +108,14 @@ const KaryaCard = ({ karya, onClick, columnWidth }: KaryaCardProps) => {
               {isVideo(mediaUrls[0]) ? (
                 <video
                   src={mediaUrls[0]}
-                  className="w-full h-full object-cover"
+                  className="w-full aspect-[4/3] object-cover"
                   preload="metadata"
                 />
               ) : (
                 <img
                   src={mediaUrls[0]}
                   alt={karya.title}
-                  className={`w-full h-full object-cover transition-opacity duration-500 ${
+                  className={`w-full aspect-[4/3] object-cover transition-opacity duration-500 ${
                     imageLoaded ? 'opacity-100' : 'opacity-0'
                   }`}
                   onLoad={handleImageLoad}
@@ -144,7 +123,7 @@ const KaryaCard = ({ karya, onClick, columnWidth }: KaryaCardProps) => {
                 />
               )}
               {!imageLoaded && (
-                <div className="absolute inset-0 bg-secondary animate-pulse"></div>
+                <div className="absolute inset-0 bg-secondary animate-pulse aspect-[4/3]"></div>
               )}
             </>
           )}
