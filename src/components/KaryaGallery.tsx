@@ -1,8 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import Masonry from 'react-masonry-css';
 import { Database } from '@/integrations/supabase/types';
 import KaryaCard from './KaryaCard';
 import KaryaDetailDialog from './KaryaDetailDialog';
@@ -40,24 +38,27 @@ const KaryaGallery = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [isMobile, setIsMobile] = useState(false);
   const [spotlightItems, setSpotlightItems] = useState<KaryaType[]>([]);
+  const [columnDimensions, setColumnDimensions] = useState<{ width: number; count: number }>({ width: 300, count: 3 });
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640);
+    const checkDimensions = () => {
+      const width = window.innerWidth;
+      let columnCount = 4;
+      if (width < 640) columnCount = 1;
+      else if (width < 1024) columnCount = 2;
+      else if (width < 1536) columnCount = 3;
+      
+      const containerWidth = Math.min(width - 32, 1536); // Max width with padding
+      const columnWidth = Math.floor((containerWidth - (columnCount - 1) * 24) / columnCount); // 24px gap
+      
+      setColumnDimensions({ width: columnWidth, count: columnCount });
+      setIsMobile(width < 640);
     };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    
+    checkDimensions();
+    window.addEventListener('resize', checkDimensions);
+    return () => window.removeEventListener('resize', checkDimensions);
   }, []);
-
-  const breakpointColumnsObj = {
-    default: 4,
-    1536: 3,
-    1280: 3,
-    1024: 2,
-    768: 2,
-    640: 1
-  };
 
   const { data: karya, isLoading, error } = useQuery({
     queryKey: ['karya'],
@@ -76,12 +77,10 @@ const KaryaGallery = () => {
   // Set spotlight items based on is_spotlight flag and category
   useEffect(() => {
     if (!karya) return;
-    
     let filteredItems = [...karya].filter(item => item.is_spotlight);
     if (activeCategory !== 'all') {
       filteredItems = filteredItems.filter(item => item.category === activeCategory);
     }
-    
     setSpotlightItems(filteredItems);
   }, [karya, activeCategory]);
 
@@ -93,6 +92,30 @@ const KaryaGallery = () => {
   const filteredKarya = karya?.filter(item => 
     activeCategory === 'all' || item.category === activeCategory
   );
+
+  const getColumnItems = () => {
+    if (!filteredKarya) return [];
+    const columns = Array.from({ length: columnDimensions.count }, () => []);
+    let columnHeights = Array(columnDimensions.count).fill(0);
+
+    filteredKarya.forEach((item) => {
+      // Calculate aspect ratio and height
+      let aspectRatio = 4/3; // Default aspect ratio
+      if (item.media_width && item.media_height) {
+        aspectRatio = item.media_width / item.media_height;
+      }
+      const itemHeight = columnDimensions.width / aspectRatio;
+      
+      // Find the shortest column
+      const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
+      
+      // Add item to shortest column and update height
+      columns[shortestColumn].push({ item, height: itemHeight });
+      columnHeights[shortestColumn] += itemHeight + 24; // Add gap
+    });
+
+    return columns;
+  };
 
   const SkeletonCards = () => (
     <>
@@ -128,12 +151,12 @@ const KaryaGallery = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {spotlightItems.map((item, index) => (
+            {spotlightItems.map((item) => (
               <motion.div 
                 key={item.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
+                transition={{ duration: 0.3 }}
                 className="spotlight-item"
                 style={{
                   '--tile-glow-color': item.category === 'design' 
@@ -148,6 +171,7 @@ const KaryaGallery = () => {
                 <KaryaCard 
                   karya={item} 
                   onClick={() => handleKaryaClick(item)}
+                  width={columnDimensions.width}
                 />
               </motion.div>
             ))}
@@ -155,7 +179,7 @@ const KaryaGallery = () => {
         </motion.div>
       )}
       
-      {/* Improved Category Selector */}
+      {/* Category Selector */}
       <div className="mb-10">
         {isMobile ? (
           <div className="px-4">
@@ -177,53 +201,50 @@ const KaryaGallery = () => {
                   </div>
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent 
-                className="bg-secondary/90 border-border/40 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden"
-                position="popper"
-                sideOffset={5}
-              >
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="py-1"
-                >
-                  {categories.map(category => (
-                    <SelectItem
-                      key={category.value}
-                      value={category.value}
-                      className="text-foreground hover:bg-foreground/10 focus:bg-foreground/10 rounded-xl my-1"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="bg-white/90 p-1 rounded-full">
-                          <img src={category.icon} alt="" className="w-4 h-4 object-contain" />
+              <SelectContent className="bg-secondary/90 border-border/40 backdrop-blur-md rounded-2xl shadow-lg">
+                <AnimatePresence>
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="py-1"
+                  >
+                    {categories.map(category => (
+                      <SelectItem
+                        key={category.value}
+                        value={category.value}
+                        className="text-foreground hover:bg-foreground/10 focus:bg-foreground/10 rounded-xl my-1"
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className="bg-white/90 p-1 rounded-full">
+                            <img src={category.icon} alt="" className="w-4 h-4 object-contain" />
+                          </div>
+                          <span>{category.label}</span>
                         </div>
-                        <span>{category.label}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </motion.div>
+                      </SelectItem>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
               </SelectContent>
             </Select>
           </div>
         ) : (
           <div className="flex justify-center">
-            <div className="inline-flex bg-secondary/70 border border-border/40 backdrop-blur-md rounded-2xl p-1.5 shadow-lg">
-              {categories.map((category) => (
+            <div className="inline-flex p-1 bg-secondary/80 backdrop-blur-md rounded-2xl border border-border/40 shadow-md">
+              {categories.map((category, index) => (
                 <motion.button
                   key={category.value}
                   onClick={() => setActiveCategory(category.value)}
                   className={cn(
-                    "relative px-5 py-2.5 rounded-xl transition-all duration-300 font-medium text-sm",
-                    "hover:text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/50 focus:ring-offset-1 focus:ring-offset-transparent"
+                    "px-4 py-2 rounded-xl relative",
+                    "transition-colors duration-200"
                   )}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
-                  <AnimatePresence mode="wait">
+                  <AnimatePresence>
                     {activeCategory === category.value && (
                       <motion.div
+                        layoutId="activeCategory"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -262,27 +283,29 @@ const KaryaGallery = () => {
             <p className="text-readable">Terjadi kesalahan saat memuat karya. Silakan coba lagi nanti.</p>
           </div>
         ) : (
-          <Masonry
-            breakpointCols={breakpointColumnsObj}
-            className="my-masonry-grid"
-            columnClassName="my-masonry-grid_column"
-          >
+          <div className="flex gap-6">
             {isLoading ? (
               <SkeletonCards />
             ) : filteredKarya && filteredKarya.length > 0 ? (
-              filteredKarya.map((item) => (
-                <KaryaCard
-                  key={item.id}
-                  karya={item}
-                  onClick={() => handleKaryaClick(item)}
-                />
+              getColumnItems().map((column, columnIndex) => (
+                <div key={columnIndex} className="flex-1 flex flex-col gap-6">
+                  {column.map(({ item, height }) => (
+                    <KaryaCard
+                      key={item.id}
+                      karya={item}
+                      onClick={() => handleKaryaClick(item)}
+                      width={columnDimensions.width}
+                      height={height}
+                    />
+                  ))}
+                </div>
               ))
             ) : (
               <div className="text-center py-12 w-full col-span-full bg-secondary/30 backdrop-blur-sm rounded-3xl border border-border/30 shadow-md">
                 <p className="text-muted-foreground text-readable">Belum ada karya dalam kategori ini.</p>
               </div>
             )}
-          </Masonry>
+          </div>
         )}
       </motion.div>
 

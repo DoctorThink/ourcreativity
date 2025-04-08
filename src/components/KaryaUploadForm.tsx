@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -52,6 +51,8 @@ const formSchema = z.object({
     required_error: 'Pilih tipe media',
   }),
   image_url: z.string().optional(),
+  media_width: z.number().optional(),
+  media_height: z.number().optional(),
 });
 
 export function KaryaUploadForm() {
@@ -74,6 +75,8 @@ export function KaryaUploadForm() {
       content_url: '',
       media_type: 'image',
       image_url: '',
+      media_width: undefined,
+      media_height: undefined,
     },
   });
 
@@ -105,7 +108,6 @@ export function KaryaUploadForm() {
       return;
     }
 
-    // Validate file size
     if (file.size > maxSize) {
       toast({
         title: 'Ukuran terlalu besar',
@@ -122,17 +124,33 @@ export function KaryaUploadForm() {
     form.setValue('media_file', file);
     form.setValue('media_type', type);
     
-    // Create preview
+    // Get media dimensions
     if (type === 'image') {
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
         setMediaPreview(result);
+        
+        // Get image dimensions
+        const img = document.createElement('img');
+        img.onload = () => {
+          form.setValue('media_width', img.width);
+          form.setValue('media_height', img.height);
+        };
+        img.src = result;
       };
       reader.readAsDataURL(file);
     } else if (type === 'video') {
       const videoUrl = URL.createObjectURL(file);
       setMediaPreview(videoUrl);
+      
+      // Get video dimensions
+      const video = document.createElement('video');
+      video.onloadedmetadata = () => {
+        form.setValue('media_width', video.videoWidth);
+        form.setValue('media_height', video.videoHeight);
+      };
+      video.src = videoUrl;
     }
   };
 
@@ -203,6 +221,8 @@ export function KaryaUploadForm() {
         description: values.description || null,
         content_url: null,
         status: 'pending', // Set the status to pending for admin review
+        media_width: values.media_width,
+        media_height: values.media_height,
       };
       
       // Set appropriate URLs based on media type

@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Database } from '@/integrations/supabase/types';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
@@ -14,15 +13,16 @@ import {
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
-interface KaryaCardProps {
+interface Props {
   karya: KaryaType;
   onClick?: () => void;
+  width?: number;
+  height?: number;
 }
 
-const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
+const KaryaCard: React.FC<Props> = ({ karya, onClick, width, height }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
+
   const categoryIcons: Record<string, string> = {
     'design': '/lovable-uploads/design.png',
     'video': '/lovable-uploads/video.png',
@@ -30,62 +30,69 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     'meme': '/lovable-uploads/meme.png',
   };
 
-  // Determine content type
   const isVideo = (url: string) => url?.match(/\.(mp4|webm|ogg)$/i);
   const isText = karya.category === 'writing' && karya.description;
-  
-  // Use the media_urls array if it exists and has items, otherwise fallback to image_url
+
   const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
 
   const handleImageLoad = () => {
     setImageLoaded(true);
   };
 
-  const stopPropagation = (e: React.MouseEvent) => {
+  const stopPropagation = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
   };
+
+  // Calculate aspect ratio
+  let aspectRatio = 4 / 3; // Default aspect ratio
+  if (karya.media_width && karya.media_height) {
+    aspectRatio = karya.media_width / karya.media_height;
+  }
+
+  const cardWidth = width || 'auto';
+  const cardHeight = height || (width ? width / aspectRatio : 'auto');
 
   return (
     <motion.div
       whileHover={{ y: -5, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300 }}
       className={`${karya.is_spotlight ? 'spotlight-card' : ''}`}
+      style={{ width: cardWidth }}
     >
       <Card
         onClick={onClick}
         className={`group relative w-full overflow-hidden bg-secondary/80 backdrop-blur-md border border-border/40 rounded-3xl transition-all duration-300 cursor-pointer hover:border-border/60 hover:shadow-xl ${
           karya.is_spotlight ? 'ring-2 ring-lavender/50 shadow-lg shadow-lavender/20' : ''
         }`}
+        style={{ height: cardHeight }}
       >
-        {/* Content Preview Container */}
-        <div className="relative w-full overflow-hidden rounded-t-2xl">
+        <div className="relative w-full h-full overflow-hidden rounded-t-2xl">
           {isText ? (
-            <div className="aspect-[4/3] p-6 flex items-center justify-center bg-gradient-to-br from-secondary to-background/80 overflow-hidden">
+            <div className="h-full p-6 flex items-center justify-center bg-gradient-to-br from-secondary to-background/80 overflow-hidden">
               <p className="text-foreground/80 text-sm line-clamp-6 text-center font-serif">
                 {karya.description}
               </p>
             </div>
           ) : mediaUrls.length > 1 ? (
-            // Carousel for multiple media
-            <Carousel 
-              className="w-full aspect-[4/3]"
-              onMouseDown={stopPropagation} 
+            <Carousel
+              className="w-full h-full"
+              onMouseDown={stopPropagation}
               onTouchStart={stopPropagation}
             >
               <CarouselContent>
                 {mediaUrls.map((url, index) => (
-                  <CarouselItem key={index}>
+                  <CarouselItem key={index} className="h-full">
                     {isVideo(url) ? (
                       <video
                         src={url}
-                        className="w-full h-full object-cover aspect-[4/3]"
+                        className="w-full h-full object-cover"
                         preload="metadata"
                       />
                     ) : (
                       <img
                         src={url}
                         alt={`${karya.title} - slide ${index + 1}`}
-                        className="w-full h-full object-cover aspect-[4/3]"
+                        className="w-full h-full object-cover"
                         onLoad={handleImageLoad}
                         loading="lazy"
                       />
@@ -93,74 +100,44 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious 
-                className="absolute left-2 z-10" 
+              <CarouselPrevious
+                className="absolute left-2 z-10"
                 onClick={stopPropagation}
               />
-              <CarouselNext 
-                className="absolute right-2 z-10" 
+              <CarouselNext
+                className="absolute right-2 z-10"
                 onClick={stopPropagation}
               />
             </Carousel>
           ) : (
-            // Single media display
             <>
               {isVideo(mediaUrls[0]) ? (
                 <video
                   src={mediaUrls[0]}
-                  className="w-full aspect-[4/3] object-cover"
+                  className="w-full h-full object-cover"
                   preload="metadata"
                 />
               ) : (
                 <img
                   src={mediaUrls[0]}
                   alt={karya.title}
-                  className={`w-full aspect-[4/3] object-cover transition-opacity duration-500 ${
-                    imageLoaded ? 'opacity-100' : 'opacity-0'
-                  }`}
+                  className="w-full h-full object-cover"
                   onLoad={handleImageLoad}
                   loading="lazy"
                 />
               )}
-              {!imageLoaded && (
-                <div className="absolute inset-0 bg-secondary animate-pulse aspect-[4/3]"></div>
-              )}
             </>
           )}
-        </div>
 
-        {/* Glass morphism overlay with improved aesthetics */}
-        <div 
-          className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-md"
-          aria-hidden="true"
-        />
-        
-        {/* Content overlay with better typography */}
-        <div className="absolute bottom-0 left-0 right-0 p-5 text-foreground opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-          <div className="flex justify-between items-end gap-3">
-            <div className="flex-1 min-w-0">
-              <h3 className="text-base sm:text-lg font-semibold truncate tracking-tight">{karya.title}</h3>
-              <p className="text-foreground/80 text-xs sm:text-sm truncate mt-1">{karya.creator_name}</p>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute bottom-0 w-full p-4">
+              <h3 className="text-white font-bold text-lg truncate">{karya.title}</h3>
+              <p className="text-white/80 text-sm truncate">by {karya.creator_name}</p>
             </div>
-            {karya.link_url && (
-              <motion.a 
-                href={karya.link_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={stopPropagation}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="flex items-center gap-1.5 text-foreground/70 bg-background/50 backdrop-blur-sm rounded-full px-2.5 py-1 hover:bg-background/70 transition-colors"
-                aria-label="Visit related link"
-              >
-                <ExternalLink className="h-3.5 w-3.5" />
-              </motion.a>
-            )}
           </div>
         </div>
 
-        {/* Category Icon - Improved with white background */}
-        <div 
+        <div
           className="absolute top-3 right-3 bg-white/90 backdrop-blur-md p-2 rounded-full scale-100 transition-all duration-300 shadow-md"
           aria-label={`Category: ${karya.category}`}
         >
