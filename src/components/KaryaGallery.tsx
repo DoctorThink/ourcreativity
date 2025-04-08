@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import Masonry from 'react-masonry-css';
@@ -40,15 +40,41 @@ const KaryaGallery = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [isMobile, setIsMobile] = useState(false);
   const [spotlightItems, setSpotlightItems] = useState<KaryaType[]>([]);
+  const [columnWidths, setColumnWidths] = useState<Record<number, number>>({});
+  const masonryRef = useRef<HTMLDivElement>(null);
+
+  // Calculate column widths for the masonry grid
+  const calculateColumnWidths = useCallback(() => {
+    if (!masonryRef.current) return;
+    
+    const columns = masonryRef.current.querySelectorAll('.my-masonry-grid_column');
+    const newColumnWidths: Record<number, number> = {};
+    
+    columns.forEach((column, index) => {
+      newColumnWidths[index] = column.clientWidth;
+    });
+    
+    setColumnWidths(newColumnWidths);
+  }, []);
 
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 640);
     };
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+    
+    const handleResize = () => {
+      checkMobile();
+      calculateColumnWidths();
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Initial calculation after component mounts
+    setTimeout(calculateColumnWidths, 100);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, [calculateColumnWidths]);
 
   const breakpointColumnsObj = {
     default: 4,
@@ -64,7 +90,7 @@ const KaryaGallery = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('karya')
-        .select('*')
+        .select('*, media_width, media_height')
         .eq('status', 'approved')
         .order('created_at', { ascending: false });
       
@@ -72,6 +98,13 @@ const KaryaGallery = () => {
       return data as KaryaType[];
     },
   });
+
+  // Recalculate column widths when data loads
+  useEffect(() => {
+    if (karya && !isLoading) {
+      setTimeout(calculateColumnWidths, 100);
+    }
+  }, [karya, isLoading, calculateColumnWidths]);
 
   // Set spotlight items based on is_spotlight flag and category
   useEffect(() => {
@@ -128,29 +161,37 @@ const KaryaGallery = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {spotlightItems.map((item, index) => (
-              <motion.div 
-                key={item.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="spotlight-item"
-                style={{
-                  '--tile-glow-color': item.category === 'design' 
-                    ? 'rgba(152, 245, 225, 0.2)' 
-                    : item.category === 'video' 
-                    ? 'rgba(155, 109, 255, 0.2)' 
-                    : item.category === 'meme' 
-                    ? 'rgba(254, 198, 161, 0.2)' 
-                    : 'rgba(255, 209, 220, 0.2)'
-                } as React.CSSProperties}
-              >
-                <KaryaCard 
-                  karya={item} 
-                  onClick={() => handleKaryaClick(item)}
-                />
-              </motion.div>
-            ))}
+            {spotlightItems.map((item, index) => {
+              // Calculate spotlight column width - for the 3-column grid used in spotlight section
+              const spotlightColumnWidth = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3')?.clientWidth 
+                ? (document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3')?.clientWidth - 48) / 3 
+                : undefined;
+                
+              return (
+                <motion.div 
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  className="spotlight-item"
+                  style={{
+                    '--tile-glow-color': item.category === 'design' 
+                      ? 'rgba(152, 245, 225, 0.2)' 
+                      : item.category === 'video' 
+                      ? 'rgba(155, 109, 255, 0.2)' 
+                      : item.category === 'meme' 
+                      ? 'rgba(254, 198, 161, 0.2)' 
+                      : 'rgba(255, 209, 220, 0.2)'
+                  } as React.CSSProperties}
+                >
+                  <KaryaCard 
+                    karya={item} 
+                    onClick={() => handleKaryaClick(item)}
+                    columnWidth={spotlightColumnWidth}
+                  />
+                </motion.div>
+              );
+            })}
           </div>
         </motion.div>
       )}
@@ -266,15 +307,17 @@ const KaryaGallery = () => {
             breakpointCols={breakpointColumnsObj}
             className="my-masonry-grid"
             columnClassName="my-masonry-grid_column"
+            ref={masonryRef as any}
           >
             {isLoading ? (
               <SkeletonCards />
             ) : filteredKarya && filteredKarya.length > 0 ? (
-              filteredKarya.map((item) => (
+              filteredKarya.map((item, index) => (
                 <KaryaCard
                   key={item.id}
                   karya={item}
                   onClick={() => handleKaryaClick(item)}
+                  columnWidth={columnWidths[index % Object.keys(columnWidths).length]}
                 />
               ))
             ) : (

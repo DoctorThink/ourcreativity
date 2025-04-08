@@ -21,7 +21,9 @@ export type Database = {
           is_spotlight: boolean | null
           likes_count: number | null
           link_url: string | null
-          media_urls: string[] | null
+          media_urls: string[] | null,
+          media_width: number | null,
+          media_height: number | null
           status: string
           title: string
           updated_at: string
@@ -37,7 +39,9 @@ export type Database = {
           is_spotlight?: boolean | null
           likes_count?: number | null
           link_url?: string | null
-          media_urls?: string[] | null
+          media_urls?: string[] | null,
+          media_width?: number | null,
+          media_height?: number | null
           status?: string
           title: string
           updated_at?: string
@@ -53,7 +57,9 @@ export type Database = {
           is_spotlight?: boolean | null
           likes_count?: number | null
           link_url?: string | null
-          media_urls?: string[] | null
+          media_urls?: string[] | null,
+          media_width?: number | null,
+          media_height?: number | null
           status?: string
           title?: string
           updated_at?: string
