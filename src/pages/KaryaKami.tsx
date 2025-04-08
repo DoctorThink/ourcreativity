@@ -27,17 +27,20 @@ const KaryaKami = () => {
   };
 
   return (
-    <PageLayout title="Karya Kami" subtitle="Koleksi kreativitas dari komunitas kami. Jelajahi beragam karya kreatif yang telah dibuat oleh anggota OUR CREATIVITY.">
+    <PageLayout 
+      title="Karya Kami" 
+      subtitle="Koleksi kreativitas dari komunitas kami. Jelajahi beragam karya kreatif yang telah dibuat oleh anggota OUR CREATIVITY."
+    >
       <motion.div 
         initial="initial"
         animate="animate"
         variants={containerVariants}
         className="min-h-screen"
       >
-        {/* Upload Button */}
+        {/* Modernized Upload Button section with improved spacing */}
         <motion.div 
           variants={childVariants}
-          className="container flex justify-center py-6"
+          className="container flex justify-center py-8"
         >
           <KaryaUploadForm />
         </motion.div>

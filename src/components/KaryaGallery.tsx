@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -8,7 +9,6 @@ import KaryaDetailDialog from './KaryaDetailDialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ChevronDown } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -83,7 +83,7 @@ const KaryaGallery = () => {
   const SkeletonCards = () => (
     <>
       {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="rounded-3xl overflow-hidden h-fit flex flex-col bg-secondary-dark border border-grayMid/30 mb-6">
+        <div key={i} className="rounded-3xl overflow-hidden h-fit flex flex-col bg-secondary border border-border/40 shadow-lg mb-6">
           <Skeleton className="aspect-[4/3] w-full" />
           <div className="p-4 pb-2">
             <Skeleton className="h-5 w-3/4 mb-2" />
@@ -100,22 +100,29 @@ const KaryaGallery = () => {
 
   return (
     <div className="container py-12">
-      {/* Responsive Category Selector */}
-      <div className="mb-8">
+      {/* Modernized Category Selector */}
+      <div className="mb-10">
         {isMobile ? (
           <div className="px-4">
             <Select value={activeCategory} onValueChange={setActiveCategory}>
-              <SelectTrigger className="w-full bg-gradient-to-b from-grayMid/10 to-grayDark/20 border-grayLight/10 backdrop-blur-md text-white hover:bg-grayMid/20 transition-colors">
+              <SelectTrigger className="w-full bg-secondary/80 border border-border/40 backdrop-blur-md rounded-2xl text-foreground hover:bg-secondary/90 transition-colors shadow-md">
                 <SelectValue>
-                  {categories.find(cat => cat.value === activeCategory)?.label || 'Pilih Kategori'}
+                  <div className="flex items-center gap-2">
+                    <img 
+                      src={categories.find(cat => cat.value === activeCategory)?.icon || categories[0].icon} 
+                      alt="" 
+                      className="w-4 h-4 object-contain"
+                    />
+                    <span>{categories.find(cat => cat.value === activeCategory)?.label || 'Pilih Kategori'}</span>
+                  </div>
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="bg-secondary border-grayLight/10 backdrop-blur-md">
+              <SelectContent className="bg-secondary border-border/40 backdrop-blur-md rounded-2xl shadow-lg">
                 {categories.map(category => (
                   <SelectItem
                     key={category.value}
                     value={category.value}
-                    className="text-foreground hover:bg-grayMid/20 focus:bg-grayMid/20"
+                    className="text-foreground hover:bg-foreground/10 focus:bg-foreground/10 rounded-xl"
                   >
                     <div className="flex items-center gap-2">
                       <img src={category.icon} alt="" className="w-4 h-4 object-contain" />
@@ -128,40 +135,37 @@ const KaryaGallery = () => {
           </div>
         ) : (
           <div className="flex justify-center">
-            <div className="inline-flex bg-gradient-to-b from-grayMid/10 to-grayDark/20 border border-grayLight/10 backdrop-blur-md rounded-full p-1.5 shadow-inner shadow-black/20">
+            <div className="inline-flex bg-secondary/70 border border-border/40 backdrop-blur-md rounded-2xl p-1.5 shadow-lg">
               {categories.map((category) => (
                 <motion.button
                   key={category.value}
                   onClick={() => setActiveCategory(category.value)}
                   className={cn(
-                    "relative px-5 py-2 rounded-full transition-all duration-300 font-medium text-sm",
-                    "hover:text-white focus:outline-none focus:ring-2 focus:ring-grayLight/50 focus:ring-offset-1 focus:ring-offset-transparent"
+                    "relative px-5 py-2.5 rounded-xl transition-all duration-300 font-medium text-sm",
+                    "hover:text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/50 focus:ring-offset-1 focus:ring-offset-transparent"
                   )}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeCategory === category.value ? 'active' : 'inactive'}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className={cn(
-                        "absolute inset-0 rounded-full",
-                        activeCategory === category.value 
-                          ? "bg-gradient-to-b from-white/15 to-white/5 border border-white/20 shadow-lg"
-                          : "bg-transparent"
-                      )}
-                    />
+                    {activeCategory === category.value && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/15 to-white/5 border border-white/20 shadow-lg"
+                      />
+                    )}
                   </AnimatePresence>
                   
                   <span className={cn(
-                    "relative z-10 transition-colors duration-200",
+                    "relative z-10 transition-colors duration-200 flex items-center gap-2",
                     activeCategory === category.value 
-                      ? "text-white font-semibold"
-                      : "text-gray-400 hover:text-gray-300"
+                      ? "text-foreground font-semibold"
+                      : "text-foreground/60 hover:text-foreground/80"
                   )}>
+                    <img src={category.icon} alt="" className="w-4 h-4 object-contain" />
                     {category.label}
                   </span>
                 </motion.button>
@@ -178,8 +182,8 @@ const KaryaGallery = () => {
         transition={{ duration: 0.3 }}
       >
         {error ? (
-          <div className="text-center py-12 text-rose-500">
-            <p>Terjadi kesalahan saat memuat karya. Silakan coba lagi nanti.</p>
+          <div className="text-center py-12 text-rose-500 bg-secondary/30 backdrop-blur-sm rounded-3xl border border-border/30 shadow-md p-8">
+            <p className="text-readable">Terjadi kesalahan saat memuat karya. Silakan coba lagi nanti.</p>
           </div>
         ) : (
           <Masonry
@@ -198,8 +202,8 @@ const KaryaGallery = () => {
                 />
               ))
             ) : (
-              <div className="text-center py-12 w-full col-span-full">
-                <p className="text-muted-foreground">Belum ada karya dalam kategori ini.</p>
+              <div className="text-center py-12 w-full col-span-full bg-secondary/30 backdrop-blur-sm rounded-3xl border border-border/30 shadow-md">
+                <p className="text-muted-foreground text-readable">Belum ada karya dalam kategori ini.</p>
               </div>
             )}
           </Masonry>
