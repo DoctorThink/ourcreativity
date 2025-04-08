@@ -41,7 +41,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     setImageLoaded(true);
   };
 
-  const stopPropagation = (e: React.MouseEvent) => {
+  const stopPropagation = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
   };
 
