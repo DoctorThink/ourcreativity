@@ -26,6 +26,12 @@
     --glow-white: rgba(255, 255, 255, 0.15);
     --glow-bright: rgba(255, 255, 255, 0.3);
     --default-glow: rgba(255, 255, 255, 0.1);
+    
+    /* Flowing Gradient Variables */
+    --gradient-dark-1: #0f0f0f;
+    --gradient-dark-2: #1a1a1a;
+    --gradient-dark-3: #2c2c2c;
+    --gradient-dark-4: #3f3f3f;
   }
 
   *, *::before, *::after {
@@ -45,6 +51,25 @@
     /* Added for improved rendering */
     text-rendering: optimizeLegibility;
     -webkit-tap-highlight-color: transparent;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -10;
+    background: 
+      radial-gradient(circle at 20% 20%, var(--gradient-dark-2), var(--gradient-dark-1) 60%),
+      radial-gradient(circle at 80% 80%, var(--gradient-dark-3), transparent 60%),
+      linear-gradient(135deg, var(--gradient-dark-1), var(--gradient-dark-2), var(--gradient-dark-3));
+    background-size: 200% 200%, 200% 200%, 400% 400%;
+    animation: flowingGradient 60s ease-in-out infinite alternate;
+    opacity: 0.9;
+    will-change: background-position;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -66,6 +91,25 @@
   /* Ensure sans-serif font applies correctly */
   .font-sans {
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+}
+
+/* Flowing Gradient Animation */
+@keyframes flowingGradient {
+  0% {
+    background-position: 0% 0%, 100% 0%, 0% 50%;
+  }
+  25% {
+    background-position: 50% 25%, 70% 50%, 25% 75%;
+  }
+  50% {
+    background-position: 100% 50%, 30% 100%, 50% 100%;
+  }
+  75% {
+    background-position: 50% 75%, 70% 50%, 75% 25%;
+  }
+  100% {
+    background-position: 0% 100%, 0% 0%, 100% 50%;
   }
 }
 
