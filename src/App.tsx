@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-route
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { PageTransition } from "@/components/PageTransition";
+import FlowingBackground from "@/components/FlowingBackground";
 
 // Fix capitalization to match exactly the file name
 const Index = lazy(() => import("./pages/index"));
@@ -101,6 +102,8 @@ const App = () => {
             <Toaster />
             <Sonner />
             <div className="app-container gpu-accelerated">
+              {/* Global FlowingBackground visible on all pages */}
+              <FlowingBackground />
               <BrowserRouter>
                 {isAppReady ? (
                   <Suspense fallback={<LoadingFallback />}>

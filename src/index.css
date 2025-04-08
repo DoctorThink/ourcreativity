@@ -8,34 +8,33 @@
 
 @layer base {
   :root {
-    /* Core Theme Colors - Monochrome */
-    --background: #0A0A0A;
+    /* Core Theme Colors - Lighter Gray Monochromatic */
+    --background: #1C1C1E;
     --foreground: #FFFFFF;
-    --secondary: #1A1A1A;
+    --secondary: #2C2C2E;
     --secondary-foreground: #FFFFFF;
-    --border: #2A2A2A;
-    --input: #1A1A1A;
-    --ring: #404040;
+    --border: #3A3A3C;
+    --input: #2C2C2E;
+    --ring: #505050;
 
     /* RGB versions */
     --foreground-rgb: 255, 255, 255;
-    --background-rgb: 10, 10, 10;
-    --secondary-rgb: 26, 26, 26;
+    --background-rgb: 28, 28, 30;
+    --secondary-rgb: 44, 44, 46;
 
     /* Monochrome Glow Variables */
     --glow-white: rgba(255, 255, 255, 0.15);
     --glow-bright: rgba(255, 255, 255, 0.3);
     --default-glow: rgba(255, 255, 255, 0.1);
     
-    /* Flowing Gradient Variables */
-    --gradient-dark-1: #0f0f0f;
-    --gradient-dark-2: #1a1a1a;
-    --gradient-dark-3: #2c2c2c;
-    --gradient-dark-4: #3f3f3f;
+    /* Flowing Gradient Variables - Lighter Grays */
+    --gradient-dark-1: #1C1C1E;
+    --gradient-dark-2: #2C2C2E;
+    --gradient-dark-3: #3A3A3C;
+    --gradient-dark-4: #505050;
   }
 
   *, *::before, *::after {
-    /* Slightly faster transitions */
     transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease, transform 0.2s ease;
   }
 
@@ -48,7 +47,6 @@
     @apply bg-background text-foreground font-serif antialiased overflow-x-hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Added for improved rendering */
     text-rendering: optimizeLegibility;
     -webkit-tap-highlight-color: transparent;
     position: relative;
@@ -76,7 +74,6 @@
     @apply font-serif;
   }
 
-  /* Reduced motion preferences */
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -88,13 +85,11 @@
      }
   }
 
-  /* Ensure sans-serif font applies correctly */
   .font-sans {
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
 }
 
-/* Flowing Gradient Animation */
 @keyframes flowingGradient {
   0% {
     background-position: 0% 0%, 100% 0%, 0% 50%;
@@ -113,38 +108,36 @@
   }
 }
 
-/* Homepage Title Gradient Animation */
 .home-title {
   background: linear-gradient(
     to right,
-    #ffffff, #E5DEFF, #FEC6A1, #98F5E1, #FFD1DC, #ffffff /* Adjusted gradient colors slightly */
+    #ffffff, #E5DEFF, #FEC6A1, #98F5E1, #FFD1DC, #ffffff
   );
-  background-size: 300% 300%; /* Faster cycle */
+  background-size: 300% 300%;
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  animation: gradientTextAnimation 8s ease infinite; /* Faster animation */
+  animation: gradientTextAnimation 8s ease infinite;
 }
+
 @keyframes gradientTextAnimation {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Background Noise Pattern - IMPROVED - Less grainy */
 .noise-pattern {
-    position: absolute; /* Changed to absolute to stay within parent */
+    position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); /* Modified noise pattern for subtlety */
-    z-index: -1; /* Behind other background elements */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    z-index: -1;
     pointer-events: none;
-    opacity: 0.15; /* Reduced opacity for less visual noise */
-    mix-blend-mode: overlay; /* Better blend with background */
+    opacity: 0.15;
+    mix-blend-mode: overlay;
 }
 
-/* Background Grid Pattern */
 .bg-grid-pattern {
   background-image: 
     linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
@@ -152,73 +145,57 @@
   background-size: 30px 30px;
 }
 
-/* Scrollbar Styles */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: rgba(var(--background-rgb), 0.5); }
-::-webkit-scrollbar-thumb { background-color: rgba(var(--foreground-rgb), 0.2); border-radius: 3px; } /* Slightly darker thumb */
+::-webkit-scrollbar-thumb { background-color: rgba(var(--foreground-rgb), 0.2); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background-color: rgba(var(--foreground-rgb), 0.3); }
 * { scrollbar-width: thin; scrollbar-color: rgba(var(--foreground-rgb), 0.2) rgba(var(--background-rgb), 0.5); }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Text Styles */
-.text-readable { letter-spacing: 0.01em; line-height: 1.65; } /* Slightly increased line-height */
+.text-readable { letter-spacing: 0.01em; line-height: 1.65; }
 
-/* Page Transition Styles */
 .page-transition {
   width: 100%;
   min-height: 100vh;
-  will-change: opacity, transform; /* Optimizes animations */
+  will-change: opacity, transform;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
 }
 
-/* ----------------------------------------------- */
-/* ---- UTILITIES & EFFECTS -------- */
-/* ----------------------------------------------- */
 @layer utilities {
-
-  /* Shimmer Effect (Enhanced) */
   .bg-shimmer-gradient {
-    background-image: linear-gradient( -75deg, rgba(255, 255, 255, 0) 35%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0) 65% ); /* Slightly brighter shimmer */
+    background-image: linear-gradient( -75deg, rgba(255, 255, 255, 0) 35%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0) 65% );
     background-size: 200% 100%;
     pointer-events: none;
   }
   @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-  .animate-shimmer { animation: shimmer 2.5s infinite linear; } /* Faster shimmer */
+  .animate-shimmer { animation: shimmer 2.5s infinite linear; }
 
-  /* Glow Effect for Interactive Tiles */
   .glow-card {
     transition: box-shadow 0.5s ease, transform 0.3s ease;
     will-change: transform, box-shadow;
   }
 
   .interactive-tile:hover {
-     /* Apply glow using the CSS variable set in the TSX component */
-     /* Fallback to default glow if variable is not set */
      box-shadow: 0 0 25px 6px var(--tile-glow-color, var(--default-glow)), 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-     /* Combine glow with existing shadow from hover variant */
    }
    
-  /* Outer glow effect for cards */
   .outer-glow {
     box-shadow: 0 0 20px 5px var(--tile-glow-color, var(--default-glow));
     opacity: 0;
     transition: opacity 0.5s ease;
   }
   
-  /* Icon glow effect */
   .icon-glow {
     box-shadow: 0 0 12px 0px var(--tile-glow-color, var(--default-glow));
     transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -228,12 +205,10 @@
     box-shadow: 0 0 18px 2px var(--tile-glow-color, var(--default-glow));
   }
   
-  /* Inner shadow for depth */
   .shadow-inner-subtle {
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.15);
   }
 
-  /* Improved, smoother floating animations */
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-20px); }
@@ -259,7 +234,6 @@
     50% { opacity: 0.9; transform: scale(1.05); }
   }
   
-  /* Hardware acceleration for smoother animations */
   .animate-float {
     animation: float 15s ease-in-out infinite;
     will-change: transform;
@@ -285,7 +259,6 @@
     will-change: opacity, transform;
   }
 
-  /* Page transition effects */
   .fade-enter {
     opacity: 0;
     transform: translateY(10px);
@@ -308,19 +281,16 @@
     transition: opacity 300ms, transform 300ms;
   }
 
-  /* Better rendering for animations */
   .gpu-accelerated {
     will-change: transform;
     transform: translateZ(0);
     backface-visibility: hidden;
   }
-  
-  /* Improve text rendering */
+
   .text-sharp {
     text-rendering: optimizeLegibility;
   }
 
-  /* Glossy Button Effects */
   .btn-glossy {
     background-image: linear-gradient(
       to bottom,
@@ -360,10 +330,8 @@
   .btn-glow-bright:hover {
     box-shadow: 0 0 20px var(--glow-bright);
   }
+}
 
-} /* End of @layer utilities */
-
-/* Masonry Grid Styles */
 .my-masonry-grid {
   display: flex;
   width: 100%;
@@ -377,16 +345,15 @@
   background-clip: padding-box;
 }
 
-/* Consistent spacing between items - Enhanced */
 .my-masonry-grid_column > * {
-  display: block; /* Ensure items are block-level */
-  margin-bottom: 2.5rem; /* Increased bottom margin */
-  break-inside: avoid; /* Prevent items breaking across columns */
-  width: 100%; /* Ensure item fills column width */
-  /* Removed transform/will-change as they might interfere */
+  display: block;
+  margin-bottom: 2.5rem;
+  break-inside: avoid;
+  width: 100%;
+  transform: none;
+  will-change: none;
 }
 
-/* Responsive adjustments */
 @media screen and (max-width: 640px) {
   .my-masonry-grid {
     margin-left: -0.5rem;
@@ -399,6 +366,6 @@
   }
   
   .my-masonry-grid_column > * {
-    margin-bottom: 1.5rem; /* Increased bottom margin for mobile */
+    margin-bottom: 1.5rem;
   }
 }

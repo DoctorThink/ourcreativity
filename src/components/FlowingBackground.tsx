@@ -9,11 +9,11 @@ interface FlowingBackgroundProps {
 const FlowingBackground: React.FC<FlowingBackgroundProps> = ({ className }) => {
   return (
     <div className={`fixed inset-0 -z-20 overflow-hidden pointer-events-none ${className}`}>
-      {/* Large, subtle gradient blobs */}
+      {/* Large, subtle gradient blobs with lighter gray monochromatic palette */}
       <motion.div 
-        className="absolute w-[120vw] h-[120vh] rounded-full opacity-20 blur-[150px]"
+        className="absolute w-[120vw] h-[120vh] rounded-full opacity-25 blur-[150px]"
         style={{
-          background: 'radial-gradient(circle at center, #2c2c2c 0%, transparent 70%)',
+          background: 'radial-gradient(circle at center, #4a4a4a 0%, transparent 70%)',
           top: '-10vh',
           left: '-10vw',
         }}
@@ -30,9 +30,9 @@ const FlowingBackground: React.FC<FlowingBackgroundProps> = ({ className }) => {
       />
       
       <motion.div 
-        className="absolute w-[80vw] h-[80vh] rounded-full opacity-10 blur-[100px]"
+        className="absolute w-[80vw] h-[80vh] rounded-full opacity-15 blur-[100px]"
         style={{
-          background: 'radial-gradient(circle at center, #3f3f3f 0%, transparent 70%)',
+          background: 'radial-gradient(circle at center, #5f5f5f 0%, transparent 70%)',
           bottom: '-10vh',
           right: '-10vw',
         }}
@@ -48,9 +48,9 @@ const FlowingBackground: React.FC<FlowingBackgroundProps> = ({ className }) => {
         }}
       />
       
-      {/* Subtle line accents */}
+      {/* Subtle line accents with lighter colors */}
       <motion.div 
-        className="absolute h-[1px] w-[40vw] bg-gradient-to-r from-transparent via-gray-700 to-transparent opacity-20"
+        className="absolute h-[1px] w-[40vw] bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-20"
         style={{ top: '30%', left: '10%' }}
         animate={{
           x: [0, 50, 0],
@@ -65,7 +65,7 @@ const FlowingBackground: React.FC<FlowingBackgroundProps> = ({ className }) => {
       />
       
       <motion.div 
-        className="absolute w-[1px] h-[40vh] bg-gradient-to-b from-transparent via-gray-700 to-transparent opacity-20"
+        className="absolute w-[1px] h-[40vh] bg-gradient-to-b from-transparent via-gray-500 to-transparent opacity-20"
         style={{ top: '20%', right: '30%' }}
         animate={{
           y: [0, 40, 0],
