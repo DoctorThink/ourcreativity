@@ -87,6 +87,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                         src={url} 
                         controls
                         className="w-full h-full object-contain max-h-[70vh]"
+                        playsInline
                       />
                     ) : (
                       <img 
@@ -108,6 +109,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                   src={mediaUrls[0]} 
                   controls
                   className="w-full h-full object-contain max-h-[70vh]"
+                  playsInline
                 />
               ) : (
                 <img 

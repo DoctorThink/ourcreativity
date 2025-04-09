@@ -70,7 +70,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
             <Carousel 
               className="w-full aspect-[4/3]"
               onMouseDown={stopPropagation} 
-              onTouchStart={stopPropagation}
+              onClick={stopPropagation}
             >
               <CarouselContent>
                 {mediaUrls.map((url, index) => (
@@ -80,6 +80,8 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                         src={url}
                         className="w-full h-full object-cover aspect-[4/3]"
                         preload="metadata"
+                        playsInline
+                        muted
                       />
                     ) : (
                       <img
@@ -110,6 +112,8 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                   src={mediaUrls[0]}
                   className="w-full aspect-[4/3] object-cover"
                   preload="metadata"
+                  playsInline
+                  muted
                 />
               ) : (
                 <img

@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { ChevronDown } from 'lucide-react';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
@@ -38,17 +39,8 @@ const KaryaGallery = () => {
   const [selectedKarya, setSelectedKarya] = useState<KaryaType | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
   const [spotlightItems, setSpotlightItems] = useState<KaryaType[]>([]);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const breakpointColumnsObj = {
     default: 4,
@@ -127,14 +119,14 @@ const KaryaGallery = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {spotlightItems.map((item, index) => (
               <motion.div 
                 key={item.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="spotlight-item"
+                className="spotlight-item scale-105 transform-gpu"
                 style={{
                   '--tile-glow-color': item.category === 'design' 
                     ? 'rgba(152, 245, 225, 0.2)' 
