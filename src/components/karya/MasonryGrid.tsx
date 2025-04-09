@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { motion } from 'framer-motion';
 import Masonry from 'react-masonry-css';
 import { Database } from '@/integrations/supabase/types';
@@ -21,8 +22,6 @@ const MasonryGrid: React.FC<MasonryGridProps> = ({
   filteredKarya,
   onKaryaClick
 }) => {
-  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
-
   // Responsive breakpoint columns for masonry layout
   const breakpointColumnsObj = {
     default: 4,
@@ -33,20 +32,13 @@ const MasonryGrid: React.FC<MasonryGridProps> = ({
     640: 1
   };
 
-  const handleImageLoad = (imageUrl: string) => {
-    setLoadedImages(prev => new Set(prev).add(imageUrl));
-  };
-
   // Skeleton loader cards with better aspect ratio handling
   const SkeletonCards = () => (
     <>
       {Array.from({ length: 8 }).map((_, i) => (
         <div key={i} className="mb-6">
           <div className="rounded-3xl overflow-hidden h-fit flex flex-col bg-secondary/80 backdrop-blur-md border border-border/40 shadow-lg">
-            {/* Add loading class for shimmer effect */}
-            <div className="aspect-ratio-box loading">
-              <Skeleton className="w-full h-full absolute inset-0" />
-            </div>
+            <Skeleton className="w-full" style={{ aspectRatio: i % 2 === 0 ? '4/3' : '1/1' }} />
             <div className="p-4 pb-2">
               <Skeleton className="h-5 w-3/4 mb-2" />
               <Skeleton className="h-4 w-1/2" />
@@ -89,20 +81,11 @@ const MasonryGrid: React.FC<MasonryGridProps> = ({
             <SkeletonCards />
           ) : filteredKarya && filteredKarya.length > 0 ? (
             filteredKarya.map((item) => (
-              <motion.div
+              <KaryaCard
                 key={item.id}
-                className={`masonry-grid-item ${loadedImages.has(item.image_url) ? 'masonry-grid-item-loaded' : ''}`}
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <KaryaCard
-                  karya={item}
-                  onClick={() => onKaryaClick(item)}
-                  onImageLoad={() => handleImageLoad(item.image_url)}
-                />
-              </motion.div>
+                karya={item}
+                onClick={() => onKaryaClick(item)}
+              />
             ))
           ) : (
             <div className="text-center py-16 w-full col-span-full bg-secondary/30 backdrop-blur-sm rounded-3xl border border-border/30 shadow-md">
