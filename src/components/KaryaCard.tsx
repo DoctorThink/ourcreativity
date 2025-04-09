@@ -51,6 +51,9 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     e.stopPropagation();
   };
 
+  // Determine if this is a video card for special handling
+  const hasVideo = mediaUrls.some(url => isVideo(url));
+
   return (
     <motion.div
       whileHover={{ y: -5, scale: 1.02 }}
@@ -142,9 +145,9 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           )}
         </div>
 
-        {/* Glass morphism overlay with improved aesthetics */}
+        {/* Glass morphism overlay - Modified to prevent flickering on video cards */}
         <div 
-          className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-md"
+          className={`absolute inset-0 bg-gradient-to-t from-background/95 via-background/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${hasVideo ? '' : 'backdrop-blur-md'}`}
           aria-hidden="true"
         />
         
