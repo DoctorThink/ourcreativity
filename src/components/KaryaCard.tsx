@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Database } from '@/integrations/supabase/types';
 import { motion } from 'framer-motion';
@@ -16,10 +17,9 @@ type KaryaType = Database['public']['Tables']['karya']['Row'];
 interface KaryaCardProps {
   karya: KaryaType;
   onClick?: () => void;
-  onImageLoad?: () => void;
 }
 
-const KaryaCard = ({ karya, onClick, onImageLoad }: KaryaCardProps) => {
+const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   
@@ -37,9 +37,14 @@ const KaryaCard = ({ karya, onClick, onImageLoad }: KaryaCardProps) => {
   // Use the media_urls array if it exists and has items, otherwise fallback to image_url
   const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
 
+  // Calculate aspect ratio based on media dimensions if available
+  // Default to 4:3 if dimensions aren't available
+  const aspectRatio = karya.media_width && karya.media_height 
+    ? `${karya.media_width} / ${karya.media_height}`
+    : '4 / 3';
+
   const handleImageLoad = () => {
     setImageLoaded(true);
-    onImageLoad?.();
   };
 
   const stopPropagation = (e: React.MouseEvent | React.TouchEvent) => {
@@ -54,10 +59,9 @@ const KaryaCard = ({ karya, onClick, onImageLoad }: KaryaCardProps) => {
     if (hasVideo && videoRef.current) {
       videoRef.current.addEventListener('loadedmetadata', () => {
         setImageLoaded(true);
-        onImageLoad?.();
       });
     }
-  }, [hasVideo, onImageLoad]);
+  }, [hasVideo]);
 
   return (
     <motion.div
@@ -71,10 +75,13 @@ const KaryaCard = ({ karya, onClick, onImageLoad }: KaryaCardProps) => {
           karya.is_spotlight ? 'ring-2 ring-lavender/50 shadow-lg shadow-lavender/20' : ''
         }`}
       >
-        {/* Content Preview Container with improved aspect ratio handling */}
-        <div className="aspect-ratio-box">
+        {/* Content Preview Container with aspect-ratio */}
+        <div 
+          className="relative w-full overflow-hidden rounded-t-2xl"
+          style={{ aspectRatio }}
+        >
           {isText ? (
-            <div className="absolute inset-0 p-6 flex items-center justify-center bg-gradient-to-br from-secondary to-background/80">
+            <div className="h-full w-full p-6 flex items-center justify-center bg-gradient-to-br from-secondary to-background/80 overflow-hidden">
               <p className="text-foreground/80 text-sm line-clamp-6 text-center font-serif">
                 {karya.description}
               </p>
@@ -82,7 +89,7 @@ const KaryaCard = ({ karya, onClick, onImageLoad }: KaryaCardProps) => {
           ) : mediaUrls.length > 1 ? (
             // Carousel for multiple media
             <Carousel 
-              className="absolute inset-0"
+              className="w-full h-full"
               onMouseDown={stopPropagation} 
               onClick={stopPropagation}
             >
@@ -94,13 +101,11 @@ const KaryaCard = ({ karya, onClick, onImageLoad }: KaryaCardProps) => {
                         <video
                           ref={videoRef}
                           src={url}
-                          className={`w-full h-full object-cover transition-opacity duration-500 ${
-                            imageLoaded ? 'opacity-100' : 'opacity-0'
-                          }`}
+                          className="w-full h-full object-cover"
                           preload="metadata"
                           playsInline
                           muted
-                          poster="#1C1C1E"
+                          poster="#1C1C1E" // Dark background as poster
                         />
                         <div className="absolute inset-0 flex items-center justify-center">
                           <div className="bg-black/30 p-3 rounded-full">
@@ -112,9 +117,7 @@ const KaryaCard = ({ karya, onClick, onImageLoad }: KaryaCardProps) => {
                       <img
                         src={url}
                         alt={`${karya.title} - slide ${index + 1}`}
-                        className={`w-full h-full object-cover transition-opacity duration-500 ${
-                          imageLoaded ? 'opacity-100' : 'opacity-0'
-                        }`}
+                        className="w-full h-full object-cover"
                         onLoad={handleImageLoad}
                         loading="lazy"
                       />
@@ -122,24 +125,28 @@ const KaryaCard = ({ karya, onClick, onImageLoad }: KaryaCardProps) => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="absolute left-2 z-10" onClick={stopPropagation} />
-              <CarouselNext className="absolute right-2 z-10" onClick={stopPropagation} />
+              <CarouselPrevious 
+                className="absolute left-2 z-10" 
+                onClick={stopPropagation}
+              />
+              <CarouselNext 
+                className="absolute right-2 z-10" 
+                onClick={stopPropagation}
+              />
             </Carousel>
           ) : (
             // Single media display
             <>
               {isVideo(mediaUrls[0]) ? (
-                <div className="absolute inset-0">
+                <div className="relative w-full h-full">
                   <video
                     ref={videoRef}
                     src={mediaUrls[0]}
-                    className={`w-full h-full object-cover transition-opacity duration-500 ${
-                      imageLoaded ? 'opacity-100' : 'opacity-0'
-                    }`}
+                    className="w-full h-full object-cover"
                     preload="metadata"
                     playsInline
                     muted
-                    poster="#1C1C1E"
+                    poster="#1C1C1E" // Dark background color as poster
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="bg-black/30 p-3 rounded-full">
@@ -158,11 +165,10 @@ const KaryaCard = ({ karya, onClick, onImageLoad }: KaryaCardProps) => {
                   loading="lazy"
                 />
               )}
+              {!imageLoaded && !hasVideo && (
+                <div className="absolute inset-0 bg-secondary animate-pulse"></div>
+              )}
             </>
-          )}
-          {/* Loading state */}
-          {!imageLoaded && (
-            <div className="absolute inset-0 bg-secondary animate-shimmer bg-shimmer-gradient"></div>
           )}
         </div>
 
