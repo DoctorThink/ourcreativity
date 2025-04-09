@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChevronDown } from 'lucide-react';
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -38,18 +38,10 @@ const KaryaGallery = () => {
   const [selectedKarya, setSelectedKarya] = useState<KaryaType | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
   const [spotlightItems, setSpotlightItems] = useState<KaryaType[]>([]);
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
+  // Responsive breakpoint columns for masonry layout
   const breakpointColumnsObj = {
     default: 4,
     1536: 3,
@@ -94,14 +86,17 @@ const KaryaGallery = () => {
     activeCategory === 'all' || item.category === activeCategory
   );
 
+  // Skeleton loader cards with better aspect ratio handling
   const SkeletonCards = () => (
     <>
       {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="rounded-3xl overflow-hidden h-fit flex flex-col bg-secondary/80 backdrop-blur-md border border-border/40 shadow-lg mb-6">
-          <Skeleton className="aspect-[4/3] w-full" />
-          <div className="p-4 pb-2">
-            <Skeleton className="h-5 w-3/4 mb-2" />
-            <Skeleton className="h-4 w-1/2" />
+        <div key={i} className="mb-6">
+          <div className="rounded-3xl overflow-hidden h-fit flex flex-col bg-secondary/80 backdrop-blur-md border border-border/40 shadow-lg">
+            <Skeleton className="w-full" style={{ aspectRatio: '4/3' }} />
+            <div className="p-4 pb-2">
+              <Skeleton className="h-5 w-3/4 mb-2" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
           </div>
         </div>
       ))}
@@ -127,14 +122,14 @@ const KaryaGallery = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {spotlightItems.map((item, index) => (
               <motion.div 
                 key={item.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="spotlight-item"
+                className="spotlight-item scale-105 transform-gpu"
                 style={{
                   '--tile-glow-color': item.category === 'design' 
                     ? 'rgba(152, 245, 225, 0.2)' 
@@ -251,7 +246,7 @@ const KaryaGallery = () => {
         )}
       </div>
 
-      {/* Gallery Content */}
+      {/* Gallery Content - Improved Masonry with better spacing & aspect ratio handling */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

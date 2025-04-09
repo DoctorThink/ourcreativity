@@ -1,4 +1,3 @@
-
 /* src/index.css */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
@@ -89,6 +88,19 @@
   .font-sans {
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
+
+  video {
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    display: block;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000;
+    transform-style: preserve-3d;
+  }
 }
 
 @keyframes flowingGradient {
@@ -173,7 +185,6 @@
   transform-style: preserve-3d;
 }
 
-/* New Glass Morphism Effects */
 .glass-card {
   background: rgba(44, 44, 46, 0.8);
   backdrop-filter: blur(12px);
@@ -195,7 +206,6 @@
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
 }
 
-/* Spotlight Effect for Cards */
 .spotlight-card {
   position: relative;
 }
@@ -225,6 +235,22 @@
   100% {
     background-position: 300% 300%;
   }
+}
+
+.spotlight-item {
+  transition: transform 0.3s ease-out;
+  transform: scale(1.05);
+  z-index: 1;
+}
+
+.spotlight-item:hover {
+  transform: scale(1.08) translateY(-5px);
+  z-index: 2;
+}
+
+.spotlight-item .spotlight-card::before {
+  opacity: 0.8;
+  filter: blur(12px);
 }
 
 @layer utilities {
@@ -385,8 +411,89 @@
   .btn-glow-bright:hover {
     box-shadow: 0 0 20px var(--glow-bright);
   }
+
+  .video-card {
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+  
+  .video-card video {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+  
+  .video-play-button {
+    @apply absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300;
+    background: rgba(0, 0, 0, 0.3);
+  }
+  
+  .video-card:hover .video-play-button {
+    opacity: 1;
+  }
+  
+  .card-content-reveal {
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.3s ease;
+  }
+  
+  .group:hover .card-content-reveal {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  .text-card-content {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 8;
+    -webkit-box-orient: vertical;
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+    text-align: justify;
+  }
+  
+  .optimized-blur {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    will-change: backdrop-filter;
+    transform: translateZ(0);
+  }
+  
+  .immersive-dialog {
+    @apply max-w-7xl max-h-[90vh] p-0 overflow-hidden rounded-3xl transition-all duration-500;
+    transform-origin: center;
+  }
+  
+  .fullscreen-dialog {
+    @apply max-w-screen max-h-screen w-screen h-screen fixed inset-0 rounded-none;
+  }
+  
+  .masonry-grid-improved {
+    display: flex;
+    width: 100%;
+    gap: 1.5rem;
+  }
+  
+  .masonry-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .category-selector {
+    @apply flex py-2 px-3 rounded-full transition-all duration-300;
+  }
+  
+  .category-selector-active {
+    @apply bg-primary/10 text-primary font-medium;
+  }
 }
 
+/* Improved Masonry Grid Styling */
 .my-masonry-grid {
   display: flex;
   width: 100%;
@@ -405,10 +512,23 @@
   margin-bottom: 2.5rem;
   break-inside: avoid;
   width: 100%;
-  transform: none;
-  will-change: none;
 }
 
+/* Fix for video elements to prevent GPU acceleration issues */
+video {
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  display: block;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  transform-style: preserve-3d;
+}
+
+/* Responsive improvements */
 @media screen and (max-width: 640px) {
   .my-masonry-grid {
     margin-left: -0.5rem;
@@ -422,5 +542,18 @@
   
   .my-masonry-grid_column > * {
     margin-bottom: 1.5rem;
+  }
+
+  .spotlight-item {
+    transform: scale(1.03);
+  }
+
+  .spotlight-item:hover {
+    transform: scale(1.05) translateY(-3px);
+  }
+
+  .embla__button {
+    width: 32px !important;
+    height: 32px !important;
   }
 }

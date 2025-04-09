@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import PageLayout from '@/components/layouts/PageLayout';
-import KaryaGallery from '@/components/KaryaGallery';
+import KaryaGallery from '@/components/karya/KaryaGallery';
 import { KaryaUploadForm } from '@/components/KaryaUploadForm';
 
 const KaryaKami = () => {
@@ -38,7 +38,7 @@ const KaryaKami = () => {
         className="min-h-screen relative"
       >
         {/* Background elements for visual interest */}
-        <div className="absolute top-0 left-0 right-0 h-[60vh] overflow-hidden -z-10 opacity-50">
+        <div className="absolute top-0 left-0 right-0 h-[60vh] overflow-hidden -z-10 opacity-50 pointer-events-none">
           <div className="absolute top-[-20%] left-[-10%] w-[40%] h-[40%] bg-gradient-to-br from-lavender/10 to-mint/5 rounded-full filter blur-[100px] animate-float-slow"></div>
           <div className="absolute bottom-[-30%] right-[-10%] w-[50%] h-[60%] bg-gradient-to-br from-peach/10 to-softPink/5 rounded-full filter blur-[120px] animate-float-slow-reverse"></div>
         </div>
@@ -51,7 +51,7 @@ const KaryaKami = () => {
           <KaryaUploadForm />
         </motion.div>
 
-        {/* Gallery Section */}
+        {/* Gallery Section with improved masonry grid */}
         <motion.section 
           variants={childVariants}
           className="py-8"

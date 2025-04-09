@@ -1,9 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Database } from '@/integrations/supabase/types';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Play } from 'lucide-react';
 import {
   Carousel,
   CarouselContent,
@@ -21,7 +21,7 @@ interface KaryaCardProps {
 
 const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
   
   const categoryIcons: Record<string, string> = {
     'design': '/lovable-uploads/design.png',
@@ -37,6 +37,12 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   // Use the media_urls array if it exists and has items, otherwise fallback to image_url
   const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
 
+  // Calculate aspect ratio based on media dimensions if available
+  // Default to 4:3 if dimensions aren't available
+  const aspectRatio = karya.media_width && karya.media_height 
+    ? `${karya.media_width} / ${karya.media_height}`
+    : '4 / 3';
+
   const handleImageLoad = () => {
     setImageLoaded(true);
   };
@@ -44,6 +50,18 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   const stopPropagation = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
   };
+
+  // Determine if this is a video card for special handling
+  const hasVideo = mediaUrls.some(url => isVideo(url));
+
+  // Pre-load video metadata to avoid layout shifts
+  useEffect(() => {
+    if (hasVideo && videoRef.current) {
+      videoRef.current.addEventListener('loadedmetadata', () => {
+        setImageLoaded(true);
+      });
+    }
+  }, [hasVideo]);
 
   return (
     <motion.div
@@ -53,14 +71,17 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     >
       <Card
         onClick={onClick}
-        className={`group relative w-full overflow-hidden bg-secondary/80 backdrop-blur-md border border-border/40 rounded-3xl transition-all duration-300 cursor-pointer hover:border-border/60 hover:shadow-xl ${
+        className={`group relative w-full overflow-hidden bg-secondary/80 border border-border/40 rounded-3xl transition-all duration-300 cursor-pointer hover:border-border/60 hover:shadow-xl ${
           karya.is_spotlight ? 'ring-2 ring-lavender/50 shadow-lg shadow-lavender/20' : ''
         }`}
       >
-        {/* Content Preview Container */}
-        <div className="relative w-full overflow-hidden rounded-t-2xl">
+        {/* Content Preview Container with aspect-ratio */}
+        <div 
+          className="relative w-full overflow-hidden rounded-t-2xl"
+          style={{ aspectRatio }}
+        >
           {isText ? (
-            <div className="aspect-[4/3] p-6 flex items-center justify-center bg-gradient-to-br from-secondary to-background/80 overflow-hidden">
+            <div className="h-full w-full p-6 flex items-center justify-center bg-gradient-to-br from-secondary to-background/80 overflow-hidden">
               <p className="text-foreground/80 text-sm line-clamp-6 text-center font-serif">
                 {karya.description}
               </p>
@@ -68,24 +89,35 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           ) : mediaUrls.length > 1 ? (
             // Carousel for multiple media
             <Carousel 
-              className="w-full aspect-[4/3]"
+              className="w-full h-full"
               onMouseDown={stopPropagation} 
-              onTouchStart={stopPropagation}
+              onClick={stopPropagation}
             >
-              <CarouselContent>
+              <CarouselContent className="h-full">
                 {mediaUrls.map((url, index) => (
-                  <CarouselItem key={index}>
+                  <CarouselItem key={index} className="h-full">
                     {isVideo(url) ? (
-                      <video
-                        src={url}
-                        className="w-full h-full object-cover aspect-[4/3]"
-                        preload="metadata"
-                      />
+                      <div className="relative w-full h-full">
+                        <video
+                          ref={videoRef}
+                          src={url}
+                          className="w-full h-full object-cover"
+                          preload="metadata"
+                          playsInline
+                          muted
+                          poster="#1C1C1E" // Dark background as poster
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="bg-black/30 p-3 rounded-full">
+                            <Play className="w-6 h-6 text-white" />
+                          </div>
+                        </div>
+                      </div>
                     ) : (
                       <img
                         src={url}
                         alt={`${karya.title} - slide ${index + 1}`}
-                        className="w-full h-full object-cover aspect-[4/3]"
+                        className="w-full h-full object-cover"
                         onLoad={handleImageLoad}
                         loading="lazy"
                       />
@@ -106,37 +138,44 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
             // Single media display
             <>
               {isVideo(mediaUrls[0]) ? (
-                <video
-                  src={mediaUrls[0]}
-                  className="w-full aspect-[4/3] object-cover"
-                  preload="metadata"
-                />
+                <div className="relative w-full h-full">
+                  <video
+                    ref={videoRef}
+                    src={mediaUrls[0]}
+                    className="w-full h-full object-cover"
+                    preload="metadata"
+                    playsInline
+                    muted
+                    poster="#1C1C1E" // Dark background color as poster
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="bg-black/30 p-3 rounded-full">
+                      <Play className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                </div>
               ) : (
                 <img
                   src={mediaUrls[0]}
                   alt={karya.title}
-                  className={`w-full aspect-[4/3] object-cover transition-opacity duration-500 ${
+                  className={`w-full h-full object-cover transition-opacity duration-500 ${
                     imageLoaded ? 'opacity-100' : 'opacity-0'
                   }`}
                   onLoad={handleImageLoad}
                   loading="lazy"
                 />
               )}
-              {!imageLoaded && (
-                <div className="absolute inset-0 bg-secondary animate-pulse aspect-[4/3]"></div>
+              {!imageLoaded && !hasVideo && (
+                <div className="absolute inset-0 bg-secondary animate-pulse"></div>
               )}
             </>
           )}
         </div>
 
-        {/* Glass morphism overlay with improved aesthetics */}
+        {/* Content overlay with gradient background for better readability */}
         <div 
-          className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-md"
-          aria-hidden="true"
-        />
-        
-        {/* Content overlay with better typography */}
-        <div className="absolute bottom-0 left-0 right-0 p-5 text-foreground opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+          className="absolute bottom-0 left-0 right-0 p-5 text-foreground opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t from-background/95 to-transparent"
+        >
           <div className="flex justify-between items-end gap-3">
             <div className="flex-1 min-w-0">
               <h3 className="text-base sm:text-lg font-semibold truncate tracking-tight">{karya.title}</h3>
@@ -159,9 +198,9 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           </div>
         </div>
 
-        {/* Category Icon - Improved with white background */}
+        {/* Category Icon - Improved with gradient background */}
         <div 
-          className="absolute top-3 right-3 bg-white/90 backdrop-blur-md p-2 rounded-full scale-100 transition-all duration-300 shadow-md"
+          className="absolute top-3 right-3 bg-gradient-to-br from-white/95 to-white/85 backdrop-blur-md p-2 rounded-full scale-100 transition-all duration-300 shadow-md"
           aria-label={`Category: ${karya.category}`}
         >
           <img
