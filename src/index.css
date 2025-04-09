@@ -413,6 +413,7 @@
   }
 }
 
+/* Improved Masonry Grid Styling */
 .my-masonry-grid {
   display: flex;
   width: 100%;
@@ -431,8 +432,20 @@
   margin-bottom: 2.5rem;
   break-inside: avoid;
   width: 100%;
-  transform: none;
-  will-change: none;
+}
+
+/* Fix for video elements to prevent GPU acceleration issues */
+video {
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  display: block;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  transform-style: preserve-3d;
 }
 
 @media screen and (max-width: 640px) {

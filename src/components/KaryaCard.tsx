@@ -37,6 +37,12 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   // Use the media_urls array if it exists and has items, otherwise fallback to image_url
   const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
 
+  // Calculate aspect ratio based on media dimensions if available
+  // Default to 4:3 if dimensions aren't available
+  const aspectRatio = karya.media_width && karya.media_height 
+    ? `${karya.media_width} / ${karya.media_height}`
+    : '4 / 3';
+
   const handleImageLoad = () => {
     setImageLoaded(true);
   };
@@ -57,10 +63,13 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           karya.is_spotlight ? 'ring-2 ring-lavender/50 shadow-lg shadow-lavender/20' : ''
         }`}
       >
-        {/* Content Preview Container */}
-        <div className="relative w-full overflow-hidden rounded-t-2xl">
+        {/* Content Preview Container with aspect-ratio */}
+        <div 
+          className="relative w-full overflow-hidden rounded-t-2xl"
+          style={{ aspectRatio }}
+        >
           {isText ? (
-            <div className="aspect-[4/3] p-6 flex items-center justify-center bg-gradient-to-br from-secondary to-background/80 overflow-hidden">
+            <div className="h-full w-full p-6 flex items-center justify-center bg-gradient-to-br from-secondary to-background/80 overflow-hidden">
               <p className="text-foreground/80 text-sm line-clamp-6 text-center font-serif">
                 {karya.description}
               </p>
@@ -68,17 +77,17 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           ) : mediaUrls.length > 1 ? (
             // Carousel for multiple media
             <Carousel 
-              className="w-full aspect-[4/3]"
+              className="w-full h-full"
               onMouseDown={stopPropagation} 
               onClick={stopPropagation}
             >
-              <CarouselContent>
+              <CarouselContent className="h-full">
                 {mediaUrls.map((url, index) => (
-                  <CarouselItem key={index}>
+                  <CarouselItem key={index} className="h-full">
                     {isVideo(url) ? (
                       <video
                         src={url}
-                        className="w-full h-full object-cover aspect-[4/3]"
+                        className="w-full h-full object-cover"
                         preload="metadata"
                         playsInline
                         muted
@@ -87,7 +96,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                       <img
                         src={url}
                         alt={`${karya.title} - slide ${index + 1}`}
-                        className="w-full h-full object-cover aspect-[4/3]"
+                        className="w-full h-full object-cover"
                         onLoad={handleImageLoad}
                         loading="lazy"
                       />
@@ -110,7 +119,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
               {isVideo(mediaUrls[0]) ? (
                 <video
                   src={mediaUrls[0]}
-                  className="w-full aspect-[4/3] object-cover"
+                  className="w-full h-full object-cover"
                   preload="metadata"
                   playsInline
                   muted
@@ -119,7 +128,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                 <img
                   src={mediaUrls[0]}
                   alt={karya.title}
-                  className={`w-full aspect-[4/3] object-cover transition-opacity duration-500 ${
+                  className={`w-full h-full object-cover transition-opacity duration-500 ${
                     imageLoaded ? 'opacity-100' : 'opacity-0'
                   }`}
                   onLoad={handleImageLoad}
@@ -127,7 +136,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                 />
               )}
               {!imageLoaded && (
-                <div className="absolute inset-0 bg-secondary animate-pulse aspect-[4/3]"></div>
+                <div className="absolute inset-0 bg-secondary animate-pulse"></div>
               )}
             </>
           )}

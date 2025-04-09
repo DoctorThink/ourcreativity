@@ -51,7 +51,7 @@ const KaryaKami = () => {
           <KaryaUploadForm />
         </motion.div>
 
-        {/* Gallery Section */}
+        {/* Gallery Section with improved masonry grid */}
         <motion.section 
           variants={childVariants}
           className="py-8"

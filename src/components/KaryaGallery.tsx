@@ -17,7 +17,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { ChevronDown } from 'lucide-react';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -42,6 +41,7 @@ const KaryaGallery = () => {
   const isMobile = useIsMobile();
   const [spotlightItems, setSpotlightItems] = useState<KaryaType[]>([]);
 
+  // Responsive breakpoint columns for masonry layout
   const breakpointColumnsObj = {
     default: 4,
     1536: 3,
@@ -86,14 +86,17 @@ const KaryaGallery = () => {
     activeCategory === 'all' || item.category === activeCategory
   );
 
+  // Skeleton loader cards with better aspect ratio handling
   const SkeletonCards = () => (
     <>
       {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="rounded-3xl overflow-hidden h-fit flex flex-col bg-secondary/80 backdrop-blur-md border border-border/40 shadow-lg mb-6">
-          <Skeleton className="aspect-[4/3] w-full" />
-          <div className="p-4 pb-2">
-            <Skeleton className="h-5 w-3/4 mb-2" />
-            <Skeleton className="h-4 w-1/2" />
+        <div key={i} className="mb-6">
+          <div className="rounded-3xl overflow-hidden h-fit flex flex-col bg-secondary/80 backdrop-blur-md border border-border/40 shadow-lg">
+            <Skeleton className="w-full" style={{ aspectRatio: '4/3' }} />
+            <div className="p-4 pb-2">
+              <Skeleton className="h-5 w-3/4 mb-2" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
           </div>
         </div>
       ))}
@@ -243,7 +246,7 @@ const KaryaGallery = () => {
         )}
       </div>
 
-      {/* Gallery Content */}
+      {/* Gallery Content - Improved Masonry with better spacing & aspect ratio handling */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
