@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import PageLayout from '@/components/layouts/PageLayout';
-import KaryaGallery from '@/components/KaryaGallery';
+import KaryaGallery from '@/components/karya/KaryaGallery';
 import { KaryaUploadForm } from '@/components/KaryaUploadForm';
 
 const KaryaKami = () => {
