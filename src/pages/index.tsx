@@ -1,8 +1,31 @@
 // src/pages/Index.tsx
+import React from 'react';
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { BookOpen, Info, Bell, ScrollText, Users, Palette, Feather, Clock, Code, Instagram, ExternalLink } from "lucide-react"; // Added ExternalLink
 import { cn } from "@/lib/utils"; // Assuming utils.ts is in src/lib
+
+
+// Define the type for Bento Grid tiles
+interface BentoTile {
+  id: string;
+  colSpan: string;
+  rowSpan: string;
+  mdColSpan?: string;
+  mdRowSpan?: string;
+  content?: React.ReactNode; // Content can be any renderable React node
+  bgColor: string;
+  accentColorClass?: string;
+  iconColorClass?: string;
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>; // Type for icon components like Lucide
+  text?: string;
+  href?: string;
+  isInteractive: boolean;
+  comingSoon?: boolean; // Optional: Indicates if the tile feature is coming soon
+  isWidget?: boolean; // Optional: Indicates if the tile is a widget style
+  backdropBlur?: boolean; // Optional: Apply backdrop blur effect
+  glowColorVar?: string; // Optional: CSS variable name for glow color
+}
 
 const Index = () => {
   const navigate = useNavigate();
@@ -47,7 +70,7 @@ const Index = () => {
 
 
   // --- Bento Grid Tile Configuration (Updated Positions, Styles) ---
-  const bentoTiles = [
+  const bentoTiles: BentoTile[] = [
     // Row 1
     {
       id: "title",
@@ -133,14 +156,17 @@ const Index = () => {
       glowColorVar: "--color-mint-glow", // Using mint glow
       isInteractive: true, isWidget: true, backdropBlur: true,
     },
-    { // Karya (Coming Soon - Now takes the 3rd column)
+    { // Karya (Now Interactive - Takes the 3rd column)
       id: "karya",
-      icon: Feather,
-      text: "Karya",
-      colSpan: "col-span-1", rowSpan: "row-span-1", mdColSpan: "md:col-span-1", mdRowSpan: "md:row-span-1", // Changed Span
-      bgColor: "bg-secondary/70", // Slightly more transparent
-      textColor: "text-foreground/60",
-      isInteractive: false, comingSoon: true, backdropBlur: true,
+      icon: Palette, // Changed icon to Palette for better representation
+      text: "Karya Kami", // Updated text
+      href: "/karya-kami", // Added navigation link
+      colSpan: "col-span-1", rowSpan: "row-span-1", mdColSpan: "md:col-span-1", mdRowSpan: "md:row-span-1",
+      bgColor: "bg-secondary/80", // Matched other interactive tiles
+      accentColorClass: "bg-emerald", // Added Emerald accent
+      iconColorClass: "text-background", // Standard icon color
+      glowColorVar: "--color-emerald-glow", // Added glow variable
+      isInteractive: true, isWidget: true, backdropBlur: true, // Made interactive, removed comingSoon
     },
     { // Logo Visual Accent
       id: "logo-visual",
@@ -228,9 +254,9 @@ const Index = () => {
         >
           {bentoTiles.map((tile) => {
             const {
-                id, colSpan, rowSpan, mdColSpan, mdRowSpan, content, bgColor, textColor,
+                id, colSpan, rowSpan, mdColSpan, mdRowSpan, content, bgColor,
                 accentColorClass, iconColorClass, icon: Icon, text, href, isInteractive,
-                comingSoon, isWidget, backdropBlur, glowColorVar
+                comingSoon, isWidget, backdropBlur, glowColorVar // Removed textColor
             } = tile;
 
             const MotionComponent = motion.div;
@@ -244,7 +270,7 @@ const Index = () => {
                     `relative group overflow-hidden rounded-2xl md:rounded-3xl border shadow-lg transition-all duration-300 ease-in-out`, // Smoother corners, transition
                     `border-white/10 hover:border-white/20`, // Slightly more visible border on hover
                     colSpan, rowSpan, mdColSpan || colSpan, mdRowSpan || rowSpan,
-                    bgColor, textColor || 'text-foreground',
+                    bgColor, 'text-foreground',
                     comingSoon ? 'opacity-70 filter grayscale-[50%]' : '', // Slightly less grayscale
                     isInteractive && !comingSoon ? 'cursor-pointer interactive-tile glow-card' : 'cursor-default',
                     backdropBlur ? 'backdrop-blur-lg' : '' // Apply backdrop blur if specified
@@ -286,7 +312,7 @@ const Index = () => {
                          </motion.div>
                          {/* Text with slight lift on hover */}
                          <motion.span
-                            className={cn(`text-xs md:text-sm font-serif font-medium`, textColor || 'text-foreground')}
+                            className={cn(`text-xs md:text-sm font-serif font-medium`, 'text-foreground')}
                             whileHover={{ y: -2 }}
                           >
                             {text}
