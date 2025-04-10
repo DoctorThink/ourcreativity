@@ -150,6 +150,15 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                   <span className="sr-only">{showInfoPanel ? 'Hide info' : 'Show info'}</span>
                 </button>
               )}
+              {isFullscreen && (
+                <button
+                  onClick={onClose}
+                  className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
+                >
+                  <X className="h-5 w-5" />
+                  <span className="sr-only">Close</span>
+                </button>
+              )}
             </div>
           </div>
           
