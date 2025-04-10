@@ -7,6 +7,12 @@ import { useToast } from '@/hooks/use-toast';
 import { Database } from '@/integrations/supabase/types';
 import { Plus, Upload, Loader2, Check, ChevronDown, Video, Image, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
+console.log('React:', React);
+console.log('zod:', zod);
+console.log('useForm:', useForm);
+console.log('zodResolver:', zodResolver);
+console.log('LucideReact:', LucideReact);
+console.log('framerMotion:', framerMotion);
 import { Button } from '@/components/ui/button';
 import {
   Form,
