@@ -35,6 +35,8 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MDXEditor } from '@mdxeditor/editor';
+import '@mdxeditor/editor/style.css';
 
 type KaryaInsert = Database['public']['Tables']['karya']['Insert'];
 
@@ -47,7 +49,7 @@ const formSchema = z.object({
   description: z.string().optional(),
   content_url: z.string().url('URL konten tidak valid').optional().or(z.literal('')),
   media_file: z.instanceof(File, { message: 'File wajib diupload' }).optional(),
-  media_type: z.enum(['image', 'video', 'text'], {
+  media_type: z.enum(['image', 'video', 'text', 'pdf', 'docx'], {
     required_error: 'Pilih tipe media',
   }),
   image_url: z.string().optional(),
@@ -58,8 +60,9 @@ export function KaryaUploadForm() {
   const [isOpen, setIsOpen] = useState(false);
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [mediaPreview, setMediaPreview] = useState<string | null>(null);
-  const [mediaType, setMediaType] = useState<'image' | 'video' | 'text'>('image');
+  const [mediaType, setMediaType] = useState<'image' | 'video' | 'text' | 'pdf' | 'docx'>('image');
   const [isUploading, setIsUploading] = useState(false);
+  const [markdownContent, setMarkdownContent] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
 
@@ -77,7 +80,7 @@ export function KaryaUploadForm() {
   });
 
   // Handle image/video file change
-  const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'video') => {
+  const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'video' | 'pdf' | 'docx') => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -88,9 +91,15 @@ export function KaryaUploadForm() {
     if (type === 'image') {
       allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
       maxSize = 1 * 1024 * 1024; // 1MB
-    } else {
+    } else if (type === 'video') {
       allowedTypes = ['video/mp4', 'video/webm', 'video/ogg'];
       maxSize = 50 * 1024 * 1024; // 50MB
+    } else if (type === 'pdf') {
+      allowedTypes = ['application/pdf'];
+      maxSize = 10 * 1024 * 1024; // 10MB
+    } else {
+      allowedTypes = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      maxSize = 10 * 1024 * 1024; // 10MB
     }
 
     if (!allowedTypes.includes(file.type)) {
@@ -98,7 +107,11 @@ export function KaryaUploadForm() {
         title: 'Format tidak didukung',
         description: type === 'image' 
           ? 'Gunakan format gambar: JPG, PNG, WebP, atau GIF'
-          : 'Gunakan format video: MP4, WebM, atau OGG',
+          : type === 'video'
+          ? 'Gunakan format video: MP4, WebM, atau OGG'
+          : type === 'pdf'
+          ? 'Gunakan format PDF'
+          : 'Gunakan format DOCX',
         variant: 'destructive',
       });
       return;
@@ -110,7 +123,9 @@ export function KaryaUploadForm() {
         title: 'Ukuran terlalu besar',
         description: type === 'image'
           ? 'Ukuran maksimal gambar adalah 1MB'
-          : 'Ukuran maksimal video adalah 50MB',
+          : type === 'video'
+          ? 'Ukuran maksimal video adalah 50MB'
+          : 'Ukuran maksimal file adalah 10MB',
         variant: 'destructive',
       });
       return;
@@ -149,6 +164,7 @@ export function KaryaUploadForm() {
     setMediaFile(null);
     setMediaPreview(null);
     setMediaType('image');
+    setMarkdownContent('');
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -269,8 +285,10 @@ export function KaryaUploadForm() {
           if (value === 'image') setMediaType('image');
           else if (value === 'video') setMediaType('video');
           else if (value === 'text') handleTextMode();
+          else if (value === 'pdf') setMediaType('pdf');
+          else if (value === 'docx') setMediaType('docx');
         }}>
-          <TabsList className="grid grid-cols-3 mb-6">
+          <TabsList className="grid grid-cols-5 mb-6">
             <TabsTrigger value="image" className="flex items-center gap-2">
               <Image className="h-4 w-4" />
               <span>Gambar</span>
@@ -281,7 +299,15 @@ export function KaryaUploadForm() {
             </TabsTrigger>
             <TabsTrigger value="text" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
-              <span>Tulisan</span>
+              <span>Tulis</span>
+            </TabsTrigger>
+            <TabsTrigger value="pdf" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              <span>PDF</span>
+            </TabsTrigger>
+            <TabsTrigger value="docx" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              <span>DOCX</span>
             </TabsTrigger>
           </TabsList>
           
@@ -396,7 +422,6 @@ export function KaryaUploadForm() {
               </TabsContent>
               
               <TabsContent value="text" className="mt-0">
-                {/* Text content description - Only show extended version for text entries */}
                 <FormField
                   control={form.control}
                   name="description"
@@ -404,12 +429,76 @@ export function KaryaUploadForm() {
                     <FormItem>
                       <FormLabel className="text-foreground-dark">Konten Tulisan</FormLabel>
                       <FormControl>
-                        <Textarea 
-                          placeholder="Tulis karya Anda di sini..." 
-                          {...field} 
-                          className="resize-none bg-secondary-dark/70 border-grayMid/30 focus:border-grayLight/80 text-foreground-dark placeholder:text-grayMid/70 rounded-xl min-h-[200px]"
-                          rows={8}
-                        />
+                        <div className="min-h-[400px] rounded-xl border border-grayMid/30 overflow-hidden">
+                          <MDXEditor
+                            markdown={markdownContent}
+                            onChange={(content) => {
+                              setMarkdownContent(content);
+                              field.onChange(content);
+                            }}
+                            className="prose prose-invert max-w-none p-4 bg-secondary-dark/70"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </TabsContent>
+
+              <TabsContent value="pdf" className="mt-0">
+                <FormField
+                  control={form.control}
+                  name="media_file"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground-dark">File PDF</FormLabel>
+                      <FormControl>
+                        <label className="flex flex-col items-center justify-center w-full aspect-[4/3] rounded-xl border-2 border-dashed border-grayMid/40 hover:border-grayMid/70 bg-secondary-dark/50 cursor-pointer transition-all duration-300 hover:bg-secondary-dark/80 group">
+                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                            <div className="bg-grayDark/50 p-3 rounded-full mb-3 group-hover:bg-grayDark/70 transition-colors">
+                              <FileText className="w-8 h-8 text-grayLight group-hover:text-white transition-colors" />
+                            </div>
+                            <p className="mb-2 text-base text-foreground-dark font-medium">Klik untuk unggah PDF</p>
+                            <p className="text-xs text-muted-foreground">PDF (Max 10MB)</p>
+                          </div>
+                          <input
+                            type="file"
+                            className="hidden"
+                            accept="application/pdf"
+                            onChange={(e) => handleMediaChange(e, 'pdf')}
+                          />
+                        </label>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </TabsContent>
+
+              <TabsContent value="docx" className="mt-0">
+                <FormField
+                  control={form.control}
+                  name="media_file"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground-dark">File DOCX</FormLabel>
+                      <FormControl>
+                        <label className="flex flex-col items-center justify-center w-full aspect-[4/3] rounded-xl border-2 border-dashed border-grayMid/40 hover:border-grayMid/70 bg-secondary-dark/50 cursor-pointer transition-all duration-300 hover:bg-secondary-dark/80 group">
+                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                            <div className="bg-grayDark/50 p-3 rounded-full mb-3 group-hover:bg-grayDark/70 transition-colors">
+                              <FileText className="w-8 h-8 text-grayLight group-hover:text-white transition-colors" />
+                            </div>
+                            <p className="mb-2 text-base text-foreground-dark font-medium">Klik untuk unggah DOCX</p>
+                            <p className="text-xs text-muted-foreground">DOCX (Max 10MB)</p>
+                          </div>
+                          <input
+                            type="file"
+                            className="hidden"
+                            accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                            onChange={(e) => handleMediaChange(e, 'docx')}
+                          />
+                        </label>
                       </FormControl>
                       <FormMessage />
                     </FormItem>

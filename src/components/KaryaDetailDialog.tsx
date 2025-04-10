@@ -42,9 +42,33 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
   };
 
   const isVideo = (url: string) => url?.match(/\.(mp4|webm|ogg)$/i);
+  const isPDF = (url: string) => url?.match(/\.pdf$/i);
+  const isDocx = (url: string) => url?.match(/\.docx$/i);
   const isText = karya.category === 'writing' && karya.description;
   
   const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
+
+  // Handle document preview
+  const renderDocumentPreview = (url: string) => {
+    if (isPDF(url)) {
+      return (
+        <iframe
+          src={`https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`}
+          className="w-full h-full border-0"
+          title="PDF Viewer"
+        />
+      );
+    } else if (isDocx(url)) {
+      return (
+        <iframe
+          src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`}
+          className="w-full h-full border-0"
+          title="DOCX Viewer"
+        />
+      );
+    }
+    return null;
+  };
 
   const toggleDescription = () => {
     setIsDescriptionExpanded(!isDescriptionExpanded);
@@ -81,6 +105,8 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                           playsInline
                           preload="metadata"
                         />
+                      ) : isPDF(url) || isDocx(url) ? (
+                        renderDocumentPreview(url)
                       ) : (
                         <img 
                           src={url}
@@ -108,6 +134,8 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                     playsInline
                     preload="metadata"
                   />
+                ) : isPDF(mediaUrls[0]) || isDocx(mediaUrls[0]) ? (
+                  renderDocumentPreview(mediaUrls[0])
                 ) : (
                   <img 
                     src={mediaUrls[0]}
