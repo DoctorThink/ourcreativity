@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Dialog, 
@@ -235,18 +234,32 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                     })}
                   </p>
                   
-                  {karya.link_url && (
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button 
-                        className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-lavender to-purpleLight text-white border border-white/10" 
-                        size="sm"
-                        onClick={() => window.open(karya.link_url, '_blank')}
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                        <span>Lihat Karya Lengkap</span>
-                      </Button>
-                    </motion.div>
-                  )}
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    {karya.content_url && (
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button 
+                          className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10" 
+                          size="sm"
+                          onClick={() => window.open(karya.content_url, '_blank')}
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                          <span>Link Konten</span>
+                        </Button>
+                      </motion.div>
+                    )}
+                    {karya.link_url && (
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button 
+                          className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-lavender to-purpleLight text-white border border-white/10" 
+                          size="sm"
+                          onClick={() => window.open(karya.link_url, '_blank')}
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                          <span>Lihat Karya Lengkap</span>
+                        </Button>
+                      </motion.div>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             )}
