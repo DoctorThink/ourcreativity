@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown, ExternalLink, X, Maximize2, Minimize2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Database } from '@/integrations/supabase/types';
 import { motion, AnimatePresence } from 'framer-motion';
-import ReactMarkdown from 'react-markdown';
 import {
   Carousel,
   CarouselContent,
@@ -44,7 +43,8 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
   };
 
   const isVideo = (url: string) => url?.match(/\.(mp4|webm|ogg)$/i);
-  // Removed isText variable, logic moved inline below
+  const isText = karya.category === 'writing' && karya.description;
+  
   // Use the media_urls array if it exists and has items, otherwise fallback to image_url
   const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
 
@@ -71,28 +71,15 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
           {/* Content preview with enhanced media display - takes full height in fullscreen mode */}
           <div className="relative w-full bg-black/50 flex-grow" 
                style={{ height: isFullscreen ? '100vh' : isText ? 'auto' : '65vh' }}>
-            {karya.media_type === 'text' ? (
-              // Handle Text type (Document or Markdown)
-              karya.content_url ? (
-                // Display Document using iframe
-                <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                   <iframe
-                     src={`https://docs.google.com/gview?url=${encodeURIComponent(karya.content_url)}&embedded=true`}
-                     className="w-full h-full border-none"
-                     title={`Document Viewer: ${karya.title}`}
-                   >
-                     <p>Your browser does not support iframes. <a href={karya.content_url} target="_blank" rel="noopener noreferrer">Download the document</a>.</p>
-                   </iframe>
+            {isText ? (
+              <div className="w-full h-full overflow-auto p-8 bg-gradient-to-b from-secondary/90 to-secondary/70 backdrop-blur-md flex items-center justify-center">
+                <div className="max-w-3xl prose prose-invert">
+                  <p className="text-foreground/90 whitespace-pre-wrap text-readable leading-relaxed">
+                    {karya.description}
+                  </p>
                 </div>
-              ) : (
-                // Display Markdown content
-                <div className="w-full h-full overflow-auto p-8 bg-gradient-to-b from-secondary/90 to-secondary/70 backdrop-blur-md flex justify-center">
-                  <div className="max-w-3xl w-full prose prose-invert text-foreground/90 text-readable leading-relaxed">
-                    <ReactMarkdown>{karya.description || ''}</ReactMarkdown>
-                  </div>
-                </div>
-              )
-            ) : mediaUrls.length > 1 ? ( // Handle Image/Video Carousel
+              </div>
+            ) : mediaUrls.length > 1 ? (
               <Carousel className="w-full h-full">
                 <CarouselContent className="h-full">
                   {mediaUrls.map((url, index) => (
@@ -209,7 +196,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                 </div>
                 
                 {/* Expandable description section */}
-                {karya.media_type !== 'text' && karya.description && ( // Show description section only for non-text types
+                {!isText && karya.description && (
                   <div className="p-6">
                     <div 
                       className={`relative overflow-hidden transition-all duration-300 ${
@@ -248,17 +235,15 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-2">
-                    {/* Link Konten Button - Show for uploaded documents OR optional external links on image/video */}
-                    {karya.content_url && (karya.media_type === 'text' || (karya.media_type !== 'text' && !karya.link_url)) && (
+                    {karya.content_url && (
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button
-                          className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10"
+                        <Button 
+                          className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10" 
                           size="sm"
                           onClick={() => window.open(karya.content_url, '_blank')}
                         >
                           <ExternalLink className="h-4 w-4" />
-                          {/* Adjust button text based on context */}
-                          <span>{karya.media_type === 'text' ? 'Lihat Dokumen' : 'Link Konten'}</span>
+                          <span>Link Konten</span>
                         </Button>
                       </motion.div>
                     )}
