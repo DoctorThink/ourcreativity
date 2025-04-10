@@ -1,8 +1,7 @@
-import { type Config } from "tailwindcss";
-import animate from "tailwindcss-animate";
+
+import type { Config } from "tailwindcss";
 
 export default {
-  darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -123,7 +122,7 @@ export default {
         "pulse-soft": "pulse-soft 3s ease-in-out infinite",
         "rotate-slow": "rotate-slow 12s linear infinite",
         "morph": "morph 8s ease-in-out infinite",
-        "shimmer": "shimmer 2s linear infinite",
+        "shimmer": "shimmer 3s ease-in-out infinite",
         "gradient-cycle": "gradient-cycle 8s ease-in-out infinite",
         "theme-fade": "theme-fade 0.5s ease-in-out",
       },
@@ -135,5 +134,5 @@ export default {
       }
     },
   },
-  plugins: [animate],
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;
