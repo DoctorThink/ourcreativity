@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ReactNode, useEffect, useState } from "react";
 import { ArrowLeft, Instagram, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useIsMobile } from "@/hooks/use-mobile.tsx";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import FlowingBackground from "@/components/FlowingBackground";
 

@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -35,11 +36,6 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Link from '@tiptap/extension-link';
-import BubbleMenu from '@tiptap/extension-bubble-menu';
-import { Editor } from '@tiptap/core';
 
 type KaryaInsert = Database['public']['Tables']['karya']['Insert'];
 
@@ -52,7 +48,7 @@ const formSchema = z.object({
   description: z.string().optional(),
   content_url: z.string().url('URL konten tidak valid').optional().or(z.literal('')),
   media_file: z.instanceof(File, { message: 'File wajib diupload' }).optional(),
-  media_type: z.enum(['image', 'video', 'text', 'pdf', 'docx'], {
+  media_type: z.enum(['image', 'video', 'text'], {
     required_error: 'Pilih tipe media',
   }),
   image_url: z.string().optional(),
@@ -63,7 +59,7 @@ export function KaryaUploadForm() {
   const [isOpen, setIsOpen] = useState(false);
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [mediaPreview, setMediaPreview] = useState<string | null>(null);
-  const [mediaType, setMediaType] = useState<'image' | 'video' | 'text' | 'pdf' | 'docx'>('image');
+  const [mediaType, setMediaType] = useState<'image' | 'video' | 'text'>('image');
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -81,28 +77,8 @@ export function KaryaUploadForm() {
     },
   });
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Link.configure({
-        openOnClick: false,
-      }),
-      BubbleMenu,
-    ],
-    onUpdate: ({ editor }) => {
-      const html = editor.getHTML();
-      form.setValue('description', html);
-    },
-    content: '',
-    editorProps: {
-      attributes: {
-        class: 'prose prose-invert prose-sm sm:prose-base max-w-none focus:outline-none p-4'
-      }
-    }
-  });
-
   // Handle image/video file change
-  const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'video' | 'pdf' | 'docx') => {
+  const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'video') => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -113,15 +89,9 @@ export function KaryaUploadForm() {
     if (type === 'image') {
       allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
       maxSize = 1 * 1024 * 1024; // 1MB
-    } else if (type === 'video') {
+    } else {
       allowedTypes = ['video/mp4', 'video/webm', 'video/ogg'];
       maxSize = 50 * 1024 * 1024; // 50MB
-    } else if (type === 'pdf') {
-      allowedTypes = ['application/pdf'];
-      maxSize = 10 * 1024 * 1024; // 10MB
-    } else {
-      allowedTypes = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-      maxSize = 10 * 1024 * 1024; // 10MB
     }
 
     if (!allowedTypes.includes(file.type)) {
@@ -129,11 +99,7 @@ export function KaryaUploadForm() {
         title: 'Format tidak didukung',
         description: type === 'image' 
           ? 'Gunakan format gambar: JPG, PNG, WebP, atau GIF'
-          : type === 'video'
-          ? 'Gunakan format video: MP4, WebM, atau OGG'
-          : type === 'pdf'
-          ? 'Gunakan format PDF'
-          : 'Gunakan format DOCX',
+          : 'Gunakan format video: MP4, WebM, atau OGG',
         variant: 'destructive',
       });
       return;
@@ -145,9 +111,7 @@ export function KaryaUploadForm() {
         title: 'Ukuran terlalu besar',
         description: type === 'image'
           ? 'Ukuran maksimal gambar adalah 1MB'
-          : type === 'video'
-          ? 'Ukuran maksimal video adalah 50MB'
-          : 'Ukuran maksimal file adalah 10MB',
+          : 'Ukuran maksimal video adalah 50MB',
         variant: 'destructive',
       });
       return;
@@ -237,15 +201,17 @@ export function KaryaUploadForm() {
         creator_name: values.creator_name,
         category: values.category,
         description: values.description || null,
-        content_url: values.content_url || null,
+        content_url: null,
         status: 'pending', // Set the status to pending for admin review
       };
       
       // Set appropriate URLs based on media type
       if (mediaType === 'image') {
         karyaData.image_url = imageUrl;
+        karyaData.content_url = values.content_url || null;
       } else if (mediaType === 'video') {
-        karyaData.image_url = imageUrl; // Video file url becomes the image url for preview
+        karyaData.image_url = values.content_url ? values.content_url : imageUrl; // For video thumbnail
+        karyaData.content_url = imageUrl; // The video URL
       } else if (mediaType === 'text') {
         // For text entries, we set a placeholder image and the content is in the description
         karyaData.image_url = '/lovable-uploads/karyatulis.png'; // Default image for text entries
@@ -306,10 +272,8 @@ export function KaryaUploadForm() {
           if (value === 'image') setMediaType('image');
           else if (value === 'video') setMediaType('video');
           else if (value === 'text') handleTextMode();
-          else if (value === 'pdf') setMediaType('pdf');
-          else if (value === 'docx') setMediaType('docx');
         }}>
-          <TabsList className="grid grid-cols-5 mb-6">
+          <TabsList className="grid grid-cols-3 mb-6">
             <TabsTrigger value="image" className="flex items-center gap-2">
               <Image className="h-4 w-4" />
               <span>Gambar</span>
@@ -320,15 +284,7 @@ export function KaryaUploadForm() {
             </TabsTrigger>
             <TabsTrigger value="text" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
-              <span>Tulis</span>
-            </TabsTrigger>
-            <TabsTrigger value="pdf" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              <span>PDF</span>
-            </TabsTrigger>
-            <TabsTrigger value="docx" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              <span>DOCX</span>
+              <span>Tulisan</span>
             </TabsTrigger>
           </TabsList>
           
@@ -443,6 +399,7 @@ export function KaryaUploadForm() {
               </TabsContent>
               
               <TabsContent value="text" className="mt-0">
+                {/* Text content description - Only show extended version for text entries */}
                 <FormField
                   control={form.control}
                   name="description"
@@ -450,111 +407,12 @@ export function KaryaUploadForm() {
                     <FormItem>
                       <FormLabel className="text-foreground-dark">Konten Tulisan</FormLabel>
                       <FormControl>
-                        <div className="min-h-[400px] rounded-xl border border-grayMid/30 overflow-hidden bg-secondary-dark/70">
-                          {editor && (
-                            <>
-                              <div className="border-b border-grayMid/30 p-2 flex gap-2">
-                                <Button
-                                  type="button"
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => editor.chain().focus().toggleBold().run()}
-                                  className={editor.isActive('bold') ? 'bg-foreground/10' : ''}
-                                >
-                                  B
-                                </Button>
-                                <Button
-                                  type="button"
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => editor.chain().focus().toggleItalic().run()}
-                                  className={editor.isActive('italic') ? 'bg-foreground/10' : ''}
-                                >
-                                  I
-                                </Button>
-                                <Button
-                                  type="button"
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                                  className={editor.isActive('heading', { level: 2 }) ? 'bg-foreground/10' : ''}
-                                >
-                                  H2
-                                </Button>
-                                <Button
-                                  type="button"
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => editor.chain().focus().toggleBulletList().run()}
-                                  className={editor.isActive('bulletList') ? 'bg-foreground/10' : ''}
-                                >
-                                  •
-                                </Button>
-                              </div>
-                              <EditorContent editor={editor} />
-                            </>
-                          )}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </TabsContent>
-
-              <TabsContent value="pdf" className="mt-0">
-                <FormField
-                  control={form.control}
-                  name="media_file"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-foreground-dark">File PDF</FormLabel>
-                      <FormControl>
-                        <label className="flex flex-col items-center justify-center w-full aspect-[4/3] rounded-xl border-2 border-dashed border-grayMid/40 hover:border-grayMid/70 bg-secondary-dark/50 cursor-pointer transition-all duration-300 hover:bg-secondary-dark/80 group">
-                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                            <div className="bg-grayDark/50 p-3 rounded-full mb-3 group-hover:bg-grayDark/70 transition-colors">
-                              <FileText className="w-8 h-8 text-grayLight group-hover:text-white transition-colors" />
-                            </div>
-                            <p className="mb-2 text-base text-foreground-dark font-medium">Klik untuk unggah PDF</p>
-                            <p className="text-xs text-muted-foreground">PDF (Max 10MB)</p>
-                          </div>
-                          <input
-                            type="file"
-                            className="hidden"
-                            accept="application/pdf"
-                            onChange={(e) => handleMediaChange(e, 'pdf')}
-                          />
-                        </label>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </TabsContent>
-
-              <TabsContent value="docx" className="mt-0">
-                <FormField
-                  control={form.control}
-                  name="media_file"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-foreground-dark">File DOCX</FormLabel>
-                      <FormControl>
-                        <label className="flex flex-col items-center justify-center w-full aspect-[4/3] rounded-xl border-2 border-dashed border-grayMid/40 hover:border-grayMid/70 bg-secondary-dark/50 cursor-pointer transition-all duration-300 hover:bg-secondary-dark/80 group">
-                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                            <div className="bg-grayDark/50 p-3 rounded-full mb-3 group-hover:bg-grayDark/70 transition-colors">
-                              <FileText className="w-8 h-8 text-grayLight group-hover:text-white transition-colors" />
-                            </div>
-                            <p className="mb-2 text-base text-foreground-dark font-medium">Klik untuk unggah DOCX</p>
-                            <p className="text-xs text-muted-foreground">DOCX (Max 10MB)</p>
-                          </div>
-                          <input
-                            type="file"
-                            className="hidden"
-                            accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                            onChange={(e) => handleMediaChange(e, 'docx')}
-                          />
-                        </label>
+                        <Textarea 
+                          placeholder="Tulis karya Anda di sini..." 
+                          {...field} 
+                          className="resize-none bg-secondary-dark/70 border-grayMid/30 focus:border-grayLight/80 text-foreground-dark placeholder:text-grayMid/70 rounded-xl min-h-[200px]"
+                          rows={8}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -693,25 +551,27 @@ export function KaryaUploadForm() {
                 />
               )}
 
-              {/* Content URL - Show for all media types */}
-              <FormField
-                control={form.control}
-                name="content_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-foreground-dark">Link Konten (Opsional)</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="https://..." 
-                        {...field} 
-                        value={field.value || ''}
-                        className="bg-secondary-dark/70 border-grayMid/30 focus:border-grayLight/80 text-foreground-dark placeholder:text-grayMid/70 rounded-xl"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/* Content URL - Only show for image uploads or video thumbnail URLs */}
+              {mediaType === 'image' && (
+                <FormField
+                  control={form.control}
+                  name="content_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground-dark">Link Konten (Opsional)</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="https://..." 
+                          {...field} 
+                          value={field.value || ''}
+                          className="bg-secondary-dark/70 border-grayMid/30 focus:border-grayLight/80 text-foreground-dark placeholder:text-grayMid/70 rounded-xl"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
 
               {/* Submit Button */}
               <div className="flex justify-end gap-3 pt-2">

@@ -1,10 +1,11 @@
+
 import React, { useState } from 'react';
 import { 
   Dialog, 
   DialogContent
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ExternalLink, X, Link2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, ExternalLink, X, Maximize2, Minimize2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Database } from '@/integrations/supabase/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -25,6 +26,7 @@ interface KaryaDetailDialogProps {
 
 const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [showInfoPanel, setShowInfoPanel] = useState(true);
 
   const categoryIcons: Record<string, string> = {
@@ -42,36 +44,17 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
   };
 
   const isVideo = (url: string) => url?.match(/\.(mp4|webm|ogg)$/i);
-  const isPDF = (url: string) => url?.match(/\.pdf$/i);
-  const isDocx = (url: string) => url?.match(/\.docx$/i);
   const isText = karya.category === 'writing' && karya.description;
   
+  // Use the media_urls array if it exists and has items, otherwise fallback to image_url
   const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
-
-  // Handle document preview
-  const renderDocumentPreview = (url: string) => {
-    if (isPDF(url)) {
-      return (
-        <iframe
-          src={`https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`}
-          className="w-full h-full border-0"
-          title="PDF Viewer"
-        />
-      );
-    } else if (isDocx(url)) {
-      return (
-        <iframe
-          src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`}
-          className="w-full h-full border-0"
-          title="DOCX Viewer"
-        />
-      );
-    }
-    return null;
-  };
 
   const toggleDescription = () => {
     setIsDescriptionExpanded(!isDescriptionExpanded);
+  };
+
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
   };
 
   const toggleInfoPanel = () => {
@@ -80,10 +63,15 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 overflow-hidden border-border/30 backdrop-blur-xl shadow-xl max-w-[100vw] max-h-[100vh] w-[100vw] h-[100vh] rounded-none bg-secondary/30">
-        <div className="flex flex-col h-full overflow-hidden">
-          {/* Content preview with enhanced media display */}
-          <div className="relative w-full bg-black/20 flex-grow h-screen">
+      <DialogContent className={`p-0 overflow-hidden border-border/30 backdrop-blur-xl shadow-xl transition-all duration-300 ${
+        isFullscreen 
+          ? 'max-w-[100vw] max-h-[100vh] w-[100vw] h-[100vh] rounded-none' 
+          : 'max-w-5xl max-h-[90vh] rounded-3xl bg-secondary/90'
+      }`}>
+        <div className={`flex flex-col h-full ${isFullscreen ? 'overflow-hidden' : 'max-h-[90vh]'}`}>
+          {/* Content preview with enhanced media display - takes full height in fullscreen mode */}
+          <div className="relative w-full bg-black/50 flex-grow" 
+               style={{ height: isFullscreen ? '100vh' : isText ? 'auto' : '65vh' }}>
             {isText ? (
               <div className="w-full h-full overflow-auto p-8 bg-gradient-to-b from-secondary/90 to-secondary/70 backdrop-blur-md flex items-center justify-center">
                 <div className="max-w-3xl prose prose-invert">
@@ -104,9 +92,8 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                           className="w-full h-full object-contain max-h-full"
                           playsInline
                           preload="metadata"
+                          poster="#1C1C1E" // Dark background as poster
                         />
-                      ) : isPDF(url) || isDocx(url) ? (
-                        renderDocumentPreview(url)
                       ) : (
                         <img 
                           src={url}
@@ -133,9 +120,8 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                     className="w-full h-full object-contain max-h-full"
                     playsInline
                     preload="metadata"
+                    poster="#1C1C1E" // Dark background color as poster
                   />
-                ) : isPDF(mediaUrls[0]) || isDocx(mediaUrls[0]) ? (
-                  renderDocumentPreview(mediaUrls[0])
                 ) : (
                   <img 
                     src={mediaUrls[0]}
@@ -149,31 +135,44 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
             {/* Floating control buttons with glossy effect */}
             <div className="absolute top-4 right-4 z-10 flex gap-2">
               <button
-                onClick={toggleInfoPanel}
+                onClick={toggleFullscreen}
                 className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
               >
-                {showInfoPanel ? <ChevronDown className="h-5 w-5" /> : <ChevronDown className="h-5 w-5 rotate-180" />}
-                <span className="sr-only">{showInfoPanel ? 'Hide info' : 'Show info'}</span>
+                {isFullscreen ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />}
+                <span className="sr-only">{isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}</span>
               </button>
-              <button
-                onClick={onClose}
-                className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
-              >
-                <X className="h-5 w-5" />
-                <span className="sr-only">Close</span>
-              </button>
+              {isFullscreen && (
+                <button
+                  onClick={toggleInfoPanel}
+                  className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
+                >
+                  {showInfoPanel ? <ChevronDown className="h-5 w-5" /> : <ChevronDown className="h-5 w-5 rotate-180" />}
+                  <span className="sr-only">{showInfoPanel ? 'Hide info' : 'Show info'}</span>
+                </button>
+              )}
+              {isFullscreen && (
+                <button
+                  onClick={onClose}
+                  className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
+                >
+                  <X className="h-5 w-5" />
+                  <span className="sr-only">Close</span>
+                </button>
+              )}
             </div>
           </div>
           
-          {/* Info panel with title, description, and actions */}
+          {/* Info panel with title, description, and actions - conditionally shown in fullscreen */}
           <AnimatePresence>
-            {showInfoPanel && (
+            {(!isFullscreen || (isFullscreen && showInfoPanel)) && (
               <motion.div 
-                initial={{ y: '100%' }}
-                animate={{ y: 0 }}
-                exit={{ y: '100%' }}
+                initial={isFullscreen ? { y: '100%' } : { opacity: 1 }}
+                animate={isFullscreen ? { y: 0 } : { opacity: 1 }}
+                exit={isFullscreen ? { y: '100%' } : { opacity: 0 }}
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                className="absolute bottom-0 left-0 right-0 z-10 max-h-[50vh] overflow-y-auto rounded-t-3xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.2)] bg-gradient-to-b from-secondary/80 to-background/80 backdrop-blur-md"
+                className={`bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md ${
+                  isFullscreen ? 'absolute bottom-0 left-0 right-0 z-10 max-h-[50vh] overflow-y-auto rounded-t-3xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.2)]' : ''
+                }`}
               >
                 {/* Header with title and category info */}
                 <div className="flex justify-between items-start p-6 border-b border-border/20">
@@ -236,32 +235,18 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                     })}
                   </p>
                   
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    {karya.content_url && (
-                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button 
-                          className="gap-2 w-full sm:w-auto rounded-full bg-black/30 hover:bg-black/40 backdrop-blur-md border border-white/10 text-white shadow-lg transition-all" 
-                          size="sm"
-                          onClick={() => window.open(karya.content_url, '_blank')}
-                        >
-                          <Link2 className="h-4 w-4" />
-                          <span>Konten</span>
-                        </Button>
-                      </motion.div>
-                    )}
-                    {karya.link_url && (
-                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button 
-                          className="gap-2 w-full sm:w-auto rounded-full bg-black/30 hover:bg-black/40 backdrop-blur-md border border-white/10 text-white shadow-lg transition-all" 
-                          size="sm"
-                          onClick={() => window.open(karya.link_url, '_blank')}
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                          <span>Link</span>
-                        </Button>
-                      </motion.div>
-                    )}
-                  </div>
+                  {karya.link_url && (
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button 
+                        className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-lavender to-purpleLight text-white border border-white/10" 
+                        size="sm"
+                        onClick={() => window.open(karya.link_url, '_blank')}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        <span>Lihat Karya Lengkap</span>
+                      </Button>
+                    </motion.div>
+                  )}
                 </div>
               </motion.div>
             )}
