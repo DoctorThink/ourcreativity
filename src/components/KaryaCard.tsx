@@ -36,6 +36,9 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   
   // Use the media_urls array if it exists and has items, otherwise fallback to image_url
   const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
+  
+  // Check if this card has any videos
+  const hasVideo = mediaUrls.some(url => isVideo(url));
 
   // Calculate aspect ratio based on media dimensions if available
   // Default to 4:3 if dimensions aren't available
@@ -51,15 +54,17 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     e.stopPropagation();
   };
 
-  // Determine if this is a video card for special handling
-  const hasVideo = mediaUrls.some(url => isVideo(url));
-
   // Pre-load video metadata to avoid layout shifts
   useEffect(() => {
     if (hasVideo && videoRef.current) {
       videoRef.current.addEventListener('loadedmetadata', () => {
         setImageLoaded(true);
       });
+      
+      // Setting a poster and preloading metadata helps prevent flickering
+      if (videoRef.current) {
+        videoRef.current.poster = "#1C1C1E"; // Dark background as poster
+      }
     }
   }, [hasVideo]);
 
@@ -71,7 +76,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     >
       <Card
         onClick={onClick}
-        className={`group relative w-full overflow-hidden bg-secondary/80 border border-border/40 rounded-3xl transition-all duration-300 cursor-pointer hover:border-border/60 hover:shadow-xl ${
+        className={`group relative w-full overflow-hidden bg-secondary/80 backdrop-blur-md border border-white/10 rounded-3xl transition-all duration-300 cursor-pointer hover:border-white/20 hover:shadow-xl ${
           karya.is_spotlight ? 'ring-2 ring-lavender/50 shadow-lg shadow-lavender/20' : ''
         }`}
       >
@@ -97,7 +102,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                 {mediaUrls.map((url, index) => (
                   <CarouselItem key={index} className="h-full">
                     {isVideo(url) ? (
-                      <div className="relative w-full h-full">
+                      <div className="relative w-full h-full bg-black">
                         <video
                           ref={videoRef}
                           src={url}
@@ -108,7 +113,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                           poster="#1C1C1E" // Dark background as poster
                         />
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="bg-black/30 p-3 rounded-full">
+                          <div className="bg-black/30 backdrop-blur-sm p-3 rounded-full border border-white/10">
                             <Play className="w-6 h-6 text-white" />
                           </div>
                         </div>
@@ -126,11 +131,11 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                 ))}
               </CarouselContent>
               <CarouselPrevious 
-                className="absolute left-2 z-10" 
+                className="absolute left-2 z-10 bg-black/30 backdrop-blur-sm border border-white/10" 
                 onClick={stopPropagation}
               />
               <CarouselNext 
-                className="absolute right-2 z-10" 
+                className="absolute right-2 z-10 bg-black/30 backdrop-blur-sm border border-white/10" 
                 onClick={stopPropagation}
               />
             </Carousel>
@@ -138,7 +143,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
             // Single media display
             <>
               {isVideo(mediaUrls[0]) ? (
-                <div className="relative w-full h-full">
+                <div className="relative w-full h-full bg-black">
                   <video
                     ref={videoRef}
                     src={mediaUrls[0]}
@@ -149,7 +154,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                     poster="#1C1C1E" // Dark background color as poster
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-black/30 p-3 rounded-full">
+                    <div className="bg-black/30 backdrop-blur-sm p-3 rounded-full border border-white/10">
                       <Play className="w-6 h-6 text-white" />
                     </div>
                   </div>
@@ -174,7 +179,9 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
 
         {/* Content overlay with gradient background for better readability */}
         <div 
-          className="absolute bottom-0 left-0 right-0 p-5 text-foreground opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t from-background/95 to-transparent"
+          className={`absolute bottom-0 left-0 right-0 p-5 text-foreground opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t ${
+            hasVideo ? 'from-black/95 to-transparent' : 'from-background/95 to-transparent'
+          }`}
         >
           <div className="flex justify-between items-end gap-3">
             <div className="flex-1 min-w-0">
@@ -189,7 +196,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                 onClick={stopPropagation}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className="flex items-center gap-1.5 text-foreground/70 bg-background/50 backdrop-blur-sm rounded-full px-2.5 py-1 hover:bg-background/70 transition-colors"
+                className="flex items-center gap-1.5 text-foreground/70 bg-black/30 backdrop-blur-sm rounded-full px-2.5 py-1 hover:bg-black/50 transition-colors border border-white/10"
                 aria-label="Visit related link"
               >
                 <ExternalLink className="h-3.5 w-3.5" />

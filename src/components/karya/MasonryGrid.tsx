@@ -37,7 +37,7 @@ const MasonryGrid: React.FC<MasonryGridProps> = ({
     <>
       {Array.from({ length: 8 }).map((_, i) => (
         <div key={i} className="mb-6">
-          <div className="rounded-3xl overflow-hidden h-fit flex flex-col bg-secondary/80 backdrop-blur-md border border-border/40 shadow-lg">
+          <div className="rounded-3xl overflow-hidden h-fit flex flex-col bg-secondary/80 backdrop-blur-md border border-white/10 shadow-lg">
             <Skeleton className="w-full" style={{ aspectRatio: i % 2 === 0 ? '4/3' : '1/1' }} />
             <div className="p-4 pb-2">
               <Skeleton className="h-5 w-3/4 mb-2" />
@@ -58,19 +58,49 @@ const MasonryGrid: React.FC<MasonryGridProps> = ({
     }
   };
 
+  // Empty state with improved design
+  const EmptyState = () => (
+    <div className="text-center py-16 w-full col-span-full bg-secondary/40 backdrop-blur-lg rounded-3xl border border-white/10 shadow-md">
+      <div className="flex flex-col items-center gap-4">
+        <div className="bg-foreground/5 p-4 rounded-full border border-white/10 shadow-inner">
+          <FolderOpen className="h-12 w-12 text-foreground/30" />
+        </div>
+        <div>
+          <h3 className="text-lg font-medium text-foreground/90 mb-1">Belum Ada Karya</h3>
+          <p className="text-muted-foreground text-readable max-w-md mx-auto">
+            Belum ada karya dalam kategori ini. Silakan pilih kategori lain atau unggah karya baru.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Error state with improved design
+  const ErrorState = () => (
+    <div className="text-center py-12 text-rose-500 bg-secondary/40 backdrop-blur-lg rounded-3xl border border-rose-500/20 shadow-md p-8">
+      <div className="flex flex-col items-center gap-4">
+        <div className="bg-rose-500/10 p-4 rounded-full border border-rose-500/20">
+          <AlertCircle className="h-12 w-12 text-rose-400" />
+        </div>
+        <div>
+          <h3 className="text-lg font-medium text-rose-400 mb-1">Gagal Memuat</h3>
+          <p className="text-readable text-foreground/80">
+            Terjadi kesalahan saat memuat karya. Silakan coba lagi nanti.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <motion.div
       variants={containerVariants}
       initial="initial"
       animate="animate"
+      className="min-h-[300px]"
     >
       {error ? (
-        <div className="text-center py-12 text-rose-500 bg-secondary/30 backdrop-blur-sm rounded-3xl border border-border/30 shadow-md p-8">
-          <div className="flex flex-col items-center gap-4">
-            <AlertCircle className="h-12 w-12 text-rose-400" />
-            <p className="text-readable">Terjadi kesalahan saat memuat karya. Silakan coba lagi nanti.</p>
-          </div>
-        </div>
+        <ErrorState />
       ) : (
         <Masonry
           breakpointCols={breakpointColumnsObj}
@@ -88,16 +118,7 @@ const MasonryGrid: React.FC<MasonryGridProps> = ({
               />
             ))
           ) : (
-            <div className="text-center py-16 w-full col-span-full bg-secondary/30 backdrop-blur-sm rounded-3xl border border-border/30 shadow-md">
-              <div className="flex flex-col items-center gap-4">
-                <div className="bg-foreground/5 p-4 rounded-full">
-                  <FolderOpen className="h-12 w-12 text-foreground/30" />
-                </div>
-                <p className="text-muted-foreground text-readable max-w-md mx-auto">
-                  Belum ada karya dalam kategori ini. Silakan pilih kategori lain atau unggah karya baru.
-                </p>
-              </div>
-            </div>
+            <EmptyState />
           )}
         </Masonry>
       )}
