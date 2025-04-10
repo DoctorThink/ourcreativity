@@ -35,8 +35,11 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MDXEditor } from '@mdxeditor/editor';
-import '@mdxeditor/editor/style.css';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Link from '@tiptap/extension-link';
+import BubbleMenu from '@tiptap/extension-bubble-menu';
+import { Editor } from '@tiptap/core';
 
 type KaryaInsert = Database['public']['Tables']['karya']['Insert'];
 
@@ -62,7 +65,6 @@ export function KaryaUploadForm() {
   const [mediaPreview, setMediaPreview] = useState<string | null>(null);
   const [mediaType, setMediaType] = useState<'image' | 'video' | 'text' | 'pdf' | 'docx'>('image');
   const [isUploading, setIsUploading] = useState(false);
-  const [markdownContent, setMarkdownContent] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
 
@@ -77,6 +79,26 @@ export function KaryaUploadForm() {
       media_type: 'image',
       image_url: '',
     },
+  });
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Link.configure({
+        openOnClick: false,
+      }),
+      BubbleMenu,
+    ],
+    onUpdate: ({ editor }) => {
+      const html = editor.getHTML();
+      form.setValue('description', html);
+    },
+    content: '',
+    editorProps: {
+      attributes: {
+        class: 'prose prose-invert prose-sm sm:prose-base max-w-none focus:outline-none p-4'
+      }
+    }
   });
 
   // Handle image/video file change
@@ -164,7 +186,6 @@ export function KaryaUploadForm() {
     setMediaFile(null);
     setMediaPreview(null);
     setMediaType('image');
-    setMarkdownContent('');
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -429,15 +450,50 @@ export function KaryaUploadForm() {
                     <FormItem>
                       <FormLabel className="text-foreground-dark">Konten Tulisan</FormLabel>
                       <FormControl>
-                        <div className="min-h-[400px] rounded-xl border border-grayMid/30 overflow-hidden">
-                          <MDXEditor
-                            markdown={markdownContent}
-                            onChange={(content) => {
-                              setMarkdownContent(content);
-                              field.onChange(content);
-                            }}
-                            className="prose prose-invert max-w-none p-4 bg-secondary-dark/70"
-                          />
+                        <div className="min-h-[400px] rounded-xl border border-grayMid/30 overflow-hidden bg-secondary-dark/70">
+                          {editor && (
+                            <>
+                              <div className="border-b border-grayMid/30 p-2 flex gap-2">
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => editor.chain().focus().toggleBold().run()}
+                                  className={editor.isActive('bold') ? 'bg-foreground/10' : ''}
+                                >
+                                  B
+                                </Button>
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => editor.chain().focus().toggleItalic().run()}
+                                  className={editor.isActive('italic') ? 'bg-foreground/10' : ''}
+                                >
+                                  I
+                                </Button>
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                                  className={editor.isActive('heading', { level: 2 }) ? 'bg-foreground/10' : ''}
+                                >
+                                  H2
+                                </Button>
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => editor.chain().focus().toggleBulletList().run()}
+                                  className={editor.isActive('bulletList') ? 'bg-foreground/10' : ''}
+                                >
+                                  •
+                                </Button>
+                              </div>
+                              <EditorContent editor={editor} />
+                            </>
+                          )}
                         </div>
                       </FormControl>
                       <FormMessage />
