@@ -19,10 +19,27 @@ interface KaryaCardProps {
   onClick?: () => void;
 }
 
+// Helper function to generate transformed image URLs (adjust based on actual Supabase transformation syntax)
+const getTransformedUrl = (baseUrl: string | null | undefined, options: { format?: 'webp' | 'avif' | 'jpeg', width?: number, quality?: number } = {}): string => {
+  if (!baseUrl) return '/public/placeholder.svg'; // Fallback placeholder
+  try {
+    const url = new URL(baseUrl);
+    // Example transformation params - replace with actual Supabase params
+    if (options.format) url.searchParams.set('format', options.format);
+    if (options.width) url.searchParams.set('resize', `width:${options.width}`); // Example syntax
+    if (options.quality) url.searchParams.set('quality', options.quality.toString()); // Example syntax
+    return url.toString();
+  } catch (e) {
+    console.error("Error creating URL:", e);
+    return baseUrl; // Return original if URL parsing fails
+  }
+};
+
 const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  
+  const imageRef = useRef<HTMLImageElement>(null);
+
   const categoryIcons: Record<string, string> = {
     'design': '/lovable-uploads/design.png',
     'video': '/lovable-uploads/video.png',
@@ -48,6 +65,10 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
 
   const handleImageLoad = () => {
     setImageLoaded(true);
+    // Optional: remove placeholder background if needed
+    if (imageRef.current) {
+       imageRef.current.style.backgroundImage = 'none';
+    }
   };
 
   const stopPropagation = (e: React.MouseEvent | React.TouchEvent) => {
@@ -119,13 +140,28 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                         </div>
                       </div>
                     ) : (
-                      <img
-                        src={url}
-                        alt={`${karya.title} - slide ${index + 1}`}
-                        className="w-full h-full object-cover"
-                        onLoad={handleImageLoad}
-                        loading="lazy"
-                      />
+                      <picture>
+                        {/* Add AVIF source if desired and supported */}
+                        {/* <source srcSet={getTransformedUrl(url, { format: 'avif', width: 800 })} type="image/avif" /> */}
+                        <source srcSet={getTransformedUrl(url, { format: 'webp', width: 1200 })} type="image/webp" media="(min-width: 1024px)" />
+                        <source srcSet={getTransformedUrl(url, { format: 'webp', width: 800 })} type="image/webp" media="(min-width: 640px)" />
+                        <source srcSet={getTransformedUrl(url, { format: 'webp', width: 400 })} type="image/webp" />
+                        {/* Fallback JPG/PNG source */}
+                        <source srcSet={getTransformedUrl(url, { format: 'jpeg', width: 1200 })} type="image/jpeg" media="(min-width: 1024px)" />
+                        <source srcSet={getTransformedUrl(url, { format: 'jpeg', width: 800 })} type="image/jpeg" media="(min-width: 640px)" />
+                        {/* Fallback img tag */}
+                        <img
+                          ref={imageRef}
+                          src={getTransformedUrl(url, { format: 'jpeg', width: 400 })} // Smallest jpeg as fallback src
+                          alt={`${karya.title} - slide ${index + 1}`}
+                          className="w-full h-full object-cover"
+                          onLoad={handleImageLoad}
+                          loading="lazy"
+                          width={karya.media_width || 400} // Provide default width
+                          height={karya.media_height || 300} // Provide default height
+                          style={{ backgroundImage: 'url(/public/placeholder.svg)', backgroundSize: 'cover' }} // Placeholder background
+                        />
+                      </picture>
                     )}
                   </CarouselItem>
                 ))}
@@ -160,15 +196,30 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                   </div>
                 </div>
               ) : (
-                <img
-                  src={mediaUrls[0]}
-                  alt={karya.title}
-                  className={`w-full h-full object-cover transition-opacity duration-500 ${
-                    imageLoaded ? 'opacity-100' : 'opacity-0'
-                  }`}
-                  onLoad={handleImageLoad}
-                  loading="lazy"
-                />
+                 <picture>
+                    {/* Add AVIF source if desired and supported */}
+                    {/* <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'avif', width: 800 })} type="image/avif" /> */}
+                    <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'webp', width: 1200 })} type="image/webp" media="(min-width: 1024px)" />
+                    <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'webp', width: 800 })} type="image/webp" media="(min-width: 640px)" />
+                    <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'webp', width: 400 })} type="image/webp" />
+                    {/* Fallback JPG/PNG source */}
+                    <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 1200 })} type="image/jpeg" media="(min-width: 1024px)" />
+                    <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 800 })} type="image/jpeg" media="(min-width: 640px)" />
+                    {/* Fallback img tag */}
+                    <img
+                      ref={imageRef}
+                      src={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 400 })} // Smallest jpeg as fallback src
+                      alt={karya.title}
+                      className={`w-full h-full object-cover transition-opacity duration-500 ${
+                        imageLoaded ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      onLoad={handleImageLoad}
+                      loading="lazy"
+                      width={karya.media_width || 400} // Provide default width
+                      height={karya.media_height || 300} // Provide default height
+                      style={{ backgroundImage: 'url(/public/placeholder.svg)', backgroundSize: 'cover' }} // Placeholder background
+                    />
+                  </picture>
               )}
               {!imageLoaded && !hasVideo && (
                 <div className="absolute inset-0 bg-secondary animate-pulse"></div>
