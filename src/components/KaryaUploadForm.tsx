@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -200,15 +201,17 @@ export function KaryaUploadForm() {
         creator_name: values.creator_name,
         category: values.category,
         description: values.description || null,
-        content_url: values.content_url || null,
+        content_url: null,
         status: 'pending', // Set the status to pending for admin review
       };
       
       // Set appropriate URLs based on media type
       if (mediaType === 'image') {
         karyaData.image_url = imageUrl;
+        karyaData.content_url = values.content_url || null;
       } else if (mediaType === 'video') {
-        karyaData.image_url = imageUrl; // Video file url becomes the image url for preview
+        karyaData.image_url = values.content_url ? values.content_url : imageUrl; // For video thumbnail
+        karyaData.content_url = imageUrl; // The video URL
       } else if (mediaType === 'text') {
         // For text entries, we set a placeholder image and the content is in the description
         karyaData.image_url = '/lovable-uploads/karyatulis.png'; // Default image for text entries
@@ -548,25 +551,27 @@ export function KaryaUploadForm() {
                 />
               )}
 
-              {/* Content URL - Show for all media types */}
-              <FormField
-                control={form.control}
-                name="content_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-foreground-dark">Link Konten (Opsional)</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="https://..." 
-                        {...field} 
-                        value={field.value || ''}
-                        className="bg-secondary-dark/70 border-grayMid/30 focus:border-grayLight/80 text-foreground-dark placeholder:text-grayMid/70 rounded-xl"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/* Content URL - Only show for image uploads or video thumbnail URLs */}
+              {mediaType === 'image' && (
+                <FormField
+                  control={form.control}
+                  name="content_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground-dark">Link Konten (Opsional)</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="https://..." 
+                          {...field} 
+                          value={field.value || ''}
+                          className="bg-secondary-dark/70 border-grayMid/30 focus:border-grayLight/80 text-foreground-dark placeholder:text-grayMid/70 rounded-xl"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
 
               {/* Submit Button */}
               <div className="flex justify-end gap-3 pt-2">
