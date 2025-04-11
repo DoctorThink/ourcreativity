@@ -93,11 +93,15 @@ Halo para Kreator OurCreativity! 👋🎨
 
 Ada kabar SUPER HEBOH! 🤩 Dengan Update v3.7 (11 April 2025), kini giliran KAMU untuk PAMERKAN KARYA KERENMU langsung di OurCreativity! 🔥
 
+---
+
 **Apa yang Baru? Fitur "UNGGAH KARYA" 🤩 Spesial Buat KAMU!**
 
 *   **PAMERKAN KREASIMU:** ⬆️ Upload Gambar 🖼️, Video 🎬, atau Tulisan ✍️ karyamu SENDIRI!
 *   **GAMPANG BANGET:** 👍 Cari tombol "UNGGAH KARYA" (ada di header atau halaman Karya Kami), lalu ikuti formulirnya yang MUDAH!
 *   **PILIH JENIS KARYAMU:** Ada tab untuk Gambar (JPG, PNG, MAKS 1MB), Video (MP4, MAKS 50MB), atau Tulisan (langsung ketik aja!).
+
+---
 
 **Bagaimana Caranya? Gampang Kok!**
 
@@ -106,6 +110,8 @@ Ada kabar SUPER HEBOH! 🤩 Dengan Update v3.7 (11 April 2025), kini giliran KAM
 3.  UPLOAD file gambarmu (MAKS 1MB) 🖼️ atau videomu (MAKS 50MB) 🎬. Kalau tulisan, ketik langsung di deskripsi ✍️.
 4.  Klik Kirim! ✅ Karyamu akan dicek dulu (status pending ⏳) oleh tim admin kami sebelum bisa TAMPIL di galeri. Tenang, kamu akan dapat notifikasi kok! 😉
 
+---
+
 📌 **PENTING! Ingat Aturan Mainnya Ya:**
 
 *   Pastikan karya itu ORISINAL (buatanmu sendiri) atau kamu PUNYA IZIN yang jelas untuk membagikannya! 📜
@@ -113,9 +119,12 @@ Ada kabar SUPER HEBOH! 🤩 Dengan Update v3.7 (11 April 2025), kini giliran KAM
 *   Jaga konten tetap SOPAN & POSITIF (NO SARA, kekerasan, hal negatif)! 👍✨
 *   Patuhi BATAS UKURAN FILE yang ditentukan (Gambar: 1MB, Video: 50MB)! 📏
 
+---
+
 Kami GAK SABAR BANGET mau lihat karya-karya HEBAT dari kalian semua! Yuk, langsung COBA FITUR BARUNYA SEKARANG dan ramaikan galeri OurCreativity! 🚀🔥✨
 
-Salam Kreatif, 🎨
+\n
+Salam Kreatif, 🎨 \
 Tim OurCreativity
 `
 };
@@ -210,7 +219,6 @@ const Pengumuman = () => {
                     </ReactMarkdown>
                 </div>
             </motion.div>
-             <div className="absolute inset-0 noise-pattern opacity-[0.01] z-0"></div>
         </motion.section>
 
         {/* --- Accordion for Old Announcement (v3.5) --- */}
