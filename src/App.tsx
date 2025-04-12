@@ -1,14 +1,5 @@
 
 import React, { Suspense, lazy, useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -90,19 +81,7 @@ const queryClient = new QueryClient({
 
 const App = () => {
   const [isAppReady, setIsAppReady] = useState(false);
-  const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   
-  useEffect(() => {
-    const hasSeen = localStorage.getItem('hasSeenWelcomePopup');
-    if (!hasSeen) {
-      // Add a small delay to ensure the app is visually ready
-      const timer = setTimeout(() => {
-        setShowWelcomeDialog(true);
-      }, 500); // 500ms delay
-      return () => clearTimeout(timer);
-    }
-  }, []);
-
   useEffect(() => {
     const preloadAssets = async () => {
       const timer = setTimeout(() => {
@@ -115,11 +94,6 @@ const App = () => {
     preloadAssets();
   }, []);
   
-  const handleWelcomeDialogClose = () => {
-    localStorage.setItem('hasSeenWelcomePopup', 'true');
-    setShowWelcomeDialog(false);
-  };
-
   return (
     <QueryClientProvider client={queryClient}>
       <AdminAuthProvider>
@@ -127,29 +101,6 @@ const App = () => {
           <TooltipProvider>
             <Toaster />
             <Sonner />
-            <Dialog open={showWelcomeDialog} onOpenChange={(isOpen) => !isOpen && handleWelcomeDialogClose()}>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Selamat Datang di Our Creativity!</DialogTitle>
-                  <DialogDescription>
-                    Website ini adalah hasil karya Ardelyo. Jika Anda ingin mendukung pengembangan, silakan donasi ke{' '}
-                    <a
-                      href='https://saweria.co/ardelyo'
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='underline font-medium text-primary hover:text-primary/90'
-                    >
-                      saweria.co/ardelyo
-                    </a>.
-                    <br /><br />
-                    <strong>Update 3.7:</strong> Penambahan fitur Karya Kami dan perbaikan bug.
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <Button onClick={handleWelcomeDialogClose}>Tutup</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
             <div className="app-container gpu-accelerated">
               {/* Global FlowingBackground visible on all pages */}
               <FlowingBackground />
