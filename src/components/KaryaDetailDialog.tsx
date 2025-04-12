@@ -25,6 +25,8 @@ interface KaryaDetailDialogProps {
 
 const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showInfoPanel, setShowInfoPanel] = useState(true);
 
   const categoryIcons: Record<string, string> = {
     'design': '/lovable-uploads/design.png',
@@ -50,24 +52,25 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
     setIsDescriptionExpanded(!isDescriptionExpanded);
   };
 
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
+  const toggleInfoPanel = () => {
+    setShowInfoPanel(!showInfoPanel);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      {/* Apply fullscreen styles directly and add persistent close button */}
-      <DialogContent className="p-0 overflow-hidden border-border/30 backdrop-blur-xl shadow-xl max-w-[100vw] max-h-[100vh] w-[100vw] h-[100vh] rounded-none">
-        {/* Persistent Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-20 rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
-        >
-          <X className="h-5 w-5" />
-          <span className="sr-only">Close</span>
-        </button>
-        {/* Apply fullscreen styles directly */}
-        <div className="flex flex-col h-full overflow-hidden">
+      <DialogContent className={`p-0 overflow-hidden border-border/30 backdrop-blur-xl shadow-xl transition-all duration-300 ${
+        isFullscreen 
+          ? 'max-w-[100vw] max-h-[100vh] w-[100vw] h-[100vh] rounded-none' 
+          : 'max-w-5xl max-h-[90vh] rounded-3xl bg-secondary/90'
+      }`}>
+        <div className={`flex flex-col h-full ${isFullscreen ? 'overflow-hidden' : 'max-h-[90vh]'}`}>
           {/* Content preview with enhanced media display - takes full height in fullscreen mode */}
-          {/* Apply fullscreen styles directly - Using 100vh for now, may need adjustment */}
-          <div className="relative w-full bg-black/50 flex-grow" style={{ height: '100vh' }}>
+          <div className="relative w-full bg-black/50 flex-grow" 
+               style={{ height: isFullscreen ? '100vh' : isText ? 'auto' : '65vh' }}>
             {isText ? (
               <div className="w-full h-full overflow-auto p-8 bg-gradient-to-b from-secondary/90 to-secondary/70 backdrop-blur-md flex items-center justify-center">
                 <div className="max-w-3xl prose prose-invert">
@@ -128,15 +131,48 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
               </>
             )}
             
-            {/* Removed toggle buttons */}
+            {/* Floating control buttons with glossy effect */}
+            <div className="absolute top-4 right-4 z-10 flex gap-2">
+              <button
+                onClick={toggleFullscreen}
+                className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
+              >
+                {isFullscreen ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />}
+                <span className="sr-only">{isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}</span>
+              </button>
+              {isFullscreen && (
+                <button
+                  onClick={toggleInfoPanel}
+                  className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
+                >
+                  {showInfoPanel ? <ChevronDown className="h-5 w-5" /> : <ChevronDown className="h-5 w-5 rotate-180" />}
+                  <span className="sr-only">{showInfoPanel ? 'Hide info' : 'Show info'}</span>
+                </button>
+              )}
+              {isFullscreen && (
+                <button
+                  onClick={onClose}
+                  className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
+                >
+                  <X className="h-5 w-5" />
+                  <span className="sr-only">Close</span>
+                </button>
+              )}
+            </div>
           </div>
           
           {/* Info panel with title, description, and actions - conditionally shown in fullscreen */}
-          {/* Info panel always visible with fullscreen styles, removed animation */}
-          {/* Removed motion.div, using regular div */}
-          <div
-            className="absolute bottom-0 left-0 right-0 z-10 max-h-[50vh] overflow-y-auto rounded-t-3xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.2)] bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md"
-          >
+          <AnimatePresence>
+            {(!isFullscreen || (isFullscreen && showInfoPanel)) && (
+              <motion.div 
+                initial={isFullscreen ? { y: '100%' } : { opacity: 1 }}
+                animate={isFullscreen ? { y: 0 } : { opacity: 1 }}
+                exit={isFullscreen ? { y: '100%' } : { opacity: 0 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                className={`bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md ${
+                  isFullscreen ? 'absolute bottom-0 left-0 right-0 z-10 max-h-[50vh] overflow-y-auto rounded-t-3xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.2)]' : ''
+                }`}
+              >
                 {/* Header with title and category info */}
                 <div className="flex justify-between items-start p-6 border-b border-border/20">
                   <div>
@@ -225,7 +261,9 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                     )}
                   </div>
                 </div>
-          </div> {/* End of info panel div */}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </DialogContent>
     </Dialog>
