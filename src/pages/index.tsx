@@ -1,9 +1,19 @@
 // src/pages/Index.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { BookOpen, Info, Bell, ScrollText, Users, Palette, Feather, Clock, Code, Instagram, ExternalLink } from "lucide-react"; // Added ExternalLink
 import { cn } from "@/lib/utils"; // Assuming utils.ts is in src/lib
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 
 // Define the type for Bento Grid tiles
@@ -29,6 +39,7 @@ interface BentoTile {
 
 const Index = () => {
   const navigate = useNavigate();
+  const [showInfoDialog, setShowInfoDialog] = useState(false);
 
   // --- Animation Variants ---
   const gridContainerVariants = {
@@ -135,7 +146,7 @@ const Index = () => {
       id: "informasi",
       icon: Info,
       text: "Informasi",
-      href: "/informasi",
+      // href: "/informasi", // Removed to use DialogTrigger
       colSpan: "col-span-1", rowSpan: "row-span-1", mdColSpan: "md:col-span-1", mdRowSpan: "md:row-span-1",
       bgColor: "bg-secondary/80",
       accentColorClass: "bg-softPink", // Soft Pink
@@ -302,7 +313,15 @@ const Index = () => {
                 )}
                 whileHover={isInteractive && !comingSoon ? interactiveHover : {}}
                 whileTap={isInteractive && !comingSoon ? interactiveTap : {}}
-                onClick={isInteractive && !comingSoon && href ? () => navigate(href) : undefined}
+                onClick={() => {
+                  if (isInteractive && !comingSoon) {
+                    if (id === "informasi") {
+                      setShowInfoDialog(true); // Open dialog for 'informasi' tile
+                    } else if (href) {
+                      navigate(href); // Navigate for other interactive tiles with href
+                    }
+                  }
+                }}
                 // Apply glow effect using CSS variable defined inline
                 style={isInteractive && !comingSoon && glowColorVar ? { '--tile-glow-color': `var(${glowColorVar})` } as React.CSSProperties : {}}
               >
@@ -353,6 +372,22 @@ const Index = () => {
                 {isInteractive && !comingSoon && (
                   <div className="absolute inset-0 bg-shimmer-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-shimmer"></div>
                 )}
+
+        {/* Dialog for Informasi Tile */}
+        <Dialog open={showInfoDialog} onOpenChange={setShowInfoDialog}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Informasi Grup</DialogTitle>
+              <DialogDescription>
+                LINK GRUP ADA DISINI
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button onClick={() => setShowInfoDialog(false)}>Tutup</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
 
                 {/* Subtle inner shadow for depth */}
                 <div className="absolute inset-0 rounded-2xl md:rounded-3xl shadow-inner-subtle pointer-events-none"></div>
