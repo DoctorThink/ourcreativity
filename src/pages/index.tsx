@@ -193,24 +193,22 @@ const Index = () => {
         </div>
       )
     },
-    { // Logo Visual Accent
-      id: "logo-visual",
-      colSpan: "col-span-1", rowSpan: "row-span-1", mdColSpan: "md:col-span-1", mdRowSpan: "md:row-span-1",
-      content: (
-         <div className="flex items-center justify-center h-full relative overflow-hidden group">
-            {/* Subtle Inner Glow */}
-            <div className="absolute inset-0 bg-gradient-radial from-amethyst/15 via-transparent to-transparent opacity-0 group-hover:opacity-70 transition-opacity duration-300 blur-md"></div>
-            <motion.img
-              src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" // Fish logo
-              alt="Logo Icon"
-              className="w-12 h-12 md:w-16 md:h-16 object-contain relative z-10 transition-transform duration-300 group-hover:scale-110"
-              loading="eager"
-            />
-         </div>
-      ),
-      bgColor: "bg-secondary/50", // More transparent
+    { // Join Community Card (replacing logo-visual)
+      id: "join",
+      icon: Users,
+      text: "AYO GABUNG!",
+      colSpan: "col-span-1", 
+      rowSpan: "row-span-1", 
+      mdColSpan: "md:col-span-1", 
+      mdRowSpan: "md:row-span-1",
+      bgColor: "bg-secondary/80",
+      accentColorClass: "bg-emerald", // Using emerald for join action
+      iconColorClass: "text-background",
+      glowColorVar: "--color-emerald-glow",
+      isInteractive: true,
+      isWidget: true,
       backdropBlur: true,
-      isInteractive: false, // Not clickable, but has hover effect
+      onClick: () => setShowJoinDialog(true), // Will add dialog state and component
     },
     // Row 4 - Designer Credit (Updated with Link)
      {
