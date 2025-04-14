@@ -21,7 +21,7 @@ interface KaryaCardProps {
 
 // Helper function to generate transformed image URLs (adjust based on actual Supabase transformation syntax)
 const getTransformedUrl = (baseUrl: string | null | undefined, options: { format?: 'webp' | 'avif' | 'jpeg', width?: number, quality?: number } = {}): string => {
-  if (!baseUrl) return '/public/placeholder.svg'; // Fallback placeholder
+  if (!baseUrl) return '/placeholder.svg'; // Fallback placeholder
   try {
     const url = new URL(baseUrl);
     // Example transformation params - replace with actual Supabase params
@@ -159,7 +159,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                           loading="lazy"
                           width={karya.media_width || 400} // Provide default width
                           height={karya.media_height || 300} // Provide default height
-                          style={{ backgroundImage: 'url(/public/placeholder.svg)', backgroundSize: 'cover' }} // Placeholder background
+                          style={{ backgroundImage: 'url(/placeholder.svg)', backgroundSize: 'cover' }} // Placeholder background
                         />
                       </picture>
                     )}
@@ -217,7 +217,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                       loading="lazy"
                       width={karya.media_width || 400} // Provide default width
                       height={karya.media_height || 300} // Provide default height
-                      style={{ backgroundImage: 'url(/public/placeholder.svg)', backgroundSize: 'cover' }} // Placeholder background
+                      style={{ backgroundImage: 'url(/placeholder.svg)', backgroundSize: 'cover' }} // Placeholder background
                     />
                   </picture>
               )}
