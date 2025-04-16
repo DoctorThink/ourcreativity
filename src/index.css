@@ -262,43 +262,6 @@
   @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
   .animate-shimmer { animation: shimmer 2.5s infinite linear; }
 
-  /* Enhanced Shimmer Animation */
-  @keyframes shimmer-fast {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
-  }
-
-  .animate-shimmer-fast {
-    animation: shimmer-fast 2s infinite;
-    background: linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      transparent 100%
-    );
-    background-size: 200% 100%;
-  }
-
-  /* Subtle pulse animation for BARU tag */
-  @keyframes pulse-subtle {
-    0%, 100% {
-      opacity: 0.9;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.05);
-    }
-  }
-
-  .animate-pulse-subtle {
-    animation: pulse-subtle 2s ease-in-out infinite;
-  }
-
   .glow-card {
     transition: box-shadow 0.5s ease, transform 0.3s ease;
     will-change: transform, box-shadow;
