@@ -6,11 +6,10 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "/", // Ensure proper asset path resolution
+  base: "./", // Ensure proper asset path resolution
   server: {
     host: "::",
     port: 8080,
-    allowedHosts: ["54c4ca5d-fdb6-4e0e-a40e-5372c563e093.lovableproject.com"],
   },
   build: {
     outDir: "dist",

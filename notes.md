@@ -1,5 +1,4 @@
-# Project File List... hi
-
+# Project File List
 
 A comprehensive overview of all files and directories in the project, with descriptions.
 

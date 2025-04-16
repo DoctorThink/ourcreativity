@@ -120,26 +120,6 @@ Website ini mengimplementasikan konsep **"Creative Constellations"**:
 
 ## 📜 Changelog (Perubahan Terbaru)
 
-*   **v3.7 (Pertengahan April 2025) - Fitur Unggah Karya Komunitas**
-    *   **Apa yang Baru:**
-        *   Memperkenalkan fitur **Unggah Karya** yang memungkinkan anggota komunitas untuk membagikan kreasi mereka langsung melalui website.
-        *   Tombol "Unggah Karya" baru ditambahkan (kemungkinan di halaman Karya Kami atau header) untuk mengakses formulir unggah.
-        *   Formulir unggah intuitif dengan tab untuk jenis media: Gambar, Video, dan Tulisan.
-    *   **Sistem Kerja:**
-        *   Anggota dapat mengisi detail karya: Judul, Nama Kreator, Kategori (Design, Video, Writing, Meme), Deskripsi (opsional), dan Link Konten (opsional).
-        *   **Unggah Media:**
-            *   **Gambar:** Mendukung format JPG, PNG, WebP, GIF (Maksimal 1MB).
-            *   **Video:** Mendukung format MP4, WebM, OGG (Maksimal 50MB).
-            *   **Tulisan:** Konten ditulis langsung di kolom deskripsi (placeholder visual akan digunakan).
-        *   **Moderasi Admin:** Semua karya yang diunggah akan masuk ke status 'pending' dan **wajib ditinjau serta disetujui oleh admin** sebelum dapat tampil di galeri Karya Kami. Pengguna akan diberi notifikasi setelah mengunggah bahwa karya sedang menunggu persetujuan.
-    *   **Syarat & Ketentuan Utama (Upload Karya):**
-        *   Karya harus **orisinal** (buatan sendiri) atau pengguna memiliki **izin yang jelas** untuk membagikannya.
-        *   Dilarang keras mengunggah konten yang melanggar **hak cipta** atau kekayaan intelektual pihak lain.
-        *   Konten harus sesuai dengan **norma kesopanan**, tidak mengandung SARA, kekerasan, atau hal negatif lainnya.
-        *   Mematuhi **batasan ukuran file** yang telah ditentukan (Gambar: 1MB, Video: 50MB).
-        *   Semua karya tunduk pada **proses moderasi** oleh tim admin OurCreativity.
-
-
 *   **v3.5.x (April 2024 - Ongoing)**
     *   Implementasi kartu "Bergabung dengan Komunitas Kami" yang disempurnakan di halaman Informasi.
         *   Menggabungkan Linktree dan link WhatsApp langsung.
