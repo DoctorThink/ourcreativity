@@ -1,21 +1,14 @@
-
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layouts/PageLayout";
 import { cn } from "@/lib/utils";
-import { Zap, Sparkles, ArrowRight, Users, Star, Instagram, AlertCircle, Milestone } from 'lucide-react';
+import { Zap, Sparkles, ArrowRight, Users, Star, Instagram, AlertCircle, ChevronDown } from 'lucide-react';
 import React from "react";
-
-/**
- * FILES/FOLDERS TO CHECK/ENSURE EXIST AND ARE CONFIGURED:
- * (Consistency Check - Assumed same as previous examples)
- *
- * 1.  `src/components/layouts/PageLayout.tsx`: Provides page structure, header, background.
- * 2.  `src/index.css`: Defines CSS variables, fonts, base styles, Tailwind directives.
- * 3.  `tailwind.config.ts`: Defines accent colors, fonts, plugins.
- * 4.  `src/lib/utils.ts`: Provides the `cn` utility function.
- * 5.  `lucide-react` (dependency): Installed.
- * 6.  `framer-motion` (dependency): Installed.
- */
+import { 
+  Accordion, 
+  AccordionContent, 
+  AccordionItem, 
+  AccordionTrigger 
+} from "@/components/ui/accordion";
 
 // --- Animation Variants ---
 const containerVariants = {
@@ -48,8 +41,56 @@ const timelineItemVariants = {
 };
 
 // --- Data ---
-const majorUpdateAnnouncement = {
-  id: 1,
+const newAnnouncement = {
+  title: "🎉 Update v3.7: Fitur Unggah Karya",
+  subtitle: "WUJUDKAN KARYAMU!",
+  date: "11 April 2025",
+  sections: [
+    {
+      title: "Apa yang Baru?",
+      content: [
+        "Ada pembaruan seru di website kita! Dengan Update v3.7, kini giliran kamu untuk berbagi dan mewujudkan karya kerenmu langsung melalui OurCreativity!",
+        "Fitur \"Unggah Karya\" Spesial Buat Kamu!",
+      ]
+    },
+    {
+      title: "Yang Kamu Bisa Lakukan:",
+      content: [
+        "Pamerkan Kreasimu: Sekarang kamu bisa unggah Gambar, Video, atau Tulisan karyamu sendiri",
+        "Gampang Banget: Cari tombol \"Unggah Karya\" (ada di header atau halaman Karya Kami)",
+        "Pilih Jenis Karyamu: Ada pilihan untuk Gambar (JPG, PNG, WebP, GIF - maks 1MB), Video (MP4, WebM, OGG - maks 50MB), atau Tulisan"
+      ]
+    },
+    {
+      title: "Bagaimana Caranya?",
+      content: [
+        "1. Klik tombol \"Unggah Karya\"",
+        "2. Isi detail singkat: Judul, Namamu, Kategori (Desain, Video, Tulisan, Meme)",
+        "3. Unggah file gambar (maks 1MB) atau video (maks 50MB)",
+        "4. Klik Kirim!"
+      ]
+    },
+    {
+      title: "Proses Seleksi & Tampil Karya",
+      content: [
+        "• Karya yang kamu kirim akan ditinjau oleh tim admin",
+        "• Kami akan melakukan seleksi berdasarkan kriteria seperti orisinalitas, kualitas, dan kesesuaian",
+        "• Karya-karya terpilih akan kami umumkan dan tampilkan di galeri Karya Kami dalam update mingguan"
+      ]
+    },
+    {
+      title: "Ingat Aturan Mainnya Ya:",
+      content: [
+        "• Pastikan karya itu buatanmu sendiri atau kamu punya izin jelas untuk membagikannya",
+        "• Hargai hak cipta orang lain. Dilarang keras mengunggah karya milik orang lain tanpa izin",
+        "• Jaga konten tetap sopan dan positif (tidak mengandung SARA, kekerasan, dll)",
+        "• Patuhi batas ukuran file (Gambar 1MB, Video 50MB)"
+      ]
+    }
+  ]
+};
+
+const oldAnnouncement = {
   title: "Major Update 3.5: Wajah Baru OurCreativity!",
   date: "2 April 2024",
   icon: Zap,
@@ -61,32 +102,6 @@ const majorUpdateAnnouncement = {
     "Navigasi disederhanakan, dan animasi halus (`framer-motion`) ditambahkan untuk interaksi yang lebih dinamis dan menyenangkan. Palet warna gelap dipertahankan dengan aksen warna cerah (seperti Lavender, Mint, Peach) yang digunakan secara strategis untuk menyorot informasi penting dan kategori.",
     "Tujuannya adalah menciptakan ruang digital yang tidak hanya fungsional tetapi juga secara estetis mencerminkan semangat kreativitas, kolaborasi, dan inovasi komunitas kita.",
   ]
-};
-
-const timelineSteps = [
-  { id: 1, title: "Media Sosial Inspiratif", description: "Konten menarik minat awal.", icon: Instagram, accent: "softPink" },
-  { id: 2, title: "Minat Terbentuk", description: "Ketertarikan untuk bergabung.", icon: Star, accent: "peach" },
-  { id: 3, title: "Bergabung Komunitas", description: "Menjadi bagian dari OurCreativity.", icon: Users, accent: "mint" },
-  { id: 4, title: "Berkarya & Belajar Aktif", description: "Diskusi, kolaborasi, pengembangan diri.", icon: Sparkles, accent: "lavender" },
-  { id: 5, title: "Konsistensi Berkarya", description: "Membangun kebiasaan kreatif.", icon: Milestone, accent: "turquoise" },
-  { id: 6, title: "Kolaborasi & Apresiasi", description: "Publikasi karya di @ourcreativity.ofc.", icon: Instagram, accent: "amethyst" },
-  { id: 7, title: "Menarik Minat Baru", description: "Komunitas berkembang & menginspirasi.", icon: Users, accent: "coral" }
-];
-
-// --- Accent Color Mapping (No changes needed) ---
-const accentStyles: Record<string, { bg: string; border: string; text: string; iconText: string; shadow: string; iconBg: string; lineBg: string }> = {
-  lavender: { bg: "bg-lavender/10", border: "border-lavender/40", text: "text-lavender", iconText: "text-lavender", shadow: "shadow-lavender/5", iconBg: "bg-lavender/20", lineBg: "bg-lavender/50" },
-  mint: { bg: "bg-mint/10", border: "border-mint/40", text: "text-mint", iconText: "text-mint", shadow: "shadow-mint/5", iconBg: "bg-mint/20", lineBg: "bg-mint/50" },
-  peach: { bg: "bg-peach/10", border: "border-peach/40", text: "text-peach", iconText: "text-peach", shadow: "shadow-peach/5", iconBg: "bg-peach/20", lineBg: "bg-peach/50" },
-  softPink: { bg: "bg-softPink/10", border: "border-softPink/40", text: "text-softPink", iconText: "text-softPink", shadow: "shadow-softPink/5", iconBg: "bg-softPink/20", lineBg: "bg-softPink/50" },
-  amethyst: { bg: "bg-amethyst/10", border: "border-amethyst/40", text: "text-amethyst", iconText: "text-amethyst", shadow: "shadow-amethyst/5", iconBg: "bg-amethyst/20", lineBg: "bg-amethyst/50" },
-  turquoise: { bg: "bg-turquoise/10", border: "border-turquoise/40", text: "text-turquoise", iconText: "text-turquoise", shadow: "shadow-turquoise/5", iconBg: "bg-turquoise/20", lineBg: "bg-turquoise/50" },
-  coral: { bg: "bg-coral/10", border: "border-coral/40", text: "text-coral", iconText: "text-coral", shadow: "shadow-coral/5", iconBg: "bg-coral/20", lineBg: "bg-coral/50" },
-  default: { bg: "bg-neutral-800/20", border: "border-neutral-700/40", text: "text-neutral-400", iconText: "text-neutral-300", shadow: "shadow-black/10", iconBg: "bg-neutral-700/50", lineBg: "bg-neutral-600/50" },
-};
-
-const getAccentStyle = (accentKey: string | undefined) => {
-    return accentStyles[accentKey || 'default'] || accentStyles.default;
 };
 
 const Pengumuman = () => {
@@ -101,151 +116,143 @@ const Pengumuman = () => {
         animate="visible"
         className="space-y-8 md:space-y-10 relative z-10 pb-12"
       >
-        {/* --- Single Announcement Card --- */}
+        {/* New Main Announcement with Yellow Glow */}
         <motion.section
-            variants={cardVariants}
-            whileHover={cardHover}
-            className={cn(
-                "rounded-3xl border relative overflow-hidden shadow-xl p-6 md:p-8",
-                "bg-secondary/70 backdrop-blur-xl",
-                getAccentStyle(majorUpdateAnnouncement.accent).border,
-                getAccentStyle(majorUpdateAnnouncement.accent).shadow
-            )}
+          variants={cardVariants}
+          whileHover={cardHover}
+          className={cn(
+            "rounded-3xl border relative overflow-hidden shadow-xl p-6 md:p-8",
+            "bg-secondary/70 backdrop-blur-xl border-amber-500/30",
+            "glow-announcement"
+          )}
         >
-           <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 }}
-                className="relative z-10"
-            >
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
-                    <div className="flex items-center gap-3.5">
-                        <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0", getAccentStyle(majorUpdateAnnouncement.accent).iconBg)}>
-                            <majorUpdateAnnouncement.icon className={cn("w-5 h-5", getAccentStyle(majorUpdateAnnouncement.accent).iconText)} />
-                        </div>
-                        <h2 className="text-xl md:text-2xl font-semibold font-serif text-foreground tracking-tight">
-                            {majorUpdateAnnouncement.title}
-                        </h2>
-                    </div>
-                    <div className="flex items-center gap-2 self-end sm:self-center">
-                         <span className={cn(
-                             "inline-block px-3 py-1 rounded-full text-xs font-medium border",
-                             getAccentStyle(majorUpdateAnnouncement.accent).bg,
-                             getAccentStyle(majorUpdateAnnouncement.accent).border,
-                             getAccentStyle(majorUpdateAnnouncement.accent).text,
-                             "opacity-90"
-                         )}>
-                             {majorUpdateAnnouncement.tag}
-                         </span>
-                        <span className="text-xs font-medium text-neutral-400">
-                            {majorUpdateAnnouncement.date}
-                        </span>
-                    </div>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="relative z-10"
+          >
+            <div className="flex flex-col gap-4">
+              {/* Header */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <h2 className="text-2xl md:text-3xl font-bold font-serif text-amber-200 tracking-tight leading-tight">
+                    {newAnnouncement.title}
+                  </h2>
                 </div>
-                <div className="space-y-3 font-sans text-[14px] text-foreground/80 leading-relaxed text-readable">
-                    {majorUpdateAnnouncement.content.map((paragraph, index) => (
-                        <p key={index}>{paragraph}</p>
-                    ))}
+                <p className="text-lg md:text-xl font-semibold text-amber-100/90">
+                  {newAnnouncement.subtitle}
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className="inline-block px-3 py-1 rounded-full text-xs font-medium border border-amber-500/30 bg-amber-500/10 text-amber-200">
+                    Update Terbaru
+                  </span>
+                  <span className="text-xs font-medium text-amber-200/70">
+                    {newAnnouncement.date}
+                  </span>
                 </div>
-            </motion.div>
-            {/* Decorative elements */}
-            <div className={cn("absolute -top-10 -left-10 w-32 h-32 rounded-full opacity-[0.07] blur-xl", getAccentStyle(majorUpdateAnnouncement.accent).bg.replace('/10','/80'))}></div>
-            <div className={cn("absolute -bottom-10 -right-10 w-32 h-32 rounded-full opacity-[0.07] blur-xl", getAccentStyle(majorUpdateAnnouncement.accent).bg.replace('/10','/80'))}></div>
-             <div className="absolute inset-0 noise-pattern opacity-[0.01]"></div>
-        </motion.section>
+              </div>
 
-        {/* --- Interactive Timeline Section --- */}
-        <motion.section
-            variants={cardVariants}
-            className={cn(
-                "rounded-3xl border relative overflow-hidden shadow-lg p-6 md:p-8",
-                "bg-secondary/70 backdrop-blur-xl border-neutral-700/40 shadow-black/10"
-            )}
-        >
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.15 }}
-                className="relative z-10"
-            >
-                <div className="flex items-center gap-3.5 mb-6">
-                    <div className="w-9 h-9 rounded-lg bg-neutral-700/50 border border-neutral-600 flex items-center justify-center flex-shrink-0">
-                        <ArrowRight className="w-5 h-5 text-neutral-300" />
+              {/* Content Sections */}
+              <div className="space-y-6 mt-2">
+                {newAnnouncement.sections.map((section, index) => (
+                  <div key={index} className="space-y-2">
+                    <h3 className="text-lg font-semibold text-amber-100">
+                      {section.title}
+                    </h3>
+                    <div className="space-y-2 text-[15px] leading-relaxed text-amber-100/80">
+                      {section.content.map((text, idx) => (
+                        <p key={idx}>{text}</p>
+                      ))}
                     </div>
-                    <h2 className="text-xl md:text-2xl font-semibold font-serif text-foreground tracking-tight">
-                        Harapan & Alur Perkembangan
-                    </h2>
-                </div>
+                  </div>
+                ))}
+              </div>
 
-                {/* Timeline Container */}
-                <div className="relative pl-5">
-                     {/* Vertical Connecting Line */}
-                    <div className="absolute left-[21px] top-4 bottom-4 w-[2px] bg-gradient-to-b from-neutral-700/30 via-neutral-600/50 to-neutral-700/30 rounded-full z-0"></div>
-
-                    <div className="space-y-6 relative z-10">
-                        {timelineSteps.map((step, index) => {
-                            const accent = getAccentStyle(step.accent);
-                            const StepIcon = step.icon;
-                            return (
-                                <motion.div
-                                    key={step.id}
-                                    variants={timelineItemVariants}
-                                    className="flex items-start gap-4 group"
-                                >
-                                    {/* Step Marker */}
-                                    <motion.div
-                                        className={cn(
-                                            "mt-1 w-11 h-11 rounded-full border-2 flex items-center justify-center flex-shrink-0 z-10 transition-all duration-300",
-                                            accent.border, accent.iconBg, "group-hover:scale-110 group-hover:shadow-md", accent.shadow
-                                        )}
-                                        whileHover={{ rotate: 5 }}
-                                    >
-                                        <StepIcon className={cn("w-5 h-5", accent.iconText)} />
-                                    </motion.div>
-
-                                    {/* Step Content */}
-                                    <motion.div
-                                        className={cn(
-                                            "flex-1 pt-1 pb-2 transition-opacity duration-300 group-hover:opacity-100",
-                                            // index === 0 ? "opacity-100" : "opacity-80" // Example: Make first item fully opaque initially
-                                        )}
-                                        initial={{ opacity: 0.8 }} // Start slightly faded
-                                        whileHover={{ opacity: 1 }} // Full opacity on hover
-                                    >
-                                        <h3 className="text-base md:text-lg font-semibold font-serif text-foreground mb-0.5 leading-tight">
-                                            {step.title}
-                                        </h3>
-                                        <p className="text-[13px] text-neutral-400 font-sans leading-normal">
-                                            {step.description}
-                                        </p>
-                                    </motion.div>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-                </div>
-            </motion.div>
-             <div className="absolute inset-0 geometric-dot-pattern opacity-[0.02] mix-blend-overlay"></div>
-        </motion.section>
-
-        {/* --- Important Info Card --- */}
-        <motion.div
-            variants={cardVariants}
-            className={cn(
-                "rounded-3xl border p-5 text-center", // Slightly smaller padding
-                "bg-secondary/60 backdrop-blur-md border-neutral-700/40 shadow-md" // More subtle
-            )}
-        >
-            <div className="flex items-center justify-center gap-2 mb-1.5">
-                <AlertCircle className="w-4 h-4 text-neutral-500" />
-                <p className="text-xs font-medium text-neutral-400">Informasi Penting</p>
+              {/* Closing */}
+              <div className="mt-4 pt-4 border-t border-amber-500/20">
+                <p className="text-amber-100/90 text-sm font-medium">
+                  Kami nggak sabar melihat karya-karya hebat dari kalian! Yuk, segera coba fitur barunya dan WUJUDKAN KARYAMU di galeri OurCreativity! 🔥
+                </p>
+                <p className="text-amber-200/70 text-sm mt-2">
+                  Salam Kreatif,<br />
+                  Tim OurCreativity
+                </p>
+              </div>
             </div>
-            <p className="text-xs text-neutral-400 leading-normal">
-                Pengumuman akan diperbarui secara berkala. Pantau terus halaman ini dan media sosial kami.
-            </p>
+          </motion.div>
+
+          {/* Enhanced Glowing Effect */}
+          <div className="absolute -top-10 -left-10 w-72 h-72 rounded-full opacity-[0.15] blur-3xl bg-amber-500/80"></div>
+          <div className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full opacity-[0.12] blur-3xl bg-amber-400/80"></div>
+        </motion.section>
+
+        {/* Previous Announcement in Accordion */}
+        <motion.div variants={cardVariants}>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="prev-update" className="border-none">
+              <AccordionTrigger className="hover:no-underline py-6 px-6 rounded-2xl bg-secondary/60 backdrop-blur-sm border border-neutral-700/40">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-amethyst/20 flex items-center justify-center">
+                    <oldAnnouncement.icon className="w-5 h-5 text-amethyst" />
+                  </div>
+                  <div className="flex flex-col items-start gap-1">
+                    <h3 className="text-base font-semibold text-foreground">
+                      {oldAnnouncement.title}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-medium border border-amethyst/30 bg-amethyst/10 text-amethyst">
+                        {oldAnnouncement.tag}
+                      </span>
+                      <span className="text-xs font-medium text-neutral-400">
+                        {oldAnnouncement.date}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 px-6">
+                <div className="space-y-4 text-[14px] text-foreground/80 leading-relaxed">
+                  {oldAnnouncement.content.map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </motion.div>
 
+        {/* Info Card */}
+        <motion.div
+          variants={cardVariants}
+          className={cn(
+            "rounded-3xl border p-5 text-center",
+            "bg-secondary/60 backdrop-blur-md border-neutral-700/40 shadow-md"
+          )}
+        >
+          <div className="flex items-center justify-center gap-2 mb-1.5">
+            <AlertCircle className="w-4 h-4 text-neutral-500" />
+            <p className="text-xs font-medium text-neutral-400">Informasi Penting</p>
+          </div>
+          <p className="text-xs text-neutral-400 leading-normal">
+            Pengumuman akan diperbarui secara berkala. Pantau terus halaman ini dan media sosial kami.
+          </p>
+        </motion.div>
       </motion.div>
+
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            .glow-announcement {
+              box-shadow: 0 0 50px -12px rgba(245, 158, 11, 0.2);
+              transition: all 0.3s ease;
+            }
+            .glow-announcement:hover {
+              box-shadow: 0 0 60px -8px rgba(245, 158, 11, 0.3);
+            }
+          `
+        }}
+      />
     </PageLayout>
   );
 };
