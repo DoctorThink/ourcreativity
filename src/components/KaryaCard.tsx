@@ -49,7 +49,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
 
   // Determine content type
   const isVideo = (url: string) => url?.match(/\.(mp4|webm|ogg)$/i);
-  const isText = karya.category === 'writing' && karya.description;
+  const isText = karya.category === 'writing' && karya.description && !mediaUrls.some(url => url && !isVideo(url));
   
   // Use the media_urls array if it exists and has items, otherwise fallback to image_url
   const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
