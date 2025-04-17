@@ -99,7 +99,7 @@ const TeamEditor = () => {
   };
 
   return (
-    <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-md">
+    <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10">
       <CardHeader>
         <CardTitle>Team Members</CardTitle>
       </CardHeader>

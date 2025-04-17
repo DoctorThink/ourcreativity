@@ -151,7 +151,7 @@ const KaryaModeration = () => {
             ) : karya && karya.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {karya.map((item) => (
-                  <Card key={item.id} className="overflow-hidden rounded-md">
+                  <Card key={item.id} className="overflow-hidden">
                     <div className="aspect-square w-full overflow-hidden">
                       <img 
                         src={item.image_url} 
