@@ -74,7 +74,7 @@ const ContentEditor = () => {
   };
 
   return (
-    <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10">
+    <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-md">
       <CardHeader>
         <CardTitle>Page Content Editor</CardTitle>
       </CardHeader>

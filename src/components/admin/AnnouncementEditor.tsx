@@ -96,7 +96,7 @@ const AnnouncementEditor = () => {
   };
 
   return (
-    <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10">
+    <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10 rounded-md">
       <CardHeader>
         <CardTitle>Manage Announcements</CardTitle>
         <CardDescription>Create, edit, or delete announcements</CardDescription>
