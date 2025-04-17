@@ -1,9 +1,15 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Database } from '@/integrations/supabase/types';
 import KaryaCard from '@/components/KaryaCard';
 import { Sparkles } from 'lucide-react';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from '@/components/ui/carousel';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -34,18 +40,6 @@ const SpotlightSection: React.FC<SpotlightSectionProps> = ({
     }
   };
 
-  const itemVariants = {
-    initial: { opacity: 0, y: 20 },
-    animate: (i: number) => ({ 
-      opacity: 1, 
-      y: 0,
-      transition: { 
-        duration: 0.3, 
-        delay: i * 0.1 
-      }
-    })
-  };
-
   return (
     <motion.div
       variants={containerVariants}
@@ -66,32 +60,35 @@ const SpotlightSection: React.FC<SpotlightSectionProps> = ({
           <span>Featured works</span>
         </div>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {spotlightItems.map((item, index) => (
-          <motion.div 
-            key={item.id}
-            custom={index}
-            variants={itemVariants}
-            initial="initial"
-            animate="animate"
-            className="spotlight-item scale-105 transform-gpu"
-            style={{
-              '--tile-glow-color': item.category === 'design' 
-                ? 'rgba(152, 245, 225, 0.2)' 
-                : item.category === 'video' 
-                ? 'rgba(155, 109, 255, 0.2)' 
-                : item.category === 'meme' 
-                ? 'rgba(254, 198, 161, 0.2)' 
-                : 'rgba(255, 209, 220, 0.2)'
-            } as React.CSSProperties}
-          >
-            <KaryaCard 
-              karya={item} 
-              onClick={() => onKaryaClick(item)}
-            />
-          </motion.div>
-        ))}
+      <div className="relative">
+        <Carousel opts={{ loop: true, align: 'center' }}>
+          <CarouselContent>
+            {spotlightItems.map((item, index) => (
+              <CarouselItem key={item.id} className="px-1 md:px-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="spotlight-item scale-105 transform-gpu"
+                  style={{
+                    // @ts-ignore: Allow CSS variable for custom glow color
+                    ['--tile-glow-color' as any]: item.category === 'design'
+                      ? 'rgba(152, 245, 225, 0.2)'
+                      : item.category === 'video'
+                      ? 'rgba(155, 109, 255, 0.2)'
+                      : item.category === 'meme'
+                      ? 'rgba(254, 198, 161, 0.2)'
+                      : 'rgba(255, 209, 220, 0.2)'
+                  }}
+                >
+                  <KaryaCard karya={item} onClick={() => onKaryaClick(item)} />
+                </motion.div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-2 md:left-4 top-1/2 -translate-y-1/2 z-10" />
+          <CarouselNext className="right-2 md:right-4 top-1/2 -translate-y-1/2 z-10" />
+        </Carousel>
       </div>
     </motion.div>
   );
