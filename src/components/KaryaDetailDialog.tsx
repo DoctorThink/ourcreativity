@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { 
   Dialog, 
   DialogContent
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ExternalLink, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, ExternalLink, X, Maximize2, Minimize2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Database } from '@/integrations/supabase/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -14,29 +14,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import ColorThief from 'color-thief-browser';
-
-// Helper: Calculate luminance and contrast
-function getLuminance([r, g, b]: number[]) {
-  const a = [r, g, b].map((v) => {
-    v /= 255;
-    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-  });
-  return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
-}
-function getContrast(rgb1: number[], rgb2: number[]) {
-  const lum1 = getLuminance(rgb1);
-  const lum2 = getLuminance(rgb2);
-  return (Math.max(lum1, lum2) + 0.05) / (Math.min(lum1, lum2) + 0.05);
-}
-function getContrastingTextColor(rgb: number[]) {
-  const white = [255, 255, 255];
-  const black = [0, 0, 0];
-  const contrastWhite = getContrast(rgb, white);
-  const contrastBlack = getContrast(rgb, black);
-  // WCAG AA: 4.5:1 for normal text
-  return contrastWhite >= contrastBlack ? (contrastWhite >= 4.5 ? '#fff' : '#000') : (contrastBlack >= 4.5 ? '#000' : '#fff');
-}
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -49,9 +26,6 @@ interface KaryaDetailDialogProps {
 const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [showInfoPanel, setShowInfoPanel] = useState(true);
-  const [textColor, setTextColor] = useState<string>('#fff');
-  const [textShadow, setTextShadow] = useState<string>('0 2px 8px rgba(0,0,0,0.7)');
-  const imageRef = useRef<HTMLImageElement>(null);
 
   const categoryIcons: Record<string, string> = {
     'design': '/lovable-uploads/design.png',
@@ -77,29 +51,10 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
     setIsDescriptionExpanded(!isDescriptionExpanded);
   };
 
+
   const toggleInfoPanel = () => {
     setShowInfoPanel(!showInfoPanel);
   };
-
-  // Color analysis for text contrast
-  useEffect(() => {
-    if (isText) return;
-    const img = imageRef.current;
-    if (img && img.complete && img.naturalWidth > 0) {
-      setTimeout(() => {
-        ColorThief.getColor(img)
-          .then((rgb: number[]) => {
-            const color = getContrastingTextColor(rgb);
-            setTextColor(color);
-            setTextShadow(color === '#fff' ? '0 2px 8px rgba(0,0,0,0.7)' : '0 2px 8px rgba(255,255,255,0.7)');
-          })
-          .catch(() => {
-            setTextColor('#fff');
-            setTextShadow('0 2px 8px rgba(0,0,0,0.7)');
-          });
-        }, 200);
-      }
-    }, [isText, mediaUrls]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -132,11 +87,9 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                         />
                       ) : (
                         <img 
-                          ref={index === 0 ? imageRef : undefined}
                           src={url}
                           alt={`${karya.title} - slide ${index + 1}`}
                           className="w-full h-full object-contain max-h-full"
-                          onLoad={() => { if (index === 0 && imageRef.current) imageRef.current.style.backgroundImage = 'none'; }}
                         />
                       )}
                     </CarouselItem>
@@ -162,11 +115,9 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                   />
                 ) : (
                   <img 
-                    ref={imageRef}
                     src={mediaUrls[0]}
                     alt={karya.title}
                     className="w-full h-full object-contain max-h-full"
-                    onLoad={() => { if (imageRef.current) imageRef.current.style.backgroundImage = 'none'; }}
                   />
                 )}
               </>
@@ -202,7 +153,6 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                 className="bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md absolute bottom-0 left-0 right-0 z-10 max-h-[50vh] overflow-y-auto rounded-t-3xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.2)]"
-                style={{ color: textColor, textShadow: '0 2px 8px rgba(0,0,0,0.7)'}}
               >
                 {/* Header with title and category info */}
                 <div className="flex justify-between items-start p-6 border-b border-border/20">
