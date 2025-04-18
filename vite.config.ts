@@ -19,13 +19,21 @@ export default defineConfig(({ mode }) => {
       assetsDir: "assets",
       rollupOptions: {
         output: {
-          manualChunks: undefined, // Disable manual chunk splitting for now
-          // Ensure consistent casing in file names (all lowercase)
-          entryFileNames: 'assets/[name]-[hash].js',
-          chunkFileNames: 'assets/[name]-[hash].js',
-          assetFileNames: 'assets/[name]-[hash].[ext]'
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+            'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-tabs', '@radix-ui/react-select'],
+            'animation-vendor': ['framer-motion'],
+            'pages': ['./src/pages/KaryaKami.tsx', './src/pages/TimKami.tsx', './src/pages/Informasi.tsx']
+          },
+          entryFileNames: 'assets/[name].[hash].js',
+          chunkFileNames: 'assets/[name].[hash].js',
+          assetFileNames: 'assets/[name].[hash].[ext]'
         }
       },
+      modulePreload: {
+        polyfill: true
+      },
+      sourcemap: true,
       chunkSizeWarningLimit: 1000
     },
     plugins: [

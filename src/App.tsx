@@ -1,4 +1,3 @@
-
 import React, { Suspense, lazy, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Toaster } from "@/components/ui/toaster";
@@ -18,7 +17,10 @@ const Informasi = lazy(() => import("./pages/Informasi"));
 const Pengumuman = lazy(() => import("./pages/Pengumuman"));
 const Terms = lazy(() => import("./pages/Terms"));
 const TimKami = lazy(() => import("./pages/TimKami"));
-const KaryaKami = lazy(() => import("./pages/KaryaKami"));
+const KaryaKami = lazy(() => import("./pages/KaryaKami").then(module => {
+  // Add a small delay to ensure proper chunk loading
+  return new Promise(resolve => setTimeout(() => resolve(module), 100));
+}));
 const OurAdmin = lazy(() => import("./pages/OurAdmin"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const RequireAuth = lazy(() => import("./components/admin/RequireAuth"));
@@ -42,28 +44,69 @@ const LoadingFallback = () => (
   </div>
 );
 
+const ErrorBoundary = ({ children }: { children: React.ReactNode }) => {
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      if (event.error?.message?.includes('Failed to fetch dynamically imported module')) {
+        setHasError(true);
+        // Attempt to reload the chunk
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }
+    };
+
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
+
+  if (hasError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center p-8">
+          <h2 className="text-xl font-semibold mb-4">Loading Error</h2>
+          <p className="text-muted-foreground mb-4">An error occurred while loading the page. Retrying...</p>
+          <div className="animate-spin h-8 w-8 border-2 border-primary rounded-full border-t-transparent mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+};
+
 const AnimatedRoutes = () => {
   const location = useLocation();
   
   return (
     <AnimatePresence mode="wait" initial={false}>
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/brand-story" element={<PageTransition><BrandStory /></PageTransition>} />
-        <Route path="/informasi" element={<PageTransition><Informasi /></PageTransition>} />
-        <Route path="/pengumuman" element={<PageTransition><Pengumuman /></PageTransition>} />
-        <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
-        <Route path="/tim-kami" element={<PageTransition><TimKami /></PageTransition>} />
-        <Route path="/karya-kami" element={<PageTransition><KaryaKami /></PageTransition>} />
-        <Route path="/admin-login" element={<PageTransition><AdminLogin /></PageTransition>} />
-        <Route path="/our-admin" element={
-          <PageTransition>
-            <RequireAuth>
-              <OurAdmin />
-            </RequireAuth>
-          </PageTransition>
-        } />
-      </Routes>
+      <ErrorBoundary>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+          <Route path="/brand-story" element={<PageTransition><BrandStory /></PageTransition>} />
+          <Route path="/informasi" element={<PageTransition><Informasi /></PageTransition>} />
+          <Route path="/pengumuman" element={<PageTransition><Pengumuman /></PageTransition>} />
+          <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
+          <Route path="/tim-kami" element={<PageTransition><TimKami /></PageTransition>} />
+          <Route path="/karya-kami" element={
+            <PageTransition>
+              <Suspense fallback={<LoadingFallback />}>
+                <KaryaKami />
+              </Suspense>
+            </PageTransition>
+          } />
+          <Route path="/admin-login" element={<PageTransition><AdminLogin /></PageTransition>} />
+          <Route path="/our-admin" element={
+            <PageTransition>
+              <RequireAuth>
+                <OurAdmin />
+              </RequireAuth>
+            </PageTransition>
+          } />
+        </Routes>
+      </ErrorBoundary>
     </AnimatePresence>
   );
 };
