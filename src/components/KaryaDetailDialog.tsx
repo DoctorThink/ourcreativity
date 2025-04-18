@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Dialog, 
   DialogContent
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ExternalLink, X, Maximize2, Minimize2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, ExternalLink, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Database } from '@/integrations/supabase/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -51,7 +51,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
   const [showInfoPanel, setShowInfoPanel] = useState(true);
   const [textColor, setTextColor] = useState<string>('#fff');
   const [textShadow, setTextShadow] = useState<string>('0 2px 8px rgba(0,0,0,0.7)');
-  const imageRef = React.useRef<HTMLImageElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   const categoryIcons: Record<string, string> = {
     'design': '/lovable-uploads/design.png',
@@ -82,7 +82,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
   };
 
   // Color analysis for text contrast
-  React.useEffect(() => {
+  useEffect(() => {
     if (isText) return;
     const img = imageRef.current;
     if (img && img.complete && img.naturalWidth > 0) {
