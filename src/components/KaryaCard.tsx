@@ -10,6 +10,29 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import ColorThief from 'color-thief-browser';
+
+// Helper: Calculate luminance and contrast
+function getLuminance([r, g, b]: number[]) {
+  const a = [r, g, b].map((v) => {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+}
+function getContrast(rgb1: number[], rgb2: number[]) {
+  const lum1 = getLuminance(rgb1);
+  const lum2 = getLuminance(rgb2);
+  return (Math.max(lum1, lum2) + 0.05) / (Math.min(lum1, lum2) + 0.05);
+}
+function getContrastingTextColor(rgb: number[]) {
+  const white = [255, 255, 255];
+  const black = [0, 0, 0];
+  const contrastWhite = getContrast(rgb, white);
+  const contrastBlack = getContrast(rgb, black);
+  // WCAG AA: 4.5:1 for normal text
+  return contrastWhite >= contrastBlack ? (contrastWhite >= 4.5 ? '#fff' : '#000') : (contrastBlack >= 4.5 ? '#000' : '#fff');
+}
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -38,6 +61,8 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
+  const [textColor, setTextColor] = useState<string>('#fff');
+  const [textShadow, setTextShadow] = useState<string>('0 2px 8px rgba(0,0,0,0.7)');
 
   const categoryIcons: Record<string, string> = {
     'design': '/lovable-uploads/design.png',
@@ -87,6 +112,25 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
       }
     }
   }, [hasVideo]);
+
+  // Color analysis for text contrast
+  useEffect(() => {
+    // Only analyze if not text-only
+    if (isText) return;
+    const img = imageRef.current;
+    if (img && img.complete && img.naturalWidth > 0) {
+      ColorThief.getColor(img)
+        .then((rgb: number[]) => {
+          const color = getContrastingTextColor(rgb);
+          setTextColor(color);
+          setTextShadow(color === '#fff' ? '0 2px 8px rgba(0,0,0,0.7)' : '0 2px 8px rgba(255,255,255,0.7)');
+        })
+        .catch(() => {
+          setTextColor('#fff');
+          setTextShadow('0 2px 8px rgba(0,0,0,0.7)');
+        });
+    }
+  }, [imageLoaded, isText, mediaUrls]);
 
   return (
     <motion.div
@@ -232,6 +276,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           className={`absolute bottom-0 left-0 right-0 p-5 text-foreground opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t ${
             hasVideo ? 'from-black/95 to-transparent' : 'from-background/95 to-transparent'
           }`}
+          style={{ color: textColor, textShadow }}
         >
           <div className="flex justify-between items-end gap-3">
             <div className="flex-1 min-w-0">
