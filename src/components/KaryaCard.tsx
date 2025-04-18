@@ -130,7 +130,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
             setTextColor('#fff');
             setTextShadow('0 2px 8px rgba(0,0,0,0.7)');
           });
-      }, 0);
+      }, 200);
     }
   }, [imageLoaded, isText, mediaUrls]);
 
@@ -278,7 +278,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           className={`absolute bottom-0 left-0 right-0 p-5 text-foreground opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t ${
             hasVideo ? 'from-black/95 to-transparent' : 'from-background/95 to-transparent'
           }`}
-          style={{ color: textColor, textShadow }}
+          style={{ color: textColor, textShadow: '0 2px 8px rgba(0,0,0,0.7)'}}
         >
           <div className="flex justify-between items-end gap-3">
             <div className="flex-1 min-w-0">

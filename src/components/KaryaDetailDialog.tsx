@@ -97,9 +97,9 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
             setTextColor('#fff');
             setTextShadow('0 2px 8px rgba(0,0,0,0.7)');
           });
-      }, 0);
-    }
-  }, [isText, mediaUrls]);
+        }, 200);
+      }
+    }, [isText, mediaUrls]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -202,7 +202,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                 className="bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md absolute bottom-0 left-0 right-0 z-10 max-h-[50vh] overflow-y-auto rounded-t-3xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.2)]"
-                style={{ color: textColor, textShadow }}
+                style={{ color: textColor, textShadow: '0 2px 8px rgba(0,0,0,0.7)'}}
               >
                 {/* Header with title and category info */}
                 <div className="flex justify-between items-start p-6 border-b border-border/20">
