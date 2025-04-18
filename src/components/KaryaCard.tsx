@@ -119,16 +119,18 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     if (isText) return;
     const img = imageRef.current;
     if (img && img.complete && img.naturalWidth > 0) {
-      ColorThief.getColor(img)
-        .then((rgb: number[]) => {
-          const color = getContrastingTextColor(rgb);
-          setTextColor(color);
-          setTextShadow(color === '#fff' ? '0 2px 8px rgba(0,0,0,0.7)' : '0 2px 8px rgba(255,255,255,0.7)');
-        })
-        .catch(() => {
-          setTextColor('#fff');
-          setTextShadow('0 2px 8px rgba(0,0,0,0.7)');
-        });
+      setTimeout(() => {
+        ColorThief.getColor(img)
+          .then((rgb: number[]) => {
+            const color = getContrastingTextColor(rgb);
+            setTextColor(color);
+            setTextShadow(color === '#fff' ? '0 2px 8px rgba(0,0,0,0.7)' : '0 2px 8px rgba(255,255,255,0.7)');
+          })
+          .catch(() => {
+            setTextColor('#fff');
+            setTextShadow('0 2px 8px rgba(0,0,0,0.7)');
+          });
+      }, 0);
     }
   }, [imageLoaded, isText, mediaUrls]);
 
