@@ -18,6 +18,30 @@ interface KaryaCardProps {
   onClick?: () => void;
 }
 
+// Helper function to calculate luminance
+const getLuminance = (r: number, g: number, b: number) => {
+  const [rs, gs, bs] = [r, g, b].map(c => {
+    c = c / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  });
+  return rs * 0.2126 + gs * 0.7152 + bs * 0.0722;
+};
+
+// Helper function to get dominant color and determine if it's light or dark
+const getDominantColorFromImage = (imgElement: HTMLImageElement): boolean => {
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+  if (!context) return false;
+
+  canvas.width = 1;
+  canvas.height = 1;
+  context.drawImage(imgElement, 0, 0, 1, 1);
+  const [r, g, b] = context.getImageData(0, 0, 1, 1).data;
+  
+  const luminance = getLuminance(r, g, b);
+  return luminance > 0.5; // true if light, false if dark
+};
+
 // Helper function to generate transformed image URLs (adjust based on actual Supabase transformation syntax)
 const getTransformedUrl = (baseUrl: string | null | undefined, options: { format?: 'webp' | 'avif' | 'jpeg', width?: number, quality?: number } = {}): string => {
   if (!baseUrl) return '/placeholder.svg'; // Fallback placeholder
@@ -36,6 +60,7 @@ const getTransformedUrl = (baseUrl: string | null | undefined, options: { format
 
 const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isLightBackground, setIsLightBackground] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
@@ -67,6 +92,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     // Optional: remove placeholder background if needed
     if (imageRef.current) {
        imageRef.current.style.backgroundImage = 'none';
+       setIsLightBackground(getDominantColorFromImage(imageRef.current));
     }
   };
 
@@ -227,16 +253,21 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           )}
         </div>
 
-        {/* Content overlay with gradient background for better readability */}
+        {/* Content overlay with adaptive text color */}
         <div 
-          className={`absolute bottom-0 left-0 right-0 p-5 text-foreground opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t ${
-            hasVideo ? 'from-black/95 to-transparent' : 'from-background/95 to-transparent'
+          className={`absolute bottom-0 left-0 right-0 p-5 opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t ${
+            hasVideo ? 'from-black/95 to-transparent' : 
+            isLightBackground ? 'from-black/80 to-transparent' : 'from-white/90 to-transparent'
           }`}
         >
           <div className="flex justify-between items-end gap-3">
             <div className="flex-1 min-w-0">
-              <h3 className="text-base sm:text-lg font-semibold truncate tracking-tight">{karya.title}</h3>
-              <p className="text-foreground/80 text-xs sm:text-sm truncate mt-1">{karya.creator_name}</p>
+              <h3 className={`text-base sm:text-lg font-semibold truncate tracking-tight ${
+                isLightBackground ? 'text-white' : 'text-black'
+              }`}>{karya.title}</h3>
+              <p className={`text-xs sm:text-sm truncate mt-1 ${
+                isLightBackground ? 'text-white/80' : 'text-black/80'
+              }`}>{karya.creator_name}</p>
             </div>
             {karya.link_url && (
               <motion.a 
@@ -246,7 +277,9 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                 onClick={stopPropagation}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className="flex items-center gap-1.5 text-foreground/70 bg-black/30 backdrop-blur-sm rounded-full px-2.5 py-1 hover:bg-black/50 transition-colors border border-white/10"
+                className={`flex items-center gap-1.5 ${
+                  isLightBackground ? 'text-white/70 hover:text-white bg-black/30' : 'text-black/70 hover:text-black bg-white/30'
+                } backdrop-blur-sm rounded-full px-2.5 py-1 transition-colors border border-current`}
                 aria-label="Visit related link"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
@@ -255,9 +288,11 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           </div>
         </div>
 
-        {/* Category Icon - Improved with gradient background */}
+        {/* Category Icon - with adaptive background */}
         <div 
-          className="absolute top-3 right-3 bg-gradient-to-br from-white/95 to-white/85 backdrop-blur-md p-2 rounded-full scale-100 transition-all duration-300 shadow-md"
+          className={`absolute top-3 right-3 ${
+            isLightBackground ? 'bg-black/20' : 'bg-white/95'
+          } backdrop-blur-md p-2 rounded-full scale-100 transition-all duration-300 shadow-md`}
           aria-label={`Category: ${karya.category}`}
         >
           <img
