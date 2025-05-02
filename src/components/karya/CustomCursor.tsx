@@ -72,7 +72,8 @@ export const CustomCursor: React.FC = () => {
 
       // Check for all clickable elements already in the DOM
       document.querySelectorAll("a, button, [role='button'], input, textarea, select").forEach(el => {
-        el.style.cursor = "none";
+        // Fix: Cast element to HTMLElement which has style property
+        (el as HTMLElement).style.cursor = "none";
       });
 
       // Clean up
@@ -81,7 +82,8 @@ export const CustomCursor: React.FC = () => {
         document.body.style.cursor = "auto";
         
         document.querySelectorAll("a, button, [role='button'], input, textarea, select").forEach(el => {
-          el.style.cursor = "auto";
+          // Fix: Cast element to HTMLElement which has style property
+          (el as HTMLElement).style.cursor = "auto";
         });
       };
     }
