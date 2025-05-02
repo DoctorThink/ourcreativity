@@ -7,7 +7,7 @@ import { SpotlightSection } from "../components/karya/SpotlightSection";
 
 const KaryaKami: React.FC = () => {
   return (
-    <PageLayout>
+    <PageLayout title="Karya Kami">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

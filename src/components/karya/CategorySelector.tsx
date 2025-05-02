@@ -16,8 +16,8 @@ export const CategorySelector: React.FC<CategoryProps> = ({
     { id: "all", name: "All" },
     { id: "design", name: "Design", icon: "/lovable-uploads/design.png" },
     { id: "video", name: "Video", icon: "/lovable-uploads/video.png" },
+    { id: "writing", name: "Karya Tulis", icon: "/lovable-uploads/karyatulis.png" },
     { id: "meme", name: "Meme", icon: "/lovable-uploads/meme.png" },
-    { id: "karyatulis", name: "Tulisan", icon: "/lovable-uploads/karyatulis.png" },
     { id: "game", name: "Game", icon: "/lovable-uploads/game.png" }
   ];
 
@@ -30,14 +30,21 @@ export const CategorySelector: React.FC<CategoryProps> = ({
           className={cn(
             "px-4 py-2 rounded-full flex items-center space-x-2 transition-all",
             selectedCategory === category.id
-              ? "bg-primary text-primary-foreground"
-              : "bg-secondary hover:bg-secondary/80"
+              ? "bg-primary text-primary-foreground shadow-md shadow-primary/30"
+              : "bg-secondary hover:bg-secondary/80 backdrop-blur-md border border-border/20"
           )}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
           {category.icon && (
-            <img src={category.icon} alt={category.name} className="w-5 h-5" />
+            <div className={cn(
+              "rounded-full p-1 mr-1.5",
+              selectedCategory === category.id 
+                ? "bg-primary-foreground/20" 
+                : "bg-white/90"
+            )}>
+              <img src={category.icon} alt={category.name} className="w-4 h-4" />
+            </div>
           )}
           <span>{category.name}</span>
         </motion.button>

@@ -1,10 +1,11 @@
+
 import React, { useState } from 'react';
 import { 
   Dialog, 
   DialogContent
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ExternalLink, X, Maximize2, Minimize2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, ExternalLink, X, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Database } from '@/integrations/supabase/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -14,6 +15,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Badge } from '@/components/ui/badge';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -32,6 +34,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
     'video': '/lovable-uploads/video.png',
     'writing': '/lovable-uploads/karyatulis.png',
     'meme': '/lovable-uploads/meme.png',
+    'game': '/lovable-uploads/game.png',
   };
   
   const categoryNames: Record<string, string> = {
@@ -39,6 +42,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
     'video': 'Video',
     'writing': 'Karya Tulis',
     'meme': 'Meme',
+    'game': 'Game',
   };
 
   const isVideo = (url: string) => url?.match(/\.(mp4|webm|ogg)$/i);
@@ -51,10 +55,27 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
     setIsDescriptionExpanded(!isDescriptionExpanded);
   };
 
-
   const toggleInfoPanel = () => {
     setShowInfoPanel(!showInfoPanel);
   };
+  
+  // Extract tags from description or keywords
+  const extractTags = (): string[] => {
+    if (karya.keywords && Array.isArray(karya.keywords)) {
+      return karya.keywords;
+    } else if (karya.keywords && typeof karya.keywords === 'string') {
+      return karya.keywords.split(',').map(tag => tag.trim());
+    } else if (karya.description) {
+      // Look for hashtags in the description
+      const hashtags = karya.description.match(/#[\w\u0080-\uFFFF]+/g);
+      if (hashtags && hashtags.length > 0) {
+        return hashtags.map(tag => tag.slice(1)); // Remove # symbol
+      }
+    }
+    return [];
+  };
+  
+  const tags = extractTags();
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -66,7 +87,16 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
             {isText ? (
               <div className="w-full h-full overflow-auto p-8 bg-gradient-to-b from-secondary/90 to-secondary/70 backdrop-blur-md flex items-center justify-center">
                 <div className="max-w-3xl prose prose-invert">
-                  <p className="text-foreground/90 whitespace-pre-wrap text-readable leading-relaxed">
+                  <div className="mb-6 text-center">
+                    <img 
+                      src="/lovable-uploads/karyatulis.png" 
+                      alt="Karya Tulis" 
+                      className="w-16 h-16 mx-auto mb-4 opacity-70" 
+                    />
+                    <h2 className="text-2xl font-serif mb-2">{karya.title}</h2>
+                    <p className="text-sm text-foreground/70">Oleh {karya.creator_name}</p>
+                  </div>
+                  <p className="text-foreground/90 whitespace-pre-wrap text-readable leading-relaxed font-serif text-base sm:text-lg">
                     {karya.description}
                   </p>
                 </div>
@@ -156,7 +186,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
               >
                 {/* Header with title and category info */}
                 <div className="flex justify-between items-start p-6 border-b border-border/20">
-                  <div>
+                  <div className="flex-1">
                     <h2 className="text-2xl font-bold tracking-tight">{karya.title}</h2>
                     <p className="text-foreground/70 mt-1">
                       by {karya.creator_name}
@@ -176,9 +206,32 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                   </div>
                 </div>
                 
+                {/* Tags section - new! */}
+                {tags.length > 0 && (
+                  <div className="px-6 pt-4 pb-2 border-b border-border/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Tag className="w-4 h-4 text-foreground/60" />
+                      <span className="text-sm font-medium text-foreground/80">Tags</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {tags.map((tag, index) => (
+                        <Badge 
+                          key={index} 
+                          className="bg-foreground/10 hover:bg-foreground/15 text-foreground/90 border-none"
+                        >
+                          #{tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
                 {/* Expandable description section */}
                 {!isText && karya.description && (
                   <div className="p-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-sm font-medium text-foreground/80">Description</span>
+                    </div>
                     <div 
                       className={`relative overflow-hidden transition-all duration-300 ${
                         isDescriptionExpanded ? 'max-h-[800px]' : 'max-h-[100px]'

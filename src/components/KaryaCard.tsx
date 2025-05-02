@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Database } from '@/integrations/supabase/types';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
-import { ExternalLink, Play } from 'lucide-react';
+import { ExternalLink, Play, Tag } from 'lucide-react';
 import {
   Carousel,
   CarouselContent,
@@ -18,15 +19,21 @@ interface KaryaCardProps {
   onClick?: () => void;
 }
 
-// Helper function to generate transformed image URLs (adjust based on actual Supabase transformation syntax)
+// Helper function to generate transformed image URLs with lower resolution for cards
 const getTransformedUrl = (baseUrl: string | null | undefined, options: { format?: 'webp' | 'avif' | 'jpeg', width?: number, quality?: number } = {}): string => {
   if (!baseUrl) return '/placeholder.svg'; // Fallback placeholder
   try {
+    // For thumbnails in cards, use lower resolution
     const url = new URL(baseUrl);
-    // Example transformation params - replace with actual Supabase params
+    
+    // Use much lower quality and size for card previews to improve performance
+    const cardPreviewWidth = options.width || 400; // Small width for cards
+    const cardPreviewQuality = options.quality || 60; // Lower quality for cards
+    
     if (options.format) url.searchParams.set('format', options.format);
-    if (options.width) url.searchParams.set('resize', `width:${options.width}`); // Example syntax
-    if (options.quality) url.searchParams.set('quality', options.quality.toString()); // Example syntax
+    url.searchParams.set('resize', `width:${cardPreviewWidth}`);
+    url.searchParams.set('quality', cardPreviewQuality.toString());
+    
     return url.toString();
   } catch (e) {
     console.error("Error creating URL:", e);
@@ -44,6 +51,15 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     'video': '/lovable-uploads/video.png',
     'writing': '/lovable-uploads/karyatulis.png',
     'meme': '/lovable-uploads/meme.png',
+    'game': '/lovable-uploads/game.png',
+  };
+  
+  const categoryNames: Record<string, string> = {
+    'design': 'Design',
+    'video': 'Video',
+    'writing': 'Karya Tulis',
+    'meme': 'Meme',
+    'game': 'Game',
   };
 
   // Use the media_urls array if it exists and has items, otherwise fallback to image_url
@@ -88,6 +104,24 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     }
   }, [hasVideo]);
 
+  // Extract tags from description or use keywords if available
+  const extractTags = (): string[] => {
+    if (karya.keywords && Array.isArray(karya.keywords)) {
+      return karya.keywords;
+    } else if (karya.keywords && typeof karya.keywords === 'string') {
+      return karya.keywords.split(',').map(tag => tag.trim());
+    } else if (karya.description) {
+      // Look for hashtags in the description
+      const hashtags = karya.description.match(/#[\w\u0080-\uFFFF]+/g);
+      if (hashtags && hashtags.length > 0) {
+        return hashtags.map(tag => tag.slice(1)); // Remove # symbol
+      }
+    }
+    return [];
+  };
+  
+  const tags = extractTags();
+
   return (
     <motion.div
       whileHover={{ y: -5, scale: 1.02 }}
@@ -107,9 +141,16 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
         >
           {isText ? (
             <div className="h-full w-full p-6 flex items-center justify-center bg-gradient-to-br from-secondary to-background/80 overflow-hidden">
-              <p className="text-foreground/80 text-sm line-clamp-6 text-center font-serif">
-                {karya.description}
-              </p>
+              <div className="flex flex-col items-center gap-2">
+                <img 
+                  src="/lovable-uploads/karyatulis.png" 
+                  alt="Karya Tulis" 
+                  className="w-12 h-12 mb-2 opacity-70" 
+                />
+                <p className="text-foreground/80 text-sm line-clamp-6 text-center font-serif leading-relaxed">
+                  {karya.description ? karya.description.substring(0, 120) + "..." : "Artikel Tulisan"}
+                </p>
+              </div>
             </div>
           ) : mediaUrls.length > 1 ? (
             // Carousel for multiple media
@@ -140,25 +181,19 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                       </div>
                     ) : (
                       <picture>
-                        {/* Add AVIF source if desired and supported */}
-                        {/* <source srcSet={getTransformedUrl(url, { format: 'avif', width: 800 })} type="image/avif" /> */}
-                        <source srcSet={getTransformedUrl(url, { format: 'webp', width: 1200 })} type="image/webp" media="(min-width: 1024px)" />
-                        <source srcSet={getTransformedUrl(url, { format: 'webp', width: 800 })} type="image/webp" media="(min-width: 640px)" />
-                        <source srcSet={getTransformedUrl(url, { format: 'webp', width: 400 })} type="image/webp" />
-                        {/* Fallback JPG/PNG source */}
-                        <source srcSet={getTransformedUrl(url, { format: 'jpeg', width: 1200 })} type="image/jpeg" media="(min-width: 1024px)" />
-                        <source srcSet={getTransformedUrl(url, { format: 'jpeg', width: 800 })} type="image/jpeg" media="(min-width: 640px)" />
-                        {/* Fallback img tag */}
+                        {/* Use progressively loading images with much lower resolution for cards */}
+                        <source srcSet={getTransformedUrl(url, { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
+                        <source srcSet={getTransformedUrl(url, { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
                         <img
                           ref={imageRef}
-                          src={getTransformedUrl(url, { format: 'jpeg', width: 400 })} // Smallest jpeg as fallback src
+                          src={getTransformedUrl(url, { format: 'jpeg', width: 300, quality: 50 })}
                           alt={`${karya.title} - slide ${index + 1}`}
                           className="w-full h-full object-cover"
                           onLoad={handleImageLoad}
                           loading="lazy"
-                          width={karya.media_width || 400} // Provide default width
-                          height={karya.media_height || 300} // Provide default height
-                          style={{ backgroundImage: 'url(/placeholder.svg)', backgroundSize: 'cover' }} // Placeholder background
+                          width={karya.media_width || 400}
+                          height={karya.media_height || 300}
+                          style={{ backgroundImage: 'url(/placeholder.svg)', backgroundSize: 'cover' }}
                         />
                       </picture>
                     )}
@@ -195,30 +230,24 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                   </div>
                 </div>
               ) : (
-                 <picture>
-                    {/* Add AVIF source if desired and supported */}
-                    {/* <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'avif', width: 800 })} type="image/avif" /> */}
-                    <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'webp', width: 1200 })} type="image/webp" media="(min-width: 1024px)" />
-                    <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'webp', width: 800 })} type="image/webp" media="(min-width: 640px)" />
-                    <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'webp', width: 400 })} type="image/webp" />
-                    {/* Fallback JPG/PNG source */}
-                    <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 1200 })} type="image/jpeg" media="(min-width: 1024px)" />
-                    <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 800 })} type="image/jpeg" media="(min-width: 640px)" />
-                    {/* Fallback img tag */}
-                    <img
-                      ref={imageRef}
-                      src={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 400 })} // Smallest jpeg as fallback src
-                      alt={karya.title}
-                      className={`w-full h-full object-cover transition-opacity duration-500 ${
-                        imageLoaded ? 'opacity-100' : 'opacity-0'
-                      }`}
-                      onLoad={handleImageLoad}
-                      loading="lazy"
-                      width={karya.media_width || 400} // Provide default width
-                      height={karya.media_height || 300} // Provide default height
-                      style={{ backgroundImage: 'url(/placeholder.svg)', backgroundSize: 'cover' }} // Placeholder background
-                    />
-                  </picture>
+                <picture>
+                  {/* Use much lower resolution for card previews */}
+                  <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
+                  <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
+                  <img
+                    ref={imageRef}
+                    src={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 300, quality: 50 })}
+                    alt={karya.title}
+                    className={`w-full h-full object-cover transition-opacity duration-500 ${
+                      imageLoaded ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    onLoad={handleImageLoad}
+                    loading="lazy"
+                    width={karya.media_width || 400}
+                    height={karya.media_height || 300}
+                    style={{ backgroundImage: 'url(/placeholder.svg)', backgroundSize: 'cover' }}
+                  />
+                </picture>
               )}
               {!imageLoaded && !hasVideo && (
                 <div className="absolute inset-0 bg-secondary animate-pulse"></div>
@@ -237,6 +266,25 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
             <div className="flex-1 min-w-0">
               <h3 className="text-base sm:text-lg font-semibold truncate tracking-tight">{karya.title}</h3>
               <p className="text-foreground/80 text-xs sm:text-sm truncate mt-1">{karya.creator_name}</p>
+              
+              {/* Tags display on hover */}
+              {tags.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-2 max-w-full overflow-hidden">
+                  {tags.slice(0, 3).map((tag, index) => (
+                    <span 
+                      key={index}
+                      className="text-[10px] bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/80"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+                  {tags.length > 3 && (
+                    <span className="text-[10px] bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/80">
+                      +{tags.length - 3}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
             {karya.link_url && (
               <motion.a 
