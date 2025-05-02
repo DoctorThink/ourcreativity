@@ -16,6 +16,7 @@ import OurAdmin from "./pages/OurAdmin";
 
 // Importing components
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 import { Toaster } from "./components/ui/toaster";
 import "./App.css";
 
@@ -35,8 +36,18 @@ function App() {
             <Route path="/tim-kami" element={<TimKami />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/karya-kami" element={<KaryaKami />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/*" element={<OurAdmin />} />
+            
+            {/* Wrap admin routes with AdminAuthProvider */}
+            <Route path="/admin-login" element={
+              <AdminAuthProvider>
+                <AdminLogin />
+              </AdminAuthProvider>
+            } />
+            <Route path="/admin/*" element={
+              <AdminAuthProvider>
+                <OurAdmin />
+              </AdminAuthProvider>
+            } />
           </Routes>
         </Router>
         <Toaster />

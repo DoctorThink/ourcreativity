@@ -7,6 +7,7 @@ const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated } = useAdminAuth();
 
   if (!isAuthenticated) {
+    // Update to use the correct path that matches our routes
     return <Navigate to="/admin-login" replace />;
   }
 
