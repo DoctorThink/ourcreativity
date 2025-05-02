@@ -14,24 +14,19 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.08, // Reduced stagger for smoother appearance
-      delayChildren: 0.05,
-      ease: "easeOut"
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
     },
   },
 };
 
-const sectionCardVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.98 },
-  visible: {
-    opacity: 1,
+const sectionVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
     y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.5,
-      ease: [0.25, 0.1, 0.25, 1.0] // More natural easing
-    },
-  },
+    transition: { duration: 0.6, ease: "easeOut" }
+  }
 };
 
 const memberListVariants = {
@@ -39,11 +34,19 @@ const memberListVariants = {
     visible: {
         opacity: 1,
         transition: {
-          staggerChildren: 0.05, // Faster stagger within list
-          delayChildren: 0.1,
-          ease: "easeOut"
-        }
+          staggerChildren: 0.08,
+        },
     }
+};
+
+const memberCardVariants = {
+  hidden: { opacity: 0, scale: 0.95, y: 20 },
+  visible: { 
+    opacity: 1, 
+    scale: 1, 
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" } 
+  }
 };
 
 // --- Team Data Structure with updated names and bios ---
@@ -184,11 +187,11 @@ const TimKami = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-10 md:space-y-12" // Removed gpu-accelerated from container
+        className="space-y-16 md:space-y-24"
       >
         {/* --- Founder Section --- */}
         <motion.section
-          variants={sectionCardVariants}
+          variants={sectionVariants}
           className={cn(
             "rounded-[28px] border-2 relative overflow-hidden shadow-xl", // Consistent rounded corners, removed gpu-accelerated
             "bg-gradient-to-br from-amber-900/20 via-amber-800/10 to-neutral-900/20 backdrop-blur-lg", // Premium gold-ish gradient
@@ -249,7 +252,7 @@ const TimKami = () => {
           return (
             <motion.section
               key={section.title}
-              variants={sectionCardVariants}
+              variants={sectionVariants}
               className={cn(
                 "rounded-[28px] border relative overflow-hidden shadow-lg", // Consistent rounded corners, removed gpu-accelerated
                 "bg-gradient-to-b from-secondary/60 to-secondary/80 backdrop-blur-lg", // Standard section background
@@ -296,15 +299,16 @@ const TimKami = () => {
                 className="p-4 md:p-5 space-y-3 md:space-y-4" // removed gpu-accelerated
               >
                 {section.members.map((member, index) => (
-                  <TeamMemberCard
-                    key={`${section.title}-${member.name}-${index}`}
-                    name={member.name}
-                    role={member.role}
-                    instagram={member.instagram}
-                    accentColor={section.accent}
-                    bio={member.bio}
-                    achievements={member.achievements}
-                  />
+                  <motion.div key={`${section.title}-${member.name}-${index}`} variants={memberCardVariants}>
+                    <TeamMemberCard
+                      name={member.name}
+                      role={member.role}
+                      instagram={member.instagram}
+                      accentColor={section.accent}
+                      bio={member.bio}
+                      achievements={member.achievements}
+                    />
+                  </motion.div>
                 ))}
               </motion.div>
 

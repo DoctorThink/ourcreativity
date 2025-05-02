@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -23,12 +22,22 @@ import "./App.css";
 // Create React Query client
 const queryClient = new QueryClient();
 
+import { PageTransition } from "./components/PageTransition";
+import { AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
+import { CustomCursor } from "./components/karya/CustomCursor";
+
 function App() {
+  const location = useLocation();
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <Router>
-          <Routes>
+    <>
+      {/* Apply CustomCursor globally */}
+      <CustomCursor />
+      
+      <AnimatePresence mode="wait">
+        <PageTransition key={location.pathname}>
+          <Routes location={location}>
             <Route path="/" element={<Index />} />
             <Route path="/brand-story" element={<BrandStory />} />
             <Route path="/informasi" element={<Informasi />} />
@@ -49,10 +58,9 @@ function App() {
               </AdminAuthProvider>
             } />
           </Routes>
-        </Router>
-        <Toaster />
-      </ThemeProvider>
-    </QueryClientProvider>
+        </PageTransition>
+      </AnimatePresence>
+    </>
   );
 }
 

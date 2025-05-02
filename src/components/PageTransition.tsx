@@ -23,8 +23,8 @@ const pageVariants = {
 
 const pageTransition = {
   type: "tween",
-  ease: "easeInOut", // Changed from "anticipate" for smoother motion
-  duration: 0.5 // Slightly increased duration
+  ease: "easeInOut",
+  duration: 0.5
 };
 
 export const PageTransition = ({ children }: PageTransitionProps) => {

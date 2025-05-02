@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { BookOpen, Info, Bell, ScrollText, Users, Palette, Feather, Clock, Code, ExternalLink, LinkIcon, MessageCircle } from "lucide-react"; // Added ExternalLink, LinkIcon, MessageCircle
 import { cn } from "@/lib/utils"; // Assuming utils.ts is in src/lib
 import { Dialog, DialogContent } from "@/components/ui/dialog"; // Assuming dialog components are available
+import { CustomCursor } from "../components/karya/CustomCursor"; // Added CustomCursor import
 
 // Define the type for Bento Grid tiles
 interface BentoTile {
@@ -241,6 +242,9 @@ const Index = () => {
 
   return (
     <>
+      {/* Add CustomCursor */}
+      <CustomCursor />
+      
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

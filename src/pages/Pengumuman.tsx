@@ -15,8 +15,20 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
   },
+};
+
+const announcementVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" }
+  }
 };
 
 const cardVariants = {
@@ -114,7 +126,7 @@ const Pengumuman = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-8 md:space-y-10 relative z-10 pb-12"
+        className="space-y-8"
       >
         {/* New Main Announcement with Yellow Glow */}
         <motion.section

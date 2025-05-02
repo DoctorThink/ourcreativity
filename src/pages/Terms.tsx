@@ -21,8 +21,20 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
   },
+};
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" }
+  }
 };
 
 const cardVariants = {
@@ -149,43 +161,34 @@ const Terms = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 relative z-10 pb-12"
+        className="space-y-12"
       >
         {/* --- Introduction Card --- */}
-        <motion.div
-            variants={cardVariants}
-            className={cn(
-                "md:col-span-2 p-6 rounded-3xl border relative overflow-hidden shadow-lg",
-                "bg-secondary/70 backdrop-blur-xl",
-                getAccentStyle(intro.accent).border,
-                getAccentStyle(intro.accent).shadow
-            )}
-        >
-            <div className="flex items-start gap-4">
-                <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-1", getAccentStyle(intro.accent).iconBg)}>
-                    <intro.icon className={cn("w-5 h-5", getAccentStyle(intro.accent).iconText)} />
-                </div>
-                <div>
-                    <h2 className="text-lg font-semibold font-serif text-foreground mb-1.5">
-                        {intro.title}
-                    </h2>
-                    <p className="font-sans text-sm text-foreground/80 leading-relaxed text-readable">
-                        {intro.text}
-                    </p>
-                </div>
-            </div>
-             <div className={cn("absolute -bottom-8 -right-8 w-24 h-24 rounded-full opacity-[0.05] blur-lg", getAccentStyle(intro.accent).bg.replace('/20','/80'))}></div>
-        </motion.div>
-
+        <motion.section variants={sectionVariants} className="glass-card rounded-3xl p-6 md:p-8 backdrop-blur-md">
+          <div className="flex items-start gap-4">
+              <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-1", getAccentStyle(intro.accent).iconBg)}>
+                  <intro.icon className={cn("w-5 h-5", getAccentStyle(intro.accent).iconText)} />
+              </div>
+              <div>
+                  <h2 className="text-lg font-semibold font-serif text-foreground mb-1.5">
+                      {intro.title}
+                  </h2>
+                  <p className="font-sans text-sm text-foreground/80 leading-relaxed text-readable">
+                      {intro.text}
+                  </p>
+              </div>
+          </div>
+           <div className={cn("absolute -bottom-8 -right-8 w-24 h-24 rounded-full opacity-[0.05] blur-lg", getAccentStyle(intro.accent).bg.replace('/20','/80'))}></div>
+        </motion.section>
 
         {/* --- Terms Section Cards --- */}
         {termsSections.map((section) => {
             const accent = getAccentStyle(section.accent);
             const Icon = section.icon;
             return (
-             <motion.div
+             <motion.section
                key={section.id}
-               variants={cardVariants}
+               variants={sectionVariants}
                whileHover={cardHover}
                className={cn(
                  "p-6 rounded-3xl border relative overflow-hidden shadow-lg flex flex-col", // Ensure flex column for potential height differences
@@ -225,12 +228,12 @@ const Terms = () => {
                    ))}
                 </ul>
                 <div className={cn("absolute -bottom-8 -left-8 w-24 h-24 rounded-full opacity-[0.06] blur-lg", accent.bg.replace('/10','/80'))}></div>
-             </motion.div>
+             </motion.section>
             );
         })}
 
          {/* --- Warning Card --- */}
-        <motion.div
+        <motion.section
             variants={cardVariants}
             className={cn(
                 "md:col-span-2 p-6 rounded-3xl border-2 relative overflow-hidden shadow-lg", // Stronger border for warning
@@ -252,7 +255,7 @@ const Terms = () => {
                     </p>
                 </div>
             </div>
-        </motion.div>
+        </motion.section>
 
         {/* --- Agreement Card --- */}
         <motion.div
@@ -275,8 +278,6 @@ const Terms = () => {
             </p>
              <div className="absolute inset-0 geometric-dot-pattern opacity-[0.02] mix-blend-overlay"></div>
         </motion.div>
-
-
       </motion.div>
     </PageLayout>
   );
