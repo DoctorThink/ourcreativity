@@ -1,100 +1,88 @@
 
-import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { Database } from '@/integrations/supabase/types';
-import KaryaDetailDialog from '@/components/KaryaDetailDialog';
-import CategorySelector, { CategoryOption } from './CategorySelector';
-import SpotlightSection from './SpotlightSection';
-import MasonryGrid from './MasonryGrid';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { CategorySelector } from "./CategorySelector";
+import { MasonryGrid } from "./MasonryGrid";
 
-type KaryaType = Database['public']['Tables']['karya']['Row'];
-
-// Define categories
-const categories: CategoryOption[] = [
-  { value: 'all', label: 'Semua', icon: '/lovable-uploads/design.png' },
-  { value: 'design', label: 'Design', icon: '/lovable-uploads/design.png' },
-  { value: 'video', label: 'Video', icon: '/lovable-uploads/video.png' },
-  { value: 'writing', label: 'Karya Tulis', icon: '/lovable-uploads/karyatulis.png' },
-  { value: 'meme', label: 'Meme', icon: '/lovable-uploads/meme.png' },
+// Mock data for demonstration
+const mockKarya = [
+  {
+    id: 1,
+    title: "Digital Art Exploration",
+    description: "A creative experiment with digital brushes and textures",
+    imageUrl: "/placeholder.svg",
+    category: "design",
+    createdAt: "2023-04-15",
+    creator: "Andi Susanto"
+  },
+  {
+    id: 2,
+    title: "Motion Graphics Demo",
+    description: "Animation showcase using After Effects",
+    imageUrl: "/placeholder.svg",
+    category: "video",
+    createdAt: "2023-05-22",
+    creator: "Dina Pratiwi"
+  },
+  {
+    id: 3,
+    title: "UI Design Collection",
+    description: "Mobile app interface concepts",
+    imageUrl: "/placeholder.svg",
+    category: "design",
+    createdAt: "2023-03-10",
+    creator: "Rama Wijaya"
+  },
+  {
+    id: 4,
+    title: "Meme of the Week",
+    description: "Humor content about creativity",
+    imageUrl: "/placeholder.svg",
+    category: "meme",
+    createdAt: "2023-06-05",
+    creator: "Satria Budi"
+  },
+  {
+    id: 5,
+    title: "Essay on Modern Art",
+    description: "Thoughts on contemporary art movements",
+    imageUrl: "/placeholder.svg",
+    category: "karyatulis",
+    createdAt: "2023-05-18",
+    creator: "Nina Amelia"
+  },
+  {
+    id: 6,
+    title: "Indie Game Concept",
+    description: "Early development of a 2D platformer",
+    imageUrl: "/placeholder.svg",
+    category: "game",
+    createdAt: "2023-04-30",
+    creator: "Budi Santoso"
+  }
 ];
 
-const KaryaGallery = () => {
-  const [selectedKarya, setSelectedKarya] = useState<KaryaType | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [spotlightItems, setSpotlightItems] = useState<KaryaType[]>([]);
-
-  const { data: karya, isLoading, error } = useQuery({
-    queryKey: ['karya'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('karya')
-        .select('*')
-        .eq('status', 'approved')
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      return data as KaryaType[];
-    },
-  });
-
-  // Set spotlight items based on is_spotlight flag and category
-  useEffect(() => {
-    if (!karya) return;
-    
-    let filteredItems = [...karya].filter(item => item.is_spotlight);
-    if (activeCategory !== 'all') {
-      filteredItems = filteredItems.filter(item => item.category === activeCategory);
-    }
-    
-    setSpotlightItems(filteredItems);
-  }, [karya, activeCategory]);
-
-  const handleKaryaClick = (item: KaryaType) => {
-    setSelectedKarya(item);
-    setIsDialogOpen(true);
-  };
-
-  const filteredKarya = karya?.filter(item => 
-    activeCategory === 'all' || item.category === activeCategory
-  );
+export const KaryaGallery: React.FC = () => {
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  
+  const filteredKarya = selectedCategory === "all" 
+    ? mockKarya 
+    : mockKarya.filter(item => item.category === selectedCategory);
 
   return (
-    <div className="container py-8">
-      {/* Spotlight Section */}
-      <SpotlightSection
-        spotlightItems={spotlightItems}
-        activeCategory={activeCategory}
-        categories={categories}
-        onKaryaClick={handleKaryaClick}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <CategorySelector 
+        selectedCategory={selectedCategory} 
+        onSelectCategory={setSelectedCategory}
       />
       
-      {/* Category Selector */}
-      <CategorySelector 
-        categories={categories}
-        activeCategory={activeCategory}
-        setActiveCategory={setActiveCategory}
-      />
-
-      {/* Gallery Content - Masonry Grid */}
-      <MasonryGrid
-        isLoading={isLoading}
-        error={error as Error | null}
-        filteredKarya={filteredKarya}
-        onKaryaClick={handleKaryaClick}
-      />
-
-      {/* Detail Dialog */}
-      {selectedKarya && (
-        <KaryaDetailDialog
-          karya={selectedKarya}
-          isOpen={isDialogOpen}
-          onClose={() => setIsDialogOpen(false)}
-        />
-      )}
-    </div>
+      <div className="mt-8">
+        <MasonryGrid items={filteredKarya} />
+      </div>
+    </motion.div>
   );
 };
-
-export default KaryaGallery;

@@ -1,145 +1,47 @@
 
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useIsMobile } from "@/hooks/use-mobile";
+import React from "react";
+import { motion } from "framer-motion";
+import { cn } from "../../lib/utils";
 
-export interface CategoryOption {
-  value: string;
-  label: string;
-  icon: string;
-}
+type CategoryProps = {
+  selectedCategory: string;
+  onSelectCategory: (category: string) => void;
+};
 
-interface CategorySelectorProps {
-  categories: CategoryOption[];
-  activeCategory: string;
-  setActiveCategory: (value: string) => void;
-}
-
-const CategorySelector: React.FC<CategorySelectorProps> = ({ 
-  categories, 
-  activeCategory, 
-  setActiveCategory 
+export const CategorySelector: React.FC<CategoryProps> = ({
+  selectedCategory,
+  onSelectCategory
 }) => {
-  const isMobile = useIsMobile();
-
-  // Animation variants for buttons
-  const buttonVariants = {
-    initial: { opacity: 0, y: 10 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -10 },
-    hover: { scale: 1.05, y: -2 },
-    tap: { scale: 0.95 }
-  };
+  const categories = [
+    { id: "all", name: "All" },
+    { id: "design", name: "Design", icon: "/lovable-uploads/design.png" },
+    { id: "video", name: "Video", icon: "/lovable-uploads/video.png" },
+    { id: "meme", name: "Meme", icon: "/lovable-uploads/meme.png" },
+    { id: "karyatulis", name: "Tulisan", icon: "/lovable-uploads/karyatulis.png" },
+    { id: "game", name: "Game", icon: "/lovable-uploads/game.png" }
+  ];
 
   return (
-    <div className="mb-10">
-      {isMobile ? (
-        <div className="px-4">
-          <Select 
-            value={activeCategory} 
-            onValueChange={setActiveCategory}
-          >
-            <SelectTrigger className="w-full bg-secondary/80 border border-border/40 backdrop-blur-md rounded-2xl text-foreground hover:bg-secondary/90 transition-colors shadow-md">
-              <SelectValue>
-                <div className="flex items-center gap-2">
-                  <div className="bg-gradient-to-br from-white/95 to-white/85 p-1.5 rounded-full">
-                    <img 
-                      src={categories.find(cat => cat.value === activeCategory)?.icon || categories[0].icon} 
-                      alt="" 
-                      className="w-4 h-4 object-contain"
-                    />
-                  </div>
-                  <span>{categories.find(cat => cat.value === activeCategory)?.label || 'Pilih Kategori'}</span>
-                </div>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent 
-              className="bg-secondary/90 border-border/40 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden"
-              position="popper"
-              sideOffset={5}
-            >
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className="py-1"
-              >
-                {categories.map(category => (
-                  <SelectItem
-                    key={category.value}
-                    value={category.value}
-                    className="text-foreground hover:bg-foreground/10 focus:bg-foreground/10 rounded-xl my-1"
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="bg-gradient-to-br from-white/95 to-white/85 p-1.5 rounded-full">
-                        <img src={category.icon} alt="" className="w-4 h-4 object-contain" />
-                      </div>
-                      <span>{category.label}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </motion.div>
-            </SelectContent>
-          </Select>
-        </div>
-      ) : (
-        <div className="flex justify-center">
-          <div className="inline-flex bg-secondary/70 border border-border/40 backdrop-blur-md rounded-2xl p-1.5 shadow-lg">
-            <AnimatePresence mode="wait">
-              {categories.map((category) => (
-                <motion.button
-                  key={category.value}
-                  onClick={() => setActiveCategory(category.value)}
-                  className={cn(
-                    "relative px-5 py-2.5 rounded-xl transition-all duration-300 font-medium text-sm",
-                    "hover:text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/50 focus:ring-offset-1 focus:ring-offset-transparent"
-                  )}
-                  variants={buttonVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  {activeCategory === category.value && (
-                    <motion.div
-                      layoutId="activeCategory"
-                      className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/15 to-white/5 border border-white/20 shadow-lg"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    />
-                  )}
-                  
-                  <span className={cn(
-                    "relative z-10 transition-colors duration-200 flex items-center gap-2",
-                    activeCategory === category.value 
-                      ? "text-foreground font-semibold"
-                      : "text-foreground/60 hover:text-foreground/80"
-                  )}>
-                    <div className="bg-gradient-to-br from-white/95 to-white/85 p-1.5 rounded-full">
-                      <img src={category.icon} alt="" className="w-4 h-4 object-contain" />
-                    </div>
-                    {category.label}
-                  </span>
-                </motion.button>
-              ))}
-            </AnimatePresence>
-          </div>
-        </div>
-      )}
+    <div className="flex flex-wrap gap-4 justify-center">
+      {categories.map((category) => (
+        <motion.button
+          key={category.id}
+          onClick={() => onSelectCategory(category.id)}
+          className={cn(
+            "px-4 py-2 rounded-full flex items-center space-x-2 transition-all",
+            selectedCategory === category.id
+              ? "bg-primary text-primary-foreground"
+              : "bg-secondary hover:bg-secondary/80"
+          )}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          {category.icon && (
+            <img src={category.icon} alt={category.name} className="w-5 h-5" />
+          )}
+          <span>{category.name}</span>
+        </motion.button>
+      ))}
     </div>
   );
 };
-
-export default CategorySelector;
