@@ -59,13 +59,10 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
     setShowInfoPanel(!showInfoPanel);
   };
   
-  // Extract tags from description or keywords
+  // Extract tags from description only
   const extractTags = (): string[] => {
-    if (karya.keywords && Array.isArray(karya.keywords)) {
-      return karya.keywords;
-    } else if (karya.keywords && typeof karya.keywords === 'string') {
-      return karya.keywords.split(',').map(tag => tag.trim());
-    } else if (karya.description) {
+    // Only look for hashtags in the description
+    if (karya.description) {
       // Look for hashtags in the description
       const hashtags = karya.description.match(/#[\w\u0080-\uFFFF]+/g);
       if (hashtags && hashtags.length > 0) {

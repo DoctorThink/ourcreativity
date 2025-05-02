@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { CategorySelector } from "./CategorySelector";
@@ -29,7 +28,7 @@ const mockKarya = [
     media_height: 600,
     link_url: "https://example.com/design",
     content_url: null,
-    keywords: ["digitalart", "creative", "design"]
+    likes_count: 0
   },
   {
     id: "2",
@@ -47,7 +46,7 @@ const mockKarya = [
     media_height: 720,
     link_url: "https://example.com/video",
     content_url: null,
-    keywords: ["animation", "motiongraphics", "aftereffects"]
+    likes_count: 0
   },
   {
     id: "3",
@@ -65,7 +64,7 @@ const mockKarya = [
     media_height: 800,
     link_url: "https://example.com/uidesign",
     content_url: null,
-    keywords: ["ui", "mobile", "design"]
+    likes_count: 0
   },
   {
     id: "4",
@@ -83,7 +82,7 @@ const mockKarya = [
     media_height: 600,
     link_url: null,
     content_url: null,
-    keywords: ["meme", "funny", "creative"]
+    likes_count: 0
   },
   {
     id: "5",
@@ -101,7 +100,7 @@ const mockKarya = [
     media_height: null,
     link_url: "https://example.com/essay",
     content_url: "https://example.com/essay/content",
-    keywords: ["senimodern", "essay", "writing", "kritik", "seni"]
+    likes_count: 0
   },
   {
     id: "6",
@@ -119,7 +118,7 @@ const mockKarya = [
     media_height: 900,
     link_url: "https://example.com/game",
     content_url: null,
-    keywords: ["game", "indie", "platformer"]
+    likes_count: 0
   }
 ];
 
