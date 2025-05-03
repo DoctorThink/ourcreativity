@@ -106,3 +106,49 @@ button:focus-visible {
 p, h1, h2, h3, h4, h5, h6 {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
+
+/* Admin Dashboard specific styles */
+.glass-admin-tabs {
+  background: rgba(28, 28, 30, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  padding: 4px;
+}
+
+.glass-admin-tabs [data-state="active"] {
+  background: rgba(155, 109, 255, 0.2);
+  box-shadow: 0 2px 10px rgba(155, 109, 255, 0.3);
+  border-radius: 9999px;
+}
+
+/* General glassmorphism styles */
+.glass-morphism {
+  background: rgba(28, 28, 30, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Utility for GPU acceleration */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
+}
+
+/* Text sharpness */
+.text-sharp {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Text readability */
+.text-readable {
+  letter-spacing: 0.015em;
+  line-height: 1.6;
+}

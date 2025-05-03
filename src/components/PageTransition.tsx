@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 
 interface PageTransitionProps {
   children: ReactNode;
+  isAdmin?: boolean;
 }
 
 const pageVariants = {
@@ -24,6 +25,27 @@ const pageVariants = {
   }
 };
 
+const adminPageVariants = {
+  initial: {
+    opacity: 0,
+    x: 20,
+  },
+  in: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: "spring",
+      stiffness: 240,
+      damping: 25,
+      mass: 0.9
+    }
+  },
+  out: {
+    opacity: 0,
+    x: -20,
+  }
+};
+
 const pageTransition = {
   type: "spring",
   stiffness: 300,
@@ -31,13 +53,13 @@ const pageTransition = {
   mass: 1
 };
 
-export const PageTransition = ({ children }: PageTransitionProps) => {
+export const PageTransition = ({ children, isAdmin = false }: PageTransitionProps) => {
   return (
     <motion.div
       initial="initial"
       animate="in"
       exit="out"
-      variants={pageVariants}
+      variants={isAdmin ? adminPageVariants : pageVariants}
       transition={pageTransition}
       className="page-transition will-change-transform"
     >
