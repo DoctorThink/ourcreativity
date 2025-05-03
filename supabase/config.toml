@@ -67,6 +67,7 @@ url = ""
 [realtime]
 enabled = true
 
+# Configure which tables to sync for real-time updates
 [[realtime.tables]]
 schema = "public" 
 name = "karya"

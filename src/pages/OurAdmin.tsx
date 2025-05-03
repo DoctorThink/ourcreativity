@@ -26,7 +26,7 @@ import AdminActivityLog from '@/components/admin/AdminActivityLog';
 import AdminDashboardStats from '@/components/admin/AdminDashboardStats';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const containerVariants = {
@@ -57,6 +57,7 @@ const OurAdmin = () => {
   const { isAuthenticated, logout } = useAdminAuth();
   const [lastLogin, setLastLogin] = useState(new Date());
   const [activityCounter, setActivityCounter] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
   const isMobile = useIsMobile();
@@ -65,25 +66,56 @@ const OurAdmin = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/admin-login');
+    } else {
+      setIsLoading(false);
     }
   }, [isAuthenticated, navigate]);
 
-  // Set up real-time counter for new activities
+  // Handle tab change based on URL hash
   useEffect(() => {
-    const subscription = supabase
-      .channel('schema-db-changes')
-      .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'karya' }, 
-        payload => {
-          setActivityCounter(prev => prev + 1); // Increment counter when database changes
-        }
-      )
-      .subscribe();
+    const hash = window.location.hash.replace('#', '');
+    if (hash && ['dashboard', 'announcements', 'content', 'team', 'karya', 'logs'].includes(hash)) {
+      setActiveTab(hash);
+    }
+  }, []);
+
+  // Set up real-time counter for new activities with error handling
+  useEffect(() => {
+    let subscription;
+    
+    try {
+      subscription = supabase
+        .channel('schema-db-changes')
+        .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'karya' }, 
+          payload => {
+            setActivityCounter(prev => prev + 1); // Increment counter when database changes
+          }
+        )
+        .subscribe((status) => {
+          if (status !== 'SUBSCRIBED') {
+            console.warn('Supabase subscription status:', status);
+          }
+        });
+    } catch (error) {
+      console.error('Error setting up Supabase real-time subscription:', error);
+      toast({
+        title: "Koneksi real-time bermasalah",
+        description: "Data mungkin tidak akan terupdate secara otomatis",
+        variant: "destructive"
+      });
+    }
       
     return () => {
-      subscription.unsubscribe();
+      if (subscription) {
+        try {
+          subscription.unsubscribe();
+        } catch (error) {
+          console.error('Error unsubscribing from Supabase channel:', error);
+        }
+      }
     };
-  }, []);
+  }, [toast]);
 
   // Handle logout with feedback
   const handleLogout = () => {
@@ -95,10 +127,22 @@ const OurAdmin = () => {
     navigate('/admin-login');
   };
   
-  // Handle tab change
+  // Handle tab change and update URL hash
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
+    window.location.hash = tab; // Update URL hash without reloading page
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center">
+          <div className="w-16 h-16 border-4 border-t-amethyst rounded-full animate-spin mb-4"></div>
+          <p className="text-foreground/70">Loading admin dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return null; // Don't render anything while redirecting

@@ -6,9 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { format, formatDistanceToNow } from 'date-fns';
 import { id } from 'date-fns/locale';
-import { Activity, CheckCircle, Clock, XCircle, RefreshCw } from 'lucide-react';
+import { Activity, CheckCircle, Clock, XCircle, RefreshCw, AlertCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 
 type KaryaLogItem = {
   id: string;
@@ -44,9 +45,13 @@ const AdminActivityLog = () => {
   const [logs, setLogs] = useState<KaryaLogItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const { toast } = useToast();
 
   const fetchLogs = async () => {
     setIsLoading(true);
+    setHasError(false);
+    
     try {
       // Fetch the most recent activities (karya creations and updates)
       const { data: recentKarya, error } = await supabase
@@ -81,6 +86,12 @@ const AdminActivityLog = () => {
       setLogs(processedLogs);
     } catch (error) {
       console.error('Error fetching activity logs:', error);
+      setHasError(true);
+      toast({
+        title: "Error fetching activity logs",
+        description: "Could not load activity data. Please try refreshing.",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -91,20 +102,41 @@ const AdminActivityLog = () => {
     fetchLogs();
     
     // Set up a subscription for real-time updates
-    const subscription = supabase
-      .channel('schema-db-changes')
-      .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'karya' }, 
-        payload => {
-          fetchLogs(); // Refresh logs when data changes
-        }
-      )
-      .subscribe();
+    let subscription;
+    
+    try {
+      subscription = supabase
+        .channel('activity-logs')
+        .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'karya' }, 
+          payload => {
+            fetchLogs(); // Refresh logs when data changes
+          }
+        )
+        .subscribe((status) => {
+          if (status !== 'SUBSCRIBED') {
+            console.warn('Supabase subscription status:', status);
+          }
+        });
+    } catch (error) {
+      console.error('Error setting up real-time subscription:', error);
+      toast({
+        title: "Real-time updates issue",
+        description: "Activity logs might not update automatically",
+        variant: "destructive"
+      });
+    }
       
     return () => {
-      subscription.unsubscribe();
+      if (subscription) {
+        try {
+          subscription.unsubscribe();
+        } catch (error) {
+          console.error('Error unsubscribing:', error);
+        }
+      }
     };
-  }, []);
+  }, [toast]);
 
   const handleRefresh = () => {
     setIsRefreshing(true);
@@ -154,6 +186,90 @@ const AdminActivityLog = () => {
     }
   };
 
+  const renderContent = () => {
+    if (isLoading) {
+      // Loading skeleton
+      return Array.from({ length: 5 }).map((_, index) => (
+        <div key={index} className="flex items-start space-x-4 pb-4 border-b border-foreground/5">
+          <Skeleton className="h-10 w-10 rounded-full bg-foreground/5" />
+          <div className="space-y-2 flex-1">
+            <Skeleton className="h-4 w-3/4 bg-foreground/5" />
+            <Skeleton className="h-3 w-1/2 bg-foreground/5" />
+          </div>
+        </div>
+      ));
+    }
+    
+    if (hasError) {
+      return (
+        <div className="py-12 text-center text-foreground/50">
+          <div className="flex flex-col items-center justify-center">
+            <AlertCircle className="h-12 w-12 mb-3 text-coral/70" />
+            <p>Error loading activity logs</p>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="mt-4" 
+              onClick={handleRefresh}
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Try Again
+            </Button>
+          </div>
+        </div>
+      );
+    }
+    
+    if (logs.length === 0) {
+      return (
+        <div className="py-12 text-center text-foreground/50">
+          <div className="flex flex-col items-center justify-center">
+            <Activity className="h-12 w-12 mb-3 text-foreground/20" />
+            <p>Belum ada aktivitas untuk ditampilkan</p>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="mt-4" 
+              onClick={handleRefresh}
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
+        </div>
+      );
+    }
+    
+    return (
+      <motion.div variants={containerVariants} className="space-y-4">
+        {logs.map((log) => (
+          <motion.div 
+            key={log.id} 
+            className="flex items-start space-x-4 pb-4 border-b border-foreground/5 last:border-0"
+            variants={itemVariants}
+          >
+            <div className="h-10 w-10 rounded-full bg-foreground/5 flex items-center justify-center">
+              {getStatusIcon(log.status)}
+            </div>
+            <div className="space-y-1 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-medium">{log.title}</span>
+                {getActionBadge(log.action)}
+                {getCategoryBadge(log.category)}
+              </div>
+              <div className="text-sm text-foreground/70">
+                Oleh {log.creator_name} • {formatDistanceToNow(new Date(log.updated_at), { addSuffix: true, locale: id })}
+              </div>
+              <div className="text-xs text-foreground/50">
+                {format(new Date(log.updated_at), "d MMMM yyyy, HH:mm", { locale: id })}
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+    );
+  };
+
   return (
     <motion.div
       variants={containerVariants}
@@ -178,61 +294,7 @@ const AdminActivityLog = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {isLoading ? (
-              // Loading skeleton
-              Array.from({ length: 5 }).map((_, index) => (
-                <div key={index} className="flex items-start space-x-4 pb-4 border-b border-foreground/5">
-                  <Skeleton className="h-10 w-10 rounded-full bg-foreground/5" />
-                  <div className="space-y-2 flex-1">
-                    <Skeleton className="h-4 w-3/4 bg-foreground/5" />
-                    <Skeleton className="h-3 w-1/2 bg-foreground/5" />
-                  </div>
-                </div>
-              ))
-            ) : logs.length > 0 ? (
-              <motion.div variants={containerVariants} className="space-y-4">
-                {logs.map((log) => (
-                  <motion.div 
-                    key={log.id} 
-                    className="flex items-start space-x-4 pb-4 border-b border-foreground/5 last:border-0"
-                    variants={itemVariants}
-                  >
-                    <div className="h-10 w-10 rounded-full bg-foreground/5 flex items-center justify-center">
-                      {getStatusIcon(log.status)}
-                    </div>
-                    <div className="space-y-1 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-medium">{log.title}</span>
-                        {getActionBadge(log.action)}
-                        {getCategoryBadge(log.category)}
-                      </div>
-                      <div className="text-sm text-foreground/70">
-                        Oleh {log.creator_name} • {formatDistanceToNow(new Date(log.updated_at), { addSuffix: true, locale: id })}
-                      </div>
-                      <div className="text-xs text-foreground/50">
-                        {format(new Date(log.updated_at), "d MMMM yyyy, HH:mm", { locale: id })}
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            ) : (
-              <div className="py-12 text-center text-foreground/50">
-                <div className="flex flex-col items-center justify-center">
-                  <Activity className="h-12 w-12 mb-3 text-foreground/20" />
-                  <p>Belum ada aktivitas untuk ditampilkan</p>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="mt-4" 
-                    onClick={handleRefresh}
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Refresh
-                  </Button>
-                </div>
-              </div>
-            )}
+            {renderContent()}
           </div>
         </CardContent>
       </Card>

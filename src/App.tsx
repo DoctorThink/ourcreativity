@@ -58,7 +58,12 @@ function AppContent() {
                 <AdminLogin />
               </AdminAuthProvider>
             } />
-            <Route path="/admin/*" element={
+            <Route path="/our-admin" element={
+              <AdminAuthProvider>
+                <OurAdmin />
+              </AdminAuthProvider>
+            } />
+            <Route path="/admin" element={
               <AdminAuthProvider>
                 <OurAdmin />
               </AdminAuthProvider>

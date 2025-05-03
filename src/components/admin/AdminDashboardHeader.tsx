@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useToast } from '@/components/ui/use-toast';
 
 interface AdminDashboardHeaderProps {
   onLogout: () => void;
@@ -28,7 +29,9 @@ const AdminDashboardHeader = ({
 }: AdminDashboardHeaderProps) => {
   const [pendingCount, setPendingCount] = useState(0);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { toast } = useToast();
 
   // Fetch pending karya count
   useEffect(() => {
@@ -49,20 +52,41 @@ const AdminDashboardHeader = ({
     fetchPendingCount();
     
     // Set up real-time subscription for changes
-    const subscription = supabase
-      .channel('schema-db-changes')
-      .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'karya' }, 
-        payload => {
-          fetchPendingCount(); // Refresh count when data changes
-        }
-      )
-      .subscribe();
+    let subscription;
+    
+    try {
+      subscription = supabase
+        .channel('karya-changes')
+        .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'karya' }, 
+          () => {
+            fetchPendingCount(); // Refresh count when data changes
+          }
+        )
+        .subscribe((status) => {
+          if (status !== 'SUBSCRIBED') {
+            console.warn('Supabase subscription status:', status);
+          }
+        });
+    } catch (error) {
+      console.error('Error setting up real-time subscription:', error);
+      toast({
+        title: "Notifikasi real-time bermasalah",
+        description: "Data mungkin tidak akan terupdate secara otomatis",
+        variant: "destructive"
+      });
+    }
       
     return () => {
-      subscription.unsubscribe();
+      if (subscription) {
+        try {
+          subscription.unsubscribe();
+        } catch (error) {
+          console.error('Error unsubscribing:', error);
+        }
+      }
     };
-  }, []);
+  }, [toast]);
 
   // Update current time every minute
   useEffect(() => {
@@ -83,6 +107,12 @@ const AdminDashboardHeader = ({
     { id: 'logs', label: 'Logs' }
   ];
 
+  // Handle tab change from mobile menu
+  const handleMobileTabChange = (tab: string) => {
+    onTabChange(tab);
+    setIsSheetOpen(false);
+  };
+
   return (
     <motion.header 
       className="py-3 md:py-4 border-b border-foreground/10 backdrop-blur-xl bg-background/50 sticky top-0 z-40"
@@ -93,7 +123,7 @@ const AdminDashboardHeader = ({
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center gap-3">
           {isMobile && (
-            <Sheet>
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="text-foreground">
                   <Menu className="h-5 w-5" />
@@ -110,7 +140,7 @@ const AdminDashboardHeader = ({
                         className={`w-full justify-start text-left ${
                           activeTab === tab.id ? 'bg-amethyst/10 text-amethyst' : ''
                         }`}
-                        onClick={() => onTabChange(tab.id)}
+                        onClick={() => handleMobileTabChange(tab.id)}
                       >
                         {tab.label}
                       </Button>
