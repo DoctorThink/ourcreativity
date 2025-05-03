@@ -13,7 +13,7 @@ import TeamEditor from '@/components/admin/TeamEditor';
 import KaryaModeration from '@/components/admin/KaryaModeration';
 import { ScrollProgressIndicator } from '@/components/karya/ScrollProgressIndicator';
 import { 
-  ActivityLog, 
+  Activity, 
   Database, 
   Settings, 
   AreaChart, 
@@ -118,7 +118,7 @@ const OurAdmin = () => {
                   <span>Karya</span>
                 </TabsTrigger>
                 <TabsTrigger value="logs" className="flex items-center gap-2">
-                  <ActivityLog className="w-4 h-4" />
+                  <Activity className="w-4 h-4" />
                   <span>Logs</span>
                 </TabsTrigger>
               </TabsList>
