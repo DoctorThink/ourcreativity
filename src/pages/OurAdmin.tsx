@@ -27,6 +27,7 @@ import AdminDashboardStats from '@/components/admin/AdminDashboardStats';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -58,6 +59,7 @@ const OurAdmin = () => {
   const [activityCounter, setActivityCounter] = useState(0);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   
   // Check authentication status
   useEffect(() => {
@@ -92,6 +94,11 @@ const OurAdmin = () => {
     logout();
     navigate('/admin-login');
   };
+  
+  // Handle tab change
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
 
   if (!isAuthenticated) {
     return null; // Don't render anything while redirecting
@@ -116,43 +123,47 @@ const OurAdmin = () => {
           onLogout={handleLogout}
           lastLogin={lastLogin}
           activityCount={activityCounter}
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
         />
         
         {/* Main Content */}
-        <div className="container mx-auto py-6">
+        <div className="container mx-auto py-4 md:py-6">
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="space-y-6"
+            className="space-y-4 md:space-y-6"
           >
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="mb-8 glass-admin-tabs">
-                <TabsTrigger value="dashboard" className="flex items-center gap-2">
-                  <AreaChart className="w-4 h-4" />
-                  <span>Dashboard</span>
-                </TabsTrigger>
-                <TabsTrigger value="announcements" className="flex items-center gap-2">
-                  <Bell className="w-4 h-4" />
-                  <span>Pengumuman</span>
-                </TabsTrigger>
-                <TabsTrigger value="content" className="flex items-center gap-2">
-                  <FileText className="w-4 h-4" />
-                  <span>Konten</span>
-                </TabsTrigger>
-                <TabsTrigger value="team" className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  <span>Tim</span>
-                </TabsTrigger>
-                <TabsTrigger value="karya" className="flex items-center gap-2">
-                  <Database className="w-4 h-4" />
-                  <span>Karya</span>
-                </TabsTrigger>
-                <TabsTrigger value="logs" className="flex items-center gap-2">
-                  <Activity className="w-4 h-4" />
-                  <span>Logs</span>
-                </TabsTrigger>
-              </TabsList>
+            <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+              {!isMobile && (
+                <TabsList className="mb-6 glass-admin-tabs">
+                  <TabsTrigger value="dashboard" className="flex items-center gap-2">
+                    <AreaChart className="w-4 h-4" />
+                    <span>Dashboard</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="announcements" className="flex items-center gap-2">
+                    <Bell className="w-4 h-4" />
+                    <span>Pengumuman</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="content" className="flex items-center gap-2">
+                    <FileText className="w-4 h-4" />
+                    <span>Konten</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="team" className="flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    <span>Tim</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="karya" className="flex items-center gap-2">
+                    <Database className="w-4 h-4" />
+                    <span>Karya</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="logs" className="flex items-center gap-2">
+                    <Activity className="w-4 h-4" />
+                    <span>Logs</span>
+                  </TabsTrigger>
+                </TabsList>
+              )}
               
               <TabsContent value="dashboard">
                 <AdminDashboardStats />
