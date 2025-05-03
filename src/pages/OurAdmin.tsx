@@ -2,9 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { PageTransition } from '@/components/PageTransition';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
 import AnnouncementEditor from '@/components/admin/AnnouncementEditor';
@@ -27,6 +24,9 @@ import {
 import AdminDashboardHeader from '@/components/admin/AdminDashboardHeader';
 import AdminActivityLog from '@/components/admin/AdminActivityLog';
 import AdminDashboardStats from '@/components/admin/AdminDashboardStats';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -53,18 +53,49 @@ const itemVariants = {
 
 const OurAdmin = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const { logout } = useAdminAuth();
+  const { isAuthenticated, logout } = useAdminAuth();
   const [lastLogin, setLastLogin] = useState(new Date());
   const [activityCounter, setActivityCounter] = useState(0);
+  const navigate = useNavigate();
+  const { toast } = useToast();
   
-  // Simulate activity counter
+  // Check authentication status
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActivityCounter(prev => prev + Math.floor(Math.random() * 3));
-    }, 60000); // Every minute
-    
-    return () => clearInterval(interval);
+    if (!isAuthenticated) {
+      navigate('/admin-login');
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Set up real-time counter for new activities
+  useEffect(() => {
+    const subscription = supabase
+      .channel('schema-db-changes')
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'karya' }, 
+        payload => {
+          setActivityCounter(prev => prev + 1); // Increment counter when database changes
+        }
+      )
+      .subscribe();
+      
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
+
+  // Handle logout with feedback
+  const handleLogout = () => {
+    toast({
+      title: "Berhasil logout",
+      description: "Anda telah keluar dari Admin Dashboard"
+    });
+    logout();
+    navigate('/admin-login');
+  };
+
+  if (!isAuthenticated) {
+    return null; // Don't render anything while redirecting
+  }
 
   return (
     <PageTransition isAdmin={true}>
@@ -82,7 +113,7 @@ const OurAdmin = () => {
 
         {/* Admin Header */}
         <AdminDashboardHeader 
-          onLogout={logout}
+          onLogout={handleLogout}
           lastLogin={lastLogin}
           activityCount={activityCounter}
         />

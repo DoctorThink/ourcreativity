@@ -62,3 +62,11 @@ secret = ""
 redirect_uri = ""
 # Overrides the default auth provider URL. Used to support self-hosted gitlab, single-tenant Azure, or any other third-party OIDC providers.
 url = ""
+
+# Enable realtime functionality
+[realtime]
+enabled = true
+
+[[realtime.tables]]
+schema = "public" 
+name = "karya"

@@ -1,10 +1,13 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Bell, User, LogOut, CalendarClock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { formatDistanceToNow } from 'date-fns';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Bell, Clock, LogOut, User } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
 
 interface AdminDashboardHeaderProps {
   onLogout: () => void;
@@ -12,86 +15,109 @@ interface AdminDashboardHeaderProps {
   activityCount: number;
 }
 
-const AdminDashboardHeader = ({ onLogout, lastLogin, activityCount }: AdminDashboardHeaderProps) => {
+const AdminDashboardHeader = ({
+  onLogout,
+  lastLogin,
+  activityCount
+}: AdminDashboardHeaderProps) => {
+  const [pendingCount, setPendingCount] = useState(0);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Fetch pending karya count
+  useEffect(() => {
+    const fetchPendingCount = async () => {
+      try {
+        const { count, error } = await supabase
+          .from('karya')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'pending');
+        
+        if (error) throw error;
+        setPendingCount(count || 0);
+      } catch (error) {
+        console.error('Error fetching pending count:', error);
+      }
+    };
+
+    fetchPendingCount();
+    
+    // Set up real-time subscription for changes
+    const subscription = supabase
+      .channel('schema-db-changes')
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'karya' }, 
+        payload => {
+          fetchPendingCount(); // Refresh count when data changes
+        }
+      )
+      .subscribe();
+      
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // Update current time every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <motion.header 
+      className="py-4 border-b border-foreground/10 backdrop-blur-xl bg-background/50 sticky top-0 z-10"
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="sticky top-0 z-50 backdrop-blur-xl bg-background/40 p-4 border-b border-foreground/5 shadow-md shadow-black/10"
     >
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <motion.div 
-            className="bg-foreground/5 backdrop-blur-md border border-foreground/10 shadow-lg rounded-xl p-2 flex items-center"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <img
-              src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
-              alt="Admin Logo"
-              className="h-8 w-8"
-            />
-            <motion.span 
-              className="ml-2 font-serif font-bold text-xl"
-              initial={{ x: -10, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              Admin Dashboard
-            </motion.span>
-          </motion.div>
+      <div className="container mx-auto flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-serif">Admin Dashboard</h1>
+          <div className="flex items-center text-sm text-foreground/70 mt-1">
+            <Clock className="w-3 h-3 mr-1" />
+            <span>{format(currentTime, "EEEE, d MMMM yyyy • HH:mm", { locale: id })}</span>
+          </div>
         </div>
         
-        <div className="flex items-center gap-4">
-          <motion.div 
-            className="flex items-center gap-2 bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-full px-4 py-1"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-          >
-            <CalendarClock className="w-4 h-4 text-foreground/60" />
-            <span className="text-sm text-foreground/60">
-              Last login: {formatDistanceToNow(lastLogin, { addSuffix: true })}
-            </span>
-          </motion.div>
-          
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.5 }}
-            whileHover={{ scale: 1.05 }}
-            className="relative"
-          >
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              {activityCount > 0 && (
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-amethyst text-white">
-                  {activityCount}
-                </Badge>
+        <div className="flex items-center space-x-6">
+          <div className="flex items-center">
+            <div className="relative">
+              <Bell className="w-5 h-5" />
+              {pendingCount > 0 && (
+                <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-coral flex items-center justify-center">
+                  <span className="text-[10px] text-white">{pendingCount > 9 ? '9+' : pendingCount}</span>
+                </div>
               )}
-            </Button>
-          </motion.div>
-          
-          <motion.div 
-            className="flex items-center gap-2"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Button variant="ghost" size="icon" className="relative">
-              <User className="h-5 w-5" />
-            </Button>
+            </div>
             
-            <Button 
-              variant="ghost" 
-              size="icon"
-              onClick={onLogout}
-              className="text-foreground/60 hover:text-foreground hover:bg-foreground/5"
-            >
-              <LogOut className="h-5 w-5" />
-            </Button>
-          </motion.div>
+            <Badge className="ml-2 bg-foreground/5 text-xs">
+              <span className="text-amber-500 mr-1">{pendingCount}</span> menunggu
+            </Badge>
+          </div>
+          
+          <div className="flex items-center">
+            <Avatar className="w-8 h-8 mr-2">
+              <AvatarFallback className="bg-amethyst/20 text-amethyst">A</AvatarFallback>
+            </Avatar>
+            <div className="text-sm">
+              <div className="font-medium">Admin</div>
+              <div className="text-xs text-foreground/70">
+                Login: {format(lastLogin, "HH:mm")}
+              </div>
+            </div>
+          </div>
+          
+          <Button 
+            variant="ghost"
+            size="icon"
+            onClick={onLogout}
+            className="text-foreground/70 hover:text-foreground"
+          >
+            <LogOut className="w-5 h-5" />
+          </Button>
         </div>
       </div>
     </motion.header>

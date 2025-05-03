@@ -1,251 +1,295 @@
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
-import { Users, FileText, PenTool, Eye, ArrowUpRight, TrendingUp, Clock } from 'lucide-react';
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { 
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 260,
-      damping: 20
-    }
-  }
-};
-
-// Sample data for stats
-const visitsData = [
-  { name: 'Mon', visits: 420 },
-  { name: 'Tue', visits: 380 },
-  { name: 'Wed', visits: 510 },
-  { name: 'Thu', visits: 480 },
-  { name: 'Fri', visits: 620 },
-  { name: 'Sat', visits: 750 },
-  { name: 'Sun', visits: 690 },
-];
-
-const karyaTypeData = [
-  { name: 'Design', value: 45, color: '#9B6DFF' },
-  { name: 'Video', value: 30, color: '#50C878' },
-  { name: 'Meme', value: 15, color: '#FF7F50' },
-  { name: 'Text', value: 10, color: '#FFBF00' },
-];
+import React, { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
+import { supabase } from '@/integrations/supabase/client';
+import {
+  Users,
+  FileText,
+  Image,
+  CheckCheck,
+  XCircle,
+  Clock,
+} from 'lucide-react';
 
 const AdminDashboardStats = () => {
-  return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-6"
-    >
-      {/* Stats Cards */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-black/5 backdrop-blur-md border-foreground/5 overflow-hidden">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium flex items-center justify-between">
-              Total Visitors
-              <Users className="h-4 w-4 text-amethyst" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-end justify-between">
-                <span className="text-2xl font-bold">9,842</span>
-                <span className="text-xs flex items-center text-emerald">
-                  <ArrowUpRight className="h-3 w-3 mr-1" /> 
-                  +12.5%
-                </span>
-              </div>
-              <p className="text-xs text-foreground/60">vs. previous month</p>
-            </div>
-          </CardContent>
-          <div className="h-1 w-full bg-amethyst/30 mt-auto">
-            <div className="h-full bg-amethyst w-[75%]"></div>
-          </div>
-        </Card>
-        
-        <Card className="bg-black/5 backdrop-blur-md border-foreground/5 overflow-hidden">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium flex items-center justify-between">
-              Content Published
-              <FileText className="h-4 w-4 text-emerald" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-end justify-between">
-                <span className="text-2xl font-bold">124</span>
-                <span className="text-xs flex items-center text-emerald">
-                  <ArrowUpRight className="h-3 w-3 mr-1" /> 
-                  +5.2%
-                </span>
-              </div>
-              <p className="text-xs text-foreground/60">vs. previous month</p>
-            </div>
-          </CardContent>
-          <div className="h-1 w-full bg-emerald/30 mt-auto">
-            <div className="h-full bg-emerald w-[65%]"></div>
-          </div>
-        </Card>
-        
-        <Card className="bg-black/5 backdrop-blur-md border-foreground/5 overflow-hidden">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium flex items-center justify-between">
-              New Submissions
-              <PenTool className="h-4 w-4 text-coral" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-end justify-between">
-                <span className="text-2xl font-bold">57</span>
-                <span className="text-xs flex items-center text-emerald">
-                  <ArrowUpRight className="h-3 w-3 mr-1" /> 
-                  +24.8%
-                </span>
-              </div>
-              <p className="text-xs text-foreground/60">vs. previous month</p>
-            </div>
-          </CardContent>
-          <div className="h-1 w-full bg-coral/30 mt-auto">
-            <div className="h-full bg-coral w-[85%]"></div>
-          </div>
-        </Card>
-        
-        <Card className="bg-black/5 backdrop-blur-md border-foreground/5 overflow-hidden">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium flex items-center justify-between">
-              Avg. Engagement
-              <Eye className="h-4 w-4 text-amber" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-end justify-between">
-                <span className="text-2xl font-bold">3:42</span>
-                <span className="text-xs flex items-center text-emerald">
-                  <TrendingUp className="h-3 w-3 mr-1" /> 
-                  +1:12
-                </span>
-              </div>
-              <p className="text-xs text-foreground/60">avg. time on page</p>
-            </div>
-          </CardContent>
-          <div className="h-1 w-full bg-amber/30 mt-auto">
-            <div className="h-full bg-amber w-[70%]"></div>
-          </div>
-        </Card>
-      </motion.div>
+  const [stats, setStats] = useState({
+    totalKarya: 0,
+    approved: 0,
+    rejected: 0,
+    pending: 0,
+    categories: {
+      design: 0,
+      video: 0,
+      meme: 0,
+      writing: 0,
+    },
+  });
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <motion.div variants={itemVariants} className="lg:col-span-2">
-          <Card className="bg-black/5 backdrop-blur-md border-foreground/5">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Site Visitors</CardTitle>
-                  <CardDescription>Daily visitor count for the past week</CardDescription>
-                </div>
-                <Button variant="ghost" size="icon">
-                  <Clock className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={visitsData} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                    <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" />
-                    <YAxis stroke="rgba(255,255,255,0.5)" />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(0,0,0,0.8)', 
-                        border: 'none',
-                        borderRadius: '8px',
-                        color: 'white' 
-                      }}
-                    />
-                    <Bar 
-                      dataKey="visits" 
-                      fill="url(#visitGradient)" 
-                      radius={[4, 4, 0, 0]}
-                    />
-                    <defs>
-                      <linearGradient id="visitGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#9B6DFF" stopOpacity={0.8}/>
-                        <stop offset="100%" stopColor="#9B6DFF" stopOpacity={0.2}/>
-                      </linearGradient>
-                    </defs>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+  const [chartData, setChartData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      setIsLoading(true);
+      try {
+        // Fetch total count
+        const { count: totalCount } = await supabase
+          .from('karya')
+          .select('*', { count: 'exact', head: true });
+
+        // Fetch approved count
+        const { count: approvedCount } = await supabase
+          .from('karya')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'approved');
+
+        // Fetch rejected count
+        const { count: rejectedCount } = await supabase
+          .from('karya')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'rejected');
+
+        // Fetch pending count
+        const { count: pendingCount } = await supabase
+          .from('karya')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'pending');
+
+        // Fetch category counts
+        const { data: designCount } = await supabase
+          .from('karya')
+          .select('*', { count: 'exact' })
+          .eq('category', 'design');
+
+        const { data: videoCount } = await supabase
+          .from('karya')
+          .select('*', { count: 'exact' })
+          .eq('category', 'video');
+
+        const { data: memeCount } = await supabase
+          .from('karya')
+          .select('*', { count: 'exact' })
+          .eq('category', 'meme');
+
+        const { data: writingCount } = await supabase
+          .from('karya')
+          .select('*', { count: 'exact' })
+          .eq('category', 'karyatulis');
+
+        // Fetch data for chart (last 7 days)
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
         
-        <motion.div variants={itemVariants}>
-          <Card className="bg-black/5 backdrop-blur-md border-foreground/5 h-full">
-            <CardHeader>
-              <CardTitle>Karya Distribution</CardTitle>
-              <CardDescription>Breakdown by type</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={karyaTypeData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      innerRadius={60}
-                      outerRadius={80}
-                      paddingAngle={4}
-                      dataKey="value"
-                    >
-                      {karyaTypeData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(0,0,0,0.8)', 
-                        border: 'none',
-                        borderRadius: '8px',
-                        color: 'white' 
+        const { data: recentKarya } = await supabase
+          .from('karya')
+          .select('created_at, status')
+          .gte('created_at', sevenDaysAgo.toISOString())
+          .order('created_at', { ascending: true });
+        
+        // Process chart data
+        const processedChartData = processChartData(recentKarya || []);
+
+        setStats({
+          totalKarya: totalCount || 0,
+          approved: approvedCount || 0,
+          rejected: rejectedCount || 0,
+          pending: pendingCount || 0,
+          categories: {
+            design: designCount?.length || 0,
+            video: videoCount?.length || 0,
+            meme: memeCount?.length || 0,
+            writing: writingCount?.length || 0,
+          },
+        });
+
+        setChartData(processedChartData);
+      } catch (error) {
+        console.error('Error fetching admin stats:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  // Process data for the chart
+  const processChartData = (data) => {
+    const days = {};
+    const now = new Date();
+    
+    // Initialize last 7 days
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(now.getDate() - i);
+      const formattedDate = date.toLocaleDateString('id-ID', { month: 'short', day: 'numeric' });
+      days[formattedDate] = { date: formattedDate, approved: 0, rejected: 0, pending: 0, total: 0 };
+    }
+    
+    // Populate with actual data
+    data.forEach(item => {
+      const date = new Date(item.created_at);
+      const formattedDate = date.toLocaleDateString('id-ID', { month: 'short', day: 'numeric' });
+      
+      if (days[formattedDate]) {
+        days[formattedDate].total += 1;
+        days[formattedDate][item.status] = (days[formattedDate][item.status] || 0) + 1;
+      }
+    });
+    
+    return Object.values(days);
+  };
+
+  return (
+    <div className="space-y-6">
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-pulse">
+          {[1, 2, 3, 4].map((item) => (
+            <Card key={item} className="bg-foreground/5 border-foreground/10">
+              <CardContent className="p-6">
+                <div className="h-16 rounded-md bg-foreground/10"></div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <>
+          {/* Stats cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-foreground/70">Total Karya</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div className="text-2xl font-bold">{stats.totalKarya}</div>
+                  <FileText className="h-6 w-6 text-amethyst" />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-foreground/70">Disetujui</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div className="text-2xl font-bold">{stats.approved}</div>
+                  <CheckCheck className="h-6 w-6 text-emerald" />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-foreground/70">Ditolak</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div className="text-2xl font-bold">{stats.rejected}</div>
+                  <XCircle className="h-6 w-6 text-coral" />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-foreground/70">Menunggu</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div className="text-2xl font-bold">{stats.pending}</div>
+                  <Clock className="h-6 w-6 text-amber-500" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="col-span-2 backdrop-blur-xl bg-foreground/5 border border-foreground/10">
+              <CardHeader>
+                <CardTitle>Aktivitas 7 Hari Terakhir</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                      data={chartData}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
                       }}
-                    />
-                    <Legend verticalAlign="bottom" height={36} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    </motion.div>
+                    >
+                      <defs>
+                        <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#9B6DFF" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="#9B6DFF" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="date" />
+                      <Tooltip />
+                      <Area
+                        type="monotone"
+                        dataKey="total"
+                        stroke="#9B6DFF"
+                        fillOpacity={1}
+                        fill="url(#colorTotal)"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10">
+              <CardHeader>
+                <CardTitle>Kategori</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-amethyst rounded-full mr-2"></div>
+                      <span>Design</span>
+                    </div>
+                    <span className="font-medium">{stats.categories.design}</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-azure rounded-full mr-2"></div>
+                      <span>Video</span>
+                    </div>
+                    <span className="font-medium">{stats.categories.video}</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-amber-500 rounded-full mr-2"></div>
+                      <span>Meme</span>
+                    </div>
+                    <span className="font-medium">{stats.categories.meme}</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-coral rounded-full mr-2"></div>
+                      <span>Karya Tulis</span>
+                    </div>
+                    <span className="font-medium">{stats.categories.writing}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </>
+      )}
+    </div>
   );
 };
-
-// We need to import Button separately since it's used within this file
-import { Button } from "@/components/ui/button";
 
 export default AdminDashboardStats;
