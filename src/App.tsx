@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Importing pages with normal imports instead of dynamic imports
@@ -24,10 +25,10 @@ const queryClient = new QueryClient();
 
 import { PageTransition } from "./components/PageTransition";
 import { AnimatePresence } from "framer-motion";
-import { useLocation } from "react-router-dom";
 import { CustomCursor } from "./components/karya/CustomCursor";
 
-function App() {
+// Create AppContent component that uses router hooks
+function AppContent() {
   const location = useLocation();
 
   return (
@@ -61,6 +62,20 @@ function App() {
         </PageTransition>
       </AnimatePresence>
     </>
+  );
+}
+
+// Main App component that provides context
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <Router>
+          <AppContent />
+          <Toaster />
+        </Router>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 
