@@ -1,10 +1,15 @@
+
+/* Enhanced App.css with creative effects from Karya Kami */
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
+/* Enhanced logo effects */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -12,12 +17,13 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em rgba(155, 109, 255, 0.7));
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em rgba(97, 218, 251, 0.7));
 }
 
+/* Enhanced animation */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -35,8 +41,68 @@
 
 .card {
   padding: 2em;
+  border-radius: 24px;
+  background: rgba(44, 44, 46, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  border-color: rgba(155, 109, 255, 0.3);
 }
 
 .read-the-docs {
-  color: #888;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.3s ease;
+}
+
+.read-the-docs:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Special effect for home page elements */
+.home-element {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  will-change: transform, opacity;
+}
+
+.home-element:hover {
+  transform: scale(1.03);
+}
+
+/* Enhanced button styles */
+button {
+  background: rgba(155, 109, 255, 0.1);
+  border: 1px solid rgba(155, 109, 255, 0.3);
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+button:hover {
+  background: rgba(155, 109, 255, 0.2);
+  border-color: rgba(155, 109, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(155, 109, 255, 0.2);
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Enhanced global transition effects */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Ensure text is readable on dark backgrounds */
+p, h1, h2, h3, h4, h5, h6 {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }

@@ -26,6 +26,9 @@ const queryClient = new QueryClient();
 import { PageTransition } from "./components/PageTransition";
 import { AnimatePresence } from "framer-motion";
 import { CustomCursor } from "./components/karya/CustomCursor";
+import { ScrollProgressIndicator } from "./components/karya/ScrollProgressIndicator";
+import { ParticleBackground } from "./components/karya/ParticleBackground";
+import { GlobalAnimations } from "./components/GlobalAnimations";
 
 // Create AppContent component that uses router hooks
 function AppContent() {
@@ -33,8 +36,10 @@ function AppContent() {
 
   return (
     <>
-      {/* Apply CustomCursor globally */}
+      {/* Apply global design elements */}
       <CustomCursor />
+      <ScrollProgressIndicator />
+      <GlobalAnimations />
       
       <AnimatePresence mode="wait">
         <PageTransition key={location.pathname}>
