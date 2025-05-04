@@ -11,15 +11,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 
-type KaryaLogItem = {
+type ActivityLogItem = {
   id: string;
-  title: string;
-  creator_name: string;
-  status: string;
-  category: string;
+  action: string;
+  details: string | null;
+  ip_address: string | null;
   created_at: string;
-  updated_at: string;
-  action?: string;
 };
 
 const itemVariants = {
@@ -42,7 +39,7 @@ const containerVariants = {
 };
 
 const AdminActivityLog = () => {
-  const [logs, setLogs] = useState<KaryaLogItem[]>([]);
+  const [logs, setLogs] = useState<ActivityLogItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -53,37 +50,16 @@ const AdminActivityLog = () => {
     setHasError(false);
     
     try {
-      // Fetch the most recent activities (karya creations and updates)
-      const { data: recentKarya, error } = await supabase
-        .from('karya')
+      // Fetch the admin activity logs
+      const { data, error } = await supabase
+        .from('admin_activity_log')
         .select('*')
-        .order('updated_at', { ascending: false })
+        .order('created_at', { ascending: false })
         .limit(20);
 
       if (error) throw error;
 
-      // Process the data to create activity logs
-      const processedLogs = recentKarya.map((item: KaryaLogItem) => {
-        let action = '';
-        if (item.created_at === item.updated_at) {
-          action = 'created';
-        } else {
-          if (item.status === 'approved') {
-            action = 'approved';
-          } else if (item.status === 'rejected') {
-            action = 'rejected';
-          } else {
-            action = 'updated';
-          }
-        }
-        
-        return {
-          ...item,
-          action
-        };
-      });
-
-      setLogs(processedLogs);
+      setLogs(data || []);
     } catch (error) {
       console.error('Error fetching activity logs:', error);
       setHasError(true);
@@ -102,39 +78,24 @@ const AdminActivityLog = () => {
     fetchLogs();
     
     // Set up a subscription for real-time updates
-    let subscription;
-    
-    try {
-      subscription = supabase
-        .channel('activity-logs')
-        .on('postgres_changes', 
-          { event: '*', schema: 'public', table: 'karya' }, 
-          payload => {
-            fetchLogs(); // Refresh logs when data changes
-          }
-        )
-        .subscribe((status) => {
-          if (status !== 'SUBSCRIBED') {
-            console.warn('Supabase subscription status:', status);
-          }
-        });
-    } catch (error) {
-      console.error('Error setting up real-time subscription:', error);
-      toast({
-        title: "Real-time updates issue",
-        description: "Activity logs might not update automatically",
-        variant: "destructive"
+    const subscription = supabase
+      .channel('activity-logs-admin')
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'admin_activity_log' }, 
+        payload => {
+          console.log('Admin activity log changed:', payload);
+          fetchLogs(); // Refresh logs when data changes
+        }
+      )
+      .subscribe((status) => {
+        console.log('Supabase subscription status for admin logs:', status);
+        if (status !== 'SUBSCRIBED') {
+          console.warn('Supabase subscription status:', status);
+        }
       });
-    }
       
     return () => {
-      if (subscription) {
-        try {
-          subscription.unsubscribe();
-        } catch (error) {
-          console.error('Error unsubscribing:', error);
-        }
-      }
+      subscription.unsubscribe();
     };
   }, [toast]);
 
@@ -143,14 +104,17 @@ const AdminActivityLog = () => {
     fetchLogs();
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'approved':
+  const getActionIcon = (action: string) => {
+    switch (action) {
+      case 'login':
         return <CheckCircle className="h-4 w-4 text-emerald" />;
-      case 'rejected':
+      case 'logout':
+        return <XCircle className="h-4 w-4 text-blueLight" />;
+      case 'update':
+      case 'create':
+        return <Clock className="h-4 w-4 text-amethyst" />;
+      case 'delete':
         return <XCircle className="h-4 w-4 text-coral" />;
-      case 'pending':
-        return <Clock className="h-4 w-4 text-amber-500" />;
       default:
         return <Activity className="h-4 w-4 text-foreground/70" />;
     }
@@ -158,34 +122,25 @@ const AdminActivityLog = () => {
 
   const getActionBadge = (action: string) => {
     switch (action) {
-      case 'created':
-        return <Badge variant="outline" className="bg-foreground/5 text-amethyst border-amethyst/30">Dibuat</Badge>;
-      case 'approved':
-        return <Badge variant="outline" className="bg-foreground/5 text-emerald border-emerald/30">Disetujui</Badge>;
-      case 'rejected':
-        return <Badge variant="outline" className="bg-foreground/5 text-coral border-coral/30">Ditolak</Badge>;
-      case 'updated':
-        return <Badge variant="outline" className="bg-foreground/5 text-blueLight border-blueLight/30">Diperbarui</Badge>;
+      case 'login':
+        return <Badge variant="outline" className="bg-foreground/5 text-emerald border-emerald/30">Login</Badge>;
+      case 'logout':
+        return <Badge variant="outline" className="bg-foreground/5 text-blueLight border-blueLight/30">Logout</Badge>;
+      case 'create':
+        return <Badge variant="outline" className="bg-foreground/5 text-amethyst border-amethyst/30">Create</Badge>;
+      case 'update':
+        return <Badge variant="outline" className="bg-foreground/5 text-amber-500 border-amber-500/30">Update</Badge>;
+      case 'delete':
+        return <Badge variant="outline" className="bg-foreground/5 text-coral border-coral/30">Delete</Badge>;
+      case 'approve':
+        return <Badge variant="outline" className="bg-foreground/5 text-emerald border-emerald/30">Approve</Badge>;
+      case 'reject':
+        return <Badge variant="outline" className="bg-foreground/5 text-coral border-coral/30">Reject</Badge>;
       default:
-        return <Badge variant="outline" className="bg-foreground/5">Aktivitas</Badge>;
+        return <Badge variant="outline" className="bg-foreground/5">{action}</Badge>;
     }
   };
   
-  const getCategoryBadge = (category: string) => {
-    switch (category) {
-      case 'design':
-        return <Badge variant="secondary" className="bg-amethyst/10 text-amethyst border-amethyst/30">Design</Badge>;
-      case 'video':
-        return <Badge variant="secondary" className="bg-blueLight/10 text-blueLight border-blueLight/30">Video</Badge>;
-      case 'meme':
-        return <Badge variant="secondary" className="bg-amber-500/10 text-amber-500 border-amber-500/30">Meme</Badge>;
-      case 'karyatulis':
-        return <Badge variant="secondary" className="bg-coral/10 text-coral border-coral/30">Karya Tulis</Badge>;
-      default:
-        return <Badge variant="secondary" className="bg-foreground/10">{category}</Badge>;
-    }
-  };
-
   const renderContent = () => {
     if (isLoading) {
       // Loading skeleton
@@ -225,7 +180,7 @@ const AdminActivityLog = () => {
         <div className="py-12 text-center text-foreground/50">
           <div className="flex flex-col items-center justify-center">
             <Activity className="h-12 w-12 mb-3 text-foreground/20" />
-            <p>Belum ada aktivitas untuk ditampilkan</p>
+            <p>Belum ada aktivitas admin untuk ditampilkan</p>
             <Button 
               variant="outline" 
               size="sm" 
@@ -249,19 +204,18 @@ const AdminActivityLog = () => {
             variants={itemVariants}
           >
             <div className="h-10 w-10 rounded-full bg-foreground/5 flex items-center justify-center">
-              {getStatusIcon(log.status)}
+              {getActionIcon(log.action)}
             </div>
             <div className="space-y-1 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-medium">{log.title}</span>
                 {getActionBadge(log.action)}
-                {getCategoryBadge(log.category)}
+                <span className="font-medium">{log.details}</span>
               </div>
               <div className="text-sm text-foreground/70">
-                Oleh {log.creator_name} • {formatDistanceToNow(new Date(log.updated_at), { addSuffix: true, locale: id })}
+                {formatDistanceToNow(new Date(log.created_at), { addSuffix: true, locale: id })}
               </div>
               <div className="text-xs text-foreground/50">
-                {format(new Date(log.updated_at), "d MMMM yyyy, HH:mm", { locale: id })}
+                {format(new Date(log.created_at), "d MMMM yyyy, HH:mm", { locale: id })}
               </div>
             </div>
           </motion.div>
@@ -279,7 +233,7 @@ const AdminActivityLog = () => {
       <Card className="backdrop-blur-xl bg-foreground/5 border border-foreground/10">
         <CardHeader className="pb-2 flex flex-row items-center justify-between">
           <CardTitle className="text-lg font-serif">
-            Aktivitas Terbaru
+            Log Aktivitas Admin
           </CardTitle>
           <Button 
             size="sm" 
