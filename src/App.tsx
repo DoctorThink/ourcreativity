@@ -29,6 +29,7 @@ import { CustomCursor } from "./components/karya/CustomCursor";
 import { ScrollProgressIndicator } from "./components/karya/ScrollProgressIndicator";
 import { ParticleBackground } from "./components/karya/ParticleBackground";
 import { GlobalAnimations } from "./components/GlobalAnimations";
+import RequireAuth from "./components/admin/RequireAuth";
 
 // Create AppContent component that uses router hooks
 function AppContent() {
@@ -52,21 +53,17 @@ function AppContent() {
             <Route path="/terms" element={<Terms />} />
             <Route path="/karya-kami" element={<KaryaKami />} />
             
-            {/* Wrap admin routes with AdminAuthProvider */}
-            <Route path="/admin-login" element={
-              <AdminAuthProvider>
-                <AdminLogin />
-              </AdminAuthProvider>
-            } />
+            {/* Admin routes with proper protection */}
+            <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/our-admin" element={
-              <AdminAuthProvider>
+              <RequireAuth>
                 <OurAdmin />
-              </AdminAuthProvider>
+              </RequireAuth>
             } />
             <Route path="/admin" element={
-              <AdminAuthProvider>
+              <RequireAuth>
                 <OurAdmin />
-              </AdminAuthProvider>
+              </RequireAuth>
             } />
           </Routes>
         </PageTransition>
@@ -80,10 +77,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <Router>
-          <AppContent />
-          <Toaster />
-        </Router>
+        <AdminAuthProvider>
+          <Router>
+            <AppContent />
+            <Toaster />
+          </Router>
+        </AdminAuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

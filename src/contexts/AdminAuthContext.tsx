@@ -21,13 +21,24 @@ export const ADMIN_PASSWORD = "Ardelyo123$45";
 
 export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Check if admin is already authenticated from session storage
-    const authStatus = sessionStorage.getItem("adminAuth");
-    if (authStatus === "true") {
-      setIsAuthenticated(true);
-    }
+    const checkAuth = () => {
+      const authStatus = sessionStorage.getItem("adminAuth");
+      setIsAuthenticated(authStatus === "true");
+      setIsLoading(false);
+    };
+    
+    checkAuth();
+    
+    // Add event listener for storage changes (in case of multiple tabs)
+    window.addEventListener('storage', checkAuth);
+    
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+    };
   }, []);
 
   const login = async (password: string): Promise<boolean> => {

@@ -57,25 +57,18 @@ const OurAdmin = () => {
   const { isAuthenticated, logout } = useAdminAuth();
   const [lastLogin, setLastLogin] = useState(new Date());
   const [activityCounter, setActivityCounter] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const isMobile = useIsMobile();
   
-  // Check authentication status
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/admin-login');
-    } else {
-      setIsLoading(false);
-    }
-  }, [isAuthenticated, navigate]);
-
   // Handle tab change based on URL hash
   useEffect(() => {
     const hash = window.location.hash.replace('#', '');
     if (hash && ['dashboard', 'announcements', 'content', 'team', 'karya', 'logs'].includes(hash)) {
       setActiveTab(hash);
+    } else {
+      setActiveTab('dashboard'); // Default to dashboard if no valid hash
     }
   }, []);
 
@@ -89,10 +82,12 @@ const OurAdmin = () => {
         .on('postgres_changes', 
           { event: '*', schema: 'public', table: 'karya' }, 
           payload => {
+            console.log('Real-time update received:', payload);
             setActivityCounter(prev => prev + 1); // Increment counter when database changes
           }
         )
         .subscribe((status) => {
+          console.log('Supabase subscription status:', status);
           if (status !== 'SUBSCRIBED') {
             console.warn('Supabase subscription status:', status);
           }
@@ -132,21 +127,6 @@ const OurAdmin = () => {
     setActiveTab(tab);
     window.location.hash = tab; // Update URL hash without reloading page
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center">
-          <div className="w-16 h-16 border-4 border-t-amethyst rounded-full animate-spin mb-4"></div>
-          <p className="text-foreground/70">Loading admin dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return null; // Don't render anything while redirecting
-  }
 
   return (
     <PageTransition isAdmin={true}>

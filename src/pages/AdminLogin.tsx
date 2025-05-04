@@ -1,7 +1,7 @@
-// --- START OF FILE AdminLogin.tsx ---
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Lock } from "lucide-react";
@@ -11,9 +11,18 @@ import { useToast } from "@/components/ui/use-toast";
 const AdminLogin = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAdminAuth();
+  const { login, isAuthenticated } = useAdminAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const location = useLocation();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = location.state?.from?.pathname || "/our-admin";
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, location]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,23 +33,27 @@ const AdminLogin = () => {
 
       if (success) {
         toast({
-          title: "Login successful",
-          description: "Welcome to the admin dashboard",
+          title: "Login berhasil",
+          description: "Selamat datang di dashboard admin",
         });
-        navigate("/our-admin");
+        
+        // Navigate to the previous page or admin dashboard
+        const from = location.state?.from?.pathname || "/our-admin";
+        navigate(from, { replace: true });
       } else {
         toast({
-          title: "Authentication failed",
-          description: "Please check your password",
+          title: "Login gagal",
+          description: "Password yang Anda masukkan salah",
           variant: "destructive",
         });
       }
     } catch (error) {
       toast({
-        title: "Login error",
-        description: "An unexpected error occurred",
+        title: "Error login",
+        description: "Terjadi kesalahan saat proses login",
         variant: "destructive",
       });
+      console.error("Login error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -52,7 +65,7 @@ const AdminLogin = () => {
         {/* Enhanced background blobs inspired by logo */}
         <div className="absolute w-[60vw] h-[60vh] rounded-full blur-[110px] bg-[#E54646]/10 -top-[15%] -right-[15%]" />
         <div className="absolute w-[50vw] h-[50vh] rounded-full blur-[100px] bg-[#3ECAC4]/10 -bottom-[10%] -left-[10%]" />
-         <div className="absolute w-[40vw] h-[40vh] rounded-full blur-[90px] bg-[#FFA83E]/5 bottom-[20%] right-[5%]" />
+        <div className="absolute w-[40vw] h-[40vh] rounded-full blur-[90px] bg-[#FFA83E]/5 bottom-[20%] right-[5%]" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
       </div>
 
@@ -64,7 +77,7 @@ const AdminLogin = () => {
       >
         <div className="flex justify-center">
           <div className="w-16 h-16 rounded-full flex items-center justify-center bg-[#2a2a2e]/80 backdrop-blur-xl border border-[#444448]">
-            <Lock className="w-8 h-8 text-[#A855F7]" /> {/* Purple Icon */}
+            <Lock className="w-8 h-8 text-[#A855F7]" />
           </div>
         </div>
 
