@@ -1,286 +1,280 @@
-import { motion } from "framer-motion";
-import PageLayout from "@/components/layouts/PageLayout";
-import { cn } from "@/lib/utils";
-import { Check, Shield, AlertTriangle, User, FileCode, Users, Heart, Bookmark } from "lucide-react"; // Removed unused icons
-import React from "react";
 
-/**
- * FILES/FOLDERS TO CHECK/ENSURE EXIST AND ARE CONFIGURED:
- * (Consistency Check - Assumed same as previous examples)
- *
- * 1.  `src/components/layouts/PageLayout.tsx`: Provides page structure, header, background.
- * 2.  `src/index.css`: Defines CSS variables, fonts, base styles, Tailwind directives.
- * 3.  `tailwind.config.ts`: Defines accent colors, fonts, plugins.
- * 4.  `src/lib/utils.ts`: Provides the `cn` utility function.
- * 5.  `lucide-react` (dependency): Installed.
- * 6.  `framer-motion` (dependency): Installed.
- */
-
-// --- Animation Variants ---
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const sectionVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
-  }
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.98 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.45, ease: [0.25, 0.1, 0.25, 1.0] },
-  },
-};
-
-const cardHover = {
-  scale: 1.02,
-  boxShadow: "0px 10px 20px -8px rgba(0, 0, 0, 0.2)",
-  transition: { type: "spring", stiffness: 350, damping: 20 },
-};
-
-const listItemVariants = {
-    hidden: { opacity: 0, x: -10 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } }
-};
-
-// --- Terms Data (Simplified and Structured for Cards) ---
-const termsSections = [
-  {
-    id: "membership",
-    title: "Keanggotaan",
-    icon: User,
-    accent: "lavender",
-    description: "Syarat dasar menjadi anggota komunitas.",
-    rules: [
-      "Terbuka untuk semua peminat bidang kreatif.",
-      "Wajib mematuhi kode etik & peraturan komunitas.",
-      "Diharapkan partisipasi aktif dalam diskusi & kegiatan.",
-      "Dapat mengundurkan diri kapan saja dengan pemberitahuan.",
-    ],
-  },
-  {
-    id: "content",
-    title: "Konten & Karya",
-    icon: FileCode,
-    accent: "mint",
-    description: "Aturan berbagi konten dan hasil karya.",
-    rules: [
-      "Karya harus asli atau memiliki izin yang jelas.",
-      "Dilarang melanggar hak cipta & kekayaan intelektual.",
-      "Konten harus sesuai norma & nilai positif.",
-      "Komunitas berhak menampilkan karya untuk promosi (dengan kredit).",
-    ],
-  },
-  {
-    id: "interaction",
-    title: "Interaksi Komunitas",
-    icon: Users,
-    accent: "peach",
-    description: "Panduan komunikasi antar anggota.",
-    rules: [
-      "Jaga kesopanan & saling menghormati.",
-      "Tidak ada toleransi untuk pelecehan & diskriminasi.",
-      "Kritik bersifat konstruktif, fokus pada karya.",
-      "Pelanggaran berulang dapat berakibat sanksi.",
-    ],
-  },
-  {
-    id: "groups",
-    title: "Fokus Grup",
-    icon: Heart, // Representing interests/focus
-    accent: "softPink",
-    description: "Ketentuan mengenai grup minat kreatif.",
-    rules: [
-      "Bebas bergabung lebih dari satu grup (Desain, Video, Meme, Tulis).",
-      "Diskusi & konten harus relevan dengan topik grup.",
-      "Kolaborasi antar grup sangat didorong.",
-      "Setiap grup memiliki pedoman tambahan jika diperlukan.",
-    ],
-  }
-];
-
-const intro = {
-    title: "Tentang Syarat & Ketentuan",
-    icon: Shield,
-    accent: "default", // Use default style
-    text: "Syarat dan ketentuan ini dirancang untuk memastikan pengalaman yang positif, aman, dan produktif bagi semua anggota komunitas. Dengan bergabung atau berpartisipasi dalam OurCreativity, Anda dianggap telah membaca, memahami, dan setuju untuk mematuhi semua aturan ini."
-};
-
-const warning = {
-    title: "Pelanggaran Ketentuan",
-    icon: AlertTriangle,
-    accent: "coral", // Use a distinct accent for warning
-    text: "Pelanggaran terhadap syarat dan ketentuan ini dapat berakibat pada peringatan, pembatasan akses, atau pengakhiran keanggotaan, tergantung tingkat keparahan. Komunitas berhak mengubah ketentuan ini dari waktu ke waktu dengan pemberitahuan wajar kepada anggota."
-};
-
-const agreement = {
-    title: "Persetujuan",
-    icon: Bookmark,
-    accent: "default",
-    text: "Partisipasi Anda dalam komunitas ini adalah bentuk persetujuan terhadap semua syarat dan ketentuan yang berlaku.",
-    note: "Ketentuan ini berlaku efektif sejak Juni 2024."
-};
-
-// --- Accent Color Mapping (No changes needed) ---
-const accentStyles: Record<string, { bg: string; border: string; text: string; iconText: string; shadow: string; iconBg: string; bulletBg: string }> = {
-  lavender: { bg: "bg-lavender/10", border: "border-lavender/40", text: "text-lavender", iconText: "text-lavender", shadow: "shadow-lavender/5", iconBg: "bg-lavender/20", bulletBg: "bg-lavender/70" },
-  mint: { bg: "bg-mint/10", border: "border-mint/40", text: "text-mint", iconText: "text-mint", shadow: "shadow-mint/5", iconBg: "bg-mint/20", bulletBg: "bg-mint/70" },
-  peach: { bg: "bg-peach/10", border: "border-peach/40", text: "text-peach", iconText: "text-peach", shadow: "shadow-peach/5", iconBg: "bg-peach/20", bulletBg: "bg-peach/70" },
-  softPink: { bg: "bg-softPink/10", border: "border-softPink/40", text: "text-softPink", iconText: "text-softPink", shadow: "shadow-softPink/5", iconBg: "bg-softPink/20", bulletBg: "bg-softPink/70" },
-  coral: { bg: "bg-coral/10", border: "border-coral/50", text: "text-coral", iconText: "text-coral", shadow: "shadow-coral/10", iconBg: "bg-coral/20", bulletBg: "bg-coral/70" }, // Warning accent
-  default: { bg: "bg-neutral-800/20", border: "border-neutral-700/40", text: "text-neutral-400", iconText: "text-neutral-300", shadow: "shadow-black/10", iconBg: "bg-neutral-700/50", bulletBg: "bg-neutral-500" },
-};
-
-const getAccentStyle = (accentKey: string | undefined) => {
-    return accentStyles[accentKey || 'default'] || accentStyles.default;
-};
-
+import React, { useState, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import PageLayout from "../components/layouts/PageLayout";
+import BentoCard from "@/components/ui/BentoCard";
+import { 
+  ScrollText, 
+  Bell, 
+  Shield, 
+  Users, 
+  Pencil, 
+  AlertCircle, 
+  CheckCircle2,
+  BookOpenCheck
+} from "lucide-react";
 
 const Terms = () => {
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [1, 0.8, 0.8, 0.6]);
+  
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+  
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5 }
+    }
+  };
+
   return (
-    <PageLayout
-      title="SYARAT & KETENTUAN"
-      subtitle="Panduan dan peraturan untuk menjaga kualitas dan integritas komunitas OurCreativity"
+    <PageLayout 
+      title="Syarat & Ketentuan" 
+      subtitle="Informasi penting mengenai keanggotaan dan partisipasi dalam komunitas"
     >
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="space-y-12"
-      >
-        {/* --- Introduction Card --- */}
-        <motion.section variants={sectionVariants} className="glass-card rounded-3xl p-6 md:p-8 backdrop-blur-md">
-          <div className="flex items-start gap-4">
-              <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-1", getAccentStyle(intro.accent).iconBg)}>
-                  <intro.icon className={cn("w-5 h-5", getAccentStyle(intro.accent).iconText)} />
-              </div>
-              <div>
-                  <h2 className="text-lg font-semibold font-serif text-foreground mb-1.5">
-                      {intro.title}
-                  </h2>
-                  <p className="font-sans text-sm text-foreground/80 leading-relaxed text-readable">
-                      {intro.text}
-                  </p>
-              </div>
-          </div>
-           <div className={cn("absolute -bottom-8 -right-8 w-24 h-24 rounded-full opacity-[0.05] blur-lg", getAccentStyle(intro.accent).bg.replace('/20','/80'))}></div>
-        </motion.section>
-
-        {/* --- Terms Section Cards --- */}
-        {termsSections.map((section) => {
-            const accent = getAccentStyle(section.accent);
-            const Icon = section.icon;
-            return (
-             <motion.section
-               key={section.id}
-               variants={sectionVariants}
-               whileHover={cardHover}
-               className={cn(
-                 "p-6 rounded-3xl border relative overflow-hidden shadow-lg flex flex-col", // Ensure flex column for potential height differences
-                 "bg-secondary/70 backdrop-blur-xl",
-                 accent.border,
-                 accent.shadow
-               )}
-             >
-                {/* Card Header */}
-                <div className="flex items-start gap-3.5 mb-4">
-                    <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0", accent.iconBg)}>
-                        <Icon className={cn("w-5 h-5", accent.iconText)} />
-                    </div>
-                    <div>
-                        <h2 className="text-lg font-semibold font-serif text-foreground tracking-tight">
-                        {section.title}
-                        </h2>
-                        <p className="text-xs text-neutral-400 font-sans mt-0.5">{section.description}</p>
-                    </div>
-                </div>
-
-                {/* Rules List */}
-                <ul className="space-y-3 font-sans text-sm text-foreground/80 leading-relaxed list-none pl-1 flex-grow"> {/* flex-grow helps with alignment */}
-                   {section.rules.map((rule, index) => (
-                     <motion.li
-                        key={index}
-                        variants={listItemVariants}
-                        className="flex items-start gap-3"
-                      >
-                         <span className={cn(
-                            "mt-[5px] w-2 h-2 rounded-full flex-shrink-0", // Bullet styling
-                            accent.bulletBg
-                          )}
-                          />
-                         <span className="flex-1">{rule}</span> {/* Ensure text wraps */}
-                     </motion.li>
-                   ))}
-                </ul>
-                <div className={cn("absolute -bottom-8 -left-8 w-24 h-24 rounded-full opacity-[0.06] blur-lg", accent.bg.replace('/10','/80'))}></div>
-             </motion.section>
-            );
-        })}
-
-         {/* --- Warning Card --- */}
-        <motion.section
-            variants={cardVariants}
-            className={cn(
-                "md:col-span-2 p-6 rounded-3xl border-2 relative overflow-hidden shadow-lg", // Stronger border for warning
-                "bg-secondary/80 backdrop-blur-xl", // Slightly more opaque
-                getAccentStyle(warning.accent).border, // Use warning accent border
-                "shadow-lg", getAccentStyle(warning.accent).shadow // Use warning accent shadow
-            )}
-        >
-            <div className="flex items-start gap-4">
-                <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-1", getAccentStyle(warning.accent).iconBg)}>
-                    <warning.icon className={cn("w-5 h-5", getAccentStyle(warning.accent).iconText)} />
-                </div>
-                <div>
-                    <h2 className="text-lg font-semibold font-serif text-foreground mb-1.5">
-                        {warning.title}
-                    </h2>
-                    <p className="font-sans text-sm text-foreground/80 leading-relaxed text-readable">
-                        {warning.text}
-                    </p>
-                </div>
-            </div>
-        </motion.section>
-
-        {/* --- Agreement Card --- */}
+      <div ref={containerRef} className="relative z-10">
         <motion.div
-            variants={cardVariants}
-            className={cn(
-                "md:col-span-2 p-6 rounded-3xl border relative overflow-hidden shadow-lg text-center",
-                "bg-secondary/70 backdrop-blur-xl",
-                getAccentStyle(agreement.accent).border,
-                getAccentStyle(agreement.accent).shadow
-            )}
+          style={{ opacity }}
+          className="mb-8 text-center"
         >
-            <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center mx-auto mb-3", getAccentStyle(agreement.accent).iconBg)}>
-                <agreement.icon className={cn("w-5 h-5", getAccentStyle(agreement.accent).iconText)} />
-            </div>
-            <p className="font-sans text-sm text-foreground/85 leading-relaxed max-w-xl mx-auto mb-3">
-                {agreement.text}
-            </p>
-            <p className="font-sans text-xs text-neutral-500 italic">
-                 {agreement.note}
-            </p>
-             <div className="absolute inset-0 geometric-dot-pattern opacity-[0.02] mix-blend-overlay"></div>
+          <motion.div 
+            className="inline-block p-3 rounded-full bg-amethyst/20 mb-4"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <BookOpenCheck className="w-6 h-6 text-amethyst" />
+          </motion.div>
+          <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
+            Dokumen ini mengatur hubungan antara OUR CREATIVITY dan anggota komunitas. 
+            Pastikan untuk membaca dengan seksama sebelum bergabung atau berpartisipasi dalam kegiatan komunitas.
+          </p>
         </motion.div>
-      </motion.div>
+
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Section 1: Keanggotaan */}
+          <TermsSection 
+            title="Keanggotaan"
+            icon={Users}
+            iconColor="bg-turquoise text-background"
+            glowColor="rgba(152, 245, 225, 0.3)"
+            isExpanded={expandedSection === "membership"}
+            onToggle={() => setExpandedSection(expandedSection === "membership" ? null : "membership")}
+            variants={itemVariants}
+          >
+            <ul className="space-y-4 text-foreground/80">
+              <TermsItem>Keanggotaan terbuka untuk semua individu berusia minimal 15 tahun.</TermsItem>
+              <TermsItem>Pendaftaran mengharuskan pengisian formulir dan verifikasi email.</TermsItem>
+              <TermsItem>Anggota diharapkan berpartisipasi dalam minimal satu kegiatan komunitas setiap tiga bulan.</TermsItem>
+              <TermsItem>Anggota dapat memilih untuk bergabung dengan satu atau lebih kelompok kreatif sesuai minat.</TermsItem>
+              <TermsItem>Keanggotaan dapat dicabut jika melanggar kode etik komunitas.</TermsItem>
+            </ul>
+          </TermsSection>
+
+          {/* Section 2: Konten Kreatif */}
+          <TermsSection 
+            title="Konten Kreatif"
+            icon={Pencil}
+            iconColor="bg-coral text-background"
+            glowColor="rgba(254, 198, 161, 0.3)"
+            isExpanded={expandedSection === "content"}
+            onToggle={() => setExpandedSection(expandedSection === "content" ? null : "content")}
+            variants={itemVariants}
+          >
+            <ul className="space-y-4 text-foreground/80">
+              <TermsItem>Konten yang dibagikan harus asli atau memiliki izin penggunaan yang tepat.</TermsItem>
+              <TermsItem>Dilarang keras membagikan konten dengan unsur SARA, pornografi, atau melanggar hukum.</TermsItem>
+              <TermsItem>OUR CREATIVITY memiliki hak untuk menampilkan karya anggota di platform komunitas.</TermsItem>
+              <TermsItem>Hak cipta tetap dimiliki oleh kreator asli.</TermsItem>
+              <TermsItem>Penggunaan logo atau identitas OUR CREATIVITY memerlukan izin tertulis.</TermsItem>
+            </ul>
+          </TermsSection>
+
+          {/* Section 3: Privasi & Data */}
+          <TermsSection 
+            title="Privasi & Data"
+            icon={Shield}
+            iconColor="bg-mint text-background"
+            glowColor="rgba(152, 245, 225, 0.3)"
+            isExpanded={expandedSection === "privacy"}
+            onToggle={() => setExpandedSection(expandedSection === "privacy" ? null : "privacy")}
+            variants={itemVariants}
+          >
+            <ul className="space-y-4 text-foreground/80">
+              <TermsItem>Data pribadi anggota dilindungi dan tidak akan dibagikan kepada pihak ketiga tanpa izin.</TermsItem>
+              <TermsItem>Informasi kontak hanya digunakan untuk keperluan komunikasi komunitas.</TermsItem>
+              <TermsItem>Anggota dapat meminta penghapusan data pribadi kapan saja.</TermsItem>
+              <TermsItem>Cookies digunakan untuk meningkatkan pengalaman di platform digital komunitas.</TermsItem>
+              <TermsItem>OUR CREATIVITY tidak bertanggung jawab atas kebocoran data yang terjadi di luar kendali kami.</TermsItem>
+            </ul>
+          </TermsSection>
+
+          {/* Section 4: Perubahan Ketentuan */}
+          <TermsSection 
+            title="Perubahan Ketentuan"
+            icon={Bell}
+            iconColor="bg-softPink text-background"
+            glowColor="rgba(255, 209, 220, 0.3)"
+            isExpanded={expandedSection === "changes"}
+            onToggle={() => setExpandedSection(expandedSection === "changes" ? null : "changes")}
+            variants={itemVariants}
+          >
+            <ul className="space-y-4 text-foreground/80">
+              <TermsItem>OUR CREATIVITY berhak mengubah Syarat & Ketentuan ini sewaktu-waktu.</TermsItem>
+              <TermsItem>Perubahan akan diinformasikan melalui email dan platform komunitas.</TermsItem>
+              <TermsItem>Anggota dianggap menyetujui perubahan jika terus berpartisipasi setelah pemberitahuan.</TermsItem>
+              <TermsItem>Versi terbaru dari dokumen ini akan selalu tersedia di website resmi.</TermsItem>
+              <TermsItem>Pertanyaan mengenai Syarat & Ketentuan dapat diajukan melalui form kontak.</TermsItem>
+            </ul>
+          </TermsSection>
+
+          {/* Section 5: Pelanggaran & Sanksi */}
+          <TermsSection 
+            title="Pelanggaran & Sanksi"
+            icon={AlertCircle}
+            iconColor="bg-amethyst text-background"
+            glowColor="rgba(229, 222, 255, 0.3)"
+            isExpanded={expandedSection === "violations"}
+            onToggle={() => setExpandedSection(expandedSection === "violations" ? null : "violations")}
+            variants={itemVariants}
+            colSpan="col-span-1 md:col-span-2"
+          >
+            <ul className="space-y-4 text-foreground/80">
+              <TermsItem>Pelanggaran ringan akan mendapat peringatan tertulis.</TermsItem>
+              <TermsItem>Pelanggaran berulang dapat mengakibatkan pembatasan akses ke fasilitas komunitas.</TermsItem>
+              <TermsItem>Pelanggaran berat (seperti pelecehan, diskriminasi, atau pencurian karya intelektual) dapat berakibat pada penghentian keanggotaan secara permanen.</TermsItem>
+              <TermsItem>Keputusan tim moderator bersifat final namun dapat diajukan banding melalui prosedur yang ditetapkan.</TermsItem>
+              <TermsItem>OUR CREATIVITY berhak untuk melaporkan kegiatan ilegal kepada pihak berwajib.</TermsItem>
+            </ul>
+          </TermsSection>
+        </motion.div>
+
+        {/* Final Notes */}
+        <motion.div 
+          className="mt-12 p-8 rounded-3xl bg-gradient-to-br from-secondary/90 to-secondary/70 backdrop-blur-lg border border-white/10 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+        >
+          <CheckCircle2 className="w-8 h-8 text-amethyst mx-auto mb-4" />
+          <h3 className="text-xl font-serif mb-3">Penerimaan Syarat & Ketentuan</h3>
+          <p className="text-foreground/80">
+            Dengan bergabung atau berpartisipasi dalam kegiatan OUR CREATIVITY, 
+            Anda dianggap telah membaca, memahami, dan menyetujui semua syarat dan ketentuan yang tercantum di atas.
+          </p>
+          <p className="mt-4 text-sm text-foreground/60">
+            Terakhir diperbarui: 4 Mei 2025
+          </p>
+        </motion.div>
+      </div>
     </PageLayout>
   );
 };
+
+// Terms Section component
+interface TermsSectionProps {
+  title: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  iconColor: string;
+  glowColor: string;
+  children: React.ReactNode;
+  isExpanded: boolean;
+  onToggle: () => void;
+  variants: any;
+  colSpan?: string;
+}
+
+const TermsSection = ({
+  title,
+  icon: Icon,
+  iconColor,
+  glowColor,
+  children,
+  isExpanded,
+  onToggle,
+  variants,
+  colSpan = "col-span-1"
+}: TermsSectionProps) => {
+  return (
+    <motion.div 
+      variants={variants}
+      className={colSpan}
+    >
+      <BentoCard
+        className="overflow-hidden"
+        glowColor={glowColor}
+        icon={Icon}
+        iconColor={iconColor}
+        interactive={true}
+        onClick={onToggle}
+      >
+        <div className="p-6 pt-12">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-xl font-serif font-medium">{title}</h3>
+            <motion.div
+              animate={{ rotate: isExpanded ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center"
+            >
+              <svg className="w-4 h-4 text-foreground/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </motion.div>
+          </div>
+          
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ 
+              height: isExpanded ? "auto" : 0,
+              opacity: isExpanded ? 1 : 0
+            }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <motion.div 
+              className="pt-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isExpanded ? 1 : 0 }}
+              transition={{ duration: 0.3, delay: isExpanded ? 0.2 : 0 }}
+            >
+              {children}
+            </motion.div>
+          </motion.div>
+        </div>
+      </BentoCard>
+    </motion.div>
+  );
+};
+
+// Terms Item component
+const TermsItem = ({ children }: { children: React.ReactNode }) => (
+  <li className="flex items-start gap-3">
+    <span className="inline-block w-1.5 h-1.5 rounded-full bg-foreground/40 mt-2 flex-shrink-0"></span>
+    <span>{children}</span>
+  </li>
+);
 
 export default Terms;
