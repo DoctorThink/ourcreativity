@@ -20,8 +20,16 @@ import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 import { Toaster } from "./components/ui/toaster";
 import "./App.css";
 
-// Create React Query client
-const queryClient = new QueryClient();
+// Create React Query client with retry configuration for better reliability
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      staleTime: 30000,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 import { PageTransition } from "./components/PageTransition";
 import { AnimatePresence } from "framer-motion";

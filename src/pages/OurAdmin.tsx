@@ -12,14 +12,10 @@ import { ScrollProgressIndicator } from '@/components/karya/ScrollProgressIndica
 import { 
   Activity, 
   Database, 
-  Settings, 
-  AreaChart, 
+  Bell, 
   Calendar, 
-  Clock, 
   Users, 
-  FileText,
-  Bell,
-  LogOut
+  FileText
 } from 'lucide-react';
 import AdminDashboardHeader from '@/components/admin/AdminDashboardHeader';
 import AdminActivityLog from '@/components/admin/AdminActivityLog';
@@ -54,10 +50,9 @@ const itemVariants = {
 
 const OurAdmin = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const { isAuthenticated, logout } = useAdminAuth();
+  const { isAuthenticated, logout, isLoading } = useAdminAuth();
   const [lastLogin, setLastLogin] = useState(new Date());
   const [activityCounter, setActivityCounter] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const isMobile = useIsMobile();
@@ -128,13 +123,31 @@ const OurAdmin = () => {
     window.location.hash = tab; // Update URL hash without reloading page
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="mx-auto"
+          >
+            <Database className="h-12 w-12 text-amethyst" />
+          </motion.div>
+          <p className="text-foreground/70">Memuat Dashboard Admin...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <PageTransition isAdmin={true}>
       <div className="min-h-screen bg-background relative overflow-hidden">
-        {/* Background effects */}
+        {/* Background effects with more color variety */}
         <div className="fixed inset-0 -z-10">
           <div className="absolute w-[60vw] h-[60vh] rounded-full bg-gradient-radial from-amethyst/5 via-amethyst/2 to-transparent -top-[25%] -right-[15%] filter blur-[120px]"></div>
           <div className="absolute w-[50vw] h-[50vh] rounded-full bg-gradient-radial from-emerald/5 via-emerald/2 to-transparent -bottom-[15%] -left-[15%] filter blur-[120px]"></div>
+          <div className="absolute w-[40vw] h-[40vh] rounded-full bg-gradient-radial from-coral/5 via-coral/2 to-transparent bottom-[20%] right-[10%] filter blur-[100px]"></div>
           
           {/* Subtle grid pattern */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
@@ -161,28 +174,28 @@ const OurAdmin = () => {
           >
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
               {!isMobile && (
-                <TabsList className="mb-6 glass-admin-tabs">
-                  <TabsTrigger value="dashboard" className="flex items-center gap-2">
-                    <AreaChart className="w-4 h-4" />
+                <TabsList className="mb-6 glass-admin-tabs flex space-x-1 border border-foreground/10 bg-foreground/5 backdrop-blur-md p-1 rounded-xl overflow-x-auto">
+                  <TabsTrigger value="dashboard" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amethyst/20 data-[state=active]:to-turquoise/20">
+                    <Activity className="w-4 h-4" />
                     <span>Dashboard</span>
                   </TabsTrigger>
-                  <TabsTrigger value="announcements" className="flex items-center gap-2">
+                  <TabsTrigger value="announcements" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber/20 data-[state=active]:to-coral/20">
                     <Bell className="w-4 h-4" />
                     <span>Pengumuman</span>
                   </TabsTrigger>
-                  <TabsTrigger value="content" className="flex items-center gap-2">
+                  <TabsTrigger value="content" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blueLight/20 data-[state=active]:to-turquoise/20">
                     <FileText className="w-4 h-4" />
                     <span>Konten</span>
                   </TabsTrigger>
-                  <TabsTrigger value="team" className="flex items-center gap-2">
+                  <TabsTrigger value="team" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald/20 data-[state=active]:to-amethyst/20">
                     <Users className="w-4 h-4" />
                     <span>Tim</span>
                   </TabsTrigger>
-                  <TabsTrigger value="karya" className="flex items-center gap-2">
+                  <TabsTrigger value="karya" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral/20 data-[state=active]:to-amber/20">
                     <Database className="w-4 h-4" />
                     <span>Karya</span>
                   </TabsTrigger>
-                  <TabsTrigger value="logs" className="flex items-center gap-2">
+                  <TabsTrigger value="logs" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-turquoise/20 data-[state=active]:to-blueLight/20">
                     <Activity className="w-4 h-4" />
                     <span>Logs</span>
                   </TabsTrigger>

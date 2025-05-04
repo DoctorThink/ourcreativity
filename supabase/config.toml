@@ -1,73 +1,75 @@
 
-# This file is used by Supabase CLI to manage resources
+# This is an example `config.toml` file
+# You can find more information about it in the [Supabase docs](https://supabase.io/docs/guides/functions/config)
 
-[project]
-# Project reference ID
-id = "nmjakogetnzrfluicvdh"
+project_id = "nmjakogetnzrfluicvdh"
 
 [api]
-# Port number for the API URL
 port = 54321
-# Schemas to expose in your API
-schemas = ["public", "storage", "auth"]
-# Extra schemas to add to the search_path of every request
+schemas = ["public", "storage", "graphql_public"]
 extra_search_path = ["public", "extensions"]
-# Max rows returns from a view, table, or stored procedure. Limits payload size for accidental or malicious requests.
 max_rows = 1000
 
 [db]
-# Port number for the database URL
-port = 5432
-# Database major version. Used to generate a matching Docker image.
+port = 54322
+shadow_port = 54320
 major_version = 15
 
 [studio]
-# Port number for Supabase Studio
 port = 54323
-# External URL of the API server that frontend connects to
-api_url = "http://localhost:54321"
 
-# Configures storage for the project
+[inbucket]
+port = 54324
+smtp_port = 54325
+pop3_port = 54326
+
 [storage]
-# The maximum file size allowed (e.g. "5MB", "500KB")
-file_size_limit = "5MB"
-
-[[storage.buckets]]
-name = "karya-images"
-public = true
-file_size_limit = "5MB"
+file_size_limit = "50MiB"
 
 [auth]
-# The base URL of your website. Used as an allow-list for redirects and for constructing URLs used in emails.
 site_url = "http://localhost:3000"
-# The JWT secret to use for the JWT token. If not set, a random secret is generated.
-jwt_secret = ""
-# Allow/disallow new user signups to your project.
+additional_redirect_urls = ["https://localhost:3000"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
 enable_signup = true
 
 [auth.email]
-# Allow/disallow new user signups via email to your project.
 enable_signup = true
-# If enabled, a user will be required to confirm any email change on both the old, and new email addresses. If disabled, only the new email is required to confirm.
-double_confirm_changes = true
-# If enabled, users need to confirm their email address before signing in.
+double_confirm_changes = false
 enable_confirmations = false
 
-# Use an external OAuth provider. The full list of providers are: "apple", "azure", "bitbucket", "discord", "facebook", "github", "gitlab", "google", "keycloak", "linkedin", "notion", "twitch", "twitter", "slack", "spotify", "workos", "zoom"
-[auth.external.apple]
+[auth.sms]
+enable_signup = true
+enable_confirmations = true
+
+[auth.external.github]
 enabled = false
 client_id = ""
 secret = ""
-# Overrides the default auth redirectUrl.
 redirect_uri = ""
-# Overrides the default auth provider URL. Used to support self-hosted gitlab, single-tenant Azure, or any other third-party OIDC providers.
 url = ""
+
+[auth.external.google]
+enabled = false
+client_id = ""
+secret = ""
+redirect_uri = ""
+url = ""
+
+[auth.external.facebook]
+enabled = false
+client_id = ""
+secret = ""
+redirect_uri = ""
+url = ""
+
+[analytics]
+enabled = false
+port = 54327
+vector_port = 54328
+backend = "postgres"
 
 # Enable realtime functionality
 [realtime]
 enabled = true
-
-# Configure which tables to sync for real-time updates
-[[realtime.tables]]
-schema = "public" 
-name = "karya"
