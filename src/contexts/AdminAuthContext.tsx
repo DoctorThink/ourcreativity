@@ -59,15 +59,11 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         
         // Log the login activity in Supabase
         try {
-          const { error } = await supabase.from('admin_activity_log').insert({
+          await supabase.from('admin_activity_log').insert({
             action: 'login',
             details: 'Admin login successful',
             ip_address: 'client-side'
           });
-          
-          if (error) {
-            console.error("Error logging admin activity:", error);
-          }
         } catch (logError) {
           console.error("Error logging admin activity:", logError);
         }
@@ -92,15 +88,11 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       sessionStorage.removeItem("adminAuth");
       
       // Log the logout activity in Supabase
-      const { error } = supabase.from('admin_activity_log').insert({
+      supabase.from('admin_activity_log').insert({
         action: 'logout',
         details: 'Admin logged out',
         ip_address: 'client-side'
       });
-      
-      if (error) {
-        console.error("Error logging admin logout:", error);
-      }
       
     } catch (error) {
       console.error("Logout error:", error);
