@@ -56,9 +56,9 @@ const BentoCard = ({
       transition={{ duration: 0.4 }}
       style={{ 
         boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-        ...(glowColor ? { '--card-glow-color': glowColor } as any : {})
+        ...(glowColor ? { '--card-glow-color': glowColor } as React.CSSProperties : {})
       }}
-      {...motionProps}
+      {...(motionProps || {})}
       {...props}
     >
       {/* Subtle inner shadow for depth */}

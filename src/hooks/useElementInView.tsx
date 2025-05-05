@@ -72,7 +72,7 @@ interface AnimateInViewProps {
   triggerOnce?: boolean;
   variants?: Variants;
   className?: string;
-  as?: React.ElementType;
+  as?: keyof JSX.IntrinsicElements; // Changed to better type for 'as' prop
   [key: string]: any;
 }
 
@@ -95,9 +95,9 @@ export const AnimateInView = ({
     triggerOnce,
   });
 
-  // Use type assertion to fix the type error
-  const MotionComponent = motion[as as keyof typeof motion] as any;
-
+  // Create motion component dynamically based on 'as' prop
+  const MotionComponent = motion[as as keyof typeof motion] || motion.div;
+  
   return (
     <MotionComponent
       ref={elementRef}

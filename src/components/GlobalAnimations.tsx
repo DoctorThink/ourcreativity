@@ -116,21 +116,22 @@ export const GlobalAnimations: React.FC = () => {
       <motion.div 
         className="absolute w-[80vw] h-[80vh] rounded-full -top-[15%] -right-[15%] filter blur-[120px]"
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 0.8, scale: 1 }}
-        transition={{ duration: 1 }}
-        style={{ 
-          background: getPrimaryGradient(),
-          willChange: "transform, opacity"
+        animate={{ 
+          opacity: 0.8, 
+          scale: 1,
+          y: prefersReducedMotion ? undefined : [0, -20, 0],
+          scale: prefersReducedMotion ? 1 : [1, 1.05, 1]
         }}
-        animate={prefersReducedMotion ? {} : {
-          y: [0, -20, 0],
-          scale: [1, 1.05, 1],
-        }}
-        transition={{
+        transition={{ 
+          duration: 1,
           repeat: Infinity,
           repeatType: "reverse",
           duration: 20,
           ease: "easeInOut"
+        }}
+        style={{ 
+          background: getPrimaryGradient(),
+          willChange: "transform, opacity"
         }}
       />
       
@@ -138,21 +139,23 @@ export const GlobalAnimations: React.FC = () => {
       <motion.div 
         className="absolute w-[70vw] h-[70vh] rounded-full -bottom-[15%] -left-[15%] filter blur-[150px]"
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 0.6, scale: 1 }}
-        transition={{ duration: 1, delay: 0.2 }}
-        style={{ 
-          background: getSecondaryGradient(),
-          willChange: "transform, opacity"
+        animate={{ 
+          opacity: 0.6, 
+          scale: 1,
+          y: prefersReducedMotion ? undefined : [0, 20, 0],
+          scale: prefersReducedMotion ? 1 : [1, 1.03, 1]
         }}
-        animate={prefersReducedMotion ? {} : {
-          y: [0, 20, 0],
-          scale: [1, 1.03, 1],
-        }}
-        transition={{
+        transition={{ 
+          duration: 1, 
+          delay: 0.2,
           repeat: Infinity,
           repeatType: "reverse",
           duration: 25,
           ease: "easeInOut"
+        }}
+        style={{ 
+          background: getSecondaryGradient(),
+          willChange: "transform, opacity"
         }}
       />
       
@@ -160,22 +163,24 @@ export const GlobalAnimations: React.FC = () => {
       <motion.div 
         className="absolute w-[60vw] h-[60vh] rounded-full -bottom-[5%] -right-[5%] filter blur-[130px]"
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 0.5, scale: 1 }}
-        transition={{ duration: 1, delay: 0.4 }}
-        style={{ 
-          background: getAccentGradient(),
-          willChange: "transform, opacity"
+        animate={{ 
+          opacity: 0.5, 
+          scale: 1,
+          y: prefersReducedMotion ? undefined : [0, 15, 0],
+          x: prefersReducedMotion ? undefined : [0, -15, 0],
+          scale: prefersReducedMotion ? 1 : [1, 1.02, 1]
         }}
-        animate={prefersReducedMotion ? {} : {
-          y: [0, 15, 0],
-          x: [0, -15, 0],
-          scale: [1, 1.02, 1],
-        }}
-        transition={{
+        transition={{ 
+          duration: 1, 
+          delay: 0.4,
           repeat: Infinity,
           repeatType: "reverse",
           duration: 30,
           ease: "easeInOut"
+        }}
+        style={{ 
+          background: getAccentGradient(),
+          willChange: "transform, opacity"
         }}
       />
       
@@ -183,19 +188,20 @@ export const GlobalAnimations: React.FC = () => {
       <motion.div 
         className="absolute w-[40vw] h-[40vh] rounded-full top-[10%] left-[15%] filter blur-[100px]"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.3 }}
-        transition={{ duration: 1, delay: 0.6 }}
-        style={{ background: `radial-gradient(circle at center, rgba(255, 209, 220, 0.08) 0%, transparent 70%)` }}
-        animate={prefersReducedMotion ? {} : {
-          x: [0, 20, 0],
-          y: [0, -10, 0],
+        animate={{ 
+          opacity: 0.3,
+          x: prefersReducedMotion ? undefined : [0, 20, 0],
+          y: prefersReducedMotion ? undefined : [0, -10, 0]
         }}
-        transition={{
+        transition={{ 
+          duration: 1, 
+          delay: 0.6,
           repeat: Infinity,
           repeatType: "reverse",
           duration: 35,
           ease: "easeInOut"
         }}
+        style={{ background: `radial-gradient(circle at center, rgba(255, 209, 220, 0.08) 0%, transparent 70%)` }}
       />
       
       {/* Subtle line accents */}

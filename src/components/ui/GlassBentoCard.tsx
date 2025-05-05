@@ -1,6 +1,6 @@
 
 import React, { ReactNode } from 'react';
-import { motion, MotionProps, Variants } from 'framer-motion'; // Fixed import
+import { motion, MotionProps, Variants } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
 import { AnimateInView } from '@/hooks/useElementInView';
@@ -21,7 +21,7 @@ interface GlassBentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   motionProps?: Omit<MotionProps, 'children' | 'className'>; // Fixed type
   animateWhenInView?: boolean;
   animationDelay?: number;
-  animationVariants?: Variants; // Fixed type
+  animationVariants?: Variants;
   backgroundGradient?: string;
   accentBorder?: boolean;
   featured?: boolean;
@@ -114,8 +114,9 @@ const GlassBentoCard = ({
           hoverAnimation={hoverAnimation}
           tapAnimation={tapAnimation}
           motionProps={motionProps}
-          children={children}
-        />
+        >
+          {children}
+        </CardContent>
       </AnimateInView>
     );
   }
@@ -131,9 +132,9 @@ const GlassBentoCard = ({
       transition={{ duration: 0.4, delay: animationDelay }}
       style={{ 
         boxShadow: featured ? "0 8px 32px rgba(0, 0, 0, 0.15)" : "0 8px 32px rgba(0, 0, 0, 0.1)",
-        ...(glowColor ? { '--card-glow-color': glowColor } as any : {})
+        ...(glowColor ? { '--card-glow-color': glowColor } as React.CSSProperties : {})
       }}
-      {...motionProps}
+      {...(motionProps || {})}
       {...props}
     >
       <CardContent 
@@ -144,8 +145,9 @@ const GlassBentoCard = ({
         iconSizeClass={iconSizeClass}
         glowColor={glowColor}
         interactive={interactive}
-        children={children}
-      />
+      >
+        {children}
+      </CardContent>
     </motion.div>
   );
 };
@@ -184,7 +186,7 @@ const CardContent = ({
       {interactive && (
         <motion.div 
           className="absolute inset-0 bg-shimmer-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-shimmer" 
-          {...motionProps}
+          {...(motionProps || {})}
         />
       )}
 
