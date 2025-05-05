@@ -126,9 +126,6 @@ export const GlobalAnimations: React.FC = () => {
           style={{ background: getAccentGradient() }}
         />
         
-        {/* Noise Overlay */}
-        <div className="absolute inset-0 noise-pattern opacity-[0.03] z-10" />
-        
         {/* Subtle grid overlay */}
         <div className="absolute inset-0 bg-grid-pattern opacity-[0.02] z-0" />
       </div>
@@ -144,8 +141,7 @@ export const GlobalAnimations: React.FC = () => {
         animate={{ 
           opacity: 0.8, 
           scale: 1,
-          y: prefersReducedMotion ? undefined : ANIMATION_CONFIGS.orb1.yMovement,
-          scale: prefersReducedMotion ? 1 : ANIMATION_CONFIGS.orb1.scaleChange
+          y: ANIMATION_CONFIGS.orb1.yMovement
         }}
         transition={{ 
           repeat: Infinity,
@@ -166,8 +162,7 @@ export const GlobalAnimations: React.FC = () => {
         animate={{ 
           opacity: 0.6, 
           scale: 1,
-          y: prefersReducedMotion ? undefined : ANIMATION_CONFIGS.orb2.yMovement,
-          scale: prefersReducedMotion ? 1 : ANIMATION_CONFIGS.orb2.scaleChange
+          y: ANIMATION_CONFIGS.orb2.yMovement
         }}
         transition={{ 
           delay: 0.2,
@@ -189,9 +184,8 @@ export const GlobalAnimations: React.FC = () => {
         animate={{ 
           opacity: 0.5, 
           scale: 1,
-          y: prefersReducedMotion ? undefined : ANIMATION_CONFIGS.orb3.yMovement,
-          x: prefersReducedMotion ? undefined : ANIMATION_CONFIGS.orb3.xMovement,
-          scale: prefersReducedMotion ? 1 : ANIMATION_CONFIGS.orb3.scaleChange
+          y: ANIMATION_CONFIGS.orb3.yMovement,
+          x: ANIMATION_CONFIGS.orb3.xMovement
         }}
         transition={{ 
           delay: 0.4,
@@ -212,8 +206,8 @@ export const GlobalAnimations: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ 
           opacity: 0.3,
-          x: prefersReducedMotion ? undefined : ANIMATION_CONFIGS.orb4.xMovement,
-          y: prefersReducedMotion ? undefined : ANIMATION_CONFIGS.orb4.yMovement
+          x: ANIMATION_CONFIGS.orb4.xMovement,
+          y: ANIMATION_CONFIGS.orb4.yMovement
         }}
         transition={{ 
           delay: 0.6,
@@ -235,9 +229,9 @@ export const GlobalAnimations: React.FC = () => {
           opacity: 0.15,
           willChange: "transform, opacity"
         }}
-        animate={prefersReducedMotion ? {} : {
+        animate={{
           x: [0, 20, 0],
-          opacity: [0.1, 0.15, 0.1],
+          opacity: [0.1, 0.15, 0.1]
         }}
         transition={{
           repeat: Infinity,
@@ -256,9 +250,9 @@ export const GlobalAnimations: React.FC = () => {
           opacity: 0.15,
           willChange: "transform, opacity"
         }}
-        animate={prefersReducedMotion ? {} : {
+        animate={{
           y: [0, 20, 0],
-          opacity: [0.1, 0.15, 0.1],
+          opacity: [0.1, 0.15, 0.1]
         }}
         transition={{
           repeat: Infinity,
@@ -271,11 +265,6 @@ export const GlobalAnimations: React.FC = () => {
       {/* Grid overlay with reduced opacity */}
       <div 
         className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"
-      />
-      
-      {/* Noise texture overlay */}
-      <div 
-        className="absolute inset-0 noise-pattern opacity-[0.03] mix-blend-overlay"
       />
       
       {/* Dynamic particles - reduced to improve performance */}

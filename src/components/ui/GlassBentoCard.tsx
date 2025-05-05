@@ -6,7 +6,7 @@ import { LucideIcon } from 'lucide-react';
 import { AnimateInView } from '@/hooks/useElementInView';
 
 // Define more specific props to avoid type conflicts
-interface GlassBentoCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onAnimationStart'> {
+interface GlassBentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   className?: string;
   colSpan?: string;
@@ -19,7 +19,7 @@ interface GlassBentoCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
   glowColor?: string;
   interactive?: boolean;
   hoverScale?: number;
-  motionProps?: MotionProps; // Use MotionProps directly
+  motionProps?: Omit<MotionProps, keyof React.HTMLAttributes<HTMLDivElement>>;
   animateWhenInView?: boolean;
   animationDelay?: number;
   animationVariants?: Variants;
@@ -85,14 +85,14 @@ const GlassBentoCard = ({
     className
   );
 
-  // Properly typed motion props
-  const motionConfig: MotionProps = {
+  // Configure motion props without triggering type conflicts
+  const motionConfig = {
     whileHover: hoverAnimation,
     whileTap: tapAnimation,
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.4, delay: animationDelay },
-    ...motionProps
+    ...(motionProps || {})
   };
 
   // Wrap component with AnimateInView if animateWhenInView is true
@@ -122,9 +122,6 @@ const GlassBentoCard = ({
           iconSizeClass={iconSizeClass}
           glowColor={glowColor}
           interactive={interactive}
-          hoverAnimation={hoverAnimation}
-          tapAnimation={tapAnimation}
-          motionProps={motionProps}
         >
           {children}
         </CardContent>
@@ -140,7 +137,7 @@ const GlassBentoCard = ({
       style={{ 
         boxShadow: featured ? "0 8px 32px rgba(0, 0, 0, 0.15)" : "0 8px 32px rgba(0, 0, 0, 0.1)",
         ...(glowColor ? { '--card-glow-color': glowColor } as React.CSSProperties : {}),
-        ...(motionProps?.style || {})
+        ...props.style
       }}
       {...props}
     >
@@ -168,9 +165,6 @@ interface CardContentProps {
   iconSizeClass: string;
   glowColor?: string;
   interactive: boolean;
-  hoverAnimation?: any;
-  tapAnimation?: any;
-  motionProps?: any;
   children: ReactNode;
 }
 
@@ -181,7 +175,6 @@ const CardContent = ({
   iconContainerClass,
   iconSizeClass,
   interactive,
-  motionProps,
   children 
 }: CardContentProps) => {
   return (

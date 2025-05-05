@@ -72,11 +72,11 @@ interface AnimateInViewProps {
   triggerOnce?: boolean;
   variants?: Variants;
   className?: string;
-  as?: keyof JSX.IntrinsicElements; 
+  as?: string;
   [key: string]: any;
 }
 
-export const AnimateInView = ({
+export const AnimateInView: React.FC<AnimateInViewProps> = ({
   children,
   threshold = 0.1,
   rootMargin = '0px',
@@ -95,22 +95,16 @@ export const AnimateInView = ({
     triggerOnce,
   });
 
-  // Use the correct Framer Motion component type
-  const MotionTag = motion[as as keyof typeof motion] || motion.div;
-
-  return (
-    <MotionTag
-      // Cast the ref to avoid TypeScript errors when using with different element types
-      ref={elementRef as any}
-      initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
-      variants={variants}
-      className={className}
-      {...props}
-    >
-      {children}
-    </MotionTag>
-  );
+  // Create the appropriate component using createElement instead of using motion[as]
+  return React.createElement(motion[as as keyof typeof motion] || motion.div, {
+    ref: elementRef,
+    initial: "hidden",
+    animate: isInView ? "visible" : "hidden",
+    variants,
+    className,
+    ...props,
+    children
+  });
 };
 
 export default useElementInView;

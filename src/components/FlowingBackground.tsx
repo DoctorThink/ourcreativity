@@ -202,7 +202,7 @@ const FlowingBackground: React.FC<FlowingBackgroundProps> = ({
             }}
             animate={shouldAnimate ? {
               x: [0, 20, 0],
-              opacity: [opacities.lines * 0.5, opacities.lines, opacities.lines * 0.5],
+              opacity: [opacities.lines * 0.5, opacities.lines, opacities.lines * 0.5]
             } : undefined}
             transition={shouldAnimate ? {
               repeat: Infinity,
@@ -222,7 +222,7 @@ const FlowingBackground: React.FC<FlowingBackgroundProps> = ({
             }}
             animate={shouldAnimate ? {
               y: [0, 20, 0],
-              opacity: [opacities.lines * 0.5, opacities.lines, opacities.lines * 0.5],
+              opacity: [opacities.lines * 0.5, opacities.lines, opacities.lines * 0.5]
             } : undefined}
             transition={shouldAnimate ? {
               repeat: Infinity,
@@ -240,11 +240,6 @@ const FlowingBackground: React.FC<FlowingBackgroundProps> = ({
         style={{
           opacity: opacities.lines * 0.5
         }}
-      />
-      
-      {/* Noise texture overlay - very subtle */}
-      <div 
-        className="absolute inset-0 noise-pattern opacity-[0.02] mix-blend-overlay"
       />
     </div>
   );

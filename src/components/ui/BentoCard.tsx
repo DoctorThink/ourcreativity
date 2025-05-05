@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
 
 // Define more specific props to avoid type conflicts
-interface BentoCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onAnimationStart'> {
+interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   className?: string;
   colSpan?: string;
@@ -16,7 +16,7 @@ interface BentoCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onA
   glowColor?: string;
   interactive?: boolean;
   hoverScale?: number;
-  motionProps?: MotionProps; // Use MotionProps directly
+  motionProps?: Omit<MotionProps, keyof React.HTMLAttributes<HTMLDivElement>>;
 }
 
 const BentoCard = ({
@@ -40,14 +40,14 @@ const BentoCard = ({
   
   const tapAnimation = interactive ? { scale: 0.98 } : {};
 
-  // Properly typed motion props
-  const motionConfig: MotionProps = {
+  // Separate HTML attributes and motion props to avoid conflicts
+  const motionConfig = {
     whileHover: hoverAnimation,
     whileTap: tapAnimation,
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.4 },
-    ...motionProps
+    ...(motionProps || {})
   };
 
   return (
@@ -64,7 +64,7 @@ const BentoCard = ({
       style={{ 
         boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
         ...(glowColor ? { '--card-glow-color': glowColor } as React.CSSProperties : {}),
-        ...(motionProps?.style || {})
+        ...props.style
       }}
       {...props}
     >
