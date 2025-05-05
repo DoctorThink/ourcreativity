@@ -3,6 +3,31 @@ import React, { useState, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
+// Define animation constants to avoid duplication
+const ANIMATION_CONFIGS = {
+  orb1: {
+    yMovement: [0, -20, 0],
+    scaleChange: [1, 1.05, 1],
+    duration: 20,
+  },
+  orb2: {
+    yMovement: [0, 20, 0],
+    scaleChange: [1, 1.03, 1],
+    duration: 25,
+  },
+  orb3: {
+    yMovement: [0, 15, 0],
+    xMovement: [0, -15, 0],
+    scaleChange: [1, 1.02, 1],
+    duration: 30,
+  },
+  orb4: {
+    xMovement: [0, 20, 0],
+    yMovement: [0, -10, 0],
+    duration: 35,
+  }
+};
+
 export const GlobalAnimations: React.FC = () => {
   const location = useLocation();
   const prefersReducedMotion = useReducedMotion();
@@ -119,14 +144,13 @@ export const GlobalAnimations: React.FC = () => {
         animate={{ 
           opacity: 0.8, 
           scale: 1,
-          y: prefersReducedMotion ? undefined : [0, -20, 0],
-          scale: prefersReducedMotion ? 1 : [1, 1.05, 1]
+          y: prefersReducedMotion ? undefined : ANIMATION_CONFIGS.orb1.yMovement,
+          scale: prefersReducedMotion ? 1 : ANIMATION_CONFIGS.orb1.scaleChange
         }}
         transition={{ 
-          duration: 1,
           repeat: Infinity,
           repeatType: "reverse",
-          duration: 20,
+          duration: ANIMATION_CONFIGS.orb1.duration,
           ease: "easeInOut"
         }}
         style={{ 
@@ -142,15 +166,14 @@ export const GlobalAnimations: React.FC = () => {
         animate={{ 
           opacity: 0.6, 
           scale: 1,
-          y: prefersReducedMotion ? undefined : [0, 20, 0],
-          scale: prefersReducedMotion ? 1 : [1, 1.03, 1]
+          y: prefersReducedMotion ? undefined : ANIMATION_CONFIGS.orb2.yMovement,
+          scale: prefersReducedMotion ? 1 : ANIMATION_CONFIGS.orb2.scaleChange
         }}
         transition={{ 
-          duration: 1, 
           delay: 0.2,
           repeat: Infinity,
           repeatType: "reverse",
-          duration: 25,
+          duration: ANIMATION_CONFIGS.orb2.duration,
           ease: "easeInOut"
         }}
         style={{ 
@@ -166,16 +189,15 @@ export const GlobalAnimations: React.FC = () => {
         animate={{ 
           opacity: 0.5, 
           scale: 1,
-          y: prefersReducedMotion ? undefined : [0, 15, 0],
-          x: prefersReducedMotion ? undefined : [0, -15, 0],
-          scale: prefersReducedMotion ? 1 : [1, 1.02, 1]
+          y: prefersReducedMotion ? undefined : ANIMATION_CONFIGS.orb3.yMovement,
+          x: prefersReducedMotion ? undefined : ANIMATION_CONFIGS.orb3.xMovement,
+          scale: prefersReducedMotion ? 1 : ANIMATION_CONFIGS.orb3.scaleChange
         }}
         transition={{ 
-          duration: 1, 
           delay: 0.4,
           repeat: Infinity,
           repeatType: "reverse",
-          duration: 30,
+          duration: ANIMATION_CONFIGS.orb3.duration,
           ease: "easeInOut"
         }}
         style={{ 
@@ -190,15 +212,14 @@ export const GlobalAnimations: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ 
           opacity: 0.3,
-          x: prefersReducedMotion ? undefined : [0, 20, 0],
-          y: prefersReducedMotion ? undefined : [0, -10, 0]
+          x: prefersReducedMotion ? undefined : ANIMATION_CONFIGS.orb4.xMovement,
+          y: prefersReducedMotion ? undefined : ANIMATION_CONFIGS.orb4.yMovement
         }}
         transition={{ 
-          duration: 1, 
           delay: 0.6,
           repeat: Infinity,
           repeatType: "reverse",
-          duration: 35,
+          duration: ANIMATION_CONFIGS.orb4.duration,
           ease: "easeInOut"
         }}
         style={{ background: `radial-gradient(circle at center, rgba(255, 209, 220, 0.08) 0%, transparent 70%)` }}
@@ -284,7 +305,11 @@ export const GlobalAnimations: React.FC = () => {
                 Math.random() * window.innerWidth + (Math.random() > 0.5 ? -80 : 80),
                 Math.random() * window.innerWidth
               ],
-              opacity: [Math.random() * 0.4 + 0.2, Math.random() * 0.6 + 0.3, Math.random() * 0.4 + 0.2]
+              opacity: [
+                Math.random() * 0.4 + 0.2, 
+                Math.random() * 0.6 + 0.3, 
+                Math.random() * 0.4 + 0.2
+              ]
             }}
             transition={{
               duration: 25 + Math.random() * 35,

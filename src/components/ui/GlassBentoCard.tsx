@@ -1,11 +1,12 @@
 
 import React, { ReactNode } from 'react';
-import { motion, MotionProps, Variants } from 'framer-motion';
+import { motion, type MotionProps, Variants } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
 import { AnimateInView } from '@/hooks/useElementInView';
 
-interface GlassBentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
+// Define more specific props to avoid type conflicts
+interface GlassBentoCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onAnimationStart'> {
   children: ReactNode;
   className?: string;
   colSpan?: string;
@@ -18,7 +19,7 @@ interface GlassBentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   glowColor?: string;
   interactive?: boolean;
   hoverScale?: number;
-  motionProps?: Omit<MotionProps, 'children' | 'className'>; // Fixed type
+  motionProps?: MotionProps; // Use MotionProps directly
   animateWhenInView?: boolean;
   animationDelay?: number;
   animationVariants?: Variants;
@@ -84,6 +85,16 @@ const GlassBentoCard = ({
     className
   );
 
+  // Properly typed motion props
+  const motionConfig: MotionProps = {
+    whileHover: hoverAnimation,
+    whileTap: tapAnimation,
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.4, delay: animationDelay },
+    ...motionProps
+  };
+
   // Wrap component with AnimateInView if animateWhenInView is true
   if (animateWhenInView) {
     return (
@@ -125,16 +136,12 @@ const GlassBentoCard = ({
   return (
     <motion.div
       className={baseStyles}
-      whileHover={hoverAnimation}
-      whileTap={tapAnimation}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: animationDelay }}
+      {...motionConfig}
       style={{ 
         boxShadow: featured ? "0 8px 32px rgba(0, 0, 0, 0.15)" : "0 8px 32px rgba(0, 0, 0, 0.1)",
-        ...(glowColor ? { '--card-glow-color': glowColor } as React.CSSProperties : {})
+        ...(glowColor ? { '--card-glow-color': glowColor } as React.CSSProperties : {}),
+        ...(motionProps?.style || {})
       }}
-      {...(motionProps || {})}
       {...props}
     >
       <CardContent 
@@ -184,9 +191,8 @@ const CardContent = ({
       
       {/* Enhanced shimmer on hover for interactive cards */}
       {interactive && (
-        <motion.div 
+        <div 
           className="absolute inset-0 bg-shimmer-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-shimmer" 
-          {...(motionProps || {})}
         />
       )}
 

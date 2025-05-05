@@ -72,7 +72,7 @@ interface AnimateInViewProps {
   triggerOnce?: boolean;
   variants?: Variants;
   className?: string;
-  as?: keyof JSX.IntrinsicElements; // Changed to better type for 'as' prop
+  as?: keyof JSX.IntrinsicElements; 
   [key: string]: any;
 }
 
@@ -95,12 +95,13 @@ export const AnimateInView = ({
     triggerOnce,
   });
 
-  // Create motion component dynamically based on 'as' prop
-  const MotionComponent = motion[as as keyof typeof motion] || motion.div;
-  
+  // Use the correct Framer Motion component type
+  const MotionTag = motion[as as keyof typeof motion] || motion.div;
+
   return (
-    <MotionComponent
-      ref={elementRef}
+    <MotionTag
+      // Cast the ref to avoid TypeScript errors when using with different element types
+      ref={elementRef as any}
       initial="hidden"
       animate={isInView ? 'visible' : 'hidden'}
       variants={variants}
@@ -108,7 +109,7 @@ export const AnimateInView = ({
       {...props}
     >
       {children}
-    </MotionComponent>
+    </MotionTag>
   );
 };
 

@@ -1,10 +1,11 @@
 
 import React, { ReactNode } from 'react';
-import { motion, MotionProps } from 'framer-motion';
+import { motion, type MotionProps } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
 
-interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
+// Define more specific props to avoid type conflicts
+interface BentoCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onAnimationStart'> {
   children: ReactNode;
   className?: string;
   colSpan?: string;
@@ -15,7 +16,7 @@ interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   glowColor?: string;
   interactive?: boolean;
   hoverScale?: number;
-  motionProps?: Omit<MotionProps, 'children' | 'className'>; // Fixed type
+  motionProps?: MotionProps; // Use MotionProps directly
 }
 
 const BentoCard = ({
@@ -39,6 +40,16 @@ const BentoCard = ({
   
   const tapAnimation = interactive ? { scale: 0.98 } : {};
 
+  // Properly typed motion props
+  const motionConfig: MotionProps = {
+    whileHover: hoverAnimation,
+    whileTap: tapAnimation,
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.4 },
+    ...motionProps
+  };
+
   return (
     <motion.div
       className={cn(
@@ -49,16 +60,12 @@ const BentoCard = ({
         interactive ? "cursor-pointer" : "",
         className
       )}
-      whileHover={hoverAnimation}
-      whileTap={tapAnimation}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
+      {...motionConfig}
       style={{ 
         boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-        ...(glowColor ? { '--card-glow-color': glowColor } as React.CSSProperties : {})
+        ...(glowColor ? { '--card-glow-color': glowColor } as React.CSSProperties : {}),
+        ...(motionProps?.style || {})
       }}
-      {...(motionProps || {})}
       {...props}
     >
       {/* Subtle inner shadow for depth */}
