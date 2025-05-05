@@ -11,7 +11,8 @@ import {
   Pencil, 
   AlertCircle, 
   CheckCircle2,
-  BookOpenCheck
+  BookOpenCheck,
+  LucideIcon
 } from "lucide-react";
 
 const Terms = () => {
@@ -197,7 +198,7 @@ const Terms = () => {
 // Terms Section component
 interface TermsSectionProps {
   title: string;
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  icon: LucideIcon;
   iconColor: string;
   glowColor: string;
   children: React.ReactNode;

@@ -1,6 +1,6 @@
 
 import React, { ReactNode } from 'react';
-import { motion, MotionProps, VariantProps } from 'framer-motion';
+import { motion, MotionProps, Variants } from 'framer-motion'; // Fixed import
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
 import { AnimateInView } from '@/hooks/useElementInView';
@@ -18,10 +18,10 @@ interface GlassBentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   glowColor?: string;
   interactive?: boolean;
   hoverScale?: number;
-  motionProps?: MotionProps;
+  motionProps?: Omit<MotionProps, 'children' | 'className'>; // Fixed type
   animateWhenInView?: boolean;
   animationDelay?: number;
-  animationVariants?: VariantProps<typeof motion.div>;
+  animationVariants?: Variants; // Fixed type
   backgroundGradient?: string;
   accentBorder?: boolean;
   featured?: boolean;
@@ -99,7 +99,7 @@ const GlassBentoCard = ({
               delay: animationDelay
             } 
           },
-          ...animationVariants
+          ...(animationVariants || {})
         }}
         {...props}
       >
@@ -151,19 +151,30 @@ const GlassBentoCard = ({
 };
 
 // Extracted card content component to avoid duplication
+interface CardContentProps {
+  Icon?: LucideIcon;
+  iconColor: string;
+  iconBackground: string;
+  iconContainerClass: string;
+  iconSizeClass: string;
+  glowColor?: string;
+  interactive: boolean;
+  hoverAnimation?: any;
+  tapAnimation?: any;
+  motionProps?: any;
+  children: ReactNode;
+}
+
 const CardContent = ({ 
   Icon, 
   iconColor,
   iconBackground,
   iconContainerClass,
   iconSizeClass,
-  glowColor,
   interactive,
-  hoverAnimation,
-  tapAnimation,
   motionProps,
   children 
-}: any) => {
+}: CardContentProps) => {
   return (
     <>
       {/* Subtle inner shadow for depth */}

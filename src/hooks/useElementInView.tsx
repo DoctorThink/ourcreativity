@@ -1,5 +1,6 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, ReactNode } from 'react';
+import { motion, Variants } from 'framer-motion';
 
 interface InViewOptions {
   threshold?: number;
@@ -7,7 +8,8 @@ interface InViewOptions {
   triggerOnce?: boolean;
 }
 
-export function useElementInView<T extends HTMLElement>({
+// Generic type parameter to make the hook work with different element types
+export function useElementInView<T extends HTMLElement = HTMLDivElement>({
   threshold = 0.1,
   rootMargin = '0px',
   triggerOnce = false,
@@ -63,15 +65,12 @@ export function useElementInView<T extends HTMLElement>({
 }
 
 // Helper component to animate elements when they come into view
-import { motion } from 'framer-motion';
-import React, { ReactNode } from 'react';
-
 interface AnimateInViewProps {
   children: ReactNode;
   threshold?: number;
   rootMargin?: string;
   triggerOnce?: boolean;
-  variants?: any;
+  variants?: Variants;
   className?: string;
   as?: React.ElementType;
   [key: string]: any;
@@ -96,10 +95,11 @@ export const AnimateInView = ({
     triggerOnce,
   });
 
-  const Component = motion[as as keyof typeof motion] || motion.div;
+  // Use type assertion to fix the type error
+  const MotionComponent = motion[as as keyof typeof motion] as any;
 
   return (
-    <Component
+    <MotionComponent
       ref={elementRef}
       initial="hidden"
       animate={isInView ? 'visible' : 'hidden'}
@@ -108,7 +108,7 @@ export const AnimateInView = ({
       {...props}
     >
       {children}
-    </Component>
+    </MotionComponent>
   );
 };
 

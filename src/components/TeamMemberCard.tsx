@@ -1,9 +1,9 @@
+
 // --- START OF FILE TeamMemberCard.tsx ---
 import React from "react";
 import { motion } from "framer-motion";
 import { Instagram } from "lucide-react";
 import { cn } from "@/lib/utils";
-import TeamMemberBio from "./TeamMemberBio";
 
 interface TeamMemberCardProps {
   name: string;
@@ -12,6 +12,7 @@ interface TeamMemberCardProps {
   accentColor?: string;
   bio?: string;
   achievements?: string[];
+  onClick?: () => void;
 }
 
 const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
@@ -20,7 +21,8 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
   instagram,
   accentColor,
   bio,
-  achievements
+  achievements,
+  onClick
 }) => {
     const getInitials = (name: string): string => {
       if (!name) return "?";
@@ -63,10 +65,12 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
                 damping: 15
               }
             }}
+            onClick={onClick}
             className={cn(
-                "flex flex-col gap-4 p-4 rounded-2xl border relative overflow-hidden", // Removed gpu-accelerated here
+                "flex flex-col gap-4 p-4 rounded-2xl border relative overflow-hidden", 
                 "bg-neutral-800/50 backdrop-blur-sm",
-                "border-neutral-700/60 hover:border-neutral-600 transition-colors duration-200"
+                "border-neutral-700/60 hover:border-neutral-600 transition-colors duration-200",
+                onClick ? "cursor-pointer" : ""
             )}
         >
              {/* Group main content and ensure it's above decorations */}
@@ -75,7 +79,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
                     {/* Circular Avatar */}
                     <motion.div
                         className={cn(
-                            "w-14 h-14 md:w-16 md:h-16 rounded-full border-2 flex-shrink-0 flex items-center justify-center relative overflow-hidden", // Removed gpu-accelerated
+                            "w-14 h-14 md:w-16 md:h-16 rounded-full border-2 flex-shrink-0 flex items-center justify-center relative overflow-hidden",
                             "bg-gradient-to-br from-neutral-700 to-neutral-800",
                             accent.avatarBorder
                         )}
@@ -108,25 +112,22 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
                     )}
                 </div>
 
-                {/* Bio dropdown component */}
+                {/* Bio preview if available */}
                 {(bio || (achievements && achievements.length > 0)) && (
-                    <TeamMemberBio
-                        bio={bio}
-                        achievements={achievements}
-                        accentColor={accentColor}
-                    />
+                    <div className="text-xs text-neutral-400 line-clamp-2">
+                        {bio ? bio.substring(0, 80) + (bio.length > 80 ? '...' : '') : 'Lihat prestasi'}
+                    </div>
                 )}
             </div>
 
-            {/* Decorative Elements - Ensure they are behind content (z-0) and non-interactive */}
+            {/* Decorative Elements */}
             <div className={cn(
-                "absolute bottom-0 right-0 w-12 h-12 border-l border-t rounded-tl-full opacity-20 pointer-events-none z-0", // Added pointer-events-none and z-0
+                "absolute bottom-0 right-0 w-12 h-12 border-l border-t rounded-tl-full opacity-20 pointer-events-none z-0",
                 accent.border
             )}></div>
 
-            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-foreground/5 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-opacity pointer-events-none z-0"></div> {/* Added pointer-events-none and z-0 */}
-            <div className="absolute inset-0 shadow-inner opacity-20 pointer-events-none z-0"></div> {/* Added pointer-events-none and z-0 */}
-            {/* Ensure community-node is also behind and non-interactive */}
+            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-foreground/5 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-opacity pointer-events-none z-0"></div>
+            <div className="absolute inset-0 shadow-inner opacity-20 pointer-events-none z-0"></div>
             <div className="absolute inset-0 community-node opacity-30 pointer-events-none z-0"></div> 
         </motion.div>
     );

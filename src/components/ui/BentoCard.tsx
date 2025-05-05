@@ -15,7 +15,7 @@ interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   glowColor?: string;
   interactive?: boolean;
   hoverScale?: number;
-  motionProps?: MotionProps;
+  motionProps?: Omit<MotionProps, 'children' | 'className'>; // Fixed type
 }
 
 const BentoCard = ({

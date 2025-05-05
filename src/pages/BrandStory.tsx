@@ -3,7 +3,9 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
 import BentoCard from "../components/ui/BentoCard";
-import { BookOpen, Quote, History, BarChart, Target } from "lucide-react";
+import BentoGrid from "../components/ui/BentoGrid";
+import { AnimateInView } from "@/hooks/useElementInView";
+import { BookOpen, Quote, History, BarChart, Target, Users, Award, Calendar } from "lucide-react";
 
 const BrandStory = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -12,23 +14,18 @@ const BrandStory = () => {
     offset: ["start start", "end end"],
   });
 
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, 100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.8, 0.6]);
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, 50]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.9, 0.8]);
 
   return (
     <PageLayout 
       title="Cerita Kami" 
       subtitle="Perjalanan kreativitas dan inspirasi di balik komunitas kami"
     >
-      <div ref={containerRef} className="relative z-10">
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          style={{ opacity }}
-        >
+      <div ref={containerRef} className="relative z-10 px-1">
+        {/* Main Content with Bento Grid */}
+        <BentoGrid cols={3} mdCols={2} smCols={1} gap="md" className="mb-12">
           {/* Main Story Card */}
           <BentoCard 
             colSpan="col-span-1 md:col-span-2" 
@@ -111,11 +108,13 @@ const BrandStory = () => {
               <StatItem value="4" label="Kategori Kreatif" />
             </ul>
           </BentoCard>
-
-          {/* Vision */}
+        </BentoGrid>
+        
+        {/* Additional Sections */}
+        <AnimateInView className="mb-12">
           <BentoCard 
             className="p-8"
-            colSpan="col-span-1 md:col-span-3"
+            colSpan="col-span-1 md:col-span-full"
             glowColor="rgba(155, 109, 255, 0.3)"
             icon={Target}
             iconColor="bg-amethyst text-background"
@@ -131,7 +130,69 @@ const BrandStory = () => {
               <VisionTag>Kolaborasi Internasional</VisionTag>
             </div>
           </BentoCard>
-        </motion.div>
+        </AnimateInView>
+        
+        {/* Key Values Section - Added new section */}
+        <BentoGrid cols={3} mdCols={3} smCols={1} gap="md" className="mb-12">
+          <AnimateInView>
+            <BentoCard 
+              className="p-6 min-h-[200px] flex flex-col items-center justify-center text-center"
+              glowColor="rgba(254, 198, 161, 0.2)"
+              icon={Users}
+              iconColor="bg-coral text-background"
+            >
+              <h3 className="text-lg font-medium mt-8 mb-2">Komunitas</h3>
+              <p className="text-foreground/70">Membangun hubungan yang kuat dan saling mendukung antar kreator</p>
+            </BentoCard>
+          </AnimateInView>
+          
+          <AnimateInView>
+            <BentoCard 
+              className="p-6 min-h-[200px] flex flex-col items-center justify-center text-center"
+              glowColor="rgba(152, 245, 225, 0.2)"
+              icon={Award}
+              iconColor="bg-turquoise text-background"
+            >
+              <h3 className="text-lg font-medium mt-8 mb-2">Kualitas</h3>
+              <p className="text-foreground/70">Mendorong standar tertinggi dalam setiap karya yang dihasilkan</p>
+            </BentoCard>
+          </AnimateInView>
+          
+          <AnimateInView>
+            <BentoCard 
+              className="p-6 min-h-[200px] flex flex-col items-center justify-center text-center"
+              glowColor="rgba(229, 222, 255, 0.2)"
+              icon={Calendar}
+              iconColor="bg-amethyst text-background"
+            >
+              <h3 className="text-lg font-medium mt-8 mb-2">Konsistensi</h3>
+              <p className="text-foreground/70">Berkomitmen untuk terus berkarya dan berkontribusi secara berkelanjutan</p>
+            </BentoCard>
+          </AnimateInView>
+        </BentoGrid>
+        
+        {/* Final CTA Section */}
+        <AnimateInView className="mt-16 mb-8">
+          <div className="text-center max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-serif mb-4">Menjadi Bagian dari Perjalanan Kami</h2>
+            <p className="text-foreground/80 mb-8">
+              Kami mengundang para kreator muda Indonesia untuk bergabung dan menjadi bagian dari komunitas kami. 
+              Bersama, kita akan menciptakan, menginspirasi, dan mengembangkan ekosistem kreativitas yang berkelanjutan.
+            </p>
+            <motion.div
+              className="inline-block"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <motion.button 
+                className="px-8 py-3 bg-amethyst rounded-full text-background font-medium"
+                whileHover={{ boxShadow: "0 0 15px rgba(155, 109, 255, 0.5)" }}
+              >
+                Bergabung Sekarang
+              </motion.button>
+            </motion.div>
+          </div>
+        </AnimateInView>
       </div>
     </PageLayout>
   );

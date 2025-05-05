@@ -1,11 +1,12 @@
-// --- START OF FILE TimKami.tsx (3) ---
+
+// --- START OF FILE TimKami.tsx ---
 // src/pages/TimKami.tsx
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
-import { TeamMemberCard } from "@/components/TeamMemberCard";
-import { TeamMemberBio } from "@/components/TeamMemberBio";
+import TeamMemberCard from "@/components/TeamMemberCard"; // Fixed import
+import TeamMemberBio from "@/components/TeamMemberBio"; // Fixed import
 import BentoCard from "@/components/ui/BentoCard";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Users, User, Video, PenTool, Monitor, MessageSquare } from "lucide-react";
@@ -292,22 +293,28 @@ const TimKami = () => {
         initial="hidden"
         animate="visible"
       >
-        {teamMembers.map((member) => (
-          <motion.div 
-            key={member.id} 
-            variants={memberVariants}
-          >
-            <TeamMemberCard
-              key={member.id}
-              member={member}
-              onClick={() => setSelectedMember(member)}
-            />
-          </motion.div>
-        ))}
+        {teamMembers
+          .filter(member => !activeCategory || member.category === activeCategory)
+          .map((member) => (
+            <motion.div 
+              key={member.id} 
+              variants={memberVariants}
+            >
+              <TeamMemberCard
+                name={member.name}
+                role={member.role}
+                instagram={member.instagram}
+                accentColor={member.accent}
+                bio={member.bio}
+                achievements={member.achievements}
+                onClick={() => setSelectedMember(member)}
+              />
+            </motion.div>
+          ))}
       </motion.div>
 
       {/* Empty state when no members match filter */}
-      {teamMembers.length === 0 && (
+      {teamMembers.filter(member => !activeCategory || member.category === activeCategory).length === 0 && (
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -320,7 +327,12 @@ const TimKami = () => {
       {/* Member bio dialog */}
       <Dialog open={!!selectedMember} onOpenChange={(open) => !open && setSelectedMember(null)}>
         <DialogContent className="bg-secondary/90 backdrop-blur-xl max-w-3xl p-0 border-white/10">
-          {selectedMember && <TeamMemberBio member={selectedMember} />}
+          {selectedMember && <TeamMemberBio 
+            bio={selectedMember.bio}
+            achievements={selectedMember.achievements}
+            accentColor={selectedMember.accent}
+            member={selectedMember}
+          />}
         </DialogContent>
       </Dialog>
     </PageLayout>
