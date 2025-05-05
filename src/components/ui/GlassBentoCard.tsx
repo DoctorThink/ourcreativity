@@ -6,7 +6,7 @@ import { LucideIcon } from 'lucide-react';
 import { AnimateInView } from '@/hooks/useElementInView';
 
 // Define more specific props to avoid type conflicts
-interface GlassBentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface GlassBentoCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, keyof MotionProps> {
   children: ReactNode;
   className?: string;
   colSpan?: string;
@@ -19,7 +19,7 @@ interface GlassBentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   glowColor?: string;
   interactive?: boolean;
   hoverScale?: number;
-  motionProps?: Omit<MotionProps, keyof React.HTMLAttributes<HTMLDivElement>>;
+  motionProps?: MotionProps;
   animateWhenInView?: boolean;
   animationDelay?: number;
   animationVariants?: Variants;
@@ -86,7 +86,7 @@ const GlassBentoCard = ({
   );
 
   // Configure motion props without triggering type conflicts
-  const motionConfig = {
+  const motionConfig: MotionProps = {
     whileHover: hoverAnimation,
     whileTap: tapAnimation,
     initial: { opacity: 0, y: 20 },

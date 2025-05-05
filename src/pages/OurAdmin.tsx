@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -24,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
+import AnnouncementManager from "@/components/admin/AnnouncementManager";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -172,7 +172,7 @@ const OurAdmin = () => {
             animate="visible"
             className="space-y-4 md:space-y-6"
           >
-            <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+            <Tabs defaultValue="dashboard" className="w-full">
               {!isMobile && (
                 <TabsList className="mb-6 glass-admin-tabs flex space-x-1 border border-foreground/10 bg-foreground/5 backdrop-blur-md p-1 rounded-xl overflow-x-auto">
                   <TabsTrigger value="dashboard" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amethyst/20 data-[state=active]:to-turquoise/20">
@@ -202,14 +202,9 @@ const OurAdmin = () => {
                 </TabsList>
               )}
               
-              <TabsContent value="dashboard">
+              <TabsContent value="dashboard" className="space-y-8">
                 <AdminDashboardStats />
-              </TabsContent>
-              
-              <TabsContent value="announcements">
-                <motion.div variants={itemVariants}>
-                  <AnnouncementEditor />
-                </motion.div>
+                <AdminActivityLog />
               </TabsContent>
               
               <TabsContent value="content">
@@ -224,14 +219,14 @@ const OurAdmin = () => {
                 </motion.div>
               </TabsContent>
               
+              <TabsContent value="announcements">
+                <AnnouncementManager />
+              </TabsContent>
+              
               <TabsContent value="karya">
                 <motion.div variants={itemVariants}>
                   <KaryaModeration />
                 </motion.div>
-              </TabsContent>
-              
-              <TabsContent value="logs">
-                <AdminActivityLog />
               </TabsContent>
             </Tabs>
           </motion.div>

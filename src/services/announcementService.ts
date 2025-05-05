@@ -203,9 +203,9 @@ export const fetchFeaturedAnnouncement = async (): Promise<Announcement | null> 
       .eq('important', true)
       .order('created_at', { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
-    if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows returned" error
+    if (error) {
       console.error('Error fetching featured announcement:', error);
       throw new Error(error.message);
     }

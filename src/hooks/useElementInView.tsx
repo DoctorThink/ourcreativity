@@ -72,11 +72,11 @@ interface AnimateInViewProps {
   triggerOnce?: boolean;
   variants?: Variants;
   className?: string;
-  as?: string;
+  as?: keyof typeof motion;
   [key: string]: any;
 }
 
-export const AnimateInView: React.FC<AnimateInViewProps> = ({
+export const AnimateInView = ({
   children,
   threshold = 0.1,
   rootMargin = '0px',
@@ -95,16 +95,20 @@ export const AnimateInView: React.FC<AnimateInViewProps> = ({
     triggerOnce,
   });
 
-  // Create the appropriate component using createElement instead of using motion[as]
-  return React.createElement(motion[as as keyof typeof motion] || motion.div, {
-    ref: elementRef,
-    initial: "hidden",
-    animate: isInView ? "visible" : "hidden",
-    variants,
-    className,
-    ...props,
-    children
-  });
+  const MotionComponent = motion[as];
+
+  return (
+    <MotionComponent
+      ref={elementRef}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={variants}
+      className={className}
+      {...props}
+    >
+      {children}
+    </MotionComponent>
+  );
 };
 
 export default useElementInView;

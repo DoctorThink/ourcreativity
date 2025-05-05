@@ -125,9 +125,6 @@ export const GlobalAnimations: React.FC = () => {
           className="absolute w-[60vw] h-[60vh] rounded-full -bottom-[5%] -right-[5%] opacity-50 filter blur-[130px]"
           style={{ background: getAccentGradient() }}
         />
-        
-        {/* Subtle grid overlay */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-[0.02] z-0" />
       </div>
     );
   }
@@ -261,54 +258,6 @@ export const GlobalAnimations: React.FC = () => {
           ease: "easeInOut"
         }}
       />
-      
-      {/* Grid overlay with reduced opacity */}
-      <div 
-        className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"
-      />
-      
-      {/* Dynamic particles - reduced to improve performance */}
-      <motion.div
-        className="absolute inset-0 overflow-hidden z-5"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.6 }}
-        transition={{ delay: 1, duration: 1.5 }}
-      >
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 rounded-full bg-foreground/5"
-            initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
-              opacity: Math.random() * 0.4 + 0.2
-            }}
-            animate={{
-              y: [
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight + (Math.random() > 0.5 ? -80 : 80),
-                Math.random() * window.innerHeight
-              ],
-              x: [
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth + (Math.random() > 0.5 ? -80 : 80),
-                Math.random() * window.innerWidth
-              ],
-              opacity: [
-                Math.random() * 0.4 + 0.2, 
-                Math.random() * 0.6 + 0.3, 
-                Math.random() * 0.4 + 0.2
-              ]
-            }}
-            transition={{
-              duration: 25 + Math.random() * 35,
-              repeat: Infinity,
-              repeatType: "reverse",
-              ease: "easeInOut"
-            }}
-          />
-        ))}
-      </motion.div>
     </div>
   );
 };
