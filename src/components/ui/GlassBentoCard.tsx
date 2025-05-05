@@ -1,208 +1,177 @@
 
-import React, { ReactNode } from 'react';
-import { motion, type MotionProps, Variants } from 'framer-motion';
+import React, { ReactNode, useRef, useState } from 'react';
+import { motion, MotionProps } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
-import { AnimateInView } from '@/hooks/useElementInView';
+import { useElementInView } from '@/hooks/useElementInView';
 
-// Define more specific props to avoid type conflicts
-interface GlassBentoCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, keyof MotionProps> {
+interface GlassBentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
-  className?: string;
-  colSpan?: string;
-  rowSpan?: string;
+  title?: string;
   icon?: LucideIcon;
   iconColor?: string;
-  iconBackground?: string;
-  iconSize?: 'sm' | 'md' | 'lg';
-  glassEffect?: boolean;
-  glowColor?: string;
   interactive?: boolean;
   hoverScale?: number;
+  colSpan?: string;
+  rowSpan?: string;
+  accentColor?: string;
+  hasShimmer?: boolean;
+  className?: string;
+  shineDuration?: number;
+  disabled?: boolean;
   motionProps?: MotionProps;
-  animateWhenInView?: boolean;
-  animationDelay?: number;
-  animationVariants?: Variants;
-  backgroundGradient?: string;
-  accentBorder?: boolean;
-  featured?: boolean;
 }
 
-const GlassBentoCard = ({
+const GlassBentoCard: React.FC<GlassBentoCardProps> = ({
   children,
-  className,
+  title,
+  icon: Icon,
+  iconColor = 'bg-amethyst/90',
+  interactive = true,
+  hoverScale = 1.02,
   colSpan = "col-span-1",
   rowSpan = "row-span-1",
-  icon: Icon,
-  iconColor = "text-foreground",
-  iconBackground = "bg-foreground/10", 
-  iconSize = 'md',
-  glassEffect = true,
-  glowColor,
-  interactive = true,
-  hoverScale = 1.03,
+  accentColor = "from-amethyst/20 to-transparent",
+  hasShimmer = true,
+  className = "",
+  shineDuration = 5,
+  disabled = false,
   motionProps,
-  animateWhenInView = false,
-  animationDelay = 0,
-  animationVariants,
-  backgroundGradient,
-  accentBorder = false,
-  featured = false,
   ...props
-}: GlassBentoCardProps) => {
-  // Configure animations
-  const hoverAnimation = interactive ? {
-    scale: hoverScale,
-    boxShadow: glowColor ? `0 0 25px ${glowColor}` : "0 10px 25px rgba(0, 0, 0, 0.2)"
-  } : {};
-  
-  const tapAnimation = interactive ? { scale: 0.98 } : {};
+}) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [hovered, setHovered] = useState(false);
+  const { elementRef, isInView } = useElementInView({ threshold: 0.2, triggerOnce: true });
 
-  // Determine icon size based on the iconSize prop
-  const iconSizeClass = {
-    sm: "w-4 h-4",
-    md: "w-5 h-5",
-    lg: "w-6 h-6"
-  }[iconSize];
-
-  // Determine icon container size based on iconSize
-  const iconContainerClass = {
-    sm: "p-1.5 rounded-lg",
-    md: "p-2 rounded-xl",
-    lg: "p-2.5 rounded-2xl"
-  }[iconSize];
-  
-  // Configure base styles
-  const baseStyles = cn(
-    colSpan,
-    rowSpan,
-    "rounded-3xl overflow-hidden relative border transition-all duration-300",
-    accentBorder ? "border-white/20" : "border-white/10",
-    featured ? "shadow-lg" : "shadow-md",
-    glassEffect ? "backdrop-blur-lg" : "",
-    backgroundGradient || (glassEffect ? "bg-secondary/80" : "bg-secondary"),
-    interactive ? "cursor-pointer" : "",
-    className
-  );
-
-  // Configure motion props without triggering type conflicts
-  const motionConfig: MotionProps = {
-    whileHover: hoverAnimation,
-    whileTap: tapAnimation,
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.4, delay: animationDelay },
-    ...(motionProps || {})
+  // Mouse move effect for glass card
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current || !interactive) return;
+    
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    
+    setPosition({ x, y });
   };
 
-  // Wrap component with AnimateInView if animateWhenInView is true
-  if (animateWhenInView) {
-    return (
-      <AnimateInView 
-        className={baseStyles}
-        variants={{
-          hidden: { opacity: 0, y: 20 },
-          visible: { 
-            opacity: 1, 
-            y: 0, 
-            transition: { 
-              duration: 0.6,
-              delay: animationDelay
-            } 
-          },
-          ...(animationVariants || {})
-        }}
-        {...props}
-      >
-        <CardContent 
-          Icon={Icon}
-          iconColor={iconColor}
-          iconBackground={iconBackground}
-          iconContainerClass={iconContainerClass}
-          iconSizeClass={iconSizeClass}
-          glowColor={glowColor}
-          interactive={interactive}
-        >
-          {children}
-        </CardContent>
-      </AnimateInView>
-    );
-  }
+  // Animation variants
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
 
-  // Regular motion component if not using animateWhenInView
+  const shineVariants = {
+    hidden: { opacity: 0, x: '-100%' },
+    visible: { 
+      opacity: hasShimmer ? [0, 1, 0] : 0, 
+      x: ['100%', '100%', '300%'],
+      transition: {
+        duration: shineDuration,
+        ease: "linear",
+        repeat: Infinity,
+        repeatDelay: 8
+      }
+    }
+  };
+
+  const cardStyles = {
+    filter: `drop-shadow(0 10px 20px rgba(0, 0, 0, 0.05))`,
+    transform: disabled ? 'none' : undefined,
+  };
+
+  const interactiveProps = !disabled && interactive ? {
+    whileHover: { 
+      scale: hoverScale,
+      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
+    },
+    whileTap: { scale: 0.98 },
+    onMouseMove: handleMouseMove,
+    onMouseEnter: () => setHovered(true),
+    onMouseLeave: () => setHovered(false),
+  } : {};
+  
   return (
     <motion.div
-      className={baseStyles}
-      {...motionConfig}
-      style={{ 
-        boxShadow: featured ? "0 8px 32px rgba(0, 0, 0, 0.15)" : "0 8px 32px rgba(0, 0, 0, 0.1)",
-        ...(glowColor ? { '--card-glow-color': glowColor } as React.CSSProperties : {}),
-        ...props.style
+      ref={(node) => {
+        // Combine refs
+        if (typeof elementRef === 'function') {
+          elementRef(node);
+        } else if (elementRef && 'current' in elementRef) {
+          (elementRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        }
+
+        if (cardRef.current !== node) {
+          cardRef.current = node;
+        }
       }}
+      className={cn(
+        colSpan,
+        rowSpan,
+        "rounded-3xl relative overflow-hidden",
+        "backdrop-blur-md bg-white/5 border border-white/10",
+        disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer",
+        className
+      )}
+      style={cardStyles as React.CSSProperties}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={cardVariants}
+      {...interactiveProps}
+      {...motionProps}
       {...props}
     >
-      <CardContent 
-        Icon={Icon}
-        iconColor={iconColor}
-        iconBackground={iconBackground}
-        iconContainerClass={iconContainerClass}
-        iconSizeClass={iconSizeClass}
-        glowColor={glowColor}
-        interactive={interactive}
-      >
+      {/* Moving gradient background effect */}
+      <div
+        className="absolute inset-0 opacity-20 bg-gradient-to-br"
+        style={{
+          '--gradient-position': `${position.x * 100}% ${position.y * 100}%`,
+          background: `radial-gradient(circle at var(--gradient-position), ${accentColor.split(' ')[0]} 0%, ${accentColor.split(' ')[1] || 'transparent'} 70%)`,
+          opacity: hovered ? 0.4 : 0.2,
+          transition: 'opacity 0.3s ease'
+        } as React.CSSProperties}
+      />
+
+      {/* Shimmer effect */}
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" 
+        style={{ width: '30%' }}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        variants={shineVariants}
+      />
+
+      {/* Border glow */}
+      {!disabled && hovered && (
+        <div className={`absolute inset-0 rounded-3xl border border-white/30 pointer-events-none`} />
+      )}
+
+      {/* Content wrapper */}
+      <div className="relative z-10 h-full">
+        {Icon && (
+          <div className="absolute top-4 left-4">
+            <div className={cn("p-3 rounded-full", iconColor)}>
+              <Icon className="w-4 h-4 text-white" />
+            </div>
+          </div>
+        )}
+        
+        {title && (
+          <div className="px-6 pt-16 pb-2">
+            <h3 className="text-lg font-medium text-white">{title}</h3>
+          </div>
+        )}
+        
         {children}
-      </CardContent>
+      </div>
     </motion.div>
-  );
-};
-
-// Extracted card content component to avoid duplication
-interface CardContentProps {
-  Icon?: LucideIcon;
-  iconColor: string;
-  iconBackground: string;
-  iconContainerClass: string;
-  iconSizeClass: string;
-  glowColor?: string;
-  interactive: boolean;
-  children: ReactNode;
-}
-
-const CardContent = ({ 
-  Icon, 
-  iconColor,
-  iconBackground,
-  iconContainerClass,
-  iconSizeClass,
-  interactive,
-  children 
-}: CardContentProps) => {
-  return (
-    <>
-      {/* Subtle inner shadow for depth */}
-      <div className="absolute inset-0 rounded-3xl shadow-inner-subtle pointer-events-none" />
-      
-      {/* Enhanced shimmer on hover for interactive cards */}
-      {interactive && (
-        <div 
-          className="absolute inset-0 bg-shimmer-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-shimmer" 
-        />
-      )}
-
-      {Icon && (
-        <div className="absolute top-4 left-4 z-10">
-          <motion.div 
-            className={cn("transition-all duration-300", iconContainerClass, iconBackground)}
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <Icon className={cn(iconSizeClass, iconColor)} />
-          </motion.div>
-        </div>
-      )}
-
-      {children}
-    </>
   );
 };
 

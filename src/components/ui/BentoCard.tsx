@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
 
 // Define more specific props to avoid type conflicts
-interface BentoCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, keyof MotionProps> {
+interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   className?: string;
   colSpan?: string;
@@ -50,6 +50,11 @@ const BentoCard = ({
     ...(motionProps || {})
   };
 
+  const cardStyle: React.CSSProperties = { 
+    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
+    ...(glowColor ? { '--card-glow-color': glowColor } as React.CSSProperties : {}),
+  };
+
   return (
     <motion.div
       className={cn(
@@ -61,11 +66,7 @@ const BentoCard = ({
         className
       )}
       {...motionConfig}
-      style={{ 
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-        ...(glowColor ? { '--card-glow-color': glowColor } as React.CSSProperties : {}),
-        ...props.style
-      }}
+      style={cardStyle}
       {...props}
     >
       {/* Subtle inner shadow for depth */}

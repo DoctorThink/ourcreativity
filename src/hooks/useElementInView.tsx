@@ -72,7 +72,7 @@ interface AnimateInViewProps {
   triggerOnce?: boolean;
   variants?: Variants;
   className?: string;
-  as?: keyof typeof motion;
+  as?: keyof JSX.IntrinsicElements;
   [key: string]: any;
 }
 
@@ -95,7 +95,8 @@ export const AnimateInView = ({
     triggerOnce,
   });
 
-  const MotionComponent = motion[as];
+  // Create the appropriate motion component based on the "as" prop
+  const MotionComponent = motion[as as keyof typeof motion] || motion.div;
 
   return (
     <MotionComponent

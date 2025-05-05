@@ -152,7 +152,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           </div>
         </div>
         
-        <div className="flex justify-between items-center pt-2">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-2 gap-4">
           <div className="flex items-center space-x-2">
             <Switch 
               id="published" 
@@ -177,7 +177,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
         </div>
       </div>
       
-      <DialogFooter>
+      <DialogFooter className="flex-col sm:flex-row gap-2">
         <Button variant="outline" type="button" onClick={onCancel}>
           Batal
         </Button>
@@ -207,6 +207,7 @@ const AnnouncementManager: React.FC = () => {
     setIsLoading(true);
     try {
       const data = await fetchAnnouncements('all', false);
+      console.log("Loaded announcements:", data);
       setAnnouncements(data);
     } catch (error) {
       console.error('Error loading announcements:', error);
@@ -241,11 +242,13 @@ const AnnouncementManager: React.FC = () => {
     setIsSubmitting(true);
     try {
       await deleteAnnouncement(selectedAnnouncement.id);
+      toast.success('Pengumuman berhasil dihapus');
       await loadAnnouncements();
       setIsDeleteDialogOpen(false);
       setSelectedAnnouncement(null);
     } catch (error) {
       console.error('Error deleting announcement:', error);
+      toast.error('Gagal menghapus pengumuman');
     } finally {
       setIsSubmitting(false);
     }
@@ -253,10 +256,12 @@ const AnnouncementManager: React.FC = () => {
 
   const handleTogglePublish = async (announcement: Announcement) => {
     try {
+      console.log("Toggling publish status for:", announcement.id, "Current status:", announcement.published);
       await toggleAnnouncementPublishStatus(announcement.id, announcement.published);
       await loadAnnouncements();
     } catch (error) {
       console.error('Error toggling publish status:', error);
+      toast.error('Gagal mengubah status publikasi');
     }
   };
 
@@ -266,6 +271,7 @@ const AnnouncementManager: React.FC = () => {
       await loadAnnouncements();
     } catch (error) {
       console.error('Error toggling important status:', error);
+      toast.error('Gagal mengubah status penting');
     }
   };
 
@@ -274,8 +280,10 @@ const AnnouncementManager: React.FC = () => {
     try {
       if (selectedAnnouncement) {
         await updateAnnouncement(selectedAnnouncement.id, formData);
+        toast.success('Pengumuman berhasil diperbarui');
       } else {
         await createAnnouncement(formData);
+        toast.success('Pengumuman berhasil dibuat');
       }
       
       await loadAnnouncements();
@@ -283,6 +291,7 @@ const AnnouncementManager: React.FC = () => {
       setSelectedAnnouncement(null);
     } catch (error) {
       console.error('Error saving announcement:', error);
+      toast.error('Gagal menyimpan pengumuman');
     } finally {
       setIsSubmitting(false);
     }
@@ -316,7 +325,7 @@ const AnnouncementManager: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
         <h2 className="text-2xl font-semibold">Pengumuman</h2>
         <Button onClick={handleCreateUpdate}>
           <Plus className="mr-2 h-4 w-4" />
@@ -325,7 +334,7 @@ const AnnouncementManager: React.FC = () => {
       </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="mb-4">
+        <TabsList className="mb-4 overflow-x-auto flex w-full sm:w-auto">
           <TabsTrigger value="all">Semua</TabsTrigger>
           <TabsTrigger value="published">Dipublikasi</TabsTrigger>
           <TabsTrigger value="draft">Draft</TabsTrigger>
@@ -354,7 +363,7 @@ const AnnouncementManager: React.FC = () => {
                   >
                     <Card>
                       <CardHeader className="pb-2">
-                        <div className="flex justify-between items-start">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-0">
                           <div className="space-y-1">
                             <CardTitle>{announcement.title}</CardTitle>
                             <CardDescription className="flex items-center gap-2">
@@ -364,7 +373,7 @@ const AnnouncementManager: React.FC = () => {
                                 format(new Date(announcement.created_at), "dd MMM yyyy")}
                             </CardDescription>
                           </div>
-                          <div className="flex space-x-2">
+                          <div className="flex flex-wrap gap-2">
                             <Badge className={getCategoryColor(announcement.category)}>
                               {getCategoryLabel(announcement.category)}
                             </Badge>
@@ -385,7 +394,7 @@ const AnnouncementManager: React.FC = () => {
                           </div>
                         )}
                       </CardContent>
-                      <CardFooter className="pt-2 flex justify-between">
+                      <CardFooter className="pt-2 flex flex-col sm:flex-row sm:justify-between gap-2">
                         <div className="flex items-center text-xs text-muted-foreground">
                           {announcement.published ? 'Dipublikasikan' : 'Draft'}
                         </div>
@@ -435,7 +444,7 @@ const AnnouncementManager: React.FC = () => {
       
       {/* Create/Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {selectedAnnouncement ? 'Edit Pengumuman' : 'Buat Pengumuman Baru'}
@@ -465,7 +474,7 @@ const AnnouncementManager: React.FC = () => {
               Tindakan ini tidak dapat dibatalkan.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
               Batal
             </Button>
