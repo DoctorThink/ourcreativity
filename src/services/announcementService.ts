@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Announcement, AnnouncementFormData } from "@/models/Announcement";
 import { toast } from "sonner";
@@ -28,6 +27,9 @@ export const fetchAnnouncements = async (
       throw new Error(error.message);
     }
 
+    // Debug log untuk memastikan data terambil
+    console.log('Fetched announcements:', data);
+
     return data as Announcement[];
   } catch (error: any) {
     console.error('Error in fetchAnnouncements:', error);
@@ -52,6 +54,33 @@ export const fetchAnnouncementById = async (id: string): Promise<Announcement | 
   } catch (error: any) {
     console.error('Error in fetchAnnouncementById:', error);
     throw error;
+  }
+};
+
+export const fetchFeaturedAnnouncement = async (): Promise<Announcement | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('announcements')
+      .select('*')
+      .eq('published', true)
+      .eq('important', true)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching featured announcement:', error);
+      throw new Error(error.message);
+    }
+
+    // Debug log untuk memastikan featured announcement terambil
+    console.log('Fetched featured announcement:', data);
+
+    return data as Announcement || null;
+  } catch (error: any) {
+    console.error('Error in fetchFeaturedAnnouncement:', error);
+    // Don't throw here, just return null to handle gracefully
+    return null;
   }
 };
 
@@ -191,29 +220,5 @@ export const toggleAnnouncementImportantStatus = async (id: string, currentStatu
     console.error('Error in toggleAnnouncementImportantStatus:', error);
     toast.error("Gagal mengubah status penting pengumuman");
     throw error;
-  }
-};
-
-export const fetchFeaturedAnnouncement = async (): Promise<Announcement | null> => {
-  try {
-    const { data, error } = await supabase
-      .from('announcements')
-      .select('*')
-      .eq('published', true)
-      .eq('important', true)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (error) {
-      console.error('Error fetching featured announcement:', error);
-      throw new Error(error.message);
-    }
-
-    return data as Announcement || null;
-  } catch (error: any) {
-    console.error('Error in fetchFeaturedAnnouncement:', error);
-    // Don't throw here, just return null to handle gracefully
-    return null;
   }
 };

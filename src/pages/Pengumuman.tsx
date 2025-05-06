@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -32,12 +31,16 @@ const Pengumuman = () => {
     const loadData = async () => {
       setIsLoading(true);
       try {
+        console.log('Loading featured announcement and all announcements...');
+        
         // Fetch featured announcement
         const featured = await fetchFeaturedAnnouncement();
+        console.log('Featured announcement result:', featured);
         setFeaturedAnnouncement(featured);
         
         // Fetch all announcements
         const allAnnouncements = await fetchAnnouncements();
+        console.log('All announcements result:', allAnnouncements);
         setAnnouncements(allAnnouncements);
       } catch (error) {
         console.error("Error loading announcements:", error);
@@ -53,7 +56,9 @@ const Pengumuman = () => {
     const loadFilteredAnnouncements = async () => {
       setIsLoading(true);
       try {
+        console.log(`Loading filtered announcements for category: ${filter}`);
         const data = await fetchAnnouncements(filter === 'all' ? 'all' : filter);
+        console.log('Filtered announcements result:', data);
         setAnnouncements(data);
       } catch (error) {
         console.error("Error loading filtered announcements:", error);
@@ -222,18 +227,36 @@ const Pengumuman = () => {
             animate="visible"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {filteredAnnouncements.map((announcement) => (
-              <motion.div key={announcement.id} variants={cardVariants}>
-                <AnnouncementCard 
-                  announcement={announcement}
-                  onClick={() => setSelectedAnnouncement(announcement)}
-                />
+            {filteredAnnouncements.length > 0 ? (
+              filteredAnnouncements.map((announcement) => (
+                <motion.div key={announcement.id} variants={cardVariants}>
+                  <AnnouncementCard 
+                    announcement={announcement}
+                    onClick={() => setSelectedAnnouncement(announcement)}
+                  />
+                </motion.div>
+              ))
+            ) : (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="col-span-full text-center py-16"
+              >
+                <Bell className="w-12 h-12 text-foreground/30 mx-auto mb-4" />
+                <p className="text-foreground/60 text-lg">Belum ada pengumuman untuk kategori ini</p>
+                <Button 
+                  variant="outline" 
+                  className="mt-4 bg-foreground/5 border-foreground/10"
+                  onClick={() => setFilter('all')}
+                >
+                  Lihat semua pengumuman
+                </Button>
               </motion.div>
-            ))}
+            )}
           </motion.div>
 
           {/* Empty state when no announcements match filter */}
-          {filteredAnnouncements.length === 0 && (
+          {filteredAnnouncements.length === 0 && !isLoading && (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
