@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
 import { useElementInView } from '@/hooks/useElementInView';
 
-interface GlassBentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface GlassBentoCardProps {
   children: ReactNode;
   title?: string;
   icon?: LucideIcon;
@@ -20,6 +20,7 @@ interface GlassBentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   shineDuration?: number;
   disabled?: boolean;
   motionProps?: MotionProps;
+  style?: React.CSSProperties;
 }
 
 const GlassBentoCard: React.FC<GlassBentoCardProps> = ({
@@ -37,7 +38,7 @@ const GlassBentoCard: React.FC<GlassBentoCardProps> = ({
   shineDuration = 5,
   disabled = false,
   motionProps,
-  ...props
+  style,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -82,33 +83,46 @@ const GlassBentoCard: React.FC<GlassBentoCardProps> = ({
     }
   };
 
-  const cardStyles = {
+  // Create merged styles object
+  const cardStyles: React.CSSProperties = {
     filter: `drop-shadow(0 10px 20px rgba(0, 0, 0, 0.05))`,
     transform: disabled ? 'none' : undefined,
+    ...style
   };
 
-  const interactiveProps = !disabled && interactive ? {
+  // Properly separate motion props from event handlers
+  const interactiveMotionProps: MotionProps = !disabled && interactive ? {
     whileHover: { 
       scale: hoverScale,
       boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
     },
     whileTap: { scale: 0.98 },
+  } : {};
+  
+  // Create HTML event handlers separately from motion props
+  const interactiveEventHandlers = !disabled && interactive ? {
     onMouseMove: handleMouseMove,
     onMouseEnter: () => setHovered(true),
     onMouseLeave: () => setHovered(false),
   } : {};
   
+  // Combine motion props
+  const combinedMotionProps: MotionProps = {
+    ...interactiveMotionProps,
+    ...motionProps,
+    initial: "hidden",
+    animate: isInView ? "visible" : "hidden",
+    variants: cardVariants,
+  };
+
   return (
     <motion.div
       ref={(node) => {
-        // Combine refs
-        if (typeof elementRef === 'function') {
-          elementRef(node);
-        } else if (elementRef && 'current' in elementRef) {
-          (elementRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-        }
-
-        if (cardRef.current !== node) {
+        // Safely combine refs
+        if (node !== null) {
+          if (typeof elementRef === 'function') {
+            elementRef(node);
+          }
           cardRef.current = node;
         }
       }}
@@ -120,13 +134,9 @@ const GlassBentoCard: React.FC<GlassBentoCardProps> = ({
         disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer",
         className
       )}
-      style={cardStyles as React.CSSProperties}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={cardVariants}
-      {...interactiveProps}
-      {...motionProps}
-      {...props}
+      style={cardStyles}
+      {...combinedMotionProps}
+      {...interactiveEventHandlers}
     >
       {/* Moving gradient background effect */}
       <div

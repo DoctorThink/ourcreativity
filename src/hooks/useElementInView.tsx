@@ -15,7 +15,7 @@ export function useElementInView<T extends HTMLElement = HTMLDivElement>({
   triggerOnce = false,
 }: InViewOptions = {}) {
   const [isInView, setIsInView] = useState(false);
-  const elementRef = useRef<T>(null);
+  const elementRef = useRef<T | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const hasTriggered = useRef(false);
 

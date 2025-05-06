@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
 
 // Define more specific props to avoid type conflicts
-interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface BentoCardProps {
   children: ReactNode;
   className?: string;
   colSpan?: string;
@@ -17,6 +17,7 @@ interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   interactive?: boolean;
   hoverScale?: number;
   motionProps?: MotionProps;
+  style?: React.CSSProperties;
 }
 
 const BentoCard = ({
@@ -31,8 +32,10 @@ const BentoCard = ({
   interactive = true,
   hoverScale = 1.03,
   motionProps,
+  style,
   ...props
 }: BentoCardProps) => {
+  // Define animation configurations separately from the JSX
   const hoverAnimation = interactive ? {
     scale: hoverScale,
     boxShadow: glowColor ? `0 0 25px ${glowColor}` : "0 10px 25px rgba(0, 0, 0, 0.2)"
@@ -40,7 +43,7 @@ const BentoCard = ({
   
   const tapAnimation = interactive ? { scale: 0.98 } : {};
 
-  // Separate HTML attributes and motion props to avoid conflicts
+  // Separate motion props
   const motionConfig: MotionProps = {
     whileHover: hoverAnimation,
     whileTap: tapAnimation,
@@ -50,9 +53,11 @@ const BentoCard = ({
     ...(motionProps || {})
   };
 
-  const cardStyle: React.CSSProperties = { 
+  // Merge the custom style with our calculated styles
+  const mergedStyles: React.CSSProperties = { 
     boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
     ...(glowColor ? { '--card-glow-color': glowColor } as React.CSSProperties : {}),
+    ...style
   };
 
   return (
@@ -65,9 +70,8 @@ const BentoCard = ({
         interactive ? "cursor-pointer" : "",
         className
       )}
+      style={mergedStyles}
       {...motionConfig}
-      style={cardStyle}
-      {...props}
     >
       {/* Subtle inner shadow for depth */}
       <div className="absolute inset-0 rounded-3xl shadow-inner-subtle pointer-events-none" />
