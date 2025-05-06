@@ -19,6 +19,11 @@ export function useElementInView<T extends HTMLElement = HTMLDivElement>({
   const observerRef = useRef<IntersectionObserver | null>(null);
   const hasTriggered = useRef(false);
 
+  // Create a proper callback ref that can be passed to elements
+  const refCallback = (node: T | null) => {
+    elementRef.current = node;
+  };
+
   useEffect(() => {
     const element = elementRef.current;
     
@@ -61,7 +66,7 @@ export function useElementInView<T extends HTMLElement = HTMLDivElement>({
     };
   }, [threshold, rootMargin, triggerOnce]);
 
-  return { elementRef, isInView };
+  return { elementRef: refCallback, isInView };
 }
 
 // Helper component to animate elements when they come into view

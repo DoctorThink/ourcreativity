@@ -21,6 +21,7 @@ interface GlassBentoCardProps {
   disabled?: boolean;
   motionProps?: MotionProps;
   style?: React.CSSProperties;
+  onClick?: () => void; // Add onClick prop to interface
 }
 
 const GlassBentoCard: React.FC<GlassBentoCardProps> = ({
@@ -39,6 +40,7 @@ const GlassBentoCard: React.FC<GlassBentoCardProps> = ({
   disabled = false,
   motionProps,
   style,
+  onClick, // Add onClick to props
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -54,6 +56,13 @@ const GlassBentoCard: React.FC<GlassBentoCardProps> = ({
     const y = (e.clientY - rect.top) / rect.height;
     
     setPosition({ x, y });
+  };
+  
+  // Handle click for interactive cards
+  const handleClick = () => {
+    if (!disabled && interactive && onClick) {
+      onClick();
+    }
   };
 
   // Animation variants
@@ -115,17 +124,23 @@ const GlassBentoCard: React.FC<GlassBentoCardProps> = ({
     variants: cardVariants,
   };
 
+  // Function to handle ref assignment
+  const assignRef = (node: HTMLDivElement | null) => {
+    // Handle the elementRef if it exists
+    if (node !== null) {
+      // Only call elementRef if it's a function
+      if (typeof elementRef === 'function') {
+        elementRef(node);
+      }
+      
+      // Always update our local cardRef
+      cardRef.current = node;
+    }
+  };
+
   return (
     <motion.div
-      ref={(node) => {
-        // Safely combine refs
-        if (node !== null) {
-          if (typeof elementRef === 'function') {
-            elementRef(node);
-          }
-          cardRef.current = node;
-        }
-      }}
+      ref={assignRef}
       className={cn(
         colSpan,
         rowSpan,
@@ -135,6 +150,7 @@ const GlassBentoCard: React.FC<GlassBentoCardProps> = ({
         className
       )}
       style={cardStyles}
+      onClick={handleClick} // Add the click handler
       {...combinedMotionProps}
       {...interactiveEventHandlers}
     >

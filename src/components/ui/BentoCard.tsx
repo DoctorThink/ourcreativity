@@ -18,6 +18,7 @@ interface BentoCardProps {
   hoverScale?: number;
   motionProps?: MotionProps;
   style?: React.CSSProperties;
+  onClick?: () => void; // Add onClick handler to props
 }
 
 const BentoCard = ({
@@ -33,6 +34,7 @@ const BentoCard = ({
   hoverScale = 1.03,
   motionProps,
   style,
+  onClick, // Add onClick to destructured props
   ...props
 }: BentoCardProps) => {
   // Define animation configurations separately from the JSX
@@ -53,6 +55,13 @@ const BentoCard = ({
     ...(motionProps || {})
   };
 
+  // Handle the onClick function for interactive cards
+  const handleClick = () => {
+    if (interactive && onClick) {
+      onClick();
+    }
+  };
+
   // Merge the custom style with our calculated styles
   const mergedStyles: React.CSSProperties = { 
     boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
@@ -71,6 +80,7 @@ const BentoCard = ({
         className
       )}
       style={mergedStyles}
+      onClick={handleClick} // Add onClick handler
       {...motionConfig}
     >
       {/* Subtle inner shadow for depth */}
