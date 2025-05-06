@@ -40,10 +40,11 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Pencil, Trash, Eye, EyeOff, Star, StarOff, Plus, Calendar, Link } from "lucide-react";
+import { Loader2, Pencil, Trash, Eye, EyeOff, Star, StarOff, Plus, Calendar, Link, AlertCircle } from "lucide-react";
 import { format } from 'date-fns';
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface AnnouncementFormProps {
   announcement?: Announcement;
@@ -65,29 +66,67 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
   const [important, setImportant] = useState(announcement?.important || false);
   const [imageUrl, setImageUrl] = useState(announcement?.image_url || '');
   const [linkUrl, setLinkUrl] = useState(announcement?.link_url || '');
+  const [formError, setFormError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !content) {
-      toast.error("Judul dan konten harus diisi");
+    setFormError(null);
+    
+    // Form validation
+    if (!title.trim()) {
+      setFormError("Judul pengumuman tidak boleh kosong");
+      return;
+    }
+    
+    if (!content.trim()) {
+      setFormError("Konten pengumuman tidak boleh kosong");
+      return;
+    }
+
+    // Validate URLs if provided
+    if (imageUrl && !isValidUrl(imageUrl)) {
+      setFormError("URL gambar tidak valid");
+      return;
+    }
+    
+    if (linkUrl && !isValidUrl(linkUrl)) {
+      setFormError("URL tautan tidak valid");
       return;
     }
 
     const formData: AnnouncementFormData = {
-      title,
-      content,
+      title: title.trim(),
+      content: content.trim(),
       category,
       published,
       important,
-      image_url: imageUrl || undefined,
-      link_url: linkUrl || undefined,
+      image_url: imageUrl.trim() || undefined,
+      link_url: linkUrl.trim() || undefined,
     };
 
     await onSubmit(formData);
   };
+  
+  // Simple URL validation
+  const isValidUrl = (urlString: string): boolean => {
+    try {
+      new URL(urlString);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {formError && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{formError}</AlertDescription>
+        </Alert>
+      )}
+      
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="title">Judul Pengumuman</Label>
@@ -96,7 +135,6 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Masukkan judul pengumuman"
-            required
           />
         </div>
         
@@ -108,7 +146,6 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
             onChange={(e) => setContent(e.target.value)}
             placeholder="Masukkan detail pengumuman"
             rows={8}
-            required
           />
         </div>
         
@@ -202,15 +239,19 @@ const AnnouncementManager: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
+  const [error, setError] = useState<string | null>(null);
 
   const loadAnnouncements = async () => {
     setIsLoading(true);
+    setError(null);
+    
     try {
       const data = await fetchAnnouncements('all', false);
       console.log("Loaded announcements:", data);
       setAnnouncements(data);
-    } catch (error) {
-      console.error('Error loading announcements:', error);
+    } catch (err: any) {
+      console.error('Error loading announcements:', err);
+      setError('Gagal memuat data pengumuman');
       toast.error('Gagal memuat data pengumuman');
     } finally {
       setIsLoading(false);
@@ -220,6 +261,10 @@ const AnnouncementManager: React.FC = () => {
   useEffect(() => {
     loadAnnouncements();
   }, []);
+
+  const handleRetry = () => {
+    loadAnnouncements();
+  };
 
   const handleCreateUpdate = async () => {
     setSelectedAnnouncement(null);
@@ -241,14 +286,15 @@ const AnnouncementManager: React.FC = () => {
     
     setIsSubmitting(true);
     try {
-      await deleteAnnouncement(selectedAnnouncement.id);
-      toast.success('Pengumuman berhasil dihapus');
-      await loadAnnouncements();
-      setIsDeleteDialogOpen(false);
-      setSelectedAnnouncement(null);
+      const success = await deleteAnnouncement(selectedAnnouncement.id);
+      if (success) {
+        await loadAnnouncements();
+        setIsDeleteDialogOpen(false);
+        setSelectedAnnouncement(null);
+      }
     } catch (error) {
       console.error('Error deleting announcement:', error);
-      toast.error('Gagal menghapus pengumuman');
+      // Error is handled by the service function
     } finally {
       setIsSubmitting(false);
     }
@@ -257,21 +303,25 @@ const AnnouncementManager: React.FC = () => {
   const handleTogglePublish = async (announcement: Announcement) => {
     try {
       console.log("Toggling publish status for:", announcement.id, "Current status:", announcement.published);
-      await toggleAnnouncementPublishStatus(announcement.id, announcement.published);
-      await loadAnnouncements();
+      const updated = await toggleAnnouncementPublishStatus(announcement.id, announcement.published);
+      if (updated) {
+        await loadAnnouncements();
+      }
     } catch (error) {
       console.error('Error toggling publish status:', error);
-      toast.error('Gagal mengubah status publikasi');
+      // Error is handled by the service function
     }
   };
 
   const handleToggleImportant = async (announcement: Announcement) => {
     try {
-      await toggleAnnouncementImportantStatus(announcement.id, announcement.important);
-      await loadAnnouncements();
+      const updated = await toggleAnnouncementImportantStatus(announcement.id, announcement.important);
+      if (updated) {
+        await loadAnnouncements();
+      }
     } catch (error) {
       console.error('Error toggling important status:', error);
-      toast.error('Gagal mengubah status penting');
+      // Error is handled by the service function
     }
   };
 
@@ -279,19 +329,22 @@ const AnnouncementManager: React.FC = () => {
     setIsSubmitting(true);
     try {
       if (selectedAnnouncement) {
-        await updateAnnouncement(selectedAnnouncement.id, formData);
-        toast.success('Pengumuman berhasil diperbarui');
+        const updated = await updateAnnouncement(selectedAnnouncement.id, formData);
+        if (updated) {
+          await loadAnnouncements();
+          setIsDialogOpen(false);
+          setSelectedAnnouncement(null);
+        }
       } else {
-        await createAnnouncement(formData);
-        toast.success('Pengumuman berhasil dibuat');
+        const created = await createAnnouncement(formData);
+        if (created) {
+          await loadAnnouncements();
+          setIsDialogOpen(false);
+        }
       }
-      
-      await loadAnnouncements();
-      setIsDialogOpen(false);
-      setSelectedAnnouncement(null);
     } catch (error) {
       console.error('Error saving announcement:', error);
-      toast.error('Gagal menyimpan pengumuman');
+      // Error is handled by the service function
     } finally {
       setIsSubmitting(false);
     }
@@ -323,6 +376,19 @@ const AnnouncementManager: React.FC = () => {
     }
   };
 
+  // Format date safely
+  const getDisplayDate = (announcement: Announcement) => {
+    try {
+      if (announcement.date) {
+        return format(new Date(announcement.date), "dd MMM yyyy");
+      }
+      return format(new Date(announcement.created_at), "dd MMM yyyy");
+    } catch (error) {
+      console.error("Date formatting error:", error);
+      return "Tanggal tidak valid";
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
@@ -332,6 +398,19 @@ const AnnouncementManager: React.FC = () => {
           Buat Pengumuman Baru
         </Button>
       </div>
+      
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription className="flex justify-between items-center">
+            <span>{error}</span>
+            <Button variant="outline" size="sm" onClick={handleRetry}>
+              Coba Lagi
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
       
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-4 overflow-x-auto flex w-full sm:w-auto">
@@ -368,9 +447,7 @@ const AnnouncementManager: React.FC = () => {
                             <CardTitle>{announcement.title}</CardTitle>
                             <CardDescription className="flex items-center gap-2">
                               <Calendar className="h-3 w-3" />
-                              {announcement.date ? 
-                                format(new Date(announcement.date), "dd MMM yyyy") :
-                                format(new Date(announcement.created_at), "dd MMM yyyy")}
+                              {getDisplayDate(announcement)}
                             </CardDescription>
                           </div>
                           <div className="flex flex-wrap gap-2">

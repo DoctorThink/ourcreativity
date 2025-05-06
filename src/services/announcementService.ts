@@ -1,12 +1,16 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { Announcement, AnnouncementFormData } from "@/models/Announcement";
 import { toast } from "sonner";
 
+// Simplified fetch function with better error handling
 export const fetchAnnouncements = async (
   filterCategory: string = 'all',
   publishedOnly: boolean = true
 ): Promise<Announcement[]> => {
   try {
+    console.log(`Fetching announcements with filter: ${filterCategory}, publishedOnly: ${publishedOnly}`);
+    
     let query = supabase
       .from('announcements')
       .select('*')
@@ -24,21 +28,24 @@ export const fetchAnnouncements = async (
 
     if (error) {
       console.error('Error fetching announcements:', error);
-      throw new Error(error.message);
+      toast.error(`Gagal memuat pengumuman: ${error.message}`);
+      return [];
     }
 
-    // Debug log untuk memastikan data terambil
-    console.log('Fetched announcements:', data);
-
-    return data as Announcement[];
+    console.log(`Successfully fetched ${data?.length || 0} announcements`);
+    return data as Announcement[] || [];
   } catch (error: any) {
-    console.error('Error in fetchAnnouncements:', error);
-    throw error;
+    console.error('Unexpected error in fetchAnnouncements:', error);
+    toast.error('Gagal memuat pengumuman');
+    return [];
   }
 };
 
+// Simplified fetch by ID with better error handling
 export const fetchAnnouncementById = async (id: string): Promise<Announcement | null> => {
   try {
+    console.log(`Fetching announcement with ID: ${id}`);
+    
     const { data, error } = await supabase
       .from('announcements')
       .select('*')
@@ -47,18 +54,24 @@ export const fetchAnnouncementById = async (id: string): Promise<Announcement | 
 
     if (error) {
       console.error('Error fetching announcement by ID:', error);
-      throw new Error(error.message);
+      toast.error(`Gagal memuat detail pengumuman: ${error.message}`);
+      return null;
     }
 
+    console.log('Successfully fetched announcement by ID:', data);
     return data as Announcement;
   } catch (error: any) {
-    console.error('Error in fetchAnnouncementById:', error);
-    throw error;
+    console.error('Unexpected error in fetchAnnouncementById:', error);
+    toast.error('Gagal memuat detail pengumuman');
+    return null;
   }
 };
 
+// Improved featured announcement fetch with better error handling
 export const fetchFeaturedAnnouncement = async (): Promise<Announcement | null> => {
   try {
+    console.log('Fetching featured announcement');
+    
     const { data, error } = await supabase
       .from('announcements')
       .select('*')
@@ -70,22 +83,24 @@ export const fetchFeaturedAnnouncement = async (): Promise<Announcement | null> 
 
     if (error) {
       console.error('Error fetching featured announcement:', error);
-      throw new Error(error.message);
+      toast.error(`Gagal memuat pengumuman unggulan: ${error.message}`);
+      return null;
     }
 
-    // Debug log untuk memastikan featured announcement terambil
-    console.log('Fetched featured announcement:', data);
-
+    console.log('Successfully fetched featured announcement:', data);
     return data as Announcement || null;
   } catch (error: any) {
-    console.error('Error in fetchFeaturedAnnouncement:', error);
-    // Don't throw here, just return null to handle gracefully
+    console.error('Unexpected error in fetchFeaturedAnnouncement:', error);
+    toast.error('Gagal memuat pengumuman unggulan');
     return null;
   }
 };
 
-export const createAnnouncement = async (formData: AnnouncementFormData): Promise<Announcement> => {
+// Simplified create function with better error handling
+export const createAnnouncement = async (formData: AnnouncementFormData): Promise<Announcement | null> => {
   try {
+    console.log('Creating new announcement:', formData);
+    
     const { data, error } = await supabase
       .from('announcements')
       .insert([{
@@ -103,20 +118,27 @@ export const createAnnouncement = async (formData: AnnouncementFormData): Promis
 
     if (error) {
       console.error('Error creating announcement:', error);
-      throw new Error(error.message);
+      toast.error(`Gagal membuat pengumuman: ${error.message}`);
+      return null;
     }
 
     toast.success("Pengumuman berhasil dibuat");
     return data as Announcement;
   } catch (error: any) {
-    console.error('Error in createAnnouncement:', error);
+    console.error('Unexpected error in createAnnouncement:', error);
     toast.error("Gagal membuat pengumuman");
-    throw error;
+    return null;
   }
 };
 
-export const updateAnnouncement = async (id: string, formData: AnnouncementFormData): Promise<Announcement> => {
+// Simplified update function with better error handling
+export const updateAnnouncement = async (
+  id: string, 
+  formData: AnnouncementFormData
+): Promise<Announcement | null> => {
   try {
+    console.log(`Updating announcement with ID: ${id}`, formData);
+    
     const { data, error } = await supabase
       .from('announcements')
       .update({
@@ -135,20 +157,24 @@ export const updateAnnouncement = async (id: string, formData: AnnouncementFormD
 
     if (error) {
       console.error('Error updating announcement:', error);
-      throw new Error(error.message);
+      toast.error(`Gagal memperbarui pengumuman: ${error.message}`);
+      return null;
     }
 
     toast.success("Pengumuman berhasil diperbarui");
     return data as Announcement;
   } catch (error: any) {
-    console.error('Error in updateAnnouncement:', error);
+    console.error('Unexpected error in updateAnnouncement:', error);
     toast.error("Gagal memperbarui pengumuman");
-    throw error;
+    return null;
   }
 };
 
-export const deleteAnnouncement = async (id: string): Promise<void> => {
+// Simplified delete function with better error handling
+export const deleteAnnouncement = async (id: string): Promise<boolean> => {
   try {
+    console.log(`Deleting announcement with ID: ${id}`);
+    
     const { error } = await supabase
       .from('announcements')
       .delete()
@@ -156,29 +182,41 @@ export const deleteAnnouncement = async (id: string): Promise<void> => {
 
     if (error) {
       console.error('Error deleting announcement:', error);
-      throw new Error(error.message);
+      toast.error(`Gagal menghapus pengumuman: ${error.message}`);
+      return false;
     }
 
     toast.success("Pengumuman berhasil dihapus");
+    return true;
   } catch (error: any) {
-    console.error('Error in deleteAnnouncement:', error);
+    console.error('Unexpected error in deleteAnnouncement:', error);
     toast.error("Gagal menghapus pengumuman");
-    throw error;
+    return false;
   }
 };
 
-export const toggleAnnouncementPublishStatus = async (id: string, currentStatus: boolean): Promise<Announcement> => {
+// Simplified toggle publish function with better error handling
+export const toggleAnnouncementPublishStatus = async (
+  id: string, 
+  currentStatus: boolean
+): Promise<Announcement | null> => {
   try {
+    console.log(`Toggling publish status for announcement ID: ${id}, current status: ${currentStatus}`);
+    
     const { data, error } = await supabase
       .from('announcements')
-      .update({ published: !currentStatus, updated_at: new Date().toISOString() })
+      .update({ 
+        published: !currentStatus, 
+        updated_at: new Date().toISOString() 
+      })
       .eq('id', id)
       .select()
       .single();
 
     if (error) {
       console.error('Error toggling announcement status:', error);
-      throw new Error(error.message);
+      toast.error(`Gagal mengubah status pengumuman: ${error.message}`);
+      return null;
     }
 
     toast.success(
@@ -189,24 +227,34 @@ export const toggleAnnouncementPublishStatus = async (id: string, currentStatus:
     
     return data as Announcement;
   } catch (error: any) {
-    console.error('Error in toggleAnnouncementPublishStatus:', error);
+    console.error('Unexpected error in toggleAnnouncementPublishStatus:', error);
     toast.error("Gagal mengubah status pengumuman");
-    throw error;
+    return null;
   }
 };
 
-export const toggleAnnouncementImportantStatus = async (id: string, currentStatus: boolean): Promise<Announcement> => {
+// Simplified toggle important function with better error handling
+export const toggleAnnouncementImportantStatus = async (
+  id: string, 
+  currentStatus: boolean
+): Promise<Announcement | null> => {
   try {
+    console.log(`Toggling important status for announcement ID: ${id}, current status: ${currentStatus}`);
+    
     const { data, error } = await supabase
       .from('announcements')
-      .update({ important: !currentStatus, updated_at: new Date().toISOString() })
+      .update({ 
+        important: !currentStatus, 
+        updated_at: new Date().toISOString() 
+      })
       .eq('id', id)
       .select()
       .single();
 
     if (error) {
       console.error('Error toggling announcement important status:', error);
-      throw new Error(error.message);
+      toast.error(`Gagal mengubah status penting pengumuman: ${error.message}`);
+      return null;
     }
 
     toast.success(
@@ -217,8 +265,8 @@ export const toggleAnnouncementImportantStatus = async (id: string, currentStatu
     
     return data as Announcement;
   } catch (error: any) {
-    console.error('Error in toggleAnnouncementImportantStatus:', error);
+    console.error('Unexpected error in toggleAnnouncementImportantStatus:', error);
     toast.error("Gagal mengubah status penting pengumuman");
-    throw error;
+    return null;
   }
 };

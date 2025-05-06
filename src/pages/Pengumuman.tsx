@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -13,12 +14,33 @@ import {
   Bookmark, 
   Users,
   Megaphone,
-  Loader2
+  Loader2,
+  AlertCircle
 } from "lucide-react";
 import { Announcement } from "@/models/Announcement";
 import { fetchAnnouncements, fetchFeaturedAnnouncement } from "@/services/announcementService";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import { toast } from "sonner";
+
+// Animation variants for container elements
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+// Animation variants for card elements
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.5 }
+  }
+};
 
 const Pengumuman = () => {
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
@@ -26,42 +48,58 @@ const Pengumuman = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [featuredAnnouncement, setFeaturedAnnouncement] = useState<Announcement | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // Load featured announcement and all announcements on initial load
   useEffect(() => {
-    const loadData = async () => {
+    const loadInitialData = async () => {
       setIsLoading(true);
+      setError(null);
+      
       try {
-        console.log('Loading featured announcement and all announcements...');
+        console.log('Initial data load started...');
         
-        // Fetch featured announcement
-        const featured = await fetchFeaturedAnnouncement();
+        // Parallel fetching of both featured and all announcements
+        const [featured, allAnnouncements] = await Promise.all([
+          fetchFeaturedAnnouncement(),
+          fetchAnnouncements(filter)
+        ]);
+        
         console.log('Featured announcement result:', featured);
-        setFeaturedAnnouncement(featured);
-        
-        // Fetch all announcements
-        const allAnnouncements = await fetchAnnouncements();
         console.log('All announcements result:', allAnnouncements);
+        
+        setFeaturedAnnouncement(featured);
         setAnnouncements(allAnnouncements);
-      } catch (error) {
-        console.error("Error loading announcements:", error);
+      } catch (err) {
+        console.error("Error loading initial announcements data:", err);
+        setError("Gagal memuat data pengumuman. Silakan coba lagi nanti.");
+        toast.error("Gagal memuat data pengumuman");
       } finally {
         setIsLoading(false);
       }
     };
     
-    loadData();
+    loadInitialData();
   }, []);
 
+  // Load filtered announcements when filter changes
   useEffect(() => {
     const loadFilteredAnnouncements = async () => {
+      // Skip fetching on initial load, as it's handled by the first useEffect
+      if (isLoading) return;
+
       setIsLoading(true);
+      setError(null);
+      
       try {
         console.log(`Loading filtered announcements for category: ${filter}`);
-        const data = await fetchAnnouncements(filter === 'all' ? 'all' : filter);
+        const data = await fetchAnnouncements(filter);
         console.log('Filtered announcements result:', data);
         setAnnouncements(data);
-      } catch (error) {
-        console.error("Error loading filtered announcements:", error);
+      } catch (err) {
+        console.error("Error loading filtered announcements:", err);
+        setError("Gagal memuat data pengumuman. Silakan coba lagi nanti.");
+        toast.error("Gagal memuat data pengumuman");
       } finally {
         setIsLoading(false);
       }
@@ -70,26 +108,31 @@ const Pengumuman = () => {
     loadFilteredAnnouncements();
   }, [filter]);
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
+  // Handle retry loading data
+  const handleRetry = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      console.log('Retrying data load...');
+      
+      // Parallel fetching of both featured and all announcements
+      const [featured, allAnnouncements] = await Promise.all([
+        fetchFeaturedAnnouncement(),
+        fetchAnnouncements(filter)
+      ]);
+      
+      setFeaturedAnnouncement(featured);
+      setAnnouncements(allAnnouncements);
+      toast.success("Data pengumuman berhasil dimuat");
+    } catch (err) {
+      console.error("Error retrying data load:", err);
+      setError("Gagal memuat data pengumuman. Silakan coba lagi nanti.");
+      toast.error("Gagal memuat data pengumuman");
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.5 }
-    }
-  };
-
-  // Filter announcements - this is now handled by the backend
-  const filteredAnnouncements = announcements;
 
   return (
     <PageLayout 
@@ -137,8 +180,24 @@ const Pengumuman = () => {
         </div>
       </motion.div>
 
+      {/* Error State */}
+      {error && !isLoading && (
+        <motion.div 
+          className="mb-8 text-center py-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <p className="text-foreground/80 text-xl mb-4">{error}</p>
+          <Button onClick={handleRetry} variant="default">
+            Coba Lagi
+          </Button>
+        </motion.div>
+      )}
+
       {/* Featured Announcement */}
-      {featuredAnnouncement ? (
+      {!error && featuredAnnouncement ? (
         <motion.div 
           className="mb-8"
           initial={{ opacity: 0, y: 20 }}
@@ -194,7 +253,7 @@ const Pengumuman = () => {
             </div>
           </BentoCard>
         </motion.div>
-      ) : !isLoading && (
+      ) : !isLoading && !error ? (
         <motion.div 
           className="mb-8"
           initial={{ opacity: 0, y: 20 }}
@@ -210,7 +269,7 @@ const Pengumuman = () => {
             <p className="text-foreground/60 text-lg">Belum ada pengumuman penting saat ini</p>
           </BentoCard>
         </motion.div>
-      )}
+      ) : null}
 
       {/* Loading state */}
       {isLoading ? (
@@ -221,42 +280,44 @@ const Pengumuman = () => {
       ) : (
         <>
           {/* Announcement grid */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {filteredAnnouncements.length > 0 ? (
-              filteredAnnouncements.map((announcement) => (
-                <motion.div key={announcement.id} variants={cardVariants}>
-                  <AnnouncementCard 
-                    announcement={announcement}
-                    onClick={() => setSelectedAnnouncement(announcement)}
-                  />
-                </motion.div>
-              ))
-            ) : (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="col-span-full text-center py-16"
-              >
-                <Bell className="w-12 h-12 text-foreground/30 mx-auto mb-4" />
-                <p className="text-foreground/60 text-lg">Belum ada pengumuman untuk kategori ini</p>
-                <Button 
-                  variant="outline" 
-                  className="mt-4 bg-foreground/5 border-foreground/10"
-                  onClick={() => setFilter('all')}
+          {!error && (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {announcements.length > 0 ? (
+                announcements.map((announcement) => (
+                  <motion.div key={announcement.id} variants={cardVariants}>
+                    <AnnouncementCard 
+                      announcement={announcement}
+                      onClick={() => setSelectedAnnouncement(announcement)}
+                    />
+                  </motion.div>
+                ))
+              ) : (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="col-span-full text-center py-16"
                 >
-                  Lihat semua pengumuman
-                </Button>
-              </motion.div>
-            )}
-          </motion.div>
+                  <Bell className="w-12 h-12 text-foreground/30 mx-auto mb-4" />
+                  <p className="text-foreground/60 text-lg">Belum ada pengumuman untuk kategori ini</p>
+                  <Button 
+                    variant="outline" 
+                    className="mt-4 bg-foreground/5 border-foreground/10"
+                    onClick={() => setFilter('all')}
+                  >
+                    Lihat semua pengumuman
+                  </Button>
+                </motion.div>
+              )}
+            </motion.div>
+          )}
 
           {/* Empty state when no announcements match filter */}
-          {filteredAnnouncements.length === 0 && !isLoading && (
+          {announcements.length === 0 && !isLoading && !error && (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -293,6 +354,7 @@ const Pengumuman = () => {
   );
 };
 
+// Filter Button Component
 const FilterButton = ({ 
   active, 
   onClick, 
@@ -324,6 +386,7 @@ const FilterButton = ({
   </motion.button>
 );
 
+// Announcement Card Component
 const AnnouncementCard = ({ 
   announcement, 
   onClick 
@@ -349,13 +412,24 @@ const AnnouncementCard = ({
     }
   };
   
+  // Handle unknown category gracefully
   const categoryStyle = categoryStyles[announcement.category as keyof typeof categoryStyles] || categoryStyles.update;
   const CategoryIcon = categoryStyle.icon;
   
-  // Format date either from date field or created_at
-  const displayDate = announcement.date ? 
-    format(new Date(announcement.date), "dd MMM yyyy") : 
-    format(new Date(announcement.created_at), "dd MMM yyyy");
+  // Format date safely
+  const getDisplayDate = () => {
+    try {
+      if (announcement.date) {
+        return format(new Date(announcement.date), "dd MMM yyyy");
+      }
+      return format(new Date(announcement.created_at), "dd MMM yyyy");
+    } catch (error) {
+      console.error("Date formatting error:", error);
+      return "Tanggal tidak valid";
+    }
+  };
+  
+  const displayDate = getDisplayDate();
   
   return (
     <BentoCard
@@ -397,11 +471,22 @@ const AnnouncementCard = ({
   );
 };
 
+// Announcement Detail Component
 const AnnouncementDetail = ({ announcement }: { announcement: Announcement }) => {
-  // Format date either from date field or created_at
-  const displayDate = announcement.date ? 
-    format(new Date(announcement.date), "dd MMM yyyy") : 
-    format(new Date(announcement.created_at), "dd MMM yyyy");
+  // Format date safely
+  const getDisplayDate = () => {
+    try {
+      if (announcement.date) {
+        return format(new Date(announcement.date), "dd MMM yyyy");
+      }
+      return format(new Date(announcement.created_at), "dd MMM yyyy");
+    } catch (error) {
+      console.error("Date formatting error:", error);
+      return "Tanggal tidak valid";
+    }
+  };
+
+  const displayDate = getDisplayDate();
 
   return (
     <motion.div 
@@ -439,6 +524,11 @@ const AnnouncementDetail = ({ announcement }: { announcement: Announcement }) =>
             src={announcement.image_url} 
             alt={announcement.title}
             className="w-full h-auto rounded-xl object-cover max-h-[300px]"
+            onError={(e) => {
+              // Handle image loading error
+              e.currentTarget.style.display = 'none';
+              console.error('Failed to load announcement image:', announcement.image_url);
+            }}
           />
         </div>
       )}
