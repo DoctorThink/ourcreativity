@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -102,27 +101,36 @@ const Pengumuman = () => {
       try {
         console.log('Initial data load started...');
         
-        // Parallel fetching of both featured and all announcements
-        const [featured, allAnnouncements] = await Promise.all([
-          fetchFeaturedAnnouncement(),
-          fetchAnnouncements(filter)
-        ]);
-        
-        console.log('Featured announcement result:', featured);
-        console.log('All announcements result:', allAnnouncements);
-        
-        setFeaturedAnnouncement(featured);
-        setAnnouncements(allAnnouncements);
-
-        // If no announcements found, try adding predefined announcements
-        if (allAnnouncements.length === 0) {
-          console.log('No announcements found, adding predefined announcements');
-          await handleAddPredefinedAnnouncements();
+        try {
+          // Parallel fetching of both featured and all announcements
+          const [featured, allAnnouncements] = await Promise.all([
+            fetchFeaturedAnnouncement(),
+            fetchAnnouncements(filter)
+          ]);
+          
+          console.log('Featured announcement result:', featured);
+          console.log('All announcements result:', allAnnouncements);
+          
+          setFeaturedAnnouncement(featured);
+          setAnnouncements(allAnnouncements);
+          
+          // If no announcements found, check if we have permission issues
+          if (allAnnouncements.length === 0) {
+            console.log('No announcements found, checking for permission issues');
+          }
+        } catch (err) {
+          console.error("Error loading initial announcements data:", err);
+          
+          // Check if this is a Supabase permission error
+          const errorMessage = err instanceof Error ? err.message : String(err);
+          if (errorMessage.includes('permission denied') || errorMessage.includes('42501')) {
+            setError("Gagal memuat data pengumuman: Izin database tidak sesuai. Mohon hubungi administrator.");
+            toast.error("Gagal akses database pengumuman");
+          } else {
+            setError("Gagal memuat data pengumuman. Silakan coba lagi nanti.");
+            toast.error("Gagal memuat data pengumuman");
+          }
         }
-      } catch (err) {
-        console.error("Error loading initial announcements data:", err);
-        setError("Gagal memuat data pengumuman. Silakan coba lagi nanti.");
-        toast.error("Gagal memuat data pengumuman");
       } finally {
         setIsLoading(false);
       }
@@ -133,10 +141,10 @@ const Pengumuman = () => {
 
   // Load filtered announcements when filter changes
   useEffect(() => {
+    // Skip if this is the initial load or if we're already loading
+    if (isLoading && announcements.length === 0) return;
+    
     const loadFilteredAnnouncements = async () => {
-      // Skip fetching on initial load, as it's handled by the first useEffect
-      if (isLoading && announcements.length === 0) return;
-
       setIsLoading(true);
       setError(null);
       
@@ -147,8 +155,14 @@ const Pengumuman = () => {
         setAnnouncements(data);
       } catch (err) {
         console.error("Error loading filtered announcements:", err);
-        setError("Gagal memuat data pengumuman. Silakan coba lagi nanti.");
-        toast.error("Gagal memuat data pengumuman");
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        if (errorMessage.includes('permission denied') || errorMessage.includes('42501')) {
+          setError("Gagal memuat data pengumuman: Izin database tidak sesuai. Mohon hubungi administrator.");
+          toast.error("Gagal akses database pengumuman");
+        } else {
+          setError("Gagal memuat data pengumuman. Silakan coba lagi nanti.");
+          toast.error("Gagal memuat data pengumuman");
+        }
       } finally {
         setIsLoading(false);
       }
@@ -165,7 +179,10 @@ const Pengumuman = () => {
     try {
       console.log('Retrying data load...');
       
-      // Parallel fetching of both featured and all announcements
+      // Try to add predefined announcements first, which might help create the table structure
+      await handleAddPredefinedAnnouncements();
+      
+      // Now try to fetch the announcements again
       const [featured, allAnnouncements] = await Promise.all([
         fetchFeaturedAnnouncement(),
         fetchAnnouncements(filter)
@@ -173,11 +190,22 @@ const Pengumuman = () => {
       
       setFeaturedAnnouncement(featured);
       setAnnouncements(allAnnouncements);
-      toast.success("Data pengumuman berhasil dimuat");
+      
+      if (allAnnouncements.length > 0) {
+        toast.success("Data pengumuman berhasil dimuat");
+      } else {
+        toast.info("Tidak ada pengumuman ditemukan");
+      }
     } catch (err) {
       console.error("Error retrying data load:", err);
-      setError("Gagal memuat data pengumuman. Silakan coba lagi nanti.");
-      toast.error("Gagal memuat data pengumuman");
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      if (errorMessage.includes('permission denied') || errorMessage.includes('42501')) {
+        setError("Gagal memuat data pengumuman: Izin database tidak sesuai. Mohon hubungi administrator.");
+        toast.error("Gagal akses database pengumuman");
+      } else {
+        setError("Gagal memuat data pengumuman. Silakan coba lagi nanti.");
+        toast.error("Gagal memuat data pengumuman");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -188,20 +216,32 @@ const Pengumuman = () => {
     setIsAddingPredefined(true);
     
     try {
-      await addPredefinedAnnouncements();
+      console.log("Adding predefined announcements...");
+      const result = await addPredefinedAnnouncements();
+      console.log("Result of adding predefined announcements:", result);
       
-      // Reload announcements after adding predefined ones
-      const [featured, allAnnouncements] = await Promise.all([
-        fetchFeaturedAnnouncement(),
-        fetchAnnouncements(filter)
-      ]);
-      
-      setFeaturedAnnouncement(featured);
-      setAnnouncements(allAnnouncements);
-      toast.success("Pengumuman berhasil ditambahkan");
+      if (result) {
+        // Reload announcements after adding predefined ones
+        const [featured, allAnnouncements] = await Promise.all([
+          fetchFeaturedAnnouncement(),
+          fetchAnnouncements(filter)
+        ]);
+        
+        setFeaturedAnnouncement(featured);
+        setAnnouncements(allAnnouncements);
+        toast.success("Pengumuman predefinisi berhasil ditambahkan");
+      } else {
+        toast.error("Gagal menambahkan pengumuman predefinisi");
+      }
     } catch (err) {
       console.error("Error adding predefined announcements:", err);
-      toast.error("Gagal menambahkan pengumuman predefinisi");
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      if (errorMessage.includes('permission denied') || errorMessage.includes('42501')) {
+        setError("Gagal menambahkan pengumuman: Izin database tidak sesuai. Mohon hubungi administrator.");
+        toast.error("Gagal akses database pengumuman");
+      } else {
+        toast.error("Gagal menambahkan pengumuman predefinisi");
+      }
     } finally {
       setIsAddingPredefined(false);
     }

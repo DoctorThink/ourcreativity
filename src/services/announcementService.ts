@@ -40,11 +40,12 @@ export const fetchAnnouncements = async (
       throw new Error(error.message);
     }
     
-    return data as Announcement[];
+    return data as Announcement[] || [];
   } catch (error) {
     console.error("Exception in fetchAnnouncements:", error);
     toast.error("Gagal memuat data pengumuman");
-    throw error;
+    // Return empty array instead of throwing when showing an error toast
+    return [];
   }
 };
 
@@ -84,7 +85,7 @@ export const fetchFeaturedAnnouncement = async (): Promise<Announcement | null> 
     }
     
     console.error("Exception in fetchFeaturedAnnouncement:", error);
-    throw error;
+    return null;
   }
 };
 
