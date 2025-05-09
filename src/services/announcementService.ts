@@ -92,28 +92,30 @@ export const fetchFeaturedAnnouncement = async (): Promise<Announcement | null> 
  * Creates a new announcement
  * 
  * @param announcementData - The data for the new announcement
- * @returns A Promise that resolves to a boolean indicating success
+ * @returns A Promise that resolves to the created Announcement
  */
 export const createAnnouncement = async (
   announcementData: AnnouncementFormData
-): Promise<boolean> => {
+): Promise<Announcement> => {
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("announcements")
-      .insert(announcementData);
+      .insert(announcementData)
+      .select()
+      .single();
     
     if (error) {
       console.error("Error creating announcement:", error);
       toast.error(`Gagal membuat pengumuman: ${error.message}`);
-      return false;
+      throw new Error(error.message);
     }
     
     toast.success("Pengumuman berhasil dibuat");
-    return true;
+    return data as Announcement;
   } catch (error) {
     console.error("Exception in createAnnouncement:", error);
     toast.error("Gagal membuat pengumuman");
-    return false;
+    throw error;
   }
 };
 
@@ -122,33 +124,35 @@ export const createAnnouncement = async (
  * 
  * @param id - The ID of the announcement to update
  * @param announcementData - The updated data for the announcement
- * @returns A Promise that resolves to a boolean indicating success
+ * @returns A Promise that resolves to the updated Announcement
  */
 export const updateAnnouncement = async (
   id: string, 
   announcementData: AnnouncementFormData
-): Promise<boolean> => {
+): Promise<Announcement> => {
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("announcements")
       .update({
         ...announcementData,
         updated_at: new Date().toISOString()
       })
-      .eq("id", id);
+      .eq("id", id)
+      .select()
+      .single();
     
     if (error) {
       console.error("Error updating announcement:", error);
       toast.error(`Gagal memperbarui pengumuman: ${error.message}`);
-      return false;
+      throw new Error(error.message);
     }
     
     toast.success("Pengumuman berhasil diperbarui");
-    return true;
+    return data as Announcement;
   } catch (error) {
     console.error("Exception in updateAnnouncement:", error);
     toast.error("Gagal memperbarui pengumuman");
-    return false;
+    throw error;
   }
 };
 
@@ -185,35 +189,37 @@ export const deleteAnnouncement = async (id: string): Promise<boolean> => {
  * 
  * @param id - The ID of the announcement to toggle
  * @param currentStatus - The current published status
- * @returns A Promise that resolves to a boolean indicating success
+ * @returns A Promise that resolves to the updated Announcement
  */
 export const toggleAnnouncementPublishStatus = async (
   id: string, 
   currentStatus: boolean = true
-): Promise<boolean> => {
+): Promise<Announcement> => {
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("announcements")
       .update({ 
         published: !currentStatus,
         updated_at: new Date().toISOString()
       })
-      .eq("id", id);
+      .eq("id", id)
+      .select()
+      .single();
     
     if (error) {
       console.error("Error toggling announcement publish status:", error);
       toast.error(`Gagal mengubah status publikasi: ${error.message}`);
-      return false;
+      throw new Error(error.message);
     }
     
     toast.success(currentStatus ? 
       "Pengumuman disembunyikan" : 
       "Pengumuman dipublikasikan");
-    return true;
+    return data as Announcement;
   } catch (error) {
     console.error("Exception in toggleAnnouncementPublishStatus:", error);
     toast.error("Gagal mengubah status publikasi");
-    return false;
+    throw error;
   }
 };
 
@@ -222,35 +228,37 @@ export const toggleAnnouncementPublishStatus = async (
  * 
  * @param id - The ID of the announcement to toggle
  * @param currentStatus - The current important status
- * @returns A Promise that resolves to a boolean indicating success
+ * @returns A Promise that resolves to the updated Announcement
  */
 export const toggleAnnouncementImportantStatus = async (
   id: string, 
   currentStatus: boolean = false
-): Promise<boolean> => {
+): Promise<Announcement> => {
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("announcements")
       .update({ 
         important: !currentStatus,
         updated_at: new Date().toISOString()
       })
-      .eq("id", id);
+      .eq("id", id)
+      .select()
+      .single();
     
     if (error) {
       console.error("Error toggling announcement important status:", error);
       toast.error(`Gagal mengubah status prioritas: ${error.message}`);
-      return false;
+      throw new Error(error.message);
     }
     
     toast.success(currentStatus ? 
       "Status penting dihapus" : 
       "Ditandai sebagai pengumuman penting");
-    return true;
+    return data as Announcement;
   } catch (error) {
     console.error("Exception in toggleAnnouncementImportantStatus:", error);
     toast.error("Gagal mengubah status prioritas");
-    return false;
+    throw error;
   }
 };
 
