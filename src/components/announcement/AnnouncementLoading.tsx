@@ -8,18 +8,17 @@ export const AnnouncementLoading: React.FC = () => (
     <motion.div
       animate={{ 
         rotate: 360,
-        scale: [1, 1.1, 1],
       }}
       transition={{ 
         repeat: Infinity, 
-        duration: 2,
+        duration: 1.5,
         ease: "linear" 
       }}
     >
       <Loader2 className="w-8 h-8 sm:w-12 sm:h-12 text-amethyst" />
     </motion.div>
     <motion.p 
-      className="text-foreground/60 text-sm sm:text-lg mt-4"
+      className="text-foreground/70 text-sm sm:text-base mt-4 font-medium"
       animate={{ opacity: [0.5, 1, 0.5] }}
       transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
     >
