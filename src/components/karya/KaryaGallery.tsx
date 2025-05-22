@@ -122,38 +122,80 @@ const mockKarya = [
   }
 ];
 
-export const KaryaGallery: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+interface KaryaGalleryProps {
+  initialKaryaList: KaryaType[];
+  isLoading: boolean;
+  selectedCategory: string;
+  onSelectCategory: (category: string) => void;
+  searchTerm: string;
+  sortBy: string; // 'recency' | 'popularity'
+  selectedTags: string[];
+}
+
+export const KaryaGallery: React.FC<KaryaGalleryProps> = ({
+  initialKaryaList,
+  isLoading,
+  selectedCategory,
+  onSelectCategory,
+  searchTerm,
+  sortBy,
+  selectedTags,
+}) => {
   const [selectedKarya, setSelectedKarya] = useState<KaryaType | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Query for fetching karya data from Supabase
-  const { data: karyaData, isLoading } = useQuery({
-    queryKey: ['karya'],
-    queryFn: async () => {
-      try {
-        const { data, error } = await supabase
-          .from('karya')
-          .select('*')
-          .eq('status', 'approved')
-          .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        return data as KaryaType[];
-      } catch (error) {
-        console.error("Error fetching karya:", error);
-        // Fall back to mock data if there's an error
-        return mockKarya as unknown as KaryaType[];
-      }
-    },
-    retry: 1,
-    // If Supabase isn't connected, use mock data
-    initialData: mockKarya as unknown as KaryaType[],
-  });
+  // Helper function to extract tags from a string
+  const extractTagsFromString = (text: string | null | undefined): string[] => {
+    if (!text) return [];
+    // Matches hashtags like #tag, #Tag123, #tag_with_underscore
+    // Handles Unicode characters in tags based on the previous example \u0080-\uFFFF
+    const hashtags = text.match(/#[\w\u0080-\uFFFF]+/g);
+    if (hashtags && hashtags.length > 0) {
+      return hashtags.map(tag => tag.slice(1).toLowerCase()); // Remove # and lowercase
+    }
+    return [];
+  };
   
-  const filteredKarya = selectedCategory === "all" 
-    ? karyaData 
-    : karyaData?.filter(item => item.category === selectedCategory);
+  // Apply filtering and sorting using initialKaryaList prop
+  const processedKarya = (() => {
+    if (!initialKaryaList) return [];
+
+    let result: KaryaType[] = [...initialKaryaList];
+
+    // 1. Category filter
+    if (selectedCategory !== "all") {
+      result = result.filter(item => item.category === selectedCategory);
+    }
+
+    // 2. Search term filter
+    if (searchTerm) {
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      result = result.filter(item => 
+        item.title?.toLowerCase().includes(lowerSearchTerm) ||
+        item.description?.toLowerCase().includes(lowerSearchTerm) ||
+        item.creator_name?.toLowerCase().includes(lowerSearchTerm)
+      );
+    }
+
+    // 3. Tag filter
+    if (selectedTags.length > 0) {
+      const lowerSelectedTags = selectedTags.map(tag => tag.toLowerCase());
+      result = result.filter(item => {
+        const itemTags = extractTagsFromString(item.description); // Assuming tags are in description
+        return lowerSelectedTags.some(selectedTag => itemTags.includes(selectedTag));
+      });
+    }
+    
+    // 4. Sorting
+    if (sortBy === 'recency') {
+      result = result.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    } else if (sortBy === 'popularity') {
+      // Ensure likes_count is treated as a number, defaulting to 0 if null/undefined
+      result = result.sort((a, b) => (b.likes_count || 0) - (a.likes_count || 0));
+    }
+
+    return result;
+  })();
 
   const handleKaryaClick = (karya: KaryaType) => {
     setSelectedKarya(karya);
@@ -168,7 +210,7 @@ export const KaryaGallery: React.FC = () => {
     >
       <CategorySelector 
         selectedCategory={selectedCategory} 
-        onSelectCategory={setSelectedCategory}
+        onSelectCategory={onSelectCategory}
       />
       
       <div className="mt-8">
@@ -184,9 +226,9 @@ export const KaryaGallery: React.FC = () => {
               </div>
             ))}
           </div>
-        ) : filteredKarya && filteredKarya.length > 0 ? (
+        ) : processedKarya && processedKarya.length > 0 ? (
           <MasonryGrid 
-            items={filteredKarya} 
+            items={processedKarya} 
             onKaryaClick={handleKaryaClick}
           />
         ) : (
