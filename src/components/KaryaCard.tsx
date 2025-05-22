@@ -22,22 +22,35 @@ interface KaryaCardProps {
 // Helper function to generate transformed image URLs with lower resolution for cards
 const getTransformedUrl = (baseUrl: string | null | undefined, options: { format?: 'webp' | 'avif' | 'jpeg', width?: number, quality?: number } = {}): string => {
   if (!baseUrl) return '/placeholder.svg'; // Fallback placeholder
+
   try {
-    // For thumbnails in cards, use lower resolution
-    const url = new URL(baseUrl);
+    const parsedUrl = new URL(baseUrl);
+
+    // Check if it's a Supabase Storage URL. If so, return directly without client-side transformation attempts.
+    // Supabase Storage URLs typically contain '.supabase.co/storage/v1/object/public/'
+    // Or more broadly, just check for 'supabase.co' in hostname for simplicity here.
+    if (parsedUrl.hostname.includes('supabase.co')) {
+      // If Supabase has its own transformation parameters, they would be part of the `baseUrl`
+      // or a different base URL structure (e.g., /render/image/transform/...)
+      // For now, assuming direct links are used and client-side params are not supported.
+      return baseUrl;
+    }
+
+    // For other absolute URLs, attempt transformation
+    const cardPreviewWidth = options.width || 400; 
+    const cardPreviewQuality = options.quality || 60; 
     
-    // Use much lower quality and size for card previews to improve performance
-    const cardPreviewWidth = options.width || 400; // Small width for cards
-    const cardPreviewQuality = options.quality || 60; // Lower quality for cards
+    if (options.format) parsedUrl.searchParams.set('format', options.format);
+    parsedUrl.searchParams.set('resize', `width:${cardPreviewWidth}`);
+    parsedUrl.searchParams.set('quality', cardPreviewQuality.toString());
     
-    if (options.format) url.searchParams.set('format', options.format);
-    url.searchParams.set('resize', `width:${cardPreviewWidth}`);
-    url.searchParams.set('quality', cardPreviewQuality.toString());
+    return parsedUrl.toString();
     
-    return url.toString();
   } catch (e) {
-    console.error("Error creating URL:", e);
-    return baseUrl; // Return original if URL parsing fails
+    // This catch block will handle cases where baseUrl is not a valid absolute URL (e.g., relative paths like "/placeholder.svg")
+    // Or if any other URL operation fails.
+    // console.warn("URL processing error in getTransformedUrl, returning original:", e); // Optional: more verbose logging
+    return baseUrl; // Return original if URL parsing or processing fails
   }
 };
 
@@ -262,7 +275,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           <div className="flex justify-between items-end gap-3">
             <div className="flex-1 min-w-0">
               <h3 className="text-base sm:text-lg font-semibold truncate tracking-tight">{karya.title}</h3>
-              <p className="text-foreground/80 text-xs sm:text-sm truncate mt-1">{karya.creator_name}</p>
+              <p className="text-foreground/80 text-xs sm:text-sm truncate mt-1 font-sans">{karya.creator_name}</p>
               
               {/* Tags display on hover */}
               {tags.length > 0 && (
@@ -270,13 +283,13 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                   {tags.slice(0, 3).map((tag, index) => (
                     <span 
                       key={index}
-                      className="text-[10px] bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/80"
+                      className="text-[10px] bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/80 font-sans"
                     >
                       #{tag}
                     </span>
                   ))}
                   {tags.length > 3 && (
-                    <span className="text-[10px] bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/80">
+                    <span className="text-[10px] bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/80 font-sans">
                       +{tags.length - 3}
                     </span>
                   )}

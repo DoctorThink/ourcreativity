@@ -4,23 +4,29 @@ import { motion } from "framer-motion";
 import { Filter, Search, ArrowLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 
 interface AdvancedFiltersProps {
-  onSelectCategory: (category: string) => void;
   selectedCategory: string;
+  onSelectCategory: (category: string) => void;
+  searchTerm: string;
+  onSearchTermChange: (term: string) => void;
+  sortBy: string; // 'recency' | 'popularity'
+  onSortByChange: (sort: string) => void;
+  selectedTags: string[];
+  onSelectedTagsChange: (tags: string[]) => void;
 }
 
 const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
-  onSelectCategory,
   selectedCategory,
+  onSelectCategory,
+  searchTerm,
+  onSearchTermChange,
+  sortBy,
+  onSortByChange,
+  selectedTags,
+  onSelectedTagsChange,
 }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [recencyValue, setRecencyValue] = useState([50]);
-  const [popularityValue, setPopularityValue] = useState([50]);
-  const [activeTags, setActiveTags] = useState<string[]>([]);
-  
   const categories = [
     { id: "all", name: "Semua" },
     { id: "design", name: "Desain", icon: "/lovable-uploads/design.png" },
@@ -37,10 +43,10 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
   ];
   
   const toggleTag = (tag: string) => {
-    if (activeTags.includes(tag)) {
-      setActiveTags(activeTags.filter(t => t !== tag));
+    if (selectedTags.includes(tag)) {
+      onSelectedTagsChange(selectedTags.filter(t => t !== tag));
     } else {
-      setActiveTags([...activeTags, tag]);
+      onSelectedTagsChange([...selectedTags, tag]);
     }
   };
   
@@ -92,17 +98,17 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           <Input
             type="text"
             placeholder="Search by title, creator, or description..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchTerm}
+            onChange={(e) => onSearchTermChange(e.target.value)}
             className="pl-10 py-6 bg-background/40 border-white/10 focus-visible:ring-amethyst"
           />
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/50" size={18} />
-          {searchQuery && (
+          {searchTerm && (
             <motion.button
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => setSearchQuery("")}
+              onClick={() => onSearchTermChange("")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/50 hover:text-foreground"
             >
               <ArrowLeft size={18} />
@@ -113,7 +119,7 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
       
       {/* Categories with animated selection */}
       <motion.div variants={itemVariants} className="mb-6">
-        <h4 className="text-sm text-foreground/70 mb-3">Categories</h4>
+        <h4 className="text-sm text-foreground/70 mb-3 font-sans">Categories</h4>
         <div className="flex flex-wrap gap-3">
           {categories.map((category) => (
             <motion.button
@@ -146,45 +152,30 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
       </motion.div>
       
       {/* Sliders with animated feedback */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
-        <motion.div variants={itemVariants}>
-          <h4 className="text-sm text-foreground/70 mb-3">Recency</h4>
-          <div className="px-2">
-            <Slider
-              defaultValue={recencyValue}
-              max={100}
-              step={1}
-              onValueChange={setRecencyValue}
-            />
-            <div className="flex justify-between mt-2 text-xs text-foreground/60">
-              <span>Oldest</span>
-              <span className="text-amethyst font-medium">{recencyValue}%</span>
-              <span>Newest</span>
-            </div>
-          </div>
-        </motion.div>
-        
-        <motion.div variants={itemVariants}>
-          <h4 className="text-sm text-foreground/70 mb-3">Popularity</h4>
-          <div className="px-2">
-            <Slider
-              defaultValue={popularityValue}
-              max={100}
-              step={1}
-              onValueChange={setPopularityValue}
-            />
-            <div className="flex justify-between mt-2 text-xs text-foreground/60">
-              <span>Any</span>
-              <span className="text-amethyst font-medium">{popularityValue}%</span>
-              <span>Most Popular</span>
-            </div>
-          </div>
-        </motion.div>
-      </div>
+      {/* Sort By Buttons */}
+      <motion.div variants={itemVariants} className="mb-6">
+        <h4 className="text-sm text-foreground/70 mb-3 font-sans">Sort By</h4>
+        <div className="flex flex-wrap gap-3">
+          <Button
+            variant={sortBy === "recency" ? "default" : "outline"}
+            onClick={() => onSortByChange("recency")}
+            className={sortBy === "recency" ? "bg-amethyst text-background" : "border-white/10 hover:bg-background/60"}
+          >
+            Recency (Newest First)
+          </Button>
+          <Button
+            variant={sortBy === "popularity" ? "default" : "outline"}
+            onClick={() => onSortByChange("popularity")}
+            className={sortBy === "popularity" ? "bg-amethyst text-background" : "border-white/10 hover:bg-background/60"}
+          >
+            Popularity
+          </Button>
+        </div>
+      </motion.div>
       
       {/* Popular tags with animation */}
       <motion.div variants={itemVariants} className="mb-6">
-        <h4 className="text-sm text-foreground/70 mb-3">Popular Tags</h4>
+        <h4 className="text-sm text-foreground/70 mb-3 font-sans">Popular Tags</h4>
         <div className="flex flex-wrap gap-2">
           {popularTags.map((tag) => (
             <Badge
@@ -192,7 +183,7 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
               variant="secondary"
               onClick={() => toggleTag(tag)}
               className={`cursor-pointer px-3 py-1.5 ${
-                activeTags.includes(tag)
+                selectedTags.includes(tag)
                   ? "bg-amethyst/20 hover:bg-amethyst/30 border-amethyst/50"
                   : "bg-background/40 hover:bg-background/60 border-white/10"
               }`}
@@ -218,10 +209,9 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           variant="outline"
           className="border-white/10 hover:bg-background/60 hover:text-foreground"
           onClick={() => {
-            setSearchQuery("");
-            setRecencyValue([50]);
-            setPopularityValue([50]);
-            setActiveTags([]);
+            onSearchTermChange("");
+            onSortByChange("recency"); // Default sort
+            onSelectedTagsChange([]);
             onSelectCategory("all");
           }}
         >
@@ -229,8 +219,9 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
         </Button>
         <Button 
           className="bg-gradient-to-r from-amethyst to-turquoise hover:opacity-90 transition-opacity duration-300"
+          // This button doesn't need a specific onClick if filters apply live
         >
-          Apply Filters
+          Apply Filters 
         </Button>
       </motion.div>
     </motion.div>
