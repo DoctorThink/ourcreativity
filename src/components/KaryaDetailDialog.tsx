@@ -184,8 +184,8 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                 {/* Header with title and category info */}
                 <div className="flex justify-between items-start p-6 border-b border-border/20">
                   <div className="flex-1">
-                    <h2 className="text-2xl font-bold tracking-tight">{karya.title}</h2> {/* Main title - serif is fine */}
-                    <p className="text-foreground/70 mt-1 font-sans"> {/* Creator name - sans-serif */}
+                    <h2 className="text-2xl font-bold tracking-tight">{karya.title}</h2>
+                    <p className="text-foreground/70 mt-1">
                       by {karya.creator_name}
                     </p>
                   </div>
@@ -197,7 +197,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                         className="w-5 h-5 object-contain"
                       />
                     </div>
-                    <span className="text-sm text-foreground/80 font-medium font-sans"> {/* Category name - sans-serif */}
+                    <span className="text-sm text-foreground/80 font-medium">
                       {categoryNames[karya.category] || 'Karya'}
                     </span>
                   </div>
@@ -208,13 +208,13 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                   <div className="px-6 pt-4 pb-2 border-b border-border/20">
                     <div className="flex items-center gap-2 mb-2">
                       <Tag className="w-4 h-4 text-foreground/60" />
-                      <span className="text-sm font-medium text-foreground/80 font-sans">Tags</span> {/* Label - sans-serif */}
+                      <span className="text-sm font-medium text-foreground/80">Tags</span>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {tags.map((tag, index) => (
                         <Badge 
                           key={index} 
-                          className="bg-foreground/10 hover:bg-foreground/15 text-foreground/90 border-none font-sans" /* Tag text - sans-serif */
+                          className="bg-foreground/10 hover:bg-foreground/15 text-foreground/90 border-none"
                         >
                           #{tag}
                         </Badge>
@@ -227,7 +227,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                 {!isText && karya.description && (
                   <div className="p-6">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm font-medium text-foreground/80 font-sans">Description</span> {/* Label - sans-serif */}
+                      <span className="text-sm font-medium text-foreground/80">Description</span>
                     </div>
                     <div 
                       className={`relative overflow-hidden transition-all duration-300 ${
@@ -257,7 +257,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                 
                 {/* Date and action buttons */}
                 <div className="p-6 pt-0 flex flex-col sm:flex-row justify-between items-center">
-                  <p className="text-xs text-foreground/60 mb-4 sm:mb-0 font-sans"> {/* Date - sans-serif */}
+                  <p className="text-xs text-foreground/60 mb-4 sm:mb-0">
                     Dibuat pada {new Date(karya.created_at).toLocaleDateString('id-ID', {
                       year: 'numeric',
                       month: 'long',
