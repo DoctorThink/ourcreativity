@@ -61,6 +61,16 @@ const Pengumuman = () => {
       {/* Version badge */}
       <VersionBadge />
 
+      {/* "OurCreativity Mobile, Coming Soon" Text */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="text-sm text-foreground/70 mt-2 mb-6 text-center p-3 bg-secondary/40 backdrop-blur-sm rounded-xl border border-white/10 shadow-md"
+      >
+        🚀 OurCreativity Mobile - Segera Hadir untuk Pengalaman Kreatif Tanpa Batas di Genggaman Anda! 📱
+      </motion.div>
+
       {/* Filter tabs */}
       <motion.div 
         className="mb-6 sm:mb-10 overflow-x-auto scrollbar-hide"
