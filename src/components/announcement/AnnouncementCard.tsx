@@ -13,7 +13,6 @@ import {
 import { format } from "date-fns";
 import { Announcement } from "@/models/Announcement";
 import BentoCard from "@/components/ui/BentoCard";
-import { getCategoryTheme, getSolidCategoryBgClass } from "@/lib/themeUtils"; // Import theme helper
 
 interface AnnouncementCardProps {
   announcement: Announcement;
@@ -24,15 +23,31 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
   announcement, 
   onClick 
 }) => {
-  const theme = getCategoryTheme(announcement.category);
-  
-  const categoryIconsMap: Record<string, React.ElementType> = {
-    event: Calendar,
-    recruitment: Users,
-    update: Megaphone,
+  const categoryStyles = {
+    event: {
+      bgColor: "bg-coral/20",
+      textColor: "text-coral",
+      icon: Calendar,
+      gradientColor: "from-coral/20 to-coral/40",
+    },
+    recruitment: {
+      bgColor: "bg-turquoise/20",
+      textColor: "text-turquoise",
+      icon: Users,
+      gradientColor: "from-turquoise/20 to-turquoise/40",
+    },
+    update: {
+      bgColor: "bg-amethyst/20",
+      textColor: "text-amethyst",
+      icon: Megaphone,
+      gradientColor: "from-amethyst/20 to-amethyst/40",
+    }
   };
-  const CategoryIcon = categoryIconsMap[announcement.category] || Megaphone;
-
+  
+  // Handle unknown category gracefully
+  const categoryStyle = categoryStyles[announcement.category as keyof typeof categoryStyles] || categoryStyles.update;
+  const CategoryIcon = categoryStyle.icon;
+  
   // Format date safely
   const getDisplayDate = () => {
     try {
@@ -58,60 +73,52 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
   const isArdelyo = announcement.content.includes('Ardelyo') || announcement.content.includes('Unix Series');
   
   return (
-    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="h-full">
+    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
       <BentoCard
-        className={`p-0 h-full relative overflow-hidden flex flex-col border-t-4 ${theme.borderClass} ${isGerakan27April ? 'bg-black/60 !border-red-700' : theme.bgClass}`}
+        className={`p-4 sm:p-6 h-full relative overflow-hidden ${isGerakan27April ? 'bg-black/60 border-red-900/50' : ''}`}
         interactive={true}
         onClick={onClick}
         glowColor={
           isGerakan27April ? "rgba(234, 56, 76, 0.2)" : 
           isVersionFour ? "rgba(155, 109, 255, 0.2)" : 
-          undefined // Or use theme.accentClass with opacity for a default glow
+          undefined
         }
       >
-        {/* Image Display */}
-        {announcement.image_url && (
-          <div className="w-full h-32 sm:h-40 overflow-hidden">
-            <img 
-              src={announcement.image_url} 
-              alt={announcement.title} 
-              className="w-full h-full object-cover" 
-            />
-          </div>
+        {/* Decorative background elements */}
+        {isGerakan27April && (
+          <>
+            <div className="absolute -top-10 -left-10 w-40 h-40 bg-red-900/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-5 right-5 w-20 h-20 bg-red-800/10 rounded-full blur-xl"></div>
+          </>
         )}
         
-        {/* Content Area */}
-        <div className="p-4 sm:p-5 flex flex-col flex-grow">
-          {/* Decorative background elements (conditional) */}
-          {isGerakan27April && (
-            <>
-              <div className="absolute -top-10 -left-10 w-40 h-40 bg-red-900/20 rounded-full blur-3xl opacity-50"></div>
-              <div className="absolute bottom-5 right-5 w-20 h-20 bg-red-800/10 rounded-full blur-xl opacity-50"></div>
-            </>
-          )}
-          {isVersionFour && (
-            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-amethyst/5 rounded-full blur-2xl opacity-50"></div>
-          )}
-          {isArdelyo && (
-            <div className="absolute top-5 -left-10 w-24 h-24 bg-turquoise/5 rounded-full blur-xl opacity-50"></div>
-          )}
-
-          <div className="flex items-start justify-between z-10 relative mb-3">
-            <div className={`px-2.5 py-1 rounded-full 
-              ${isGerakan27April 
-                ? 'bg-gradient-to-r from-red-900/80 to-red-600/70 text-white' 
-                : `${getSolidCategoryBgClass(announcement.category)} ${theme.badgeTextClass}`} 
-              text-xs font-sans font-medium flex items-center gap-1.5`}
-            >
-              <CategoryIcon className="w-3 h-3" />
-              <span className="capitalize">
-                {announcement.category === "event" ? "Acara" : 
-                 announcement.category === "recruitment" ? "Rekrutmen" : 
-                 announcement.category || "Info"}
-              </span>
-            </div>
-            
-            <div className="flex gap-1.5">
+        {isVersionFour && (
+          <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-amethyst/5 rounded-full blur-2xl"></div>
+        )}
+        
+        {isArdelyo && (
+          <div className="absolute top-5 -left-10 w-24 h-24 bg-turquoise/5 rounded-full blur-xl"></div>
+        )}
+        
+        <div className="flex items-start justify-between z-10 relative">
+          <div className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-full 
+            ${isGerakan27April 
+              ? 'bg-gradient-to-r from-red-900/70 to-red-600/50 text-white' 
+              : `bg-gradient-to-r ${categoryStyle.gradientColor} ${categoryStyle.textColor}`} 
+            text-xs font-medium flex items-center gap-1.5`}
+          >
+            {isGerakan27April ? (
+              <AlertTriangle className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+            ) : (
+              <CategoryIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+            )}
+            <span>
+              {announcement.category === "event" ? "Acara" : 
+               announcement.category === "recruitment" ? "Rekrutmen" : "Update"}
+            </span>
+          </div>
+          
+          <div className="flex gap-1.5">
             {isGerakan27April && (
               <motion.span 
                 className="bg-gradient-to-r from-red-800 to-red-600 text-white text-xs px-1.5 sm:px-2 py-0.5 rounded-full flex items-center"
@@ -152,26 +159,24 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
           </div>
         </div>
         
-          
-          <div className="mt-1 flex-grow"> {/* Changed mt-3 to mt-1 and added flex-grow */}
-            <h3 className={`text-base sm:text-lg font-serif mb-2 ${isGerakan27April ? 'text-red-200' : theme.accentClass}`}>
-              {announcement.title}
-            </h3>
-            <p className={`line-clamp-3 text-xs sm:text-sm font-sans mb-3 ${isGerakan27April ? 'text-red-100/80' : 'text-foreground/80'}`}>
-              {announcement.content.substring(0, 120)}...
-            </p>
-          </div>
-          
-          <div className="flex items-center justify-between text-xs text-foreground/60 mt-auto font-sans">
-            <span className={`flex items-center gap-1.5 ${isGerakan27April ? 'text-red-200/70' : 'text-foreground/70'}`}>
-              <Clock className="w-3 h-3" />
-              {displayDate}
-            </span>
-            <span className={`font-medium hover:underline flex items-center ${isGerakan27April ? 'text-red-300 hover:text-red-200' : `${theme.accentClass} hover:${theme.textClass}`}`}>
-              Selengkapnya
-              <ArrowUpRight className="w-3 h-3 ml-0.5" />
-            </span>
-          </div>
+        <div className="mt-3 sm:mt-4">
+          <h3 className={`text-base sm:text-xl font-serif mb-1.5 sm:mb-2 ${isGerakan27April ? 'text-red-200' : ''}`}>
+            {announcement.title}
+          </h3>
+          <p className={`line-clamp-3 text-xs sm:text-sm mb-3 sm:mb-4 ${isGerakan27April ? 'text-red-100/80' : 'text-foreground/70'}`}>
+            {announcement.content.substring(0, 120)}...
+          </p>
+        </div>
+        
+        <div className="flex items-center justify-between text-xs text-foreground/60 mt-auto">
+          <span className={`flex items-center gap-1.5 ${isGerakan27April ? 'text-red-200/70' : ''}`}>
+            <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+            {displayDate}
+          </span>
+          <span className={`text-xs sm:text-sm font-medium hover:underline flex items-center ${isGerakan27April ? 'text-red-200' : 'text-foreground/80'}`}>
+            Selengkapnya
+            <ArrowUpRight className="w-3 h-3 ml-1" />
+          </span>
         </div>
       </BentoCard>
     </motion.div>

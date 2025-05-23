@@ -13,9 +13,7 @@ import {
 import { format } from "date-fns";
 import { Announcement } from "@/models/Announcement";
 import { useIsMobile } from "@/hooks/use-mobile";
-// Button import likely not needed if only using motion.button with custom styles for actions
-import { getCategoryTheme, getSolidCategoryBgClass, CategoryTheme } from "@/lib/themeUtils"; 
-import { Users } from "lucide-react"; // Assuming Users is needed for recruitment icon
+import { Button } from "@/components/ui/button";
 
 interface AnnouncementDetailProps {
   announcement: Announcement;
@@ -23,15 +21,7 @@ interface AnnouncementDetailProps {
 
 export const AnnouncementDetail: React.FC<AnnouncementDetailProps> = ({ announcement }) => {
   const isMobile = useIsMobile();
-  const theme = getCategoryTheme(announcement.category);
   
-  const categoryIconsMap: Record<string, React.ElementType> = { // Keep this map for icons if needed
-    event: Calendar,
-    recruitment: Users, 
-    update: Megaphone,
-  };
-  const CategoryIcon = categoryIconsMap[announcement.category] || Megaphone;
-
   // Format date safely
   const getDisplayDate = () => {
     try {
@@ -61,7 +51,7 @@ export const AnnouncementDetail: React.FC<AnnouncementDetailProps> = ({ announce
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-        className={`p-4 sm:p-6 md:p-8 relative overflow-hidden ${isGerakan27April ? 'bg-black/80 border-red-800/60' : theme.bgClass}`}
+      className={`p-4 sm:p-8 relative overflow-hidden ${isGerakan27April ? 'bg-black border-red-900/50' : ''}`}
     >
       {/* Decorative elements */}
       {isGerakan27April && (
