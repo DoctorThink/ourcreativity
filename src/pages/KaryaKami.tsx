@@ -1,6 +1,10 @@
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { extractTagsFromDescription } from "@/lib/karyaUtils";
+import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/integrations/supabase/types";
 import { KaryaGallery } from "../components/karya/KaryaGallery";
 import PageLayout from "../components/layouts/PageLayout";
 import { SpotlightSection } from "../components/karya/SpotlightSection";
@@ -10,12 +14,78 @@ import CategoryExplorer from "../components/karya/CategoryExplorer";
 import { ScrollProgressIndicator } from "../components/karya/ScrollProgressIndicator";
 import { useMediaQuery } from "@/hooks/use-media-query";
 
+type KaryaType = Database['public']['Tables']['karya']['Row'];
+type SortByType = 'created_at_desc' | 'likes_count_desc';
+
+const fetchKaryaData = async (): Promise<KaryaType[]> => {
+  const { data, error } = await supabase
+    .from('karya')
+    .select('id, title, description, media_urls, image_url, category, created_at, updated_at, creator_name, status, is_spotlight, media_width, media_height, link_url, content_url, likes_count')
+    .eq('status', 'approved')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error("Error fetching karya data:", error);
+    throw new Error(error.message);
+  }
+  return data || [];
+};
+
 const KaryaKami: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState<SortByType>('created_at_desc');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const mainRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const { data: allKaryaData, isLoading, isError } = useQuery<KaryaType[], Error>({
+    queryKey: ['allKarya'],
+    queryFn: fetchKaryaData,
+  });
+
+  const uniqueTags = useMemo(() => {
+    if (!allKaryaData) return [];
+    const allTags = allKaryaData.flatMap(item => extractTagsFromDescription(item.description));
+    return [...new Set(allTags)].sort();
+  }, [allKaryaData]);
+
+  const displayedKarya = useMemo(() => {
+    let items = allKaryaData || [];
+
+    // Category Filtering
+    if (selectedCategory !== "all") {
+      items = items.filter(item => item.category === selectedCategory);
+    }
+
+    // Search Term Filtering
+    if (searchTerm) {
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      items = items.filter(item => 
+        item.title?.toLowerCase().includes(lowerSearchTerm) ||
+        item.description?.toLowerCase().includes(lowerSearchTerm) ||
+        item.creator_name?.toLowerCase().includes(lowerSearchTerm)
+      );
+    }
+
+    // Tag Filtering
+    if (selectedTags.length > 0) {
+      items = items.filter(item => {
+        const itemTags = extractTagsFromDescription(item.description);
+        return selectedTags.every(selectedTag => itemTags.includes(selectedTag.toLowerCase()));
+      });
+    }
+
+    // Sorting
+    if (sortBy === 'created_at_desc') {
+      items = [...items].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    } else if (sortBy === 'likes_count_desc') {
+      items = [...items].sort((a, b) => (b.likes_count || 0) - (a.likes_count || 0));
+    }
+
+    return items;
+  }, [allKaryaData, selectedCategory, searchTerm, selectedTags, sortBy]);
   
   // Scroll-triggered animations
   const { scrollYProgress } = useScroll({
@@ -26,15 +96,6 @@ const KaryaKami: React.FC = () => {
   const headerOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
   const headerScale = useTransform(scrollYProgress, [0, 0.1], [1, 0.95]);
   const headerY = useTransform(scrollYProgress, [0, 0.1], [0, -20]);
-  
-  // Loading effect
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-    
-    return () => clearTimeout(timer);
-  }, []);
   
   // Parallax scrolling effect
   const titleParallax = useTransform(scrollYProgress, [0, 1], [0, -100]);
@@ -50,6 +111,10 @@ const KaryaKami: React.FC = () => {
     setSelectedCategory(category);
   };
 
+  const handleSearchTermChange = (term: string) => setSearchTerm(term);
+  const handleSortByChange = (sortOption: SortByType) => setSortBy(sortOption);
+  const handleSelectedTagsChange = (tags: string[]) => setSelectedTags(tags);
+
   return (
     <PageLayout title="">
       <motion.div
@@ -58,18 +123,18 @@ const KaryaKami: React.FC = () => {
       >
         {/* Loading animation */}
         <AnimatePresence>
-          {isLoading && (
-            <motion.div 
+          {isLoading && !allKaryaData && ( // Show loading only if data is not yet available
+            <motion.div
               className="fixed inset-0 bg-background z-50 flex items-center justify-center"
               initial={{ opacity: 1 }}
-              exit={{ 
+              exit={{
                 opacity: 0,
                 transition: { duration: 0.8, ease: "easeInOut" }
               }}
             >
               <motion.div
                 className="relative w-24 h-24"
-                animate={{ 
+                animate={{
                   rotate: 360,
                   scale: [1, 1.2, 1],
                 }}
@@ -79,9 +144,9 @@ const KaryaKami: React.FC = () => {
                 }}
               >
                 <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amethyst via-turquoise to-coral opacity-80 blur-md" />
-                <img 
+                <img
                   src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
-                  alt="Loading..." 
+                  alt="Loading..."
                   className="absolute inset-0 w-full h-full object-contain"
                 />
               </motion.div>
@@ -90,7 +155,7 @@ const KaryaKami: React.FC = () => {
         </AnimatePresence>
         
         {/* Floating Navigation */}
-        <FloatingNav toggleFilters={toggleFilters} showFilters={showFilters} />
+        {!isLoading && <FloatingNav toggleFilters={toggleFilters} showFilters={showFilters} />}
         
         {/* Header Section with motion effects */}
         <motion.div 
@@ -127,7 +192,17 @@ const KaryaKami: React.FC = () => {
         {/* Advanced Filters - expandable section */}
         <AnimatePresence>
           {showFilters && (
-            <AdvancedFilters onSelectCategory={handleCategorySelect} selectedCategory={selectedCategory} />
+            <AdvancedFilters 
+              onSelectCategory={handleCategorySelect} 
+              selectedCategory={selectedCategory}
+              onSearchTermChange={handleSearchTermChange}
+              searchTerm={searchTerm}
+              onSortByChange={handleSortByChange}
+              sortBy={sortBy}
+              onSelectedTagsChange={handleSelectedTagsChange}
+              selectedTags={selectedTags}
+              uniqueTags={uniqueTags}
+            />
           )}
         </AnimatePresence>
         
@@ -149,7 +224,7 @@ const KaryaKami: React.FC = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="mb-16"
         >
-          <SpotlightSection />
+          <SpotlightSection karyaItems={allKaryaData || []} />
         </motion.div>
         
         {/* Gallery Section with motion effects */}
@@ -176,7 +251,13 @@ const KaryaKami: React.FC = () => {
             </h2>
           </motion.div>
           
-          <KaryaGallery />
+          <KaryaGallery 
+            karyaItems={displayedKarya} 
+            isLoading={isLoading && !allKaryaData} 
+            isError={isError}
+            selectedCategory={selectedCategory}
+            onSelectCategory={handleCategorySelect} 
+          />
         </motion.section>
       </motion.div>
     </PageLayout>

@@ -82,18 +82,23 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
           <div className="relative w-full bg-black/50 flex-grow" 
                style={{ height: isText ? 'auto' : '100vh' }}>
             {isText ? (
-              <div className="w-full h-full overflow-auto p-8 bg-gradient-to-b from-secondary/90 to-secondary/70 backdrop-blur-md flex items-center justify-center">
-                <div className="max-w-3xl prose prose-invert">
-                  <div className="mb-6 text-center">
+              <div className="w-full h-full overflow-auto p-6 sm:p-8 md:p-12 bg-gradient-to-b from-secondary/90 to-secondary/70 backdrop-blur-md flex items-center justify-center">
+                {/* Applied prose-lg for better readability of long text, and prose-serif for consistent font. */}
+                <div className="max-w-3xl w-full prose prose-lg prose-serif prose-invert">
+                  <div className="mb-8 text-center">
                     <img 
-                      src="/lovable-uploads/karyatulis.png" 
+                      src={categoryIcons['writing']} 
                       alt="Karya Tulis" 
-                      className="w-16 h-16 mx-auto mb-4 opacity-70" 
+                      className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 opacity-80" 
                     />
-                    <h2 className="text-2xl font-serif mb-2">{karya.title}</h2>
-                    <p className="text-sm text-foreground/70">Oleh {karya.creator_name}</p>
+                    {/* Title uses serif font from prose-serif, ensure it's distinct */}
+                    <h1 className="text-3xl sm:text-4xl font-bold !font-sans tracking-tight mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-300">{karya.title}</h1>
+                    <p className="text-base text-slate-400">
+                      Oleh {karya.creator_name}
+                    </p>
                   </div>
-                  <p className="text-foreground/90 whitespace-pre-wrap text-readable leading-relaxed font-serif text-base sm:text-lg">
+                  {/* Prose classes will style this <p> for font, size, line height, color etc. */}
+                  <p className="whitespace-pre-wrap text-slate-300 leading-relaxed sm:leading-loose">
                     {karya.description}
                   </p>
                 </div>
@@ -179,42 +184,43 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                className="bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md absolute bottom-0 left-0 right-0 z-10 max-h-[50vh] overflow-y-auto rounded-t-3xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.2)]"
+                className="bg-gradient-to-b from-secondary/90 via-background/90 to-background/95 backdrop-blur-lg absolute bottom-0 left-0 right-0 z-10 max-h-[60vh] sm:max-h-[50vh] overflow-y-auto rounded-t-3xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.25)]"
               >
                 {/* Header with title and category info */}
-                <div className="flex justify-between items-start p-6 border-b border-border/20">
-                  <div className="flex-1">
-                    <h2 className="text-2xl font-bold tracking-tight">{karya.title}</h2>
-                    <p className="text-foreground/70 mt-1">
-                      by {karya.creator_name}
+                <div className="flex flex-col sm:flex-row justify-between items-start p-5 sm:p-6 border-b border-white/10">
+                  <div className="flex-1 mb-3 sm:mb-0">
+                    <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">{karya.title}</h2>
+                    <p className="text-sm text-slate-400 mt-1">
+                      Oleh {karya.creator_name}
                     </p>
                   </div>
-                  <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm py-1.5 px-3 rounded-full border border-white/10 shadow-md">
-                    <div className="bg-white/90 p-1.5 rounded-full">
+                  <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm py-1.5 px-3 rounded-full border border-white/15 shadow-md self-start sm:self-center">
+                    <div className="bg-white/20 p-1 rounded-full">
                       <img 
-                        src={categoryIcons[karya.category] || '/lovable-uploads/design.png'} 
+                        src={categoryIcons[karya.category] || categoryIcons['design']} 
                         alt={karya.category}
-                        className="w-5 h-5 object-contain"
+                        className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
                       />
                     </div>
-                    <span className="text-sm text-foreground/80 font-medium">
+                    <span className="text-xs sm:text-sm text-slate-300 font-medium">
                       {categoryNames[karya.category] || 'Karya'}
                     </span>
                   </div>
                 </div>
                 
-                {/* Tags section - new! */}
+                {/* Tags section */}
                 {tags.length > 0 && (
-                  <div className="px-6 pt-4 pb-2 border-b border-border/20">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Tag className="w-4 h-4 text-foreground/60" />
-                      <span className="text-sm font-medium text-foreground/80">Tags</span>
+                  <div className="px-5 sm:px-6 pt-4 pb-3 border-b border-white/10">
+                    <div className="flex items-center gap-2 mb-2.5">
+                      <Tag className="w-3.5 h-3.5 text-slate-400" />
+                      <span className="text-xs sm:text-sm font-medium text-slate-300">Tags</span>
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {tags.map((tag, index) => (
                         <Badge 
                           key={index} 
-                          className="bg-foreground/10 hover:bg-foreground/15 text-foreground/90 border-none"
+                          variant="secondary"
+                          className="bg-white/5 hover:bg-white/10 text-slate-300 border-white/10 text-xs px-2.5 py-1"
                         >
                           #{tag}
                         </Badge>
@@ -223,42 +229,43 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                   </div>
                 )}
                 
-                {/* Expandable description section */}
+                {/* Expandable description section - styles adjusted for better readability */}
                 {!isText && karya.description && (
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm font-medium text-foreground/80">Description</span>
+                  <div className="p-5 sm:p-6 text-sm">
+                    <div className="flex items-center gap-2 mb-2.5">
+                      <span className="text-xs sm:text-sm font-medium text-slate-300">Deskripsi</span>
                     </div>
                     <div 
-                      className={`relative overflow-hidden transition-all duration-300 ${
-                        isDescriptionExpanded ? 'max-h-[800px]' : 'max-h-[100px]'
+                      className={`relative overflow-hidden transition-all ease-in-out duration-500 ${
+                        isDescriptionExpanded ? 'max-h-[600px] sm:max-h-[400px]' : 'max-h-[80px] sm:max-h-[60px]' // Adjusted max-h for typical screen heights
                       }`}
                     >
-                      <p className="text-foreground/90 leading-relaxed text-readable whitespace-pre-wrap">
-                        {karya.description}
-                      </p>
+                      {/* Using prose here for better text formatting of user-generated content */}
+                      <div className="prose prose-sm prose-invert max-w-none prose-p:text-slate-300 prose-p:leading-relaxed">
+                        <p className="whitespace-pre-wrap">{karya.description}</p>
+                      </div>
                       {!isDescriptionExpanded && (
-                        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background/95 to-transparent pointer-events-none"></div>
+                        <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-background/90 via-background/80 to-transparent pointer-events-none"></div>
                       )}
                     </div>
                     <Button 
                       variant="ghost" 
                       size="sm" 
                       onClick={toggleDescription}
-                      className="mt-2 text-foreground/60 hover:text-foreground hover:bg-foreground/5 gap-1 rounded-full"
+                      className="mt-2.5 text-slate-400 hover:text-sky-400 hover:bg-sky-500/10 gap-1 rounded-full px-3 py-1.5 text-xs"
                     >
-                      {isDescriptionExpanded ? 'Show Less' : 'Read More'}
+                      {isDescriptionExpanded ? 'Lebih Sedikit' : 'Selengkapnya'}
                       <ChevronDown 
-                        className={`h-4 w-4 transition-transform ${isDescriptionExpanded ? 'rotate-180' : ''}`} 
+                        className={`h-3.5 w-3.5 transition-transform duration-200 ${isDescriptionExpanded ? 'rotate-180' : ''}`} 
                       />
                     </Button>
                   </div>
                 )}
                 
-                {/* Date and action buttons */}
-                <div className="p-6 pt-0 flex flex-col sm:flex-row justify-between items-center">
-                  <p className="text-xs text-foreground/60 mb-4 sm:mb-0">
-                    Dibuat pada {new Date(karya.created_at).toLocaleDateString('id-ID', {
+                {/* Date and action buttons - styles adjusted */}
+                <div className="p-5 sm:p-6 pt-2 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+                  <p className="text-[11px] sm:text-xs text-slate-500 order-last sm:order-first">
+                    Dibuat: {new Date(karya.created_at).toLocaleDateString('id-ID', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric'

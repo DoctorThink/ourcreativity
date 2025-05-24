@@ -19,25 +19,40 @@ interface KaryaCardProps {
   onClick?: () => void;
 }
 
-// Helper function to generate transformed image URLs with lower resolution for cards
-const getTransformedUrl = (baseUrl: string | null | undefined, options: { format?: 'webp' | 'avif' | 'jpeg', width?: number, quality?: number } = {}): string => {
+// Helper function to generate transformed image URLs with Supabase
+const getTransformedUrl = (
+  baseUrl: string | null | undefined, 
+  options: { 
+    width?: number, 
+    height?: number, 
+    quality?: number, 
+    resizeMode?: 'cover' | 'contain' | 'fill' 
+  } = {}
+): string => {
   if (!baseUrl) return '/placeholder.svg'; // Fallback placeholder
+
   try {
-    // For thumbnails in cards, use lower resolution
     const url = new URL(baseUrl);
-    
-    // Use much lower quality and size for card previews to improve performance
-    const cardPreviewWidth = options.width || 400; // Small width for cards
-    const cardPreviewQuality = options.quality || 60; // Lower quality for cards
-    
-    if (options.format) url.searchParams.set('format', options.format);
-    url.searchParams.set('resize', `width:${cardPreviewWidth}`);
-    url.searchParams.set('quality', cardPreviewQuality.toString());
+
+    // Default values for card previews
+    const targetWidth = options.width || 400;
+    const targetQuality = options.quality || 60;
+    const targetResizeMode = options.resizeMode || 'cover';
+
+    url.searchParams.set('width', targetWidth.toString());
+    url.searchParams.set('quality', targetQuality.toString());
+    url.searchParams.set('resize', targetResizeMode);
+
+    if (options.height) {
+      url.searchParams.set('height', options.height.toString());
+    }
+    // No need to set format for auto WebP by Supabase.
+    // Supabase's `renderMethod=transform` is the default.
     
     return url.toString();
   } catch (e) {
-    console.error("Error creating URL:", e);
-    return baseUrl; // Return original if URL parsing fails
+    console.error("Error creating transformed URL:", e);
+    return baseUrl; // Return original if URL parsing/transformation fails
   }
 };
 
@@ -179,11 +194,11 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                     ) : (
                       <picture>
                         {/* Use progressively loading images with much lower resolution for cards */}
-                        <source srcSet={getTransformedUrl(url, { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
-                        <source srcSet={getTransformedUrl(url, { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
+                        <source srcSet={getTransformedUrl(url, { width: 400, quality: 60, resizeMode: 'cover' })} type="image/webp" />
+                        <source srcSet={getTransformedUrl(url, { width: 400, quality: 60, resizeMode: 'cover' })} type="image/jpeg" />
                         <img
                           ref={imageRef}
-                          src={getTransformedUrl(url, { format: 'jpeg', width: 300, quality: 50 })}
+                          src={getTransformedUrl(url, { width: 300, quality: 50, resizeMode: 'cover' })}
                           alt={`${karya.title} - slide ${index + 1}`}
                           className="w-full h-full object-cover"
                           onLoad={handleImageLoad}
@@ -229,11 +244,11 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
               ) : (
                 <picture>
                   {/* Use much lower resolution for card previews */}
-                  <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
-                  <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
+                  <source srcSet={getTransformedUrl(mediaUrls[0], { width: 400, quality: 60, resizeMode: 'cover' })} type="image/webp" />
+                  <source srcSet={getTransformedUrl(mediaUrls[0], { width: 400, quality: 60, resizeMode: 'cover' })} type="image/jpeg" />
                   <img
                     ref={imageRef}
-                    src={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 300, quality: 50 })}
+                    src={getTransformedUrl(mediaUrls[0], { width: 300, quality: 50, resizeMode: 'cover' })}
                     alt={karya.title}
                     className={`w-full h-full object-cover transition-opacity duration-500 ${
                       imageLoaded ? 'opacity-100' : 'opacity-0'
