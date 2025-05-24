@@ -519,6 +519,27 @@
   }
 }
 
+/* Improved Masonry Grid Styling */
+.my-masonry-grid {
+  display: flex;
+  width: 100%;
+  margin-left: -1rem;
+  margin-right: -1rem;
+}
+
+.my-masonry-grid_column {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  background-clip: padding-box;
+}
+
+.my-masonry-grid_column > * {
+  display: block;
+  margin-bottom: 2.5rem;
+  break-inside: avoid;
+  width: 100%;
+}
+
 /* Fix for video elements to prevent GPU acceleration issues */
 video {
   -webkit-backface-visibility: hidden;
@@ -535,8 +556,19 @@ video {
 
 /* Responsive improvements */
 @media screen and (max-width: 640px) {
-  /* Styles for .my-masonry-grid, .my-masonry-grid_column, 
-     and .my-masonry-grid_column > * were here and are now removed. */
+  .my-masonry-grid {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+  
+  .my-masonry-grid_column {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .my-masonry-grid_column > * {
+    margin-bottom: 1.5rem;
+  }
 
   .spotlight-item {
     transform: scale(1.03);
