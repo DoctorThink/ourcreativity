@@ -9,56 +9,13 @@ import AdvancedFilters from "../components/karya/AdvancedFilters";
 import CategoryExplorer from "../components/karya/CategoryExplorer";
 import { ScrollProgressIndicator } from "../components/karya/ScrollProgressIndicator";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { Database } from "@/integrations/supabase/types";
-import { mockKarya } from "@/components/karya/mockData"; // Assuming mockKarya is moved to a shared location
-
-type KaryaType = Database['public']['Tables']['karya']['Row'];
 
 const KaryaKami: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("recency"); // 'recency', 'popularity'
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  // const [isLoading, setIsLoading] = useState(true); // This will be replaced by useQuery's isLoading
+  const [isLoading, setIsLoading] = useState(true);
   const mainRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
-
-  // Fetch all Karya data here
-  const { data: karyaData, isLoading: isKaryaLoading, error: karyaError } = useQuery<KaryaType[]>({
-    queryKey: ['karya'],
-    queryFn: async () => {
-      try {
-        const { data, error } = await supabase
-          .from('karya')
-          .select('*')
-          .eq('status', 'approved')
-          .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        return data || []; // Ensure data is not null
-      } catch (error) {
-        console.error("Error fetching karya in KaryaKami:", error);
-        return mockKarya; // Fallback to mock data
-      }
-    },
-    retry: 1,
-    initialData: mockKarya, // Use mockKarya as initialData
-  });
-
-  // Find spotlight item from karyaData
-  const spotlightItem = karyaData?.find(item => item.is_spotlight === true) || null;
-  
-  // Page level loading state (for initial page transition)
-  const [isPageLoading, setIsPageLoading] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsPageLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
   
   // Scroll-triggered animations
   const { scrollYProgress } = useScroll({
@@ -69,6 +26,15 @@ const KaryaKami: React.FC = () => {
   const headerOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
   const headerScale = useTransform(scrollYProgress, [0, 0.1], [1, 0.95]);
   const headerY = useTransform(scrollYProgress, [0, 0.1], [0, -20]);
+  
+  // Loading effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    
+    return () => clearTimeout(timer);
+  }, []);
   
   // Parallax scrolling effect
   const titleParallax = useTransform(scrollYProgress, [0, 1], [0, -100]);
@@ -90,9 +56,9 @@ const KaryaKami: React.FC = () => {
         ref={mainRef}
         className="relative min-h-screen w-full overflow-hidden"
       >
-        {/* Loading animation for initial page load (not data loading) */}
+        {/* Loading animation */}
         <AnimatePresence>
-          {isPageLoading && (
+          {isLoading && (
             <motion.div 
               className="fixed inset-0 bg-background z-50 flex items-center justify-center"
               initial={{ opacity: 1 }}
@@ -161,16 +127,7 @@ const KaryaKami: React.FC = () => {
         {/* Advanced Filters - expandable section */}
         <AnimatePresence>
           {showFilters && (
-            <AdvancedFilters 
-              selectedCategory={selectedCategory}
-              onSelectCategory={handleCategorySelect}
-              searchTerm={searchTerm}
-              onSearchTermChange={setSearchTerm}
-              sortBy={sortBy}
-              onSortByChange={setSortBy}
-              selectedTags={selectedTags}
-              onSelectedTagsChange={setSelectedTags}
-            />
+            <AdvancedFilters onSelectCategory={handleCategorySelect} selectedCategory={selectedCategory} />
           )}
         </AnimatePresence>
         
@@ -192,7 +149,7 @@ const KaryaKami: React.FC = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="mb-16"
         >
-          <SpotlightSection spotlightKarya={spotlightItem} />
+          <SpotlightSection />
         </motion.div>
         
         {/* Gallery Section with motion effects */}
@@ -219,15 +176,7 @@ const KaryaKami: React.FC = () => {
             </h2>
           </motion.div>
           
-          <KaryaGallery 
-            initialKaryaList={karyaData || []} // Pass fetched data
-            isLoading={isKaryaLoading} // Pass loading state from useQuery
-            selectedCategory={selectedCategory}
-            onSelectCategory={handleCategorySelect}
-            searchTerm={searchTerm}
-            sortBy={sortBy}
-            selectedTags={selectedTags}
-          />
+          <KaryaGallery />
         </motion.section>
       </motion.div>
     </PageLayout>
