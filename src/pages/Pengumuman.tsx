@@ -1,9 +1,8 @@
-
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { RefreshCw, Loader2, Calendar, Users, Megaphone } from "lucide-react";
+import { RefreshCw, Loader2, Calendar, Users, Megaphone, Wand2 } from "lucide-react"; // Added Wand2 for Add Predefined
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAnnouncements } from "@/hooks/useAnnouncements";
@@ -23,17 +22,17 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1 }
+    transition: { staggerChildren: 0.07, delayChildren: 0.2 } // Added delayChildren
   }
 };
 
-// Animation variants for card elements
 const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 30, scale: 0.95 }, // Slightly more pronounced entry
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.5 }
+    scale: 1,
+    transition: { duration: 0.4, ease: "easeOut" } // Smoother ease
   }
 };
 
@@ -50,35 +49,33 @@ const Pengumuman = () => {
     error,
     isAddingPredefined,
     handleRetry,
-    handleAddPredefinedAnnouncements
+    handleAddPredefinedAnnouncements // This function would need to be updated in useAnnouncements to add the new specific announcements
   } = useAnnouncements();
 
   return (
     <PageLayout 
-      title="Pengumuman" 
-      subtitle="Informasi terbaru dan penting dari komunitas OUR CREATIVITY"
+      title="Pengumuman Komunitas" 
+      subtitle="Ikuti informasi terbaru, acara, dan pembaruan penting dari OurCreativity."
     >
-      {/* Version badge */}
+      {/* Version badge (assumed for current site version) */}
       <VersionBadge />
 
-      {/* "OurCreativity Mobile, Coming Soon" Text */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="text-sm text-foreground/70 mt-2 mb-6 text-center p-3 bg-secondary/40 backdrop-blur-sm rounded-xl border border-white/10 shadow-md"
+        className="text-sm text-center text-foreground/70 mt-2 mb-6 p-3 bg-gradient-to-r from-amethyst/10 via-background to-turquoise/10 backdrop-blur-sm rounded-xl border border-white/10 shadow-lg"
       >
-        🚀 OurCreativity Mobile - Segera Hadir untuk Pengalaman Kreatif Tanpa Batas di Genggaman Anda! 📱
+        📱 <span className="font-semibold text-amethyst">OurCreativity Mobile:</span> Segera hadir untuk pengalaman kreatif tanpa batas di genggaman Anda! Nantikan update selanjutnya. 🚀
       </motion.div>
 
-      {/* Filter tabs */}
       <motion.div 
-        className="mb-6 sm:mb-10 overflow-x-auto scrollbar-hide"
+        className="mb-6 sm:mb-10 overflow-x-auto scrollbar-hide flex justify-center sm:justify-start" // Centered on mobile
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <div className="flex gap-2 p-1.5 bg-secondary/50 backdrop-blur-md rounded-full border border-white/10 inline-flex">
+        <div className="flex gap-2 p-1.5 bg-secondary/60 backdrop-blur-md rounded-full border border-white/10 inline-flex shadow-md">
           <FilterButton 
             active={filter === "all"} 
             onClick={() => setFilter("all")}
@@ -89,7 +86,7 @@ const Pengumuman = () => {
             active={filter === "event"} 
             onClick={() => setFilter("event")}
             icon={Calendar}
-            color="bg-coral"
+            color="bg-coral" // Pass color for icon background
           >
             Acara
           </FilterButton>
@@ -112,7 +109,8 @@ const Pengumuman = () => {
         </div>
       </motion.div>
 
-      {/* Admin Action - Add Predefined Announcements */}
+      {/* This button's functionality (handleAddPredefinedAnnouncements) is assumed to be updated in useAnnouncements.ts */}
+      {/* to add the new v3.0, v3.5, v3.7, v4.0 announcements with their unique content. */}
       <motion.div 
         className="mb-4 flex justify-end"
         initial={{ opacity: 0 }}
@@ -124,23 +122,21 @@ const Pengumuman = () => {
           variant="outline"
           onClick={handleAddPredefinedAnnouncements}
           disabled={isAddingPredefined}
-          className="flex items-center gap-2 text-xs bg-background/20"
+          className="flex items-center gap-2 text-xs bg-background/30 backdrop-blur-sm border-foreground/20 hover:bg-foreground/10 hover:text-foreground font-sans"
         >
           {isAddingPredefined ? (
             <Loader2 className="h-3 w-3 animate-spin" />
           ) : (
-            <RefreshCw className="h-3 w-3" />
+            <Wand2 className="h-3 w-3 text-amethyst" /> // More thematic icon
           )}
-          Tambah Pengumuman Update
+          Tambah Contoh Pengumuman Update
         </Button>
       </motion.div>
 
-      {/* Error State */}
       {error && !isLoading && (
         <AnnouncementErrorState error={error} onRetry={handleRetry} />
       )}
 
-      {/* Featured Announcement */}
       {!error && featuredAnnouncement ? (
         <FeaturedAnnouncement 
           announcement={featuredAnnouncement} 
@@ -150,18 +146,16 @@ const Pengumuman = () => {
         <EmptyFeaturedAnnouncement />
       ) : null}
 
-      {/* Loading state */}
       {isLoading ? (
         <AnnouncementLoading />
       ) : (
         <>
-          {/* Announcement grid */}
           {!error && (
             <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-6" // Added mt-6
             >
               {announcements.length > 0 ? (
                 announcements.map((announcement) => (
@@ -173,20 +167,21 @@ const Pengumuman = () => {
                   </motion.div>
                 ))
               ) : (
-                <EmptyAnnouncementState onShowAll={() => setFilter('all')} />
+                <div className="col-span-1 sm:col-span-2 lg:col-span-3"> {/* Ensure EmptyState spans all columns */}
+                  <EmptyAnnouncementState onShowAll={() => setFilter('all')} />
+                </div>
               )}
             </motion.div>
           )}
         </>
       )}
 
-      {/* Detailed announcement dialog */}
       <Dialog 
         open={!!selectedAnnouncement} 
         onOpenChange={(open) => !open && setSelectedAnnouncement(null)}
       >
-        <DialogContent className="max-w-3xl p-0 bg-secondary/90 backdrop-blur-xl border border-white/10 max-h-[90vh] overflow-y-auto">
-          <AnimatePresence>
+        <DialogContent className="max-w-3xl p-0 bg-background/80 backdrop-blur-xl border border-white/10 rounded-ios max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-foreground/30 scrollbar-track-transparent">
+          <AnimatePresence mode="wait"> {/* Added mode="wait" for smoother transitions */}
             {selectedAnnouncement && (
               <AnnouncementDetail announcement={selectedAnnouncement} />
             )}
