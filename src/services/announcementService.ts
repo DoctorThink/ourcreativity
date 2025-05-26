@@ -1,248 +1,350 @@
 
-import { supabase } from '@/integrations/supabase/client';
-import { Announcement, AnnouncementFormData } from '@/models/Announcement';
+import { supabase } from "@/integrations/supabase/client";
+import { Announcement, AnnouncementFormData } from "@/models/Announcement";
+import { toast } from "sonner";
 
-// Fetch all announcements or filtered by category
-export const fetchAnnouncements = async (filter: string = 'all'): Promise<Announcement[]> => {
+/**
+ * Fetches announcements from Supabase based on category
+ * 
+ * @param category - The category to filter by, or "all" for all categories
+ * @param publishedOnly - Whether to only fetch published announcements (default: true)
+ * @returns A Promise that resolves to an array of Announcement objects
+ */
+export const fetchAnnouncements = async (
+  category: string = "all", 
+  publishedOnly: boolean = true
+): Promise<Announcement[]> => {
   try {
-    console.log(`Fetching announcements with filter: ${filter}`);
-
-    let query = supabase
-      .from('announcements')
-      .select('*')
-      .eq('published', true)
-      .order('date', { ascending: false })
-      .order('created_at', { ascending: false });
-
-    // Apply category filter if not "all"
-    if (filter !== 'all') {
-      query = query.eq('category', filter);
+    // Start building query
+    let query = supabase.from("announcements").select("*");
+    
+    // Only fetch published announcements if needed
+    if (publishedOnly) {
+      query = query.eq("published", true);
     }
-
+    
+    // Filter by category if specified
+    if (category !== "all") {
+      query = query.eq("category", category);
+    }
+    
+    // Order by date (newest first), then by created_at, then by importance
+    query = query.order("important", { ascending: false })
+                .order("date", { ascending: false, nullsFirst: false })
+                .order("created_at", { ascending: false });
+    
     const { data, error } = await query;
-
+    
     if (error) {
-      console.error('Error fetching announcements:', error);
-      throw new Error(`Failed to fetch announcements: ${error.message}`);
+      console.error("Error fetching announcements:", error);
+      throw new Error(error.message);
     }
-
-    console.log(`Fetched ${data?.length || 0} announcements`);
-    return data || [];
-
+    
+    return data as Announcement[];
   } catch (error) {
-    console.error('Error in fetchAnnouncements:', error);
+    console.error("Exception in fetchAnnouncements:", error);
+    toast.error("Gagal memuat data pengumuman");
     throw error;
   }
 };
 
-// Fetch featured announcement (important one)
+/**
+ * Fetches the single most important announcement marked as featured
+ * 
+ * @returns A Promise that resolves to an Announcement object or null if no featured announcement
+ */
 export const fetchFeaturedAnnouncement = async (): Promise<Announcement | null> => {
   try {
-    console.log('Fetching featured announcement');
-    
+    // Get the most important, most recent, published announcement
     const { data, error } = await supabase
-      .from('announcements')
-      .select('*')
-      .eq('published', true)
-      .eq('important', true)
-      .order('date', { ascending: false })
-      .order('created_at', { ascending: false })
+      .from("announcements")
+      .select("*")
+      .eq("published", true)
+      .eq("important", true)
+      .order("date", { ascending: false, nullsFirst: false })
+      .order("created_at", { ascending: false })
       .limit(1)
       .single();
-
+    
     if (error) {
-      // PGRST116 is "No rows returned" error code, which is expected if no featured announcement
       if (error.code === 'PGRST116') {
-        console.log('No featured announcement found');
+        // No featured announcement found (PGRST116 = no rows returned from the query)
         return null;
       }
       
-      console.error('Error fetching featured announcement:', error);
-      throw new Error(`Failed to fetch featured announcement: ${error.message}`);
+      console.error("Error fetching featured announcement:", error);
+      throw new Error(error.message);
     }
-
-    console.log('Featured announcement found:', data);
-    return data;
-
+    
+    return data as Announcement;
   } catch (error) {
-    console.error('Error in fetchFeaturedAnnouncement:', error);
-    // If the error is "No rows returned", we return null instead of throwing
-    if (error instanceof Error && error.message.includes('No rows returned')) {
+    // If error is not PGRST116, rethrow for handling upstream
+    if (error instanceof Error && error.message.includes('PGRST116')) {
       return null;
     }
+    
+    console.error("Exception in fetchFeaturedAnnouncement:", error);
     throw error;
   }
 };
 
-// Add a new announcement
-export const addAnnouncement = async (announcement: AnnouncementFormData): Promise<Announcement> => {
-  try {
-    const { data, error } = await supabase
-      .from('announcements')
-      .insert([announcement])
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error adding announcement:', error);
-      throw new Error(`Failed to add announcement: ${error.message}`);
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Error in addAnnouncement:', error);
-    throw error;
-  }
-};
-
-// Update an existing announcement
-export const updateAnnouncement = async (id: string, announcement: Partial<AnnouncementFormData>): Promise<Announcement> => {
-  try {
-    const { data, error } = await supabase
-      .from('announcements')
-      .update(announcement)
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error updating announcement:', error);
-      throw new Error(`Failed to update announcement: ${error.message}`);
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Error in updateAnnouncement:', error);
-    throw error;
-  }
-};
-
-// Delete an announcement
-export const deleteAnnouncement = async (id: string): Promise<void> => {
+/**
+ * Creates a new announcement
+ * 
+ * @param announcementData - The data for the new announcement
+ * @returns A Promise that resolves to a boolean indicating success
+ */
+export const createAnnouncement = async (
+  announcementData: AnnouncementFormData
+): Promise<boolean> => {
   try {
     const { error } = await supabase
-      .from('announcements')
-      .delete()
-      .eq('id', id);
-
+      .from("announcements")
+      .insert(announcementData);
+    
     if (error) {
-      console.error('Error deleting announcement:', error);
-      throw new Error(`Failed to delete announcement: ${error.message}`);
+      console.error("Error creating announcement:", error);
+      toast.error(`Gagal membuat pengumuman: ${error.message}`);
+      return false;
     }
+    
+    toast.success("Pengumuman berhasil dibuat");
+    return true;
   } catch (error) {
-    console.error('Error in deleteAnnouncement:', error);
-    throw error;
+    console.error("Exception in createAnnouncement:", error);
+    toast.error("Gagal membuat pengumuman");
+    return false;
   }
 };
 
-// Add predefined announcements for testing/demo purposes
+/**
+ * Updates an existing announcement
+ * 
+ * @param id - The ID of the announcement to update
+ * @param announcementData - The updated data for the announcement
+ * @returns A Promise that resolves to a boolean indicating success
+ */
+export const updateAnnouncement = async (
+  id: string, 
+  announcementData: AnnouncementFormData
+): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from("announcements")
+      .update({
+        ...announcementData,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", id);
+    
+    if (error) {
+      console.error("Error updating announcement:", error);
+      toast.error(`Gagal memperbarui pengumuman: ${error.message}`);
+      return false;
+    }
+    
+    toast.success("Pengumuman berhasil diperbarui");
+    return true;
+  } catch (error) {
+    console.error("Exception in updateAnnouncement:", error);
+    toast.error("Gagal memperbarui pengumuman");
+    return false;
+  }
+};
+
+/**
+ * Deletes an announcement
+ * 
+ * @param id - The ID of the announcement to delete
+ * @returns A Promise that resolves to a boolean indicating success
+ */
+export const deleteAnnouncement = async (id: string): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from("announcements")
+      .delete()
+      .eq("id", id);
+    
+    if (error) {
+      console.error("Error deleting announcement:", error);
+      toast.error(`Gagal menghapus pengumuman: ${error.message}`);
+      return false;
+    }
+    
+    toast.success("Pengumuman berhasil dihapus");
+    return true;
+  } catch (error) {
+    console.error("Exception in deleteAnnouncement:", error);
+    toast.error("Gagal menghapus pengumuman");
+    return false;
+  }
+};
+
+/**
+ * Toggles the published status of an announcement
+ * 
+ * @param id - The ID of the announcement to toggle
+ * @param currentStatus - The current published status
+ * @returns A Promise that resolves to a boolean indicating success
+ */
+export const toggleAnnouncementPublishStatus = async (
+  id: string, 
+  currentStatus: boolean = true
+): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from("announcements")
+      .update({ 
+        published: !currentStatus,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", id);
+    
+    if (error) {
+      console.error("Error toggling announcement publish status:", error);
+      toast.error(`Gagal mengubah status publikasi: ${error.message}`);
+      return false;
+    }
+    
+    toast.success(currentStatus ? 
+      "Pengumuman disembunyikan" : 
+      "Pengumuman dipublikasikan");
+    return true;
+  } catch (error) {
+    console.error("Exception in toggleAnnouncementPublishStatus:", error);
+    toast.error("Gagal mengubah status publikasi");
+    return false;
+  }
+};
+
+/**
+ * Toggles the important status of an announcement
+ * 
+ * @param id - The ID of the announcement to toggle
+ * @param currentStatus - The current important status
+ * @returns A Promise that resolves to a boolean indicating success
+ */
+export const toggleAnnouncementImportantStatus = async (
+  id: string, 
+  currentStatus: boolean = false
+): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from("announcements")
+      .update({ 
+        important: !currentStatus,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", id);
+    
+    if (error) {
+      console.error("Error toggling announcement important status:", error);
+      toast.error(`Gagal mengubah status prioritas: ${error.message}`);
+      return false;
+    }
+    
+    toast.success(currentStatus ? 
+      "Status penting dihapus" : 
+      "Ditandai sebagai pengumuman penting");
+    return true;
+  } catch (error) {
+    console.error("Exception in toggleAnnouncementImportantStatus:", error);
+    toast.error("Gagal mengubah status prioritas");
+    return false;
+  }
+};
+
+/**
+ * Adds predefined announcements to the database
+ * These include version updates and important community announcements
+ * 
+ * @returns A Promise that resolves to a boolean indicating success
+ */
 export const addPredefinedAnnouncements = async (): Promise<boolean> => {
   try {
-    const predefinedAnnouncements = [
+    // Current date
+    const now = new Date().toISOString();
+    
+    // Predefined announcements
+    const announcements = [
+      // Version 4.0 (Newest)
       {
-        title: 'Gerakan 27 April - Mengenang Tragedi Pembantaian SideR',
-        content: `Mengenang tragedi yang menjadi pembantaian terbesar dalam sejarah komunitas OUR CREATIVITY. 300+ member dari kalangan SideR (member non-aktif) menjadi korban. Di antara korban juga terdapat beberapa member aktif yang terkena dampak.\n\nTragedi ini terjadi terutama di edisi Desain dan Meme, mengakibatkan hilangnya banyak talent kreatif dari komunitas kita. Gerakan 27 April dibuat untuk mengenang dan memastikan bahwa peristiwa ini tidak terulang kembali.\n\nKami mengundang seluruh anggota komunitas untuk hadir dalam acara memorial virtual yang akan diadakan pada tanggal 27 April 2025. Acara ini akan mencakup:\n\n1. Penghormatan terhadap member yang terdampak\n2. Diskusi tentang kebijakan baru tentang perlindungan member\n3. Peluncuran program reintegrasi untuk mantan member SideR\n\nMari kita bersama-sama membangun komunitas yang lebih inklusif dan saling mendukung.`,
-        category: 'event',
+        title: "OurCreativity Web Versi 4.0 - Peningkatan Terbaru",
+        content: "Selamat datang di OurCreativity Web versi 4.0!\n\n" +
+                "Versi terbaru ini hadir dengan berbagai peningkatan dan penyempurnaan untuk pengalaman yang lebih baik. " +
+                "UI/UX telah dirancang ulang untuk responsivitas yang lebih baik di semua perangkat, dengan fokus pada estetika dan animasi yang halus.\n\n" +
+                "Fitur-fitur utama termasuk:\n\n" +
+                "• Desain responsif yang sepenuhnya berfungsi pada mobile dan desktop\n" +
+                "• Peningkatan kinerja dan kecepatan loading\n" +
+                "• Sistem pengumuman yang lebih interaktif\n" +
+                "• Integrasi dengan Supabase untuk manajemen data yang lebih efisien\n\n" +
+                "Terima kasih telah menggunakan OurCreativity Web. Kami terus berkomitmen untuk menyediakan platform terbaik untuk komunitas kreatif Indonesia.",
+        category: "update",
+        published: true,
         important: true,
-        published: true,
-        date: new Date('2025-04-27T18:00:00').toISOString(),
-        image_url: 'https://picsum.photos/id/255/800/400'
+        date: now,
+        image_url: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1740&auto=format&fit=crop"
       },
+      // Ardelyo's announcement about Unix Series
       {
-        title: "Simfoni Pembaharuan: OUR CREATIVITY v4.0 - Desain Total & Visi Masa Depan!",
-        content: "Dengan bangga dan penuh suka cita, kami mempersembahkan OUR CREATIVITY Versi 4.0 – sebuah simfoni pembaharuan yang menandai evolusi terbesar platform kita hingga saat ini! Versi 4.0 adalah hasil dari kerja keras, dedikasi, dan aspirasi kita bersama untuk menciptakan ekosistem kreatif yang sesungguhnya.\n\n**Apa yang Baru di OUR CREATIVITY v4.0: Konsep \"Symphony\"**\n\nKonsep \"Symphony\" mencerminkan harmoni antara desain, fungsionalitas, dan pengalaman pengguna. Kami telah merombak total setiap aspek platform:\n\n<ul><li><strong>Desain Menyeluruh Baru:</strong> Setiap halaman, setiap tombol, setiap interaksi kini mengalun dalam harmoni visual yang baru. Desain yang lebih elegan, modern, dan kohesif di semua lini.</li><li><strong>Performa Lebih Cepat:</strong> Kami telah melakukan optimasi mendalam di sisi backend dan frontend, menghasilkan waktu muat yang lebih cepat dan responsivitas yang lebih baik.</li><li><strong>Navigasi Intuitif:</strong> Alur kerja (workflow) dan navigasi telah didesain ulang dari dasar untuk memastikan Anda dapat menemukan apa yang Anda butuhkan dan mengakses fitur dengan lebih mudah dan efisien.</li><li><strong>Peningkatan Fitur yang Ada:</strong> Berbagai fitur yang sudah Anda kenal kini hadir dengan peningkatan fungsionalitas dan kemudahan penggunaan.</li></ul>\n\n**Visi Masa Depan: Evolusi Berikutnya**\n\nOUR CREATIVITY v4.0 akan menjadi Pembaruan Mayor Terakhir untuk versi website ini. Mengapa? Karena ini adalah fondasi kokoh bagi langkah besar kita selanjutnya. Web Developer utama kita, Ardelyo, saat ini sedang dalam tahap pembelajaran intensif untuk pengembangan Aplikasi Mobile OUR CREATIVITY. Ini adalah impian kita untuk membawa platform ini ke puncak global, memungkinkan Anda berkarya dan berkolaborasi tanpa batas, langsung dari genggaman Anda.\n\nPerjalanan ini membutuhkan dukungan luar biasa. Untuk mendukung pengembangan berkelanjutan, riset aplikasi mobile, dan biaya operasional server, kami dengan rendah hati mengajak Anda untuk memberikan donasi melalui:\n**[https://saweria.co/ardelyo](https://saweria.co/ardelyo)**\n\nSetiap kontribusi Anda, sekecil apapun, akan sangat berarti bagi masa depan OUR CREATIVITY.\n\nTerima kasih telah menjadi bagian dari perjalanan luar biasa ini. Mari bersama-sama wujudkan Simfoni Kreativitas tanpa batas!",
-        category: 'update',
+        title: "Projek Rahasia: Unix Series — Fase Kedua OurCreativity",
+        content: "Dari Web Developer Ardelyo:\n\n" +
+                "Saya ingin mengklarifikasi bahwa projek OurCreativity Web BUKAN merupakan jalan buntu. Saat ini, kami sedang mengerjakan sebuah projek secara senyap yang akan diumumkan pada waktu yang tepat di masa depan.\n\n" +
+                "Ini adalah Projek Ardelyo fase kedua untuk Komunitas OurCreativity, yang akan menjadi bagian dari visi dan misi seri projek-projek saya ke depan — bernama \"Unix Series\".\n\n" +
+                "Unix Series akan membawa inovasi dan kreasi yang belum pernah ada sebelumnya. Projek ini akan saya kerjakan sendiri, memanfaatkan teknologi terkini yang tersedia. Kami berkomitmen untuk terus mengembangkan ekosistem yang mendukung kreativitas Indonesia dan memajukan komunitas digital kita.\n\n" +
+                "Tetap pantau pengumuman kami untuk informasi lebih lanjut tentang inisiatif menarik ini.\n\n" +
+                "— Ardelyo",
+        category: "update",
+        published: true,
         important: true,
-        published: true,
-        date: new Date('2025-05-20T09:00:00').toISOString(),
-        image_url: null // As specified, or remove if no image for this version
+        date: now,
+        image_url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1742&auto=format&fit=crop"
       },
+      // Version 3.7 (Previous update)
       {
-        title: "Wajah Baru OurCreativity: Memperkenalkan Desain 'Creative Constellations'!",
-        content: "Salam Kreator! Kami sangat bersemangat mempersembahkan Wajah Baru OurCreativity melalui pembaruan versi 3.5! Terinspirasi oleh keindahan dan keteraturan kosmos, kami memperkenalkan konsep desain \"Creative Constellations\".\n\nPembaruan ini menghadirkan antarmuka yang lebih modern, bersih, dan intuitif, dengan referensi kuat pada estetika desain iOS yang elegan dan fungsional. Navigasi telah disederhanakan, palet warna diperbarui untuk kenyamanan visual, dan interaksi mikro dirancang untuk membuat pengalaman Anda menjelajahi dan berkarya menjadi lebih mulus dan menyenangkan.\n\nTemukan harmoni baru dalam setiap klik dan biarkan kreativitas Anda bersinar di antara konstelasi karya lainnya! Kami harap Anda menikmati Wajah Baru OurCreativity!",
-        category: 'update',
-        important: false,
+        title: "OurCreativity Web Versi 3.7",
+        content: "Versi 3.7 OurCreativity Web telah dirilis dengan sejumlah peningkatan stabilitas dan perbaikan bug. Update fokus pada penyempurnaan fitur yang sudah ada dan memastikan pengalaman pengguna yang lebih lancar.",
+        category: "update",
         published: true,
-        date: new Date('2025-04-02T09:00:00').toISOString(),
-        image_url: null
+        important: false,
+        date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()
       },
+      // Version 3.5 (Earlier update)
       {
-        title: "Update v3.7: Memperkenalkan 'Karya Kami' - Unggah Karya Kini Lebih Mudah & Gratis!",
-        content: "Halo Komunitas OurCreativity! Pembaruan versi 3.7 hadir membawa kabar gembira, terutama bagi Anda yang aktif berkarya. Kami dengan bangga meluncurkan fitur \"Karya Kami\"!\n\nFitur \"Karya Kami\" dirancang untuk mempermudah Anda mengunggah, mengelola, dan memamerkan semua hasil kreativitas Anda kepada komunitas – dan semuanya gratis! Proses unggah kini lebih ringkas, mendukung berbagai format file, dan dilengkapi dengan opsi pengaturan privasi yang lebih baik untuk setiap karya.\n\nKami percaya bahwa setiap karya berhak mendapatkan panggungnya. Mulai sekarang, bagikan mahakarya Anda dengan lebih mudah dan jangkau audiens yang lebih luas di OurCreativity!",
-        category: 'update',
-        important: false,
+        title: "OurCreativity Web Versi 3.5",
+        content: "Versi 3.5 membawa pembaruan tampilan dan beberapa fitur baru untuk mendukung kreativitas komunitas. Interface dibuat lebih modern dan mendukung lebih banyak format kreasi.",
+        category: "update",
         published: true,
-        date: new Date('2025-04-11T09:00:00').toISOString(),
-        image_url: null
+        important: false,
+        date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
       },
+      // Version 3.0 (Official launch)
       {
-        title: 'Rekrutmen Tim Moderator Konten Juli 2025',
-        content: 'Kami sedang mencari anggota komunitas yang berkomitmen dan berdedikasi untuk bergabung dengan tim moderator konten kami. Sebagai moderator konten, Anda akan bertanggung jawab untuk meninjau dan menyetujui kiriman konten, memastikan kepatuhan terhadap pedoman komunitas kami, dan membantu menjaga lingkungan yang positif dan mendukung bagi semua anggota. Jika Anda tertarik untuk bergabung dengan tim kami, silakan kirimkan aplikasi Anda sebelum 30 Juni 2025.',
-        category: 'recruitment',
-        important: false,
+        title: "Peluncuran Resmi OurCreativity Web Versi 3.0",
+        content: "Dengan bangga kami mengumumkan peluncuran resmi OurCreativity Web versi 3.0! Ini menandai tonggak penting dalam perjalanan komunitas kita, menyediakan platform yang komprehensif untuk berkolaborasi, berbagi, dan menumbuhkan kreativitas Indonesia.",
+        category: "update",
         published: true,
-        date: new Date('2025-06-15T09:00:00').toISOString()
-      },
-      {
-        title: 'Workshop Ardelyo Unix Series: Desain UI Modern',
-        content: 'Bergabunglah dengan kami untuk workshop interaktif yang dipimpin oleh Ardelyo, seorang desainer UI/UX berpengalaman. Dalam workshop ini, Anda akan belajar prinsip-prinsip dasar desain UI modern, teknik wireframing, dan cara membuat prototipe dengan menggunakan alat industri standar. Workshop ini cocok untuk pemula dan desainer berpengalaman yang ingin menyegarkan keterampilan mereka. Tempat terbatas, jadi daftar sekarang untuk mengamankan tempat Anda!',
-        category: 'event',
         important: false,
-        published: true,
-        date: new Date('2025-05-20T14:00:00').toISOString()
+        date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString()
       }
     ];
-
-    const announcementsToInsert: AnnouncementFormData[] = [];
-    let newAnnouncementsCount = 0;
-
-    for (const predefinedItem of predefinedAnnouncements) {
-      // Check if an announcement with the same title already exists
-      const { data: existing, error: checkError } = await supabase
-        .from('announcements')
-        .select('id, title') // Select title for logging if needed
-        .eq('title', predefinedItem.title)
-        .maybeSingle(); // Use maybeSingle to not error if no row found
-
-      if (checkError && checkError.code !== 'PGRST116') { // PGRST116 is "No rows found"
-        console.error(`Error checking for existing announcement with title "${predefinedItem.title}":`, checkError);
-        // Optionally, decide to throw an error or continue to the next item
-        // For this implementation, we'll log and skip this item to be robust.
-        continue; 
-      }
-
-      if (!existing) {
-        // Type assertion needed as predefinedItem matches AnnouncementFormData structure
-        announcementsToInsert.push(predefinedItem as AnnouncementFormData);
-      } else {
-        console.log(`Announcement with title "${predefinedItem.title}" already exists. Skipping.`);
-      }
+    
+    // Insert all predefined announcements
+    const { error } = await supabase
+      .from("announcements")
+      .upsert(announcements, { onConflict: 'title' });
+    
+    if (error) {
+      console.error("Error adding predefined announcements:", error);
+      toast.error("Gagal menambahkan pengumuman predefinisi");
+      return false;
     }
-
-    if (announcementsToInsert.length > 0) {
-      const { data, error: insertError } = await supabase
-        .from('announcements')
-        .insert(announcementsToInsert)
-        .select();
-
-      if (insertError) {
-        console.error('Error inserting new predefined announcements:', insertError);
-        throw new Error(`Failed to insert new predefined announcements: ${insertError.message}`);
-      }
-      
-      newAnnouncementsCount = data?.length || 0;
-      console.log(`Successfully added ${newAnnouncementsCount} new predefined announcements.`);
-    } else {
-      console.log('No new predefined announcements to add. All predefined items already exist or encountered check errors.');
-    }
-
-    return newAnnouncementsCount > 0; // Return true if any new announcements were added
+    
+    toast.success("Pengumuman predefinisi berhasil ditambahkan");
+    return true;
   } catch (error) {
-    // Log the error, but don't re-throw if it's a known "no rows" or similar non-critical issue from checks
-    // The specific error handling strategy might depend on how critical a partial failure is.
-    // For now, if an error occurs during the insert itself, it will be thrown from the insert block.
-    // Errors during checks are logged and skipped.
-    console.error('Error in addPredefinedAnnouncements process:', error);
-    throw error;
+    console.error("Exception in addPredefinedAnnouncements:", error);
+    toast.error("Gagal menambahkan pengumuman predefinisi");
+    return false;
   }
 };
