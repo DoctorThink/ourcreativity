@@ -121,12 +121,14 @@ const AnnouncementEditor = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteAnnouncement(id);
-      setAnnouncements(announcements.filter(a => a.id !== id));
-      
-      // If the deleted announcement was being edited, reset the form
-      if (currentAnnouncementId === id) {
-        resetForm();
+      const success = await deleteAnnouncement(id);
+      if (success) {
+        setAnnouncements(announcements.filter(a => a.id !== id));
+        
+        // If the deleted announcement was being edited, reset the form
+        if (currentAnnouncementId === id) {
+          resetForm();
+        }
       }
     } catch (error) {
       console.error("Error deleting announcement:", error);
