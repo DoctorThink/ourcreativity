@@ -1,32 +1,46 @@
 
-import React, { useState } from "react";
+import React from "react"; // Removed useState as it's not used directly for props
 import { motion } from "framer-motion";
-import { Filter, Search, ArrowLeft } from "lucide-react";
+import { Filter, Search, ArrowLeft, TrendingUp, CalendarClock } from "lucide-react"; // Added icons for sort buttons
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+// Slider is removed
 import { Badge } from "@/components/ui/badge";
 
+// Assuming SortByType is defined in KaryaKami.tsx and passed down if specific values are needed
+// For now, using string as per instructions for this component's preparation.
+type SortByType = 'created_at_desc' | 'likes_count_desc';
+
 interface AdvancedFiltersProps {
-  selectedCategory: string;
   onSelectCategory: (category: string) => void;
-  searchTerm: string;
+  selectedCategory: string;
   onSearchTermChange: (term: string) => void;
-  sortBy: string; // 'recency' | 'popularity'
-  onSortByChange: (sort: string) => void;
-  selectedTags: string[];
+  searchTerm: string;
+  onSortByChange: (sortOption: SortByType) => void;
+  sortBy: SortByType;
   onSelectedTagsChange: (tags: string[]) => void;
+  selectedTags: string[];
+  uniqueTags: string[];
 }
 
 const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
-  selectedCategory,
   onSelectCategory,
-  searchTerm,
+  selectedCategory,
   onSearchTermChange,
-  sortBy,
+  searchTerm,
   onSortByChange,
-  selectedTags,
+  sortBy,
   onSelectedTagsChange,
+  selectedTags,
+  uniqueTags,
 }) => {
+  // Internal state for search query (if needed for debouncing or local changes before prop update)
+  // For now, directly using prop 'searchTerm' and 'onSearchTermChange' for controlled input
+  // const [searchQuery, setSearchQuery] = useState(searchTerm);
+  // const [recencyValue, setRecencyValue] = useState([50]); // REMOVED
+  // const [popularityValue, setPopularityValue] = useState([50]); // REMOVED
+  // const [activeTags, setActiveTags] = useState<string[]>(selectedTags); // Use prop for selected tags
+
   const categories = [
     { id: "all", name: "Semua" },
     { id: "design", name: "Desain", icon: "/lovable-uploads/design.png" },
@@ -36,18 +50,14 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
     { id: "game", name: "Game", icon: "/lovable-uploads/game.png" },
   ];
   
-  const popularTags = [
-    "kreatif", "inovasi", "desain", "digital", "seni", 
-    "fotografi", "ilustrasi", "animasi", "inspirasi", "modern",
-    "tradisional", "budaya", "teknologi"
-  ];
+  // Use uniqueTags from props instead of static popularTags
+  // const popularTags = uniqueTags; 
   
   const toggleTag = (tag: string) => {
-    if (selectedTags.includes(tag)) {
-      onSelectedTagsChange(selectedTags.filter(t => t !== tag));
-    } else {
-      onSelectedTagsChange([...selectedTags, tag]);
-    }
+    const newSelectedTags = selectedTags.includes(tag)
+      ? selectedTags.filter(t => t !== tag)
+      : [...selectedTags, tag];
+    onSelectedTagsChange(newSelectedTags);
   };
   
   const containerVariants = {
@@ -98,17 +108,17 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           <Input
             type="text"
             placeholder="Search by title, creator, or description..."
-            value={searchTerm}
-            onChange={(e) => onSearchTermChange(e.target.value)}
+            value={searchTerm} // Controlled input
+            onChange={(e) => onSearchTermChange(e.target.value)} // Update via prop
             className="pl-10 py-6 bg-background/40 border-white/10 focus-visible:ring-amethyst"
           />
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/50" size={18} />
-          {searchTerm && (
+          {searchTerm && ( // Use searchTerm from props
             <motion.button
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => onSearchTermChange("")}
+              onClick={() => onSearchTermChange("")} // Update via prop
               className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/50 hover:text-foreground"
             >
               <ArrowLeft size={18} />
@@ -119,7 +129,7 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
       
       {/* Categories with animated selection */}
       <motion.div variants={itemVariants} className="mb-6">
-        <h4 className="text-sm text-foreground/70 mb-3 font-sans">Categories</h4>
+        <h4 className="text-sm text-foreground/70 mb-3">Categories</h4>
         <div className="flex flex-wrap gap-3">
           {categories.map((category) => (
             <motion.button
@@ -151,39 +161,48 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
         </div>
       </motion.div>
       
-      {/* Sliders with animated feedback */}
-      {/* Sort By Buttons */}
+      {/* Sort Controls */}
       <motion.div variants={itemVariants} className="mb-6">
-        <h4 className="text-sm text-foreground/70 mb-3 font-sans">Sort By</h4>
+        <h4 className="text-sm text-foreground/70 mb-3">Sort By</h4>
         <div className="flex flex-wrap gap-3">
           <Button
-            variant={sortBy === "recency" ? "default" : "outline"}
-            onClick={() => onSortByChange("recency")}
-            className={sortBy === "recency" ? "bg-amethyst text-background" : "border-white/10 hover:bg-background/60"}
+            variant={sortBy === 'created_at_desc' ? "default" : "outline"}
+            onClick={() => onSortByChange('created_at_desc')}
+            className={`flex items-center gap-2 transition-all duration-200 ${
+              sortBy === 'created_at_desc' 
+                ? 'bg-amethyst text-background hover:bg-amethyst/90' 
+                : 'bg-background/40 hover:bg-background/60 border-white/10'
+            }`}
           >
-            Recency (Newest First)
+            <CalendarClock size={16} />
+            Newest
           </Button>
           <Button
-            variant={sortBy === "popularity" ? "default" : "outline"}
-            onClick={() => onSortByChange("popularity")}
-            className={sortBy === "popularity" ? "bg-amethyst text-background" : "border-white/10 hover:bg-background/60"}
+            variant={sortBy === 'likes_count_desc' ? "default" : "outline"}
+            onClick={() => onSortByChange('likes_count_desc')}
+            className={`flex items-center gap-2 transition-all duration-200 ${
+              sortBy === 'likes_count_desc' 
+                ? 'bg-amethyst text-background hover:bg-amethyst/90' 
+                : 'bg-background/40 hover:bg-background/60 border-white/10'
+            }`}
           >
-            Popularity
+            <TrendingUp size={16} />
+            Most Popular
           </Button>
         </div>
       </motion.div>
       
-      {/* Popular tags with animation */}
+      {/* Available Tags with animation */}
       <motion.div variants={itemVariants} className="mb-6">
-        <h4 className="text-sm text-foreground/70 mb-3 font-sans">Popular Tags</h4>
+        <h4 className="text-sm text-foreground/70 mb-3">Filter by Tags</h4>
         <div className="flex flex-wrap gap-2">
-          {popularTags.map((tag) => (
+          {uniqueTags.map((tag) => ( // Use uniqueTags from props
             <Badge
               key={tag}
               variant="secondary"
               onClick={() => toggleTag(tag)}
               className={`cursor-pointer px-3 py-1.5 ${
-                selectedTags.includes(tag)
+                selectedTags.includes(tag) // Use selectedTags from props
                   ? "bg-amethyst/20 hover:bg-amethyst/30 border-amethyst/50"
                   : "bg-background/40 hover:bg-background/60 border-white/10"
               }`}
@@ -210,19 +229,21 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           className="border-white/10 hover:bg-background/60 hover:text-foreground"
           onClick={() => {
             onSearchTermChange("");
-            onSortByChange("recency"); // Default sort
             onSelectedTagsChange([]);
             onSelectCategory("all");
+            onSortByChange('created_at_desc'); // Reset sort order to default
           }}
         >
-          Reset
+          Reset Filters
         </Button>
+        {/* "Apply Filters" button can be removed or kept as per future requirements. 
+            Currently, filters apply reactively.
         <Button 
           className="bg-gradient-to-r from-amethyst to-turquoise hover:opacity-90 transition-opacity duration-300"
-          // This button doesn't need a specific onClick if filters apply live
         >
-          Apply Filters 
-        </Button>
+          Apply Filters
+        </Button> 
+        */}
       </motion.div>
     </motion.div>
   );

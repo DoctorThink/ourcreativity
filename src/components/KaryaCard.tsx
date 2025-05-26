@@ -19,38 +19,40 @@ interface KaryaCardProps {
   onClick?: () => void;
 }
 
-// Helper function to generate transformed image URLs with lower resolution for cards
-const getTransformedUrl = (baseUrl: string | null | undefined, options: { format?: 'webp' | 'avif' | 'jpeg', width?: number, quality?: number } = {}): string => {
+// Helper function to generate transformed image URLs with Supabase
+const getTransformedUrl = (
+  baseUrl: string | null | undefined, 
+  options: { 
+    width?: number, 
+    height?: number, 
+    quality?: number, 
+    resizeMode?: 'cover' | 'contain' | 'fill' 
+  } = {}
+): string => {
   if (!baseUrl) return '/placeholder.svg'; // Fallback placeholder
 
   try {
-    const parsedUrl = new URL(baseUrl);
+    const url = new URL(baseUrl);
 
-    // Check if it's a Supabase Storage URL. If so, return directly without client-side transformation attempts.
-    // Supabase Storage URLs typically contain '.supabase.co/storage/v1/object/public/'
-    // Or more broadly, just check for 'supabase.co' in hostname for simplicity here.
-    if (parsedUrl.hostname.includes('supabase.co')) {
-      // If Supabase has its own transformation parameters, they would be part of the `baseUrl`
-      // or a different base URL structure (e.g., /render/image/transform/...)
-      // For now, assuming direct links are used and client-side params are not supported.
-      return baseUrl;
+    // Default values for card previews
+    const targetWidth = options.width || 400;
+    const targetQuality = options.quality || 60;
+    const targetResizeMode = options.resizeMode || 'cover';
+
+    url.searchParams.set('width', targetWidth.toString());
+    url.searchParams.set('quality', targetQuality.toString());
+    url.searchParams.set('resize', targetResizeMode);
+
+    if (options.height) {
+      url.searchParams.set('height', options.height.toString());
     }
-
-    // For other absolute URLs, attempt transformation
-    const cardPreviewWidth = options.width || 400; 
-    const cardPreviewQuality = options.quality || 60; 
+    // No need to set format for auto WebP by Supabase.
+    // Supabase's `renderMethod=transform` is the default.
     
-    if (options.format) parsedUrl.searchParams.set('format', options.format);
-    parsedUrl.searchParams.set('resize', `width:${cardPreviewWidth}`);
-    parsedUrl.searchParams.set('quality', cardPreviewQuality.toString());
-    
-    return parsedUrl.toString();
-    
+    return url.toString();
   } catch (e) {
-    // This catch block will handle cases where baseUrl is not a valid absolute URL (e.g., relative paths like "/placeholder.svg")
-    // Or if any other URL operation fails.
-    // console.warn("URL processing error in getTransformedUrl, returning original:", e); // Optional: more verbose logging
-    return baseUrl; // Return original if URL parsing or processing fails
+    console.error("Error creating transformed URL:", e);
+    return baseUrl; // Return original if URL parsing/transformation fails
   }
 };
 
@@ -192,11 +194,11 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                     ) : (
                       <picture>
                         {/* Use progressively loading images with much lower resolution for cards */}
-                        <source srcSet={getTransformedUrl(url, { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
-                        <source srcSet={getTransformedUrl(url, { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
+                        <source srcSet={getTransformedUrl(url, { width: 400, quality: 60, resizeMode: 'cover' })} type="image/webp" />
+                        <source srcSet={getTransformedUrl(url, { width: 400, quality: 60, resizeMode: 'cover' })} type="image/jpeg" />
                         <img
                           ref={imageRef}
-                          src={getTransformedUrl(url, { format: 'jpeg', width: 300, quality: 50 })}
+                          src={getTransformedUrl(url, { width: 300, quality: 50, resizeMode: 'cover' })}
                           alt={`${karya.title} - slide ${index + 1}`}
                           className="w-full h-full object-cover"
                           onLoad={handleImageLoad}
@@ -242,11 +244,11 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
               ) : (
                 <picture>
                   {/* Use much lower resolution for card previews */}
-                  <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
-                  <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
+                  <source srcSet={getTransformedUrl(mediaUrls[0], { width: 400, quality: 60, resizeMode: 'cover' })} type="image/webp" />
+                  <source srcSet={getTransformedUrl(mediaUrls[0], { width: 400, quality: 60, resizeMode: 'cover' })} type="image/jpeg" />
                   <img
                     ref={imageRef}
-                    src={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 300, quality: 50 })}
+                    src={getTransformedUrl(mediaUrls[0], { width: 300, quality: 50, resizeMode: 'cover' })}
                     alt={karya.title}
                     className={`w-full h-full object-cover transition-opacity duration-500 ${
                       imageLoaded ? 'opacity-100' : 'opacity-0'
@@ -275,7 +277,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           <div className="flex justify-between items-end gap-3">
             <div className="flex-1 min-w-0">
               <h3 className="text-base sm:text-lg font-semibold truncate tracking-tight">{karya.title}</h3>
-              <p className="text-foreground/80 text-xs sm:text-sm truncate mt-1 font-sans">{karya.creator_name}</p>
+              <p className="text-foreground/80 text-xs sm:text-sm truncate mt-1">{karya.creator_name}</p>
               
               {/* Tags display on hover */}
               {tags.length > 0 && (
@@ -283,13 +285,13 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                   {tags.slice(0, 3).map((tag, index) => (
                     <span 
                       key={index}
-                      className="text-[10px] bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/80 font-sans"
+                      className="text-[10px] bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/80"
                     >
                       #{tag}
                     </span>
                   ))}
                   {tags.length > 3 && (
-                    <span className="text-[10px] bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/80 font-sans">
+                    <span className="text-[10px] bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/80">
                       +{tags.length - 3}
                     </span>
                   )}
