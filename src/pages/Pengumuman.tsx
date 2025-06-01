@@ -59,18 +59,6 @@ const Pengumuman = () => {
     handleAddPredefinedAnnouncements
   } = useAnnouncements();
 
-  // Remove duplicates from announcements array
-  const uniqueAnnouncements = React.useMemo(() => {
-    const seen = new Set();
-    return announcements.filter(announcement => {
-      if (seen.has(announcement.id)) {
-        return false;
-      }
-      seen.add(announcement.id);
-      return true;
-    });
-  }, [announcements]);
-
   return (
     <PageLayout 
       title="Pengumuman" 
@@ -187,8 +175,8 @@ const Pengumuman = () => {
               animate="visible"
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
             >
-              {uniqueAnnouncements.length > 0 ? (
-                uniqueAnnouncements.map((announcement) => (
+              {announcements.length > 0 ? (
+                announcements.map((announcement) => (
                   <motion.div 
                     key={announcement.id} 
                     variants={cardVariants}

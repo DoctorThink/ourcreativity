@@ -7,39 +7,42 @@ type AnnouncementType = Database['public']['Tables']['announcements']['Row'];
 type AnnouncementInsert = Database['public']['Tables']['announcements']['Insert'];
 type AnnouncementUpdate = Database['public']['Tables']['announcements']['Update'];
 
-export const fetchAnnouncements = async (filter: string = 'all', publishedOnly: boolean = true): Promise<AnnouncementType[]> => {
+export const fetchAnnouncements = async (filter: string = 'all'): Promise<AnnouncementType[]> => {
   try {
-    let query = supabase.from('announcements').select('*');
+    console.log(`Fetching announcements with filter: ${filter}`);
     
-    if (publishedOnly) {
-      query = query.eq('published', true);
-    }
+    let query = supabase
+      .from('announcements')
+      .select('*')
+      .eq('published', true);
     
     if (filter !== 'all') {
       query = query.eq('category', filter);
     }
     
-    query = query.order('important', { ascending: false })
-             .order('created_at', { ascending: false });
+    query = query
+      .order('important', { ascending: false })
+      .order('created_at', { ascending: false });
 
     const { data, error } = await query;
 
     if (error) {
       console.error('Error fetching announcements:', error);
-      toast.error('Gagal memuat pengumuman');
       throw error;
     }
 
+    console.log(`Fetched ${data?.length || 0} announcements`);
     return data || [];
   } catch (error) {
     console.error('Service error:', error);
-    toast.error('Gagal memuat pengumuman');
     throw error;
   }
 };
 
 export const fetchFeaturedAnnouncement = async (): Promise<AnnouncementType | null> => {
   try {
+    console.log('Fetching featured announcement...');
+    
     const { data, error } = await supabase
       .from('announcements')
       .select('*')
@@ -54,6 +57,7 @@ export const fetchFeaturedAnnouncement = async (): Promise<AnnouncementType | nu
       return null;
     }
 
+    console.log('Featured announcement result:', data);
     return data;
   } catch (error) {
     console.error('Service error:', error);
