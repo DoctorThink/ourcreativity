@@ -18,22 +18,28 @@ import { FeaturedAnnouncement, EmptyFeaturedAnnouncement } from "@/components/an
 import { FilterButton } from "@/components/announcement/FilterButton";
 import { VersionBadge } from "@/components/announcement/VersionBadge";
 
-// Animation variants
+// Enhanced animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1 }
+    transition: { 
+      staggerChildren: 0.08,
+      delayChildren: 0.1
+    }
   }
 };
 
-// Animation variants for card elements
 const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 30, scale: 0.95 },
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.5 }
+    scale: 1,
+    transition: { 
+      duration: 0.4,
+      ease: "easeOut"
+    }
   }
 };
 
@@ -53,25 +59,38 @@ const Pengumuman = () => {
     handleAddPredefinedAnnouncements
   } = useAnnouncements();
 
+  // Remove duplicates from announcements array
+  const uniqueAnnouncements = React.useMemo(() => {
+    const seen = new Set();
+    return announcements.filter(announcement => {
+      if (seen.has(announcement.id)) {
+        return false;
+      }
+      seen.add(announcement.id);
+      return true;
+    });
+  }, [announcements]);
+
   return (
     <PageLayout 
       title="Pengumuman" 
       subtitle="Informasi terbaru dan penting dari komunitas OUR CREATIVITY"
     >
-      {/* Version badge */}
+      {/* Enhanced version badge */}
       <VersionBadge />
 
-      {/* Filter tabs */}
+      {/* Enhanced filter tabs with better mobile responsiveness */}
       <motion.div 
-        className="mb-6 sm:mb-10 overflow-x-auto scrollbar-hide"
+        className="mb-6 sm:mb-8 overflow-x-auto scrollbar-hide"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <div className="flex gap-2 p-1.5 bg-secondary/50 backdrop-blur-md rounded-full border border-white/10 inline-flex">
+        <div className="flex gap-2 p-2 bg-secondary/60 backdrop-blur-xl rounded-2xl border border-white/10 inline-flex min-w-full sm:min-w-0 justify-center sm:justify-start shadow-lg">
           <FilterButton 
             active={filter === "all"} 
             onClick={() => setFilter("all")}
+            className="flex-1 sm:flex-initial"
           >
             Semua
           </FilterButton>
@@ -80,6 +99,7 @@ const Pengumuman = () => {
             onClick={() => setFilter("event")}
             icon={Calendar}
             color="bg-coral"
+            className="flex-1 sm:flex-initial"
           >
             Acara
           </FilterButton>
@@ -88,6 +108,7 @@ const Pengumuman = () => {
             onClick={() => setFilter("recruitment")}
             icon={Users}
             color="bg-turquoise"
+            className="flex-1 sm:flex-initial"
           >
             Rekrutmen
           </FilterButton>
@@ -96,13 +117,14 @@ const Pengumuman = () => {
             onClick={() => setFilter("update")}
             icon={Megaphone}
             color="bg-amethyst"
+            className="flex-1 sm:flex-initial"
           >
             Update
           </FilterButton>
         </div>
       </motion.div>
 
-      {/* Admin Action - Add Predefined Announcements */}
+      {/* Admin Action with enhanced styling */}
       <motion.div 
         className="mb-4 flex justify-end"
         initial={{ opacity: 0 }}
@@ -114,7 +136,7 @@ const Pengumuman = () => {
           variant="outline"
           onClick={handleAddPredefinedAnnouncements}
           disabled={isAddingPredefined}
-          className="flex items-center gap-2 text-xs bg-background/20"
+          className="flex items-center gap-2 text-xs bg-background/20 backdrop-blur-sm border-white/10 hover:bg-background/30 shadow-lg"
         >
           {isAddingPredefined ? (
             <Loader2 className="h-3 w-3 animate-spin" />
@@ -125,27 +147,39 @@ const Pengumuman = () => {
         </Button>
       </motion.div>
 
-      {/* Error State */}
+      {/* Error State with enhanced design */}
       {error && !isLoading && (
         <AnnouncementErrorState error={error} onRetry={handleRetry} />
       )}
 
-      {/* Featured Announcement */}
+      {/* Featured Announcement with enhanced animations */}
       {!error && featuredAnnouncement ? (
-        <FeaturedAnnouncement 
-          announcement={featuredAnnouncement} 
-          onClick={() => setSelectedAnnouncement(featuredAnnouncement)} 
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <FeaturedAnnouncement 
+            announcement={featuredAnnouncement} 
+            onClick={() => setSelectedAnnouncement(featuredAnnouncement)} 
+          />
+        </motion.div>
       ) : !isLoading && !error ? (
-        <EmptyFeaturedAnnouncement />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <EmptyFeaturedAnnouncement />
+        </motion.div>
       ) : null}
 
-      {/* Loading state */}
+      {/* Enhanced loading state */}
       {isLoading ? (
         <AnnouncementLoading />
       ) : (
         <>
-          {/* Announcement grid */}
+          {/* Enhanced announcement grid with better responsiveness */}
           {!error && (
             <motion.div
               variants={containerVariants}
@@ -153,9 +187,13 @@ const Pengumuman = () => {
               animate="visible"
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
             >
-              {announcements.length > 0 ? (
-                announcements.map((announcement) => (
-                  <motion.div key={announcement.id} variants={cardVariants}>
+              {uniqueAnnouncements.length > 0 ? (
+                uniqueAnnouncements.map((announcement) => (
+                  <motion.div 
+                    key={announcement.id} 
+                    variants={cardVariants}
+                    layout
+                  >
                     <AnnouncementCard 
                       announcement={announcement}
                       onClick={() => setSelectedAnnouncement(announcement)}
@@ -163,22 +201,40 @@ const Pengumuman = () => {
                   </motion.div>
                 ))
               ) : (
-                <EmptyAnnouncementState onShowAll={() => setFilter('all')} />
+                <motion.div
+                  variants={cardVariants}
+                  className="col-span-full"
+                >
+                  <EmptyAnnouncementState onShowAll={() => setFilter('all')} />
+                </motion.div>
               )}
             </motion.div>
           )}
         </>
       )}
 
-      {/* Detailed announcement dialog */}
+      {/* Enhanced detailed announcement dialog */}
       <Dialog 
         open={!!selectedAnnouncement} 
         onOpenChange={(open) => !open && setSelectedAnnouncement(null)}
       >
-        <DialogContent className="max-w-3xl p-0 bg-secondary/90 backdrop-blur-xl border border-white/10 max-h-[90vh] overflow-y-auto">
-          <AnimatePresence>
+        <DialogContent className={`max-w-4xl p-0 border-0 max-h-[95vh] overflow-hidden
+          ${selectedAnnouncement?.title.includes('Gerakan 27 April') 
+            ? 'bg-black/95 backdrop-blur-xl' 
+            : 'bg-secondary/95 backdrop-blur-xl'
+          }`}>
+          <AnimatePresence mode="wait">
             {selectedAnnouncement && (
-              <AnnouncementDetail announcement={selectedAnnouncement} />
+              <motion.div
+                key={selectedAnnouncement.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="overflow-y-auto max-h-[95vh] scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent"
+              >
+                <AnnouncementDetail announcement={selectedAnnouncement} />
+              </motion.div>
             )}
           </AnimatePresence>
         </DialogContent>
