@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { KaryaGallery } from "../components/karya/KaryaGallery";
 import PageLayout from "../components/layouts/PageLayout";
@@ -9,11 +9,27 @@ import AdvancedFilters from "../components/karya/AdvancedFilters";
 import CategoryExplorer from "../components/karya/CategoryExplorer";
 import { ScrollProgressIndicator } from "../components/karya/ScrollProgressIndicator";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/integrations/supabase/types";
+import {
+  filterKaryaBySearchTerm,
+  filterKaryaByTags,
+  sortKaryaByRecency,
+  sortKaryaByPopularity
+} from "@/lib/karyaUtils";
+
+type KaryaType = Database['public']['Tables']['karya']['Row'];
 
 const KaryaKami: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<"recency" | "popularity">("recency");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  
   const mainRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   
@@ -40,6 +56,67 @@ const KaryaKami: React.FC = () => {
   const titleParallax = useTransform(scrollYProgress, [0, 1], [0, -100]);
   const galleryParallax = useTransform(scrollYProgress, [0, 0.5], [50, 0]);
   
+  // Centralized Karya data fetching
+  const { data: karyaData, isLoading: isKaryaLoading } = useQuery({
+    queryKey: ['karya'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('karya')
+        .select('*')
+        .eq('status', 'approved')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data as KaryaType[];
+    },
+  });
+
+  // Processed and filtered karya data
+  const filteredKarya = useMemo(() => {
+    if (!karyaData) return [];
+    
+    let result = [...karyaData];
+    
+    // Filter by category
+    if (selectedCategory !== "all") {
+      result = result.filter(item => item.category === selectedCategory);
+    }
+    
+    // Filter by search term
+    result = filterKaryaBySearchTerm(result, searchTerm);
+    
+    // Filter by tags
+    result = filterKaryaByTags(result, selectedTags);
+    
+    // Sort
+    if (sortBy === "recency") {
+      result = sortKaryaByRecency(result, sortOrder === "asc");
+    } else if (sortBy === "popularity") {
+      result = sortKaryaByPopularity(result, sortOrder === "asc");
+    }
+    
+    return result;
+  }, [karyaData, selectedCategory, searchTerm, selectedTags, sortBy, sortOrder]);
+
+  // Spotlight items (items marked as spotlight or first few items)
+  const spotlightItems = useMemo(() => {
+    if (!karyaData) return [];
+    
+    let spotlightCandidates = karyaData.filter(item => item.is_spotlight);
+    
+    // Filter by category if not "all"
+    if (selectedCategory !== "all") {
+      spotlightCandidates = spotlightCandidates.filter(item => item.category === selectedCategory);
+    }
+    
+    // If no spotlight items, use first few items
+    if (spotlightCandidates.length === 0 && filteredKarya.length > 0) {
+      spotlightCandidates = filteredKarya.slice(0, 3);
+    }
+    
+    return spotlightCandidates;
+  }, [karyaData, selectedCategory, filteredKarya]);
+  
   // Filter toggle handler
   const toggleFilters = () => {
     setShowFilters(!showFilters);
@@ -48,6 +125,20 @@ const KaryaKami: React.FC = () => {
   // Category selection handler
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
+  };
+
+  // Filter handlers for AdvancedFilters
+  const handleSearchChange = (search: string) => {
+    setSearchTerm(search);
+  };
+
+  const handleTagsChange = (tags: string[]) => {
+    setSelectedTags(tags);
+  };
+
+  const handleSortChange = (sort: "recency" | "popularity", order: "asc" | "desc") => {
+    setSortBy(sort);
+    setSortOrder(order);
   };
 
   return (
@@ -127,7 +218,17 @@ const KaryaKami: React.FC = () => {
         {/* Advanced Filters - expandable section */}
         <AnimatePresence>
           {showFilters && (
-            <AdvancedFilters onSelectCategory={handleCategorySelect} selectedCategory={selectedCategory} />
+            <AdvancedFilters 
+              onSelectCategory={handleCategorySelect} 
+              selectedCategory={selectedCategory}
+              onSearchChange={handleSearchChange}
+              onTagsChange={handleTagsChange}
+              onSortChange={handleSortChange}
+              searchTerm={searchTerm}
+              selectedTags={selectedTags}
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+            />
           )}
         </AnimatePresence>
         
@@ -149,7 +250,7 @@ const KaryaKami: React.FC = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="mb-16"
         >
-          <SpotlightSection />
+          <SpotlightSection spotlightItems={spotlightItems} />
         </motion.div>
         
         {/* Gallery Section with motion effects */}
@@ -176,7 +277,12 @@ const KaryaKami: React.FC = () => {
             </h2>
           </motion.div>
           
-          <KaryaGallery />
+          <KaryaGallery 
+            karyaData={filteredKarya}
+            isLoading={isKaryaLoading}
+            selectedCategory={selectedCategory}
+            onSelectCategory={handleCategorySelect}
+          />
         </motion.section>
       </motion.div>
     </PageLayout>

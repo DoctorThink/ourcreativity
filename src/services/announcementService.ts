@@ -1,123 +1,92 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { Announcement, AnnouncementFormData } from '@/models/Announcement';
+import { Database } from '@/integrations/supabase/types';
 
-// Fetch all announcements or filtered by category
-export const fetchAnnouncements = async (filter: string = 'all'): Promise<Announcement[]> => {
+type AnnouncementType = Database['public']['Tables']['announcements']['Row'];
+type AnnouncementInsert = Database['public']['Tables']['announcements']['Insert'];
+type AnnouncementUpdate = Database['public']['Tables']['announcements']['Update'];
+
+export const fetchAnnouncements = async (): Promise<AnnouncementType[]> => {
   try {
-    console.log(`Fetching announcements with filter: ${filter}`);
-
-    let query = supabase
+    const { data, error } = await supabase
       .from('announcements')
       .select('*')
       .eq('published', true)
-      .order('date', { ascending: false })
+      .order('important', { ascending: false })
       .order('created_at', { ascending: false });
-
-    // Apply category filter if not "all"
-    if (filter !== 'all') {
-      query = query.eq('category', filter);
-    }
-
-    const { data, error } = await query;
 
     if (error) {
       console.error('Error fetching announcements:', error);
-      throw new Error(`Failed to fetch announcements: ${error.message}`);
+      throw error;
     }
 
-    console.log(`Fetched ${data?.length || 0} announcements`);
     return data || [];
-
   } catch (error) {
-    console.error('Error in fetchAnnouncements:', error);
+    console.error('Service error:', error);
     throw error;
   }
 };
 
-// Fetch featured announcement (important one)
-export const fetchFeaturedAnnouncement = async (): Promise<Announcement | null> => {
+export const fetchAllAnnouncements = async (): Promise<AnnouncementType[]> => {
   try {
-    console.log('Fetching featured announcement');
-    
     const { data, error } = await supabase
       .from('announcements')
       .select('*')
-      .eq('published', true)
-      .eq('important', true)
-      .order('date', { ascending: false })
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single();
+      .order('created_at', { ascending: false });
 
     if (error) {
-      // PGRST116 is "No rows returned" error code, which is expected if no featured announcement
-      if (error.code === 'PGRST116') {
-        console.log('No featured announcement found');
-        return null;
-      }
-      
-      console.error('Error fetching featured announcement:', error);
-      throw new Error(`Failed to fetch featured announcement: ${error.message}`);
+      console.error('Error fetching all announcements:', error);
+      throw error;
     }
 
-    console.log('Featured announcement found:', data);
-    return data;
-
+    return data || [];
   } catch (error) {
-    console.error('Error in fetchFeaturedAnnouncement:', error);
-    // If the error is "No rows returned", we return null instead of throwing
-    if (error instanceof Error && error.message.includes('No rows returned')) {
-      return null;
-    }
+    console.error('Service error:', error);
     throw error;
   }
 };
 
-// Add a new announcement
-export const addAnnouncement = async (announcement: AnnouncementFormData): Promise<Announcement> => {
+export const createAnnouncement = async (announcement: AnnouncementInsert): Promise<AnnouncementType> => {
   try {
     const { data, error } = await supabase
       .from('announcements')
-      .insert([announcement])
+      .insert(announcement)
       .select()
       .single();
 
     if (error) {
-      console.error('Error adding announcement:', error);
-      throw new Error(`Failed to add announcement: ${error.message}`);
+      console.error('Error creating announcement:', error);
+      throw error;
     }
 
     return data;
   } catch (error) {
-    console.error('Error in addAnnouncement:', error);
+    console.error('Service error:', error);
     throw error;
   }
 };
 
-// Update an existing announcement
-export const updateAnnouncement = async (id: string, announcement: Partial<AnnouncementFormData>): Promise<Announcement> => {
+export const updateAnnouncement = async (id: string, updates: AnnouncementUpdate): Promise<AnnouncementType> => {
   try {
     const { data, error } = await supabase
       .from('announcements')
-      .update(announcement)
+      .update(updates)
       .eq('id', id)
       .select()
       .single();
 
     if (error) {
       console.error('Error updating announcement:', error);
-      throw new Error(`Failed to update announcement: ${error.message}`);
+      throw error;
     }
 
     return data;
   } catch (error) {
-    console.error('Error in updateAnnouncement:', error);
+    console.error('Service error:', error);
     throw error;
   }
 };
 
-// Delete an announcement
 export const deleteAnnouncement = async (id: string): Promise<void> => {
   try {
     const { error } = await supabase
@@ -127,67 +96,100 @@ export const deleteAnnouncement = async (id: string): Promise<void> => {
 
     if (error) {
       console.error('Error deleting announcement:', error);
-      throw new Error(`Failed to delete announcement: ${error.message}`);
+      throw error;
     }
   } catch (error) {
-    console.error('Error in deleteAnnouncement:', error);
+    console.error('Service error:', error);
     throw error;
   }
 };
 
-// Add predefined announcements for testing/demo purposes
-export const addPredefinedAnnouncements = async (): Promise<boolean> => {
+export const toggleAnnouncementPublishStatus = async (id: string): Promise<AnnouncementType> => {
   try {
-    const predefinedAnnouncements = [
-      {
-        title: 'Gerakan 27 April - Mengenang Tragedi Pembantaian SideR',
-        content: `Mengenang tragedi yang menjadi pembantaian terbesar dalam sejarah komunitas OUR CREATIVITY. 300+ member dari kalangan SideR (member non-aktif) menjadi korban. Di antara korban juga terdapat beberapa member aktif yang terkena dampak.\n\nTragedi ini terjadi terutama di edisi Desain dan Meme, mengakibatkan hilangnya banyak talent kreatif dari komunitas kita. Gerakan 27 April dibuat untuk mengenang dan memastikan bahwa peristiwa ini tidak terulang kembali.\n\nKami mengundang seluruh anggota komunitas untuk hadir dalam acara memorial virtual yang akan diadakan pada tanggal 27 April 2025. Acara ini akan mencakup:\n\n1. Penghormatan terhadap member yang terdampak\n2. Diskusi tentang kebijakan baru tentang perlindungan member\n3. Peluncuran program reintegrasi untuk mantan member SideR\n\nMari kita bersama-sama membangun komunitas yang lebih inklusif dan saling mendukung.`,
-        category: 'event',
-        important: true,
-        published: true,
-        date: new Date('2025-04-27T18:00:00').toISOString(),
-        image_url: 'https://picsum.photos/id/255/800/400'
-      },
-      {
-        title: 'Peluncuran OUR CREATIVITY Versi 4.0',
-        content: 'Kami dengan bangga mengumumkan peluncuran tampilan dan fitur baru OUR CREATIVITY versi 4.0! Versi terbaru ini menampilkan desain yang lebih modern, antarmuka yang lebih mudah digunakan, dan fitur kolaborasi yang disempurnakan untuk semua anggota komunitas. Mulai hari ini, Anda dapat mengakses platform kami yang telah diperbarui dan menikmati semua fitur baru yang kami tawarkan. Terima kasih atas dukungan Anda yang terus-menerus!',
-        category: 'update',
-        important: true,
-        published: true,
-        date: new Date().toISOString()
-      },
-      {
-        title: 'Rekrutmen Tim Moderator Konten Juli 2025',
-        content: 'Kami sedang mencari anggota komunitas yang berkomitmen dan berdedikasi untuk bergabung dengan tim moderator konten kami. Sebagai moderator konten, Anda akan bertanggung jawab untuk meninjau dan menyetujui kiriman konten, memastikan kepatuhan terhadap pedoman komunitas kami, dan membantu menjaga lingkungan yang positif dan mendukung bagi semua anggota. Jika Anda tertarik untuk bergabung dengan tim kami, silakan kirimkan aplikasi Anda sebelum 30 Juni 2025.',
-        category: 'recruitment',
-        important: false,
-        published: true,
-        date: new Date('2025-06-15T09:00:00').toISOString()
-      },
-      {
-        title: 'Workshop Ardelyo Unix Series: Desain UI Modern',
-        content: 'Bergabunglah dengan kami untuk workshop interaktif yang dipimpin oleh Ardelyo, seorang desainer UI/UX berpengalaman. Dalam workshop ini, Anda akan belajar prinsip-prinsip dasar desain UI modern, teknik wireframing, dan cara membuat prototipe dengan menggunakan alat industri standar. Workshop ini cocok untuk pemula dan desainer berpengalaman yang ingin menyegarkan keterampilan mereka. Tempat terbatas, jadi daftar sekarang untuk mengamankan tempat Anda!',
-        category: 'event',
-        important: false,
-        published: true,
-        date: new Date('2025-05-20T14:00:00').toISOString()
-      }
-    ];
-
-    const { data, error } = await supabase
+    // First get the current status
+    const { data: current, error: fetchError } = await supabase
       .from('announcements')
-      .insert(predefinedAnnouncements)
-      .select();
+      .select('published')
+      .eq('id', id)
+      .single();
 
-    if (error) {
-      console.error('Error adding predefined announcements:', error);
-      throw new Error(`Failed to add predefined announcements: ${error.message}`);
+    if (fetchError) {
+      console.error('Error fetching current status:', fetchError);
+      throw fetchError;
     }
 
-    console.log(`Added ${data?.length || 0} predefined announcements`);
-    return true;
+    // Toggle the status
+    const { data, error } = await supabase
+      .from('announcements')
+      .update({ published: !current.published })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error toggling publish status:', error);
+      throw error;
+    }
+
+    return data;
   } catch (error) {
-    console.error('Error in addPredefinedAnnouncements:', error);
+    console.error('Service error:', error);
+    throw error;
+  }
+};
+
+export const toggleAnnouncementImportantStatus = async (id: string): Promise<AnnouncementType> => {
+  try {
+    // First get the current status
+    const { data: current, error: fetchError } = await supabase
+      .from('announcements')
+      .select('important')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) {
+      console.error('Error fetching current status:', fetchError);
+      throw fetchError;
+    }
+
+    // Toggle the status
+    const { data, error } = await supabase
+      .from('announcements')
+      .update({ important: !current.important })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error toggling important status:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Service error:', error);
+    throw error;
+  }
+};
+
+export const addPredefinedAnnouncements = async (): Promise<void> => {
+  const predefinedAnnouncements = [
+    {
+      title: "Gerakan 27 April - Tragedi Pembantaian Terbesar",
+      content: "Mengenang tragedi yang terjadi pada 27 April, pembantaian terbesar dalam sejarah komunitas kami. Lebih dari 300 member menjadi korban dalam peristiwa kelam ini.\n\nKorban terdiri dari:\n- Member sideR atau nonaktif\n- Beberapa member aktif yang juga terkena dampak\n\nTragedi ini terjadi di edisi desain dan meme, meninggalkan luka mendalam bagi seluruh komunitas.\n\nMari kita kenang mereka yang telah tiada dan berkomitmen untuk tidak mengulangi kesalahan serupa.",
+      category: "memorial",
+      important: true,
+      published: true,
+      image_url: null
+    }
+  ];
+
+  try {
+    for (const announcement of predefinedAnnouncements) {
+      await createAnnouncement(announcement);
+    }
+  } catch (error) {
+    console.error('Error adding predefined announcements:', error);
     throw error;
   }
 };
