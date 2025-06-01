@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface FilterButtonProps {
   active: boolean;
@@ -9,6 +10,7 @@ interface FilterButtonProps {
   children: React.ReactNode;
   icon?: LucideIcon;
   color?: string;
+  className?: string;
 }
 
 export const FilterButton: React.FC<FilterButtonProps> = ({ 
@@ -16,12 +18,16 @@ export const FilterButton: React.FC<FilterButtonProps> = ({
   onClick, 
   children,
   icon: Icon,
-  color
+  color,
+  className
 }) => (
   <motion.button 
-    className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium flex items-center gap-1.5 sm:gap-2 transition-all ${
-      active ? 'bg-gradient-to-r from-foreground to-foreground/90 text-background' : 'text-foreground/70 hover:text-foreground hover:bg-foreground/10'
-    }`}
+    className={cn(
+      `px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium flex items-center gap-1.5 sm:gap-2 transition-all ${
+        active ? 'bg-gradient-to-r from-foreground to-foreground/90 text-background' : 'text-foreground/70 hover:text-foreground hover:bg-foreground/10'
+      }`,
+      className
+    )}
     onClick={onClick}
     whileHover={{ scale: 1.05 }}
     whileTap={{ scale: 0.97 }}

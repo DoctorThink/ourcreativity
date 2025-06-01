@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { 
@@ -15,6 +14,7 @@ import {
 import { format } from "date-fns";
 import { Announcement } from "@/models/Announcement";
 import BentoCard from "@/components/ui/BentoCard";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AnnouncementCardProps {
   announcement: Announcement;
@@ -25,6 +25,8 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
   announcement, 
   onClick 
 }) => {
+  const isMobile = useIsMobile();
+  
   const categoryStyles = {
     event: {
       bgColor: "bg-coral/20",
