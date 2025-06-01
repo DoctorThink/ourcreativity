@@ -30,7 +30,7 @@ export const useAnnouncements = () => {
           // Parallel fetching of both featured and all announcements
           const [featured, allAnnouncements] = await Promise.all([
             fetchFeaturedAnnouncement(),
-            fetchAnnouncements(filter)
+            fetchAnnouncements(filter, true)
           ]);
           
           console.log('Featured announcement result:', featured);
@@ -75,7 +75,7 @@ export const useAnnouncements = () => {
       
       try {
         console.log(`Loading filtered announcements for category: ${filter}`);
-        const data = await fetchAnnouncements(filter);
+        const data = await fetchAnnouncements(filter, true);
         console.log('Filtered announcements result:', data);
         setAnnouncements(data);
       } catch (err) {
@@ -110,7 +110,7 @@ export const useAnnouncements = () => {
       // Now try to fetch the announcements again
       const [featured, allAnnouncements] = await Promise.all([
         fetchFeaturedAnnouncement(),
-        fetchAnnouncements(filter)
+        fetchAnnouncements(filter, true)
       ]);
       
       setFeaturedAnnouncement(featured);
@@ -149,7 +149,7 @@ export const useAnnouncements = () => {
         // Reload announcements after adding predefined ones
         const [featured, allAnnouncements] = await Promise.all([
           fetchFeaturedAnnouncement(),
-          fetchAnnouncements(filter)
+          fetchAnnouncements(filter, true)
         ]);
         
         setFeaturedAnnouncement(featured);

@@ -1,29 +1,63 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { Database } from '@/integrations/supabase/types';
+import { toast } from "sonner";
 
 type AnnouncementType = Database['public']['Tables']['announcements']['Row'];
 type AnnouncementInsert = Database['public']['Tables']['announcements']['Insert'];
 type AnnouncementUpdate = Database['public']['Tables']['announcements']['Update'];
 
-export const fetchAnnouncements = async (): Promise<AnnouncementType[]> => {
+export const fetchAnnouncements = async (filter: string = 'all', publishedOnly: boolean = true): Promise<AnnouncementType[]> => {
   try {
-    const { data, error } = await supabase
-      .from('announcements')
-      .select('*')
-      .eq('published', true)
-      .order('important', { ascending: false })
-      .order('created_at', { ascending: false });
+    let query = supabase.from('announcements').select('*');
+    
+    if (publishedOnly) {
+      query = query.eq('published', true);
+    }
+    
+    if (filter !== 'all') {
+      query = query.eq('category', filter);
+    }
+    
+    query = query.order('important', { ascending: false })
+             .order('created_at', { ascending: false });
+
+    const { data, error } = await query;
 
     if (error) {
       console.error('Error fetching announcements:', error);
+      toast.error('Gagal memuat pengumuman');
       throw error;
     }
 
     return data || [];
   } catch (error) {
     console.error('Service error:', error);
+    toast.error('Gagal memuat pengumuman');
     throw error;
+  }
+};
+
+export const fetchFeaturedAnnouncement = async (): Promise<AnnouncementType | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('announcements')
+      .select('*')
+      .eq('published', true)
+      .eq('important', true)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching featured announcement:', error);
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Service error:', error);
+    return null;
   }
 };
 
@@ -56,12 +90,15 @@ export const createAnnouncement = async (announcement: AnnouncementInsert): Prom
 
     if (error) {
       console.error('Error creating announcement:', error);
+      toast.error('Gagal membuat pengumuman');
       throw error;
     }
 
+    toast.success('Pengumuman berhasil dibuat');
     return data;
   } catch (error) {
     console.error('Service error:', error);
+    toast.error('Gagal membuat pengumuman');
     throw error;
   }
 };
@@ -77,17 +114,20 @@ export const updateAnnouncement = async (id: string, updates: AnnouncementUpdate
 
     if (error) {
       console.error('Error updating announcement:', error);
+      toast.error('Gagal memperbarui pengumuman');
       throw error;
     }
 
+    toast.success('Pengumuman berhasil diperbarui');
     return data;
   } catch (error) {
     console.error('Service error:', error);
+    toast.error('Gagal memperbarui pengumuman');
     throw error;
   }
 };
 
-export const deleteAnnouncement = async (id: string): Promise<void> => {
+export const deleteAnnouncement = async (id: string): Promise<boolean> => {
   try {
     const { error } = await supabase
       .from('announcements')
@@ -96,83 +136,68 @@ export const deleteAnnouncement = async (id: string): Promise<void> => {
 
     if (error) {
       console.error('Error deleting announcement:', error);
+      toast.error('Gagal menghapus pengumuman');
       throw error;
     }
+
+    toast.success('Pengumuman berhasil dihapus');
+    return true;
   } catch (error) {
     console.error('Service error:', error);
+    toast.error('Gagal menghapus pengumuman');
     throw error;
   }
 };
 
-export const toggleAnnouncementPublishStatus = async (id: string): Promise<AnnouncementType> => {
+export const toggleAnnouncementPublishStatus = async (id: string, currentStatus: boolean): Promise<AnnouncementType> => {
   try {
-    // First get the current status
-    const { data: current, error: fetchError } = await supabase
-      .from('announcements')
-      .select('published')
-      .eq('id', id)
-      .single();
-
-    if (fetchError) {
-      console.error('Error fetching current status:', fetchError);
-      throw fetchError;
-    }
-
-    // Toggle the status
     const { data, error } = await supabase
       .from('announcements')
-      .update({ published: !current.published })
+      .update({ published: !currentStatus })
       .eq('id', id)
       .select()
       .single();
 
     if (error) {
       console.error('Error toggling publish status:', error);
+      toast.error('Gagal mengubah status publikasi');
       throw error;
     }
 
+    toast.success(`Pengumuman ${!currentStatus ? 'dipublikasikan' : 'disembunyikan'}`);
     return data;
   } catch (error) {
     console.error('Service error:', error);
+    toast.error('Gagal mengubah status publikasi');
     throw error;
   }
 };
 
-export const toggleAnnouncementImportantStatus = async (id: string): Promise<AnnouncementType> => {
+export const toggleAnnouncementImportantStatus = async (id: string, currentStatus: boolean): Promise<AnnouncementType> => {
   try {
-    // First get the current status
-    const { data: current, error: fetchError } = await supabase
-      .from('announcements')
-      .select('important')
-      .eq('id', id)
-      .single();
-
-    if (fetchError) {
-      console.error('Error fetching current status:', fetchError);
-      throw fetchError;
-    }
-
-    // Toggle the status
     const { data, error } = await supabase
       .from('announcements')
-      .update({ important: !current.important })
+      .update({ important: !currentStatus })
       .eq('id', id)
       .select()
       .single();
 
     if (error) {
       console.error('Error toggling important status:', error);
+      toast.error('Gagal mengubah status penting');
       throw error;
     }
 
+    toast.success(`Pengumuman ${!currentStatus ? 'ditandai sebagai penting' : 'tidak lagi penting'}`);
     return data;
   } catch (error) {
     console.error('Service error:', error);
+    toast.error('Gagal mengubah status penting');
     throw error;
   }
 };
 
-export const addPredefinedAnnouncements = async (): Promise<void> => {
+export const addPredefinedAnnouncements = async (): Promise<boolean> => {
   const predefinedAnnouncements = [
     {
       title: "Gerakan 27 April - Tragedi Pembantaian Terbesar",
@@ -188,8 +213,11 @@ export const addPredefinedAnnouncements = async (): Promise<void> => {
     for (const announcement of predefinedAnnouncements) {
       await createAnnouncement(announcement);
     }
+    toast.success('Pengumuman predefinisi berhasil ditambahkan');
+    return true;
   } catch (error) {
     console.error('Error adding predefined announcements:', error);
+    toast.error('Gagal menambahkan pengumuman predefinisi');
     throw error;
   }
 };
