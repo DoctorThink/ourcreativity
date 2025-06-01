@@ -178,10 +178,10 @@ const Index = () => {
       content: (
         <div className="relative w-full h-full group">
           {/* Enhanced Shimmer Effect with double-layer animation */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 animate-shimmer-fast transition-opacity duration-500" />
+          {/* <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 animate-shimmer-fast transition-opacity duration-500" /> */} {/* Removed for now, shimmer below is primary */}
           <div className="absolute inset-0 bg-gradient-to-b from-lavender/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           
-          {/* Enhanced BARU Tag with improved visibility */}
+          {/* BARU Tag */}
           <div className="absolute top-3 left-3 z-20">
             <div className="bg-gradient-to-r from-coral via-peach to-coral text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border border-white/20 animate-pulse-subtle backdrop-blur-sm">
               BARU
@@ -190,7 +190,7 @@ const Index = () => {
           
           <div className="relative z-10 h-full w-full p-3 md:p-4 flex flex-col justify-center items-center text-center">
             <Palette className="w-7 h-7 md:w-8 md:h-8 mb-1.5" />
-            <span className="text-sm md:text-base font-serif font-medium">Karya Kami</span>
+            <span className="text-sm md:text-base font-sans font-semibold">Karya Kami</span> {/* Changed font */}
           </div>
         </div>
       )
@@ -315,35 +315,35 @@ const Index = () => {
 
                   {/* Inner Content Container */}
                   <div className="relative z-10 h-full w-full p-3 md:p-4 flex flex-col justify-center items-center text-center">
-                      {comingSoon ? (
+                      {comingSoon && Icon && text ? ( // Ensure Icon and text are defined for Coming Soon
                         // Coming Soon Layout
                         <>
-                          <Icon className="w-7 h-7 md:w-8 md:h-8 mb-1.5 opacity-50 text-amber-600" /> {/* Adjusted style */}
-                          <span className="text-sm md:text-base font-serif font-medium opacity-80 text-foreground/60">{text}</span>
-                          <span className="flex items-center gap-1.5 text-xs font-sans text-amber-600/80 mt-1.5"> {/* Adjusted style */}
+                          <Icon className="w-7 h-7 md:w-8 md:h-8 mb-1.5 opacity-50 text-amber-500" /> {/* Adjusted icon size & color */}
+                          <span className="text-sm font-sans font-medium opacity-80 text-foreground/60">{text}</span> {/* Changed font */}
+                          <span className="flex items-center gap-1.5 text-xs font-sans text-amber-500/80 mt-1.5"> {/* Adjusted style */}
                             <Clock size={12} />
                             Segera Hadir
                           </span>
                         </>
-                      ) : isWidget ? (
+                      ) : isWidget && Icon && text ? ( // Ensure Icon and text are defined for Widget
                          // Widget Layout with Enhanced Icon
                          <>
                            {/* Icon Container with glow effect */}
                            <motion.div
-                               className={cn(
-                                  `mb-2 md:mb-3 p-2.5 md:p-3 rounded-xl shadow-md icon-glow`, // Added icon-glow class
-                                  accentColorClass
-                                )}
-                                whileHover={{ scale: 1.1 }}
-                                transition={{ type: "spring", stiffness: 300 }}
+                              className={cn(
+                                `mb-1.5 md:mb-2 p-2.5 md:p-3 rounded-xl shadow-md icon-glow`, // Reduced bottom margin
+                                accentColorClass
+                              )}
+                              whileHover={{ scale: 1.1 }}
+                              transition={{ type: "spring", stiffness: 300 }}
                            >
-                             <Icon className={cn(`w-5 h-5 md:w-6 md:h-6`, iconColorClass || 'text-background')} />
+                             <Icon className={cn(`w-7 h-7 md:w-8 md:h-8`, iconColorClass || 'text-background')} /> {/* Increased icon size */}
                            </motion.div>
                            {/* Text with slight lift on hover */}
                            <motion.span
-                              className={cn(`text-xs md:text-sm font-serif font-medium`, 'text-foreground')}
+                              className={cn(`text-sm font-sans font-semibold`, 'text-foreground')} // Changed font, weight, and base size
                               whileHover={{ y: -2 }}
-                            >
+                           >
                               {text}
                            </motion.span>
                          </>
