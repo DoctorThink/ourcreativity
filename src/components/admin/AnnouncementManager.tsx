@@ -246,7 +246,7 @@ const AnnouncementManager: React.FC = () => {
     setError(null);
     
     try {
-      const data = await fetchAnnouncements('all', false);
+      const data = await fetchAnnouncements('all');
       console.log("Loaded announcements:", data);
       setAnnouncements(data);
     } catch (err: any) {

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -48,7 +49,7 @@ const AnnouncementEditor = () => {
   const loadAnnouncements = async () => {
     setIsLoading(true);
     try {
-      const data = await fetchAnnouncements('all', false);
+      const data = await fetchAnnouncements('all');
       setAnnouncements(data);
     } catch (error) {
       toast({
