@@ -2,7 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
-import { useAnnouncements } from "@/hooks/useAnnouncements";
+import { useLocalAnnouncements } from "@/hooks/useLocalAnnouncements";
 import { AnnouncementGrid } from "@/components/announcement/AnnouncementGrid";
 import { AnnouncementFilters } from "@/components/announcement/AnnouncementFilters";
 import { FeaturedAnnouncementCard } from "@/components/announcement/FeaturedAnnouncementCard";
@@ -32,7 +32,7 @@ const Pengumuman = () => {
     isLoading,
     error,
     handleRetry
-  } = useAnnouncements();
+  } = useLocalAnnouncements();
 
   return (
     <PageLayout 
