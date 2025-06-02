@@ -33,51 +33,6 @@ export type Database = {
         }
         Relationships: []
       }
-      announcements: {
-        Row: {
-          category: string
-          content: string
-          created_at: string
-          date: string | null
-          id: string
-          image_url: string | null
-          important: boolean
-          link_url: string | null
-          published: boolean
-          title: string
-          updated_at: string
-          user_id: string | null
-        }
-        Insert: {
-          category?: string
-          content: string
-          created_at?: string
-          date?: string | null
-          id?: string
-          image_url?: string | null
-          important?: boolean
-          link_url?: string | null
-          published?: boolean
-          title: string
-          updated_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          category?: string
-          content?: string
-          created_at?: string
-          date?: string | null
-          id?: string
-          image_url?: string | null
-          important?: boolean
-          link_url?: string | null
-          published?: boolean
-          title?: string
-          updated_at?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       karya: {
         Row: {
           category: string

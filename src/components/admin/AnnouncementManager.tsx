@@ -1,50 +1,16 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Announcement } from "@/models/Announcement";
 import {
-  fetchAnnouncements,
   createAnnouncement,
   updateAnnouncement,
   deleteAnnouncement,
   toggleAnnouncementPublishStatus,
-  toggleAnnouncementImportantStatus
-} from '@/services/announcementService';
-import { Announcement, AnnouncementFormData } from '@/models/Announcement';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Loader2, Pencil, Trash, Eye, EyeOff, Star, StarOff, Plus, Calendar, Link, AlertCircle } from "lucide-react";
-import { format } from 'date-fns';
+  toggleAnnouncementImportantStatus,
+  fetchAnnouncements
+} from "@/services/adminAnnouncementService";
+import { AnnouncementEditor } from "./AnnouncementEditor";
 import { toast } from "sonner";
-import { motion, AnimatePresence } from "framer-motion";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface AnnouncementFormProps {
   announcement?: Announcement;
