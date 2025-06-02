@@ -80,6 +80,9 @@ export default {
         'gradient-blue-cyan': "linear-gradient(to right, var(--tw-gradient-stops))",
         'founder-gradient': "linear-gradient(135deg, #FFBF00 0%, #FFA500 50%, #FF8C00 100%)",
       },
+      backgroundSize: {
+        '300%': '300%',
+      },
       keyframes: {
         "glow": {
           "0%, 100%": { textShadow: "0 0 10px rgba(229,222,255,0.8), 0 0 20px rgba(229,222,255,0.8)" },
