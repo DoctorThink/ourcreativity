@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Calendar, Users, Megaphone, BookOpen, Info, FileText } from "lucide-react";
@@ -10,7 +11,7 @@ interface BentoTile {
   id: string;
   title: string;
   description: string;
-  icon: React.FC;
+  icon: React.FC<{ className?: string }>;
   color: string;
   path: string;
 }
@@ -102,7 +103,11 @@ const Index = () => {
   ];
 
   return (
-    <PageLayout showBackButton={false}>
+    <PageLayout 
+      title="Beranda"
+      subtitle="Platform kolaborasi dan informasi untuk komunitas kreatif"
+      showBackButton={false}
+    >
       {/* Hero Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
