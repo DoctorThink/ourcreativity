@@ -1,6 +1,9 @@
+
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Announcement } from "@/models/Announcement";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, Calendar, Link, Eye, EyeOff, Star, StarOff, Trash, Pencil, Loader2, AlertCircle } from "lucide-react";
+import { format } from "date-fns";
+import { Announcement, AnnouncementFormData } from "@/models/Announcement";
 import {
   createAnnouncement,
   updateAnnouncement,
@@ -9,7 +12,17 @@ import {
   toggleAnnouncementImportantStatus,
   fetchAnnouncements
 } from "@/services/adminAnnouncementService";
-import { AnnouncementEditor } from "./AnnouncementEditor";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
 interface AnnouncementFormProps {
@@ -252,15 +265,14 @@ const AnnouncementManager: React.FC = () => {
     
     setIsSubmitting(true);
     try {
-      const success = await deleteAnnouncement(selectedAnnouncement.id);
-      if (success) {
-        await loadAnnouncements();
-        setIsDeleteDialogOpen(false);
-        setSelectedAnnouncement(null);
-      }
+      await deleteAnnouncement(selectedAnnouncement.id);
+      await loadAnnouncements();
+      setIsDeleteDialogOpen(false);
+      setSelectedAnnouncement(null);
+      toast.success('Pengumuman berhasil dihapus');
     } catch (error) {
       console.error('Error deleting announcement:', error);
-      // Error is handled by the service function
+      toast.error('Gagal menghapus pengumuman');
     } finally {
       setIsSubmitting(false);
     }
@@ -269,25 +281,23 @@ const AnnouncementManager: React.FC = () => {
   const handleTogglePublish = async (announcement: Announcement) => {
     try {
       console.log("Toggling publish status for:", announcement.id, "Current status:", announcement.published);
-      const updated = await toggleAnnouncementPublishStatus(announcement.id, announcement.published);
-      if (updated) {
-        await loadAnnouncements();
-      }
+      await toggleAnnouncementPublishStatus(announcement.id);
+      await loadAnnouncements();
+      toast.success(`Pengumuman ${announcement.published ? 'disembunyikan' : 'dipublikasikan'}`);
     } catch (error) {
       console.error('Error toggling publish status:', error);
-      // Error is handled by the service function
+      toast.error('Gagal mengubah status publikasi');
     }
   };
 
   const handleToggleImportant = async (announcement: Announcement) => {
     try {
-      const updated = await toggleAnnouncementImportantStatus(announcement.id, announcement.important);
-      if (updated) {
-        await loadAnnouncements();
-      }
+      await toggleAnnouncementImportantStatus(announcement.id);
+      await loadAnnouncements();
+      toast.success(`Pengumuman ${announcement.important ? 'tidak lagi' : 'sekarang'} ditandai penting`);
     } catch (error) {
       console.error('Error toggling important status:', error);
-      // Error is handled by the service function
+      toast.error('Gagal mengubah status penting');
     }
   };
 
@@ -295,22 +305,18 @@ const AnnouncementManager: React.FC = () => {
     setIsSubmitting(true);
     try {
       if (selectedAnnouncement) {
-        const updated = await updateAnnouncement(selectedAnnouncement.id, formData);
-        if (updated) {
-          await loadAnnouncements();
-          setIsDialogOpen(false);
-          setSelectedAnnouncement(null);
-        }
+        await updateAnnouncement(selectedAnnouncement.id, formData);
+        toast.success('Pengumuman berhasil diperbarui');
       } else {
-        const created = await createAnnouncement(formData);
-        if (created) {
-          await loadAnnouncements();
-          setIsDialogOpen(false);
-        }
+        await createAnnouncement(formData);
+        toast.success('Pengumuman berhasil dibuat');
       }
+      await loadAnnouncements();
+      setIsDialogOpen(false);
+      setSelectedAnnouncement(null);
     } catch (error) {
       console.error('Error saving announcement:', error);
-      // Error is handled by the service function
+      toast.error('Gagal menyimpan pengumuman');
     } finally {
       setIsSubmitting(false);
     }
