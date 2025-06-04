@@ -65,8 +65,8 @@ const Index = () => {
       gradientFrom: "from-coral/10",
       gradientTo: "to-red-500/20",
       path: "/pengumuman",
-      colSpan: "col-span-2",
-      rowSpan: "row-span-2",
+      colSpan: "lg:col-span-2",
+      rowSpan: "lg:row-span-2",
       pattern: "dots",
       textColor: "text-white"
     },
@@ -79,8 +79,8 @@ const Index = () => {
       gradientFrom: "from-turquoise/10",
       gradientTo: "to-emerald/20",
       path: "/tim-kami",
-      colSpan: "col-span-1",
-      rowSpan: "row-span-1",
+      colSpan: "lg:col-span-1",
+      rowSpan: "lg:row-span-1",
       pattern: "circles",
       textColor: "text-white"
     },
@@ -93,8 +93,8 @@ const Index = () => {
       gradientFrom: "from-amethyst/10",
       gradientTo: "to-lavender/20",
       path: "/karya-kami",
-      colSpan: "col-span-1",
-      rowSpan: "row-span-2",
+      colSpan: "lg:col-span-1",
+      rowSpan: "lg:row-span-2",
       pattern: "waves",
       textColor: "text-white"
     },
@@ -107,8 +107,8 @@ const Index = () => {
       gradientFrom: "from-peach/10",
       gradientTo: "to-amber/20",
       path: "/brand-story",
-      colSpan: "col-span-1",
-      rowSpan: "row-span-1",
+      colSpan: "lg:col-span-1",
+      rowSpan: "lg:row-span-1",
       pattern: "hexagon",
       textColor: "text-white"
     },
@@ -121,8 +121,8 @@ const Index = () => {
       gradientFrom: "from-softPink/10",
       gradientTo: "to-pink-500/20",
       path: "/informasi",
-      colSpan: "col-span-1",
-      rowSpan: "row-span-1",
+      colSpan: "lg:col-span-1",
+      rowSpan: "lg:row-span-1",
       pattern: "triangles",
       textColor: "text-white"
     },
@@ -135,8 +135,8 @@ const Index = () => {
       gradientFrom: "from-mint/10",
       gradientTo: "to-teal-500/20",
       path: "/terms",
-      colSpan: "col-span-1",
-      rowSpan: "row-span-1",
+      colSpan: "lg:col-span-1",
+      rowSpan: "lg:row-span-1",
       pattern: "grid",
       textColor: "text-white"
     }
@@ -236,21 +236,27 @@ const Index = () => {
         animate="visible"
         className="mb-8 md:mb-16"
       >
-        <BentoGrid 
-          cols={3} 
-          mdCols={2} 
-          smCols={1} 
-          gap="md" 
-          className="auto-rows-[minmax(200px,auto)] md:auto-rows-[minmax(240px,auto)]"
-        >
+        {/* Custom Bento Grid with proper responsive layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 auto-rows-fr">
           {bentoTiles.map((tile, index) => (
             <motion.div
               key={tile.id}
               variants={tileVariants}
-              className={`${tile.colSpan} ${tile.rowSpan} md:${tile.colSpan} md:${tile.rowSpan} sm:col-span-1 sm:row-span-1`}
+              className={`${tile.colSpan} ${tile.rowSpan} col-span-1 md:col-span-1`}
+              style={{
+                // Custom grid area for desktop bento layout
+                gridArea: isMobile ? 'auto' : 
+                  tile.id === 'pengumuman' ? '1 / 1 / 3 / 3' : // 2x2 large tile
+                  tile.id === 'tim-kami' ? '1 / 3 / 2 / 4' : // top right
+                  tile.id === 'karya-kami' ? '2 / 3 / 4 / 4' : // tall right tile
+                  tile.id === 'brand-story' ? '3 / 1 / 4 / 2' : // bottom left
+                  tile.id === 'informasi' ? '3 / 2 / 4 / 3' : // bottom middle
+                  tile.id === 'terms' ? '4 / 1 / 5 / 4' : // bottom wide
+                  'auto'
+              }}
             >
               <BentoCard
-                className={`relative group cursor-pointer h-full ${tile.color} border-border/50 hover:border-border/70 transition-all duration-300`}
+                className={`relative group cursor-pointer h-full min-h-[200px] md:min-h-[240px] ${tile.color} border-border/50 hover:border-border/70 transition-all duration-300`}
                 onClick={() => handleTileClick(tile)}
                 interactive={true}
                 hoverScale={1.02}
@@ -271,7 +277,7 @@ const Index = () => {
                   transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                 />
 
-                <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between min-h-[180px] md:min-h-[200px]">
+                <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
                   <div className="space-y-3 md:space-y-4">
                     <motion.div className="flex items-center justify-between">
                       <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl ${tile.textColor === "text-white" ? 'bg-white/10 group-hover:bg-white/20' : 'bg-primary-light/10 group-hover:bg-primary-light/20'} backdrop-blur-sm flex items-center justify-center transition-colors duration-300 shadow-lg`}>
@@ -280,7 +286,7 @@ const Index = () => {
                       
                       {index < 2 && (
                         <motion.div
-                          className={`px-2.5 py-1 ${tile.textColor === "text-white" ? 'bg-white/10' : 'bg-primary-light/20'} backdrop-blur-sm rounded-full text-xs font-medium ${tile.textColor === "text-white" ? 'text-white/90' : 'text-primary-foreground'} border ${tile.textColor === "text-white" ? 'border-white/20' : 'border-primary-light/30'}`}
+                          className={`px-2.5 py-1 ${tile.textColor === "text-white" ? 'bg-white/10' : 'bg-primary-light/20'} backdrop-blur-sm rounded-full text-xs font-medium ${tile.textColor === "text-white" ? 'text-white/90' : 'text-primary-foreground'} border ${tile.textColor === "text-white" ? 'border-white/20' : 'border-primary-light/30'} font-sans`}
                           animate={{ scale: [1, 1.03, 1] }}
                           transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                         >
@@ -291,7 +297,7 @@ const Index = () => {
                     </motion.div>
 
                     <div className="space-y-2">
-                      <motion.h3 className={`text-base md:text-lg lg:text-xl font-serif font-semibold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-sm`}>
+                      <motion.h3 className={`text-base md:text-lg lg:text-xl font-sans font-semibold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-sm`}>
                         {tile.title}
                       </motion.h3>
                       <p className={`${tile.textColor || "text-foreground"}/70 group-hover:${tile.textColor || "text-foreground"}/80 leading-relaxed drop-shadow-sm text-xs md:text-sm font-sans`}>
@@ -325,7 +331,7 @@ const Index = () => {
               </BentoCard>
             </motion.div>
           ))}
-        </BentoGrid>
+        </div>
       </motion.div>
 
       <motion.div
@@ -351,7 +357,7 @@ const Index = () => {
             <div className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-2 md:mb-2.5 rounded-lg md:rounded-xl bg-amethyst/10 dark:bg-amethyst/20 flex items-center justify-center group-hover:bg-amethyst/20 dark:group-hover:bg-amethyst/30 transition-colors">
               <stat.icon className="w-5 h-5 md:w-6 md:h-6 text-amethyst" />
             </div>
-            <div className="text-lg md:text-xl lg:text-2xl font-bold text-foreground dark:text-foreground-dark mb-0.5 md:mb-1 font-serif">{stat.value}</div>
+            <div className="text-lg md:text-xl lg:text-2xl font-bold text-foreground dark:text-foreground-dark mb-0.5 md:mb-1 font-sans">{stat.value}</div>
             <div className="text-xs md:text-sm text-foreground/70 dark:text-foreground-dark/70 font-sans">{stat.label}</div>
           </motion.div>
         ))}
