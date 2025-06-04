@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Importing pages with normal imports instead of dynamic imports
-import Index from "./pages/index";
+import Index from "./pages/Index";
 import BrandStory from "./pages/BrandStory";
 import Informasi from "./pages/Informasi";
 import Pengumuman from "./pages/Pengumuman";

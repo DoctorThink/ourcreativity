@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { 
@@ -14,13 +13,13 @@ import {
 import PageLayout from "../components/layouts/PageLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AdminDashboardHeader } from "@/components/admin/AdminDashboardHeader";
-import { AdminDashboardStats } from "@/components/admin/AdminDashboardStats";
-import { AnnouncementManager } from "@/components/admin/AnnouncementManager";
-import { TeamEditor } from "@/components/admin/TeamEditor";
-import { KaryaModeration } from "@/components/admin/KaryaModeration";
-import { ContentEditor } from "@/components/admin/ContentEditor";
-import { AdminActivityLog } from "@/components/admin/AdminActivityLog";
+import AdminDashboardHeader from "@/components/admin/AdminDashboardHeader";
+import AdminDashboardStats from "@/components/admin/AdminDashboardStats";
+import AnnouncementManager from "@/components/admin/AnnouncementManager";
+import TeamEditor from "@/components/admin/TeamEditor";
+import KaryaModeration from "@/components/admin/KaryaModeration";
+import ContentEditor from "@/components/admin/ContentEditor";
+import AdminActivityLog from "@/components/admin/AdminActivityLog";
 
 const containerVariants = {
   hidden: { opacity: 0 },

@@ -1,40 +1,31 @@
-// This file is now deprecated - all announcement functionality has been moved to localAnnouncementService.ts
-// Keeping this file to prevent import errors, but it should not be used
 
 import { Announcement } from "@/models/Announcement";
 
-// Placeholder functions that redirect to local service
+// DEPRECATED: This service is being replaced by localAnnouncementService
+// These are placeholder implementations for backward compatibility
+
 export const fetchAnnouncements = async (): Promise<Announcement[]> => {
-  console.warn("announcementService.ts is deprecated. Use localAnnouncementService.ts instead");
+  console.warn("fetchAnnouncements is deprecated, use localAnnouncementService instead");
   return [];
 };
 
-export const createAnnouncement = async (announcement: any): Promise<boolean> => {
-  console.warn("announcementService.ts is deprecated. Use localAnnouncementService.ts instead");
-  return false;
+export const fetchFeaturedAnnouncement = async (): Promise<Announcement | null> => {
+  console.warn("fetchFeaturedAnnouncement is deprecated, use localAnnouncementService instead");
+  return null;
 };
 
-export const updateAnnouncement = async (id: string, updates: any): Promise<boolean> => {
-  console.warn("announcementService.ts is deprecated. Use localAnnouncementService.ts instead");
-  return false;
+// Add other placeholder functions if needed
+export const createAnnouncement = async (data: any): Promise<Announcement> => {
+  console.warn("createAnnouncement is deprecated, use adminAnnouncementService instead");
+  throw new Error("This service is deprecated");
 };
 
-export const deleteAnnouncement = async (id: string): Promise<boolean> => {
-  console.warn("announcementService.ts is deprecated. Use localAnnouncementService.ts instead");
-  return false;
+export const updateAnnouncement = async (id: string, data: any): Promise<Announcement> => {
+  console.warn("updateAnnouncement is deprecated, use adminAnnouncementService instead");
+  throw new Error("This service is deprecated");
 };
 
-export const publishAnnouncement = async (id: string): Promise<boolean> => {
-  console.warn("announcementService.ts is deprecated. Use localAnnouncementService.ts instead");
-  return false;
-};
-
-export const unpublishAnnouncement = async (id: string): Promise<boolean> => {
-  console.warn("announcementService.ts is deprecated. Use localAnnouncementService.ts instead");
-  return false;
-};
-
-export const toggleAnnouncementImportantStatus = async (id: string): Promise<boolean> => {
-  console.warn("announcementService.ts is deprecated. Use localAnnouncementService.ts instead");
-  return false;
+export const deleteAnnouncement = async (id: string): Promise<void> => {
+  console.warn("deleteAnnouncement is deprecated, use adminAnnouncementService instead");
+  throw new Error("This service is deprecated");
 };
