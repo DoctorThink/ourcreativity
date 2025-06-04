@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Announcement } from "@/models/Announcement";
-import { fetchAnnouncements, fetchFeaturedAnnouncement } from "@/services/announcementService";
+import { fetchLocalAnnouncements, fetchLocalFeaturedAnnouncement } from "@/services/localAnnouncementService";
 import { toast } from "sonner";
 
 export const useAnnouncements = () => {
@@ -21,8 +21,8 @@ export const useAnnouncements = () => {
       console.log(`Loading announcements with filter: ${filterType}`);
       
       const [featured, allAnnouncements] = await Promise.all([
-        fetchFeaturedAnnouncement(),
-        fetchAnnouncements(filterType)
+        fetchLocalFeaturedAnnouncement(),
+        fetchLocalAnnouncements(filterType)
       ]);
       
       console.log('Featured announcement:', featured);

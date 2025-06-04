@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { 
@@ -20,6 +21,8 @@ import TeamEditor from "@/components/admin/TeamEditor";
 import KaryaModeration from "@/components/admin/KaryaModeration";
 import ContentEditor from "@/components/admin/ContentEditor";
 import AdminActivityLog from "@/components/admin/AdminActivityLog";
+import { useAdminAuth } from "@/contexts/AdminAuthContext";
+import { useNavigate } from "react-router-dom";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -46,6 +49,17 @@ const cardVariants = {
 
 const OurAdmin = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const { logout } = useAdminAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/admin-login");
+  };
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
 
   return (
     <PageLayout 
@@ -59,7 +73,13 @@ const OurAdmin = () => {
         animate="visible"
         className="space-y-6"
       >
-        <AdminDashboardHeader />
+        <AdminDashboardHeader 
+          onLogout={handleLogout}
+          lastLogin={new Date()}
+          activityCount={12}
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+        />
 
         <Tabs 
           value={activeTab} 
