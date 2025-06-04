@@ -1,50 +1,23 @@
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Users, Megaphone, BookOpen, Info, FileText, Palette, Trophy, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-// Assuming PageLayout is a component you have defined elsewhere
-import PageLayout from "src/components/layouts/PageLayout";
-
-// Mock PageLayout for standalone demonstration if needed
-const PageLayout: React.FC<{ title: string; subtitle?: string; showBackButton?: boolean; children: React.ReactNode }> = ({ title, subtitle, children }) => {
-  return (
-    <div className="p-4 sm:p-6 md:p-8 bg-background dark:bg-background-dark min-h-screen text-foreground dark:text-foreground-dark">
-      <header className="mb-6 sm:mb-8">
-        {title && <h1 className="text-3xl sm:text-4xl font-bold font-serif text-foreground dark:text-foreground-dark mb-2">{title}</h1>}
-        {subtitle && <p className="text-md sm:text-lg text-foreground/70 dark:text-foreground-dark/70">{subtitle}</p>}
-      </header>
-      <main>{children}</main>
-    </div>
-  );
-};
-
-
-// Mock useIsMobile hook if not available globally in your project
-// import { useIsMobile } from "@/hooks/use-mobile";
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  React.useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-  return isMobile;
-};
+import PageLayout from "../components/layouts/PageLayout";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface BentoTile {
   id: string;
   title: string;
   description: string;
   icon: React.FC<{ className?: string }>;
-  color: string; // Base tile background (can be a gradient class)
-  gradientFrom: string; // For the semi-transparent overlay
-  gradientTo: string;   // For the semi-transparent overlay
+  color: string;
+  gradientFrom: string;
+  gradientTo: string;
   path: string;
   size: "normal" | "large";
   pattern: string;
-  textColor?: string; // Optional specific text color for a tile
+  textColor?: string;
 }
 
 const containerVariants = {
@@ -71,7 +44,7 @@ const tileVariants = {
   },
 };
 
-const IndexPage = () => {
+const Index = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [hoveredTile, setHoveredTile] = useState<string | null>(null);
@@ -86,9 +59,9 @@ const IndexPage = () => {
       title: "Pengumuman",
       description: "Info terbaru & update penting komunitas.",
       icon: Megaphone,
-      color: "bg-gradient-to-br from-red-500/20 to-pink-600/30", // Example, adjust with your config colors if needed
-      gradientFrom: "from-red-500/10",
-      gradientTo: "to-pink-600/20",
+      color: "bg-gradient-to-br from-coral/20 to-red-500/30",
+      gradientFrom: "from-coral/10",
+      gradientTo: "to-red-500/20",
       path: "/pengumuman",
       size: "large",
       pattern: "dots",
@@ -99,9 +72,9 @@ const IndexPage = () => {
       title: "Tim Kami",
       description: "Kenali para kreator & kontributor.",
       icon: Users,
-      color: "bg-gradient-to-br from-blueLight/20 to-blueDark/30",
-      gradientFrom: "from-blueLight/10",
-      gradientTo: "to-blueDark/20",
+      color: "bg-gradient-to-br from-turquoise/20 to-emerald/30",
+      gradientFrom: "from-turquoise/10",
+      gradientTo: "to-emerald/20",
       path: "/tim-kami",
       size: "normal",
       pattern: "circles",
@@ -112,9 +85,9 @@ const IndexPage = () => {
       title: "Karya Kami",
       description: "Galeri karya kreatif anggota.",
       icon: Palette,
-      color: "bg-gradient-to-br from-purpleLight/20 to-purpleDark/30",
-      gradientFrom: "from-purpleLight/10",
-      gradientTo: "to-purpleDark/20",
+      color: "bg-gradient-to-br from-amethyst/20 to-lavender/30",
+      gradientFrom: "from-amethyst/10",
+      gradientTo: "to-lavender/20",
       path: "/karya-kami",
       size: "large",
       pattern: "waves",
@@ -125,9 +98,9 @@ const IndexPage = () => {
       title: "Brand Story",
       description: "Perjalanan & visi misi komunitas.",
       icon: BookOpen,
-      color: "bg-gradient-to-br from-emerald/20 to-teal-600/30", // Assuming teal-600 is a default tailwind color
-      gradientFrom: "from-emerald/10",
-      gradientTo: "to-teal-600/20",
+      color: "bg-gradient-to-br from-peach/20 to-amber/30",
+      gradientFrom: "from-peach/10",
+      gradientTo: "to-amber/20",
       path: "/brand-story",
       size: "normal",
       pattern: "hexagon",
@@ -138,9 +111,9 @@ const IndexPage = () => {
       title: "Informasi",
       description: "Detail komunitas & cara bergabung.",
       icon: Info,
-      color: "bg-gradient-to-br from-orangeLight/20 to-orangeDark/30",
-      gradientFrom: "from-orangeLight/10",
-      gradientTo: "to-orangeDark/20",
+      color: "bg-gradient-to-br from-softPink/20 to-pink-500/30",
+      gradientFrom: "from-softPink/10",
+      gradientTo: "to-pink-500/20",
       path: "/informasi",
       size: "normal",
       pattern: "triangles",
@@ -151,9 +124,9 @@ const IndexPage = () => {
       title: "Syarat & Ketentuan",
       description: "Panduan & aturan komunitas.",
       icon: FileText,
-      color: "bg-gradient-to-br from-grayLight/20 to-grayMid/30",
-      gradientFrom: "from-grayLight/10",
-      gradientTo: "to-grayMid/20",
+      color: "bg-gradient-to-br from-mint/20 to-teal-500/30",
+      gradientFrom: "from-mint/10",
+      gradientTo: "to-teal-500/20",
       path: "/terms",
       size: "normal",
       pattern: "grid",
@@ -170,7 +143,7 @@ const IndexPage = () => {
 
   const getPatternSvg = (pattern: string, id: string, tileTextColor: string = "text-white") => {
     const baseOpacity = "opacity-15";
-    const colorClass = tileTextColor === "text-white" ? "text-white/60" : "text-black/30"; // Adjust pattern color based on text for contrast
+    const colorClass = tileTextColor === "text-white" ? "text-white/60" : "text-black/30";
 
     switch (pattern) {
       case "dots":
@@ -220,15 +193,14 @@ const IndexPage = () => {
   };
 
   const currentTextColor = (tile: BentoTile) => tile.textColor || "text-foreground dark:text-foreground-dark";
-  const iconTextColor = (tile: BentoTile) => tile.textColor === "text-white" ? "text-white" : "text-primary-light"; // Example icon color for non-white text tiles
+  const iconTextColor = (tile: BentoTile) => tile.textColor === "text-white" ? "text-white" : "text-primary-light";
   const popularBadgeTextColor = (tile: BentoTile) => tile.textColor === "text-white" ? "text-white/90" : "text-primary-foreground";
   const popularBadgeBgColor = (tile: BentoTile) => tile.textColor === "text-white" ? "bg-white/10" : "bg-primary-light/20";
 
-
   return (
     <PageLayout 
-      title="Beranda"
-      subtitle="Platform kolaborasi dan kreativitas untuk komunitas Indonesia"
+      title=""
+      showBackButton={false}
     >
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -248,21 +220,12 @@ const IndexPage = () => {
               OUR CREATIVITY
             </span>
           </motion.h1>
-          
-          <motion.p
-            className="text-md sm:text-lg md:text-xl text-foreground/80 dark:text-foreground-dark/80 leading-relaxed max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            Jelajahi, berkolaborasi, dan ciptakan karya luar biasa bersama kami.
-          </motion.p>
 
           <motion.div
             className="flex items-center justify-center gap-2 text-xs sm:text-sm text-foreground/60 dark:text-foreground-dark/60"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           >
             <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amethyst" />
             <span>Dunia kreativitas tanpa batas menanti</span>
@@ -396,4 +359,4 @@ const IndexPage = () => {
   );
 };
 
-export default IndexPage;
+export default Index;
