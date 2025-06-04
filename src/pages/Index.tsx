@@ -277,47 +277,47 @@ const Index = () => {
                   transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                 />
 
-                <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
-                  <div className="space-y-3 md:space-y-4">
-                    <motion.div className="flex items-center justify-between">
-                      <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl ${tile.textColor === "text-white" ? 'bg-white/10 group-hover:bg-white/20' : 'bg-primary-light/10 group-hover:bg-primary-light/20'} backdrop-blur-sm flex items-center justify-center transition-colors duration-300 shadow-lg`}>
-                        <tile.icon className={`w-5 h-5 md:w-6 md:h-6 ${tile.textColor === "text-white" ? "text-white" : "text-primary-light"} drop-shadow-sm`} />
+                <div className="relative z-10 p-6 md:p-8 h-full flex flex-col justify-center text-center">
+                  <div className="space-y-6 md:space-y-8">
+                    <motion.div className="flex items-center justify-center">
+                      <div className={`w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-2xl md:rounded-3xl ${tile.textColor === "text-white" ? 'bg-white/15 group-hover:bg-white/25' : 'bg-primary-light/15 group-hover:bg-primary-light/25'} backdrop-blur-lg flex items-center justify-center transition-all duration-300 shadow-2xl border border-white/20`}>
+                        <tile.icon className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 ${tile.textColor === "text-white" ? "text-white" : "text-primary-light"} drop-shadow-lg`} strokeWidth={1.5} />
                       </div>
                       
                       {index < 2 && (
                         <motion.div
-                          className={`px-2.5 py-1 ${tile.textColor === "text-white" ? 'bg-white/10' : 'bg-primary-light/20'} backdrop-blur-sm rounded-full text-xs font-medium ${tile.textColor === "text-white" ? 'text-white/90' : 'text-primary-foreground'} border ${tile.textColor === "text-white" ? 'border-white/20' : 'border-primary-light/30'} font-sans`}
-                          animate={{ scale: [1, 1.03, 1] }}
+                          className={`absolute top-4 right-4 px-3 py-1.5 ${tile.textColor === "text-white" ? 'bg-white/15' : 'bg-primary-light/25'} backdrop-blur-lg rounded-full text-xs font-semibold ${tile.textColor === "text-white" ? 'text-white/95' : 'text-primary-foreground'} border ${tile.textColor === "text-white" ? 'border-white/30' : 'border-primary-light/40'} font-sans shadow-lg`}
+                          animate={{ scale: [1, 1.05, 1] }}
                           transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                         >
-                          <Trophy className="w-2.5 h-2.5 md:w-3 md:h-3 inline mr-1" />
+                          <Trophy className="w-3 h-3 inline mr-1.5" />
                           Populer
                         </motion.div>
                       )}
                     </motion.div>
 
-                    <div className="space-y-2">
-                      <motion.h3 className={`text-base md:text-lg lg:text-xl font-sans font-semibold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-sm`}>
+                    <div className="space-y-3 md:space-y-4">
+                      <motion.h3 className={`text-2xl md:text-3xl lg:text-4xl font-sans font-bold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-lg`}>
                         {tile.title}
                       </motion.h3>
-                      <p className={`${tile.textColor || "text-foreground"}/70 group-hover:${tile.textColor || "text-foreground"}/80 leading-relaxed drop-shadow-sm text-xs md:text-sm font-sans`}>
+                      <p className={`${tile.textColor || "text-foreground"}/80 group-hover:${tile.textColor || "text-foreground"}/90 leading-relaxed drop-shadow-sm text-base md:text-lg lg:text-xl font-sans font-medium max-w-md mx-auto`}>
                         {tile.description}
                       </p>
                     </div>
                   </div>
 
                   <motion.div 
-                    className="flex items-center justify-between mt-auto pt-3 md:pt-4"
+                    className="flex items-center justify-between mt-8 md:mt-12 pt-4 md:pt-6 border-t border-white/20"
                     initial={{ opacity: 0.8 }}
                     whileHover={{ opacity: 1 }}
                   >
-                    <div className={`flex items-center gap-1.5 ${tile.textColor || "text-foreground"}/60 text-xs font-sans`}>
-                      <Calendar className="w-3 h-3 md:w-3.5 md:h-3.5" />
+                    <div className={`flex items-center gap-2 ${tile.textColor || "text-foreground"}/70 text-sm font-sans`}>
+                      <Calendar className="w-4 h-4" />
                       <span>Update</span>
                     </div>
-                    <motion.div className={`flex items-center gap-1.5 md:gap-2 ${tile.textColor || "text-foreground"} font-medium group-hover:gap-2 md:group-hover:gap-2.5 transition-all duration-300 font-sans`}>
-                      <span className="text-xs md:text-sm">Jelajahi</span>
-                      <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 drop-shadow-sm" />
+                    <motion.div className={`flex items-center gap-2 md:gap-3 ${tile.textColor || "text-foreground"} font-semibold group-hover:gap-3 md:group-hover:gap-4 transition-all duration-300 font-sans`}>
+                      <span className="text-base md:text-lg">Jelajahi</span>
+                      <ArrowRight className="w-5 h-5 md:w-6 md:h-6 drop-shadow-sm" />
                     </motion.div>
                   </motion.div>
                 </div>
