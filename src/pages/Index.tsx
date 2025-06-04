@@ -50,7 +50,6 @@ const tileVariants = {
 const Index = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const [hoveredTile, setHoveredTile] = useState<string | null>(null);
 
   const handleTileClick = (tile: BentoTile) => {
     navigate(tile.path);
@@ -253,8 +252,6 @@ const Index = () => {
               <BentoCard
                 className={`relative group cursor-pointer h-full ${tile.color} border-border/50 hover:border-border/70 transition-all duration-300`}
                 onClick={() => handleTileClick(tile)}
-                onMouseEnter={() => setHoveredTile(tile.id)}
-                onMouseLeave={() => setHoveredTile(null)}
                 interactive={true}
                 hoverScale={1.02}
                 motionProps={{
@@ -270,7 +267,7 @@ const Index = () => {
                 
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-black/5"
-                  animate={{ opacity: hoveredTile === tile.id ? [0.3, 0.6, 0.3] : 0.2 }}
+                  animate={{ opacity: [0.2, 0.6, 0.2] }}
                   transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                 />
 
@@ -322,9 +319,7 @@ const Index = () => {
                 <motion.div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
                   style={{
-                    background: hoveredTile === tile.id 
-                      ? `radial-gradient(circle at 50% 50%, ${tile.textColor === "text-white" ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.05)"} 0%, rgba(255,255,255,0.0) 70%)`
-                      : `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.0) 70%)`
+                    background: `radial-gradient(circle at 50% 50%, ${tile.textColor === "text-white" ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.05)"} 0%, rgba(255,255,255,0.0) 70%)`
                   }}
                 />
               </BentoCard>
