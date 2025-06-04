@@ -1,3 +1,5 @@
+--- START OF FILE Index.tsx ---
+
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
@@ -143,8 +145,8 @@ const Index = () => {
   ];
 
   const getPatternSvg = (pattern: string, id: string, tileTextColor: string = "text-white") => {
-    const baseOpacity = "opacity-15";
-    const colorClass = tileTextColor === "text-white" ? "text-white/60" : "text-black/30";
+    const baseOpacity = "opacity-20"; // Increased base opacity for patterns
+    const colorClass = tileTextColor === "text-white" ? "text-white/50" : "text-black/25"; // Adjusted pattern color intensity
 
     switch (pattern) {
       case "dots":
@@ -170,7 +172,7 @@ const Index = () => {
         );
       case "hexagon":
         return (
-          <svg className={`absolute inset-0 w-full h-full opacity-10 ${colorClass}`} viewBox="0 0 100 100">
+          <svg className={`absolute inset-0 w-full h-full opacity-15 ${colorClass}`} viewBox="0 0 100 100"> {/* Increased opacity for this pattern type */}
             <defs><pattern id={`hexagon-${id}`} x="0" y="0" width="20" height="17.32" patternUnits="userSpaceOnUse"><polygon points="10,2 18,7 18,14 10,19 2,14 2,7" fill="none" stroke="currentColor" strokeWidth="1" /></pattern></defs>
             <rect width="100%" height="100%" fill={`url(#hexagon-${id})`} />
           </svg>
@@ -184,7 +186,7 @@ const Index = () => {
         );
       case "grid":
         return (
-          <svg className={`absolute inset-0 w-full h-full opacity-10 ${colorClass}`} viewBox="0 0 100 100">
+          <svg className={`absolute inset-0 w-full h-full opacity-15 ${colorClass}`} viewBox="0 0 100 100"> {/* Increased opacity for this pattern type */}
             <defs><pattern id={`grid-${id}`} x="0" y="0" width="15" height="15" patternUnits="userSpaceOnUse"><path d="M15,0 L0,0 L0,15" fill="none" stroke="currentColor" strokeWidth="1" /></pattern></defs>
             <rect width="100%" height="100%" fill={`url(#grid-${id})`} />
           </svg>
@@ -266,7 +268,7 @@ const Index = () => {
                 }}
               >
                 <div className="absolute inset-0 pointer-events-none">
-                  {getPatternSvg(tile.pattern, tile.id, tile.textColor)}
+                  {getPatternSvg(tile.pattern, tile.id, tile.textColor || "text-foreground")}
                 </div>
                 
                 <div className={`absolute inset-0 bg-gradient-to-br ${tile.gradientFrom} ${tile.gradientTo} opacity-80 group-hover:opacity-70 transition-opacity duration-300`} />
@@ -280,13 +282,13 @@ const Index = () => {
                 <div className="relative z-10 p-6 md:p-8 h-full flex flex-col justify-center text-center">
                   <div className="space-y-6 md:space-y-8">
                     <motion.div className="flex items-center justify-center">
-                      <div className={`w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-2xl md:rounded-3xl ${tile.textColor === "text-white" ? 'bg-white/15 group-hover:bg-white/25' : 'bg-primary-light/15 group-hover:bg-primary-light/25'} backdrop-blur-lg flex items-center justify-center transition-all duration-300 shadow-2xl border border-white/20`}>
+                      <div className={`w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-2xl md:rounded-3xl ${tile.textColor === "text-white" ? 'bg-white/15 group-hover:bg-white/20' : 'bg-primary-light/15 group-hover:bg-primary-light/20'} backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-xl border ${tile.textColor === "text-white" ? 'border-white/25' : 'border-primary-light/25'}`}>
                         <tile.icon className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 ${tile.textColor === "text-white" ? "text-white" : "text-primary-light"} drop-shadow-lg`} strokeWidth={1.5} />
                       </div>
                       
-                      {index < 2 && (
+                      {index < 2 && ( // Show "Populer" tag for the first two tiles as an example
                         <motion.div
-                          className={`absolute top-4 right-4 px-3 py-1.5 ${tile.textColor === "text-white" ? 'bg-white/15' : 'bg-primary-light/25'} backdrop-blur-lg rounded-full text-xs font-semibold ${tile.textColor === "text-white" ? 'text-white/95' : 'text-primary-foreground'} border ${tile.textColor === "text-white" ? 'border-white/30' : 'border-primary-light/40'} font-sans shadow-lg`}
+                          className={`absolute top-4 right-4 px-3 py-1.5 ${tile.textColor === "text-white" ? 'bg-white/20' : 'bg-primary-light/30'} backdrop-blur-md rounded-full text-xs font-semibold ${tile.textColor === "text-white" ? 'text-white/95' : 'text-primary-foreground'} border ${tile.textColor === "text-white" ? 'border-white/30' : 'border-primary-light/40'} font-sans shadow-md`}
                           animate={{ scale: [1, 1.05, 1] }}
                           transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                         >
@@ -300,7 +302,7 @@ const Index = () => {
                       <motion.h3 className={`text-2xl md:text-3xl lg:text-4xl font-sans font-bold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-lg`}>
                         {tile.title}
                       </motion.h3>
-                      <p className={`${tile.textColor || "text-foreground"}/80 group-hover:${tile.textColor || "text-foreground"}/90 leading-relaxed drop-shadow-sm text-base md:text-lg lg:text-xl font-sans font-medium max-w-md mx-auto`}>
+                      <p className={`${tile.textColor === "text-white" ? "text-white/80" : (tile.textColor || "text-foreground") + "/80"} group-hover:${tile.textColor === "text-white" ? "text-white/95" : (tile.textColor || "text-foreground") + "/95"} leading-relaxed drop-shadow-sm text-base md:text-lg lg:text-xl font-sans font-medium max-w-md mx-auto transition-colors duration-300`}>
                         {tile.description}
                       </p>
                     </div>
@@ -315,9 +317,9 @@ const Index = () => {
                       <Calendar className="w-4 h-4" />
                       <span>Update</span>
                     </div>
-                    <motion.div className={`flex items-center gap-2 md:gap-3 ${tile.textColor || "text-foreground"} font-semibold group-hover:gap-3 md:group-hover:gap-4 transition-all duration-300 font-sans`}>
+                    <motion.div className={`flex items-center gap-2 md:gap-2.5 ${tile.textColor || "text-foreground"} font-semibold transition-all duration-300 font-sans`}>
                       <span className="text-base md:text-lg">Jelajahi</span>
-                      <ArrowRight className="w-5 h-5 md:w-6 md:h-6 drop-shadow-sm" />
+                      <ArrowRight className="w-5 h-5 md:w-6 md:h-6 drop-shadow-sm transition-transform duration-300 group-hover:translate-x-1" />
                     </motion.div>
                   </motion.div>
                 </div>
@@ -325,7 +327,7 @@ const Index = () => {
                 <motion.div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
                   style={{
-                    background: `radial-gradient(circle at 50% 50%, ${tile.textColor === "text-white" ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.05)"} 0%, rgba(255,255,255,0.0) 70%)`
+                    background: `radial-gradient(circle at 50% 50%, ${tile.textColor === "text-white" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.04)"} 0%, rgba(255,255,255,0.0) 65%)` // Softer radial gradient
                   }}
                 />
               </BentoCard>
@@ -348,7 +350,7 @@ const Index = () => {
         ].map((stat, index) => (
           <motion.div
             key={stat.label}
-            className="text-center p-4 md:p-5 rounded-xl md:rounded-ios bg-background dark:bg-secondary-dark backdrop-blur-sm border border-border hover:border-border/70 transition-all duration-300 group"
+            className="text-center p-4 md:p-5 rounded-xl md:rounded-2xl bg-background/80 dark:bg-secondary-dark/80 backdrop-blur-md border border-border/70 hover:border-border transition-all duration-300 group shadow-sm hover:shadow-lg"
             whileHover={{ scale: 1.04, y: -4 }}
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -367,3 +369,4 @@ const Index = () => {
 };
 
 export default Index;
+--- END OF FILE Index.tsx ---
