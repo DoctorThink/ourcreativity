@@ -1,6 +1,3 @@
---- START OF FILE Index.tsx ---
-
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Users, Megaphone, BookOpen, Info, FileText, Palette, Trophy, Sparkles } from "lucide-react";
@@ -207,17 +204,19 @@ const Index = () => {
         className="mb-8 md:mb-12"
       >
         <div className="text-center space-y-3 md:space-y-5">
-          <motion.h1 
-            className="text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-serif font-bold leading-tight text-foreground dark:text-foreground-dark"
+          <motion.div 
+            className="flex flex-col items-center leading-tight"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            Selamat Datang di{" "}
-            <span className="bg-gradient-to-r from-amethyst via-turquoise to-coral bg-clip-text text-transparent animate-gradient-cycle bg-300%">
-              OUR CREATIVITY
+            <span className="text-lg md:text-2xl lg:text-3xl font-sans font-medium text-foreground/80 dark:text-foreground-dark/80 mb-1">
+              Selamat Datang di
             </span>
-          </motion.h1>
+            <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold bg-gradient-to-r from-amethyst via-turquoise to-coral bg-clip-text text-transparent animate-gradient-cycle bg-300%">
+              OUR CREATIVITY
+            </h1>
+          </motion.div>
 
           <motion.div
             className="flex items-center justify-center gap-2 text-xs md:text-sm text-foreground/60 dark:text-foreground-dark/60"
@@ -369,4 +368,3 @@ const Index = () => {
 };
 
 export default Index;
---- END OF FILE Index.tsx ---

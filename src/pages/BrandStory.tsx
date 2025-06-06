@@ -1,4 +1,3 @@
-
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -24,14 +23,12 @@ const BrandStory = () => {
       subtitle="Perjalanan kreativitas dan inspirasi di balik komunitas kami"
     >
       <div ref={containerRef} className="relative z-10 px-4 sm:px-6 md:px-8">
-        {/* Main Content with Bento Grid */}
-        <BentoGrid cols={3} mdCols={2} smCols={1} gap="md" className="mb-8 sm:mb-12">
+        {/* Main Content with Bento Grid - Mobile Responsive */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
           {/* Main Story Card */}
           <BentoCard 
-            colSpan="col-span-3 sm:col-span-2" 
-            rowSpan="row-span-2"
+            className="md:col-span-2 md:row-span-2 p-4 sm:p-6 md:p-8"
             glowColor="rgba(229, 222, 255, 0.3)"
-            className="p-4 sm:p-6 md:p-8"
             icon={BookOpen}
             iconColor="bg-amethyst text-background"
           >
@@ -58,7 +55,7 @@ const BrandStory = () => {
 
           {/* Quote */}
           <BentoCard 
-            className="p-4 sm:p-6 md:p-8 flex items-center justify-center"
+            className="p-4 sm:p-6 md:p-8 flex items-center justify-center min-h-[200px] md:min-h-[240px]"
             glowColor="rgba(152, 245, 225, 0.3)"
             icon={Quote}
             iconColor="bg-turquoise text-background"
@@ -75,7 +72,7 @@ const BrandStory = () => {
 
           {/* Timeline */}
           <BentoCard 
-            className="p-4 sm:p-6 md:p-8"
+            className="p-4 sm:p-6 md:p-8 min-h-[280px]"
             glowColor="rgba(254, 198, 161, 0.3)"
             icon={History}
             iconColor="bg-coral text-background"
@@ -92,7 +89,7 @@ const BrandStory = () => {
 
           {/* Growth */}
           <BentoCard 
-            className="p-4 sm:p-6 md:p-8"
+            className="p-4 sm:p-6 md:p-8 md:col-span-2 min-h-[280px]"
             glowColor="rgba(152, 245, 225, 0.3)"
             icon={BarChart}
             iconColor="bg-mint text-background"
@@ -101,20 +98,19 @@ const BrandStory = () => {
             <p className="text-foreground/80 text-xs sm:text-sm md:text-base leading-relaxed mb-3 sm:mb-4">
               Dari 5 anggota awal, kini OUR CREATIVITY telah berkembang menjadi komunitas dengan lebih dari:
             </p>
-            <ul className="space-y-2">
+            <div className="grid grid-cols-2 gap-4">
               <StatItem value="1,000+" label="Anggota Aktif" />
               <StatItem value="50+" label="Kolaborasi Project" />
               <StatItem value="12+" label="Kota di Indonesia" />
               <StatItem value="4" label="Kategori Kreatif" />
-            </ul>
+            </div>
           </BentoCard>
-        </BentoGrid>
+        </div>
         
         {/* Additional Sections */}
         <AnimateInView className="mb-8 sm:mb-12">
           <BentoCard 
             className="p-4 sm:p-6 md:p-8"
-            colSpan="col-span-1 md:col-span-full"
             glowColor="rgba(155, 109, 255, 0.3)"
             icon={Target}
             iconColor="bg-amethyst text-background"
@@ -133,7 +129,7 @@ const BrandStory = () => {
         </AnimateInView>
         
         {/* Key Values Section */}
-        <BentoGrid cols={3} mdCols={3} smCols={1} gap="sm" className="mb-8 sm:mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
           <AnimateInView>
             <BentoCard 
               className="p-4 sm:p-6 min-h-[140px] sm:min-h-[180px] md:min-h-[200px] flex flex-col items-center justify-center text-center"
@@ -169,7 +165,7 @@ const BrandStory = () => {
               <p className="text-xs sm:text-sm md:text-base text-foreground/70">Berkomitmen untuk terus berkarya dan berkontribusi secara berkelanjutan</p>
             </BentoCard>
           </AnimateInView>
-        </BentoGrid>
+        </div>
         
         {/* Final CTA Section */}
         <AnimateInView className="mt-8 sm:mt-12 md:mt-16 mb-6 sm:mb-8">

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { KaryaGallery } from "../components/karya/KaryaGallery";
@@ -6,7 +5,6 @@ import PageLayout from "../components/layouts/PageLayout";
 import { SpotlightSection } from "../components/karya/SpotlightSection";
 import FloatingNav from "../components/karya/FloatingNav";
 import AdvancedFilters from "../components/karya/AdvancedFilters";
-import CategoryExplorer from "../components/karya/CategoryExplorer";
 import { ScrollProgressIndicator } from "../components/karya/ScrollProgressIndicator";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
@@ -231,16 +229,6 @@ const KaryaKami: React.FC = () => {
             />
           )}
         </AnimatePresence>
-        
-        {/* Category Explorer - 3D hover effects */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          className="mb-12"
-        >
-          <CategoryExplorer onSelectCategory={handleCategorySelect} selectedCategory={selectedCategory} />
-        </motion.div>
         
         {/* Spotlight Section with enhanced animations */}
         <motion.div
