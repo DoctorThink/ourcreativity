@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Users, Megaphone, BookOpen, Info, FileText, Palette, Trophy, Sparkles } from "lucide-react";
@@ -210,10 +211,10 @@ const Index = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <span className="text-lg md:text-2xl lg:text-3xl font-sans font-medium text-foreground/80 dark:text-foreground-dark/80 mb-1">
+            <span className="text-lg md:text-xl lg:text-2xl font-sans font-medium text-foreground/80 dark:text-foreground-dark/80 mb-1">
               Selamat Datang di
             </span>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold bg-gradient-to-r from-amethyst via-turquoise to-coral bg-clip-text text-transparent animate-gradient-cycle bg-300%">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold bg-gradient-to-r from-amethyst via-turquoise to-coral bg-clip-text text-transparent animate-gradient-cycle bg-300%">
               OUR CREATIVITY
             </h1>
           </motion.div>
@@ -282,7 +283,8 @@ const Index = () => {
                   <div className="space-y-6 md:space-y-8">
                     <motion.div className="flex items-center justify-center">
                       <div className={`w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-2xl md:rounded-3xl ${tile.textColor === "text-white" ? 'bg-white/15 group-hover:bg-white/20' : 'bg-primary-light/15 group-hover:bg-primary-light/20'} backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-xl border ${tile.textColor === "text-white" ? 'border-white/25' : 'border-primary-light/25'}`}>
-                        <tile.icon className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 ${tile.textColor === "text-white" ? "text-white" : "text-primary-light"} drop-shadow-lg`} strokeWidth={1.5} />
+                        {/* Fixed the strokeWidth error here by using proper prop types for Lucide icons */}
+                        <tile.icon className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 ${tile.textColor === "text-white" ? "text-white" : "text-primary-light"} drop-shadow-lg`} />
                       </div>
                       
                       {index < 2 && ( // Show "Populer" tag for the first two tiles as an example
