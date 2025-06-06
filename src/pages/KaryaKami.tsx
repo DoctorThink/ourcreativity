@@ -5,7 +5,6 @@ import { KaryaGallery } from "../components/karya/KaryaGallery";
 import PageLayout from "../components/layouts/PageLayout";
 import { SpotlightSection } from "../components/karya/SpotlightSection";
 import FloatingNav from "../components/karya/FloatingNav";
-import AdvancedFilters from "../components/karya/AdvancedFilters";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,13 +19,8 @@ import {
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
 const KaryaKami: React.FC = () => {
-  const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState<"recency" | "popularity">("recency");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   
   const mainRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -45,7 +39,7 @@ const KaryaKami: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000); // Reduced from 1500ms
+    }, 800);
     
     return () => clearTimeout(timer);
   }, []);
@@ -76,21 +70,11 @@ const KaryaKami: React.FC = () => {
       result = result.filter(item => item.category === selectedCategory);
     }
     
-    // Filter by search term
-    result = filterKaryaBySearchTerm(result, searchTerm);
-    
-    // Filter by tags
-    result = filterKaryaByTags(result, selectedTags);
-    
-    // Sort
-    if (sortBy === "recency") {
-      result = sortKaryaByRecency(result, sortOrder === "asc");
-    } else if (sortBy === "popularity") {
-      result = sortKaryaByPopularity(result, sortOrder === "asc");
-    }
+    // Sort by recency (default)
+    result = sortKaryaByRecency(result, false);
     
     return result;
-  }, [karyaData, selectedCategory, searchTerm, selectedTags, sortBy, sortOrder]);
+  }, [karyaData, selectedCategory]);
 
   // Memoized spotlight items
   const spotlightItems = useMemo(() => {
@@ -111,29 +95,13 @@ const KaryaKami: React.FC = () => {
     return spotlightCandidates;
   }, [karyaData, selectedCategory, filteredKarya]);
   
-  // Filter toggle handler
-  const toggleFilters = () => {
-    setShowFilters(!showFilters);
-  };
-  
   // Category selection handler
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
   };
 
-  // Filter handlers for AdvancedFilters
-  const handleSearchChange = (search: string) => {
-    setSearchTerm(search);
-  };
-
-  const handleTagsChange = (tags: string[]) => {
-    setSelectedTags(tags);
-  };
-
-  const handleSortChange = (sort: "recency" | "popularity", order: "asc" | "desc") => {
-    setSortBy(sort);
-    setSortOrder(order);
-  };
+  // Dummy handlers for FloatingNav props (no longer used)
+  const toggleFilters = () => {};
 
   return (
     <PageLayout title="">
@@ -183,7 +151,7 @@ const KaryaKami: React.FC = () => {
         </AnimatePresence>
         
         {/* Floating Navigation */}
-        <FloatingNav toggleFilters={toggleFilters} showFilters={showFilters} />
+        <FloatingNav toggleFilters={toggleFilters} showFilters={false} />
         
         {/* Header Section with optimized motion effects */}
         <motion.div 
@@ -216,23 +184,6 @@ const KaryaKami: React.FC = () => {
             Temukan kreativitas tanpa batas dari komunitas kami
           </motion.p>
         </motion.div>
-        
-        {/* Advanced Filters - expandable section */}
-        <AnimatePresence>
-          {showFilters && (
-            <AdvancedFilters 
-              onSelectCategory={handleCategorySelect} 
-              selectedCategory={selectedCategory}
-              onSearchChange={handleSearchChange}
-              onTagsChange={handleTagsChange}
-              onSortChange={handleSortChange}
-              searchTerm={searchTerm}
-              selectedTags={selectedTags}
-              sortBy={sortBy}
-              sortOrder={sortOrder}
-            />
-          )}
-        </AnimatePresence>
         
         {/* Spotlight Section */}
         <motion.div

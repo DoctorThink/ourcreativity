@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Filter, ArrowUp } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 
 interface FloatingNavProps {
   toggleFilters: () => void;
@@ -83,22 +83,7 @@ const FloatingNav: React.FC<FloatingNavProps> = ({ toggleFilters, showFilters })
           </motion.span>
         </motion.div>
         
-        <div className="flex items-center">
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className={`p-3 rounded-full transition-all duration-300 ${
-              showFilters 
-                ? "bg-amethyst text-background shadow-lg shadow-amethyst/30" 
-                : "bg-foreground/10 hover:bg-foreground/20 backdrop-blur-sm"
-            }`}
-            onClick={toggleFilters}
-            aria-label="Toggle filters"
-          >
-            <Filter size={20} />
-          </motion.button>
-        </div>
+        {/* Removed filter button - no longer needed */}
       </motion.nav>
       
       {/* Back to top button */}

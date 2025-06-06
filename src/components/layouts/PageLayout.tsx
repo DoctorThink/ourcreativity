@@ -132,44 +132,119 @@ const PageLayout: React.FC<PageLayoutProps> = ({
           </nav>
           
           {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors duration-300"
+          <motion.button
+            className="lg:hidden p-3 rounded-2xl bg-secondary/80 backdrop-blur-sm border border-border/30 hover:bg-secondary transition-all duration-300"
             onClick={toggleMenu}
             aria-label="Toggle menu"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            {isMenuOpen ? <X className="h-5 w-5 text-white" /> : <Menu className="h-5 w-5 text-white" />}
-          </button>
+            <AnimatePresence mode="wait">
+              {isMenuOpen ? (
+                <motion.div
+                  key="close"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <X className="h-5 w-5 text-foreground" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="menu"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Menu className="h-5 w-5 text-foreground" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
         </div>
       </motion.header>
       
-      {/* Mobile Menu - Improved with solid background */}
+      {/* Enhanced Mobile Menu */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div
-            className="fixed inset-0 z-40 pt-20 bg-background border-b border-border/30 lg:hidden overflow-y-auto"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <nav className="container mx-auto px-4 py-6 flex flex-col space-y-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={cn(
-                    "px-4 py-3 rounded-xl font-sans transition-all duration-300 text-base",
-                    isActive(item.path)
-                      ? "bg-amethyst/20 text-white font-medium"
-                      : "text-white/80 hover:text-white hover:bg-white/10"
-                  )}
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setIsMenuOpen(false)}
+            />
+            
+            {/* Menu Content */}
+            <motion.div
+              className="fixed inset-x-4 top-24 z-40 bg-secondary/95 backdrop-blur-xl border border-border/30 rounded-3xl shadow-2xl shadow-black/20 lg:hidden overflow-hidden"
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            >
+              <nav className="p-6">
+                <motion.div 
+                  className="space-y-2"
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: {
+                        staggerChildren: 0.1,
+                        delayChildren: 0.1
+                      }
+                    }
+                  }}
                 >
-                  {item.name}
-                </Link>
-              ))}
-            </nav>
-          </motion.div>
+                  {navItems.map((item, index) => (
+                    <motion.div
+                      key={item.path}
+                      variants={{
+                        hidden: { opacity: 0, x: -20 },
+                        visible: { opacity: 1, x: 0 }
+                      }}
+                    >
+                      <Link
+                        to={item.path}
+                        onClick={() => setIsMenuOpen(false)}
+                        className={cn(
+                          "flex items-center px-4 py-4 rounded-2xl font-sans transition-all duration-300 text-base group",
+                          isActive(item.path)
+                            ? "bg-amethyst/20 text-white font-medium border border-amethyst/30"
+                            : "text-foreground/80 hover:text-foreground hover:bg-background/50"
+                        )}
+                      >
+                        <motion.span
+                          className="flex-1"
+                          whileHover={{ x: 4 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          {item.name}
+                        </motion.span>
+                        {isActive(item.path) && (
+                          <motion.div
+                            className="w-2 h-2 rounded-full bg-amethyst"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ duration: 0.2 }}
+                          />
+                        )}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </nav>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
       
@@ -205,39 +280,56 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         </div>
       </main>
       
-      {/* Footer - Improved for mobile */}
+      {/* Enhanced Mobile-First Footer */}
       <footer className={cn("mt-auto pt-12 pb-6", footerClassName)}>
         <div className={cn(
           "container mx-auto px-4 sm:px-6",
           fullWidth ? "max-w-full" : "max-w-7xl"
         )}>
-          <div className="border-t border-border/30 pt-6 md:pt-8">
+          <div className="border-t border-border/30 pt-8">
             {/* Mobile Footer */}
-            <div className="flex flex-col items-center md:hidden space-y-6">
+            <div className="flex flex-col items-center md:hidden space-y-8">
               {/* Logo and Copyright */}
-              <div className="flex flex-col items-center space-y-4">
+              <motion.div 
+                className="flex flex-col items-center space-y-4"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+              >
                 <img 
                   src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
                   alt="Logo" 
-                  className="h-10 w-auto" 
+                  className="h-12 w-auto" 
                 />
-                <p className="text-foreground/70 text-sm font-sans text-center">
+                <p className="text-foreground/60 text-sm font-sans text-center max-w-xs">
                   © 2025 OUR CREATIVITY. Hak Cipta Dilindungi.
                 </p>
-              </div>
+              </motion.div>
               
-              {/* Navigation */}
-              <div className="grid grid-cols-2 gap-3 w-full max-w-xs">
-                {navItems.slice(0, 6).map((item) => (
-                  <Link
+              {/* Navigation Grid */}
+              <motion.div 
+                className="grid grid-cols-2 gap-4 w-full max-w-sm"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                {navItems.slice(0, 6).map((item, index) => (
+                  <motion.div
                     key={item.path}
-                    to={item.path}
-                    className="text-sm text-center py-2 px-3 bg-secondary/50 rounded-lg text-foreground/80 hover:text-foreground hover:bg-secondary transition-colors duration-300 font-sans"
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    {item.name}
-                  </Link>
+                    <Link
+                      to={item.path}
+                      className="block text-sm text-center py-3 px-4 bg-secondary/60 rounded-xl text-foreground/70 hover:text-foreground hover:bg-secondary/80 transition-all duration-300 font-sans border border-border/20 hover:border-border/40"
+                    >
+                      {item.name}
+                    </Link>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             </div>
 
             {/* Desktop Footer */}
@@ -250,7 +342,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                 />
                 <span className="text-foreground/70 text-sm font-sans">© 2025 OUR CREATIVITY. Hak Cipta Dilindungi.</span>
               </div>
-              <div className="flex gap-4">
+              <div className="flex gap-6">
                 {navItems.slice(0, 4).map((item) => (
                   <Link
                     key={item.path}
