@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Users, Megaphone, BookOpen, Info, FileText, Palette, Trophy, Sparkles } from "lucide-react";
@@ -99,14 +98,14 @@ const Index = () => {
       textColor: "text-white"
     },
     {
-      id: "brand-story",
-      title: "Brand Story",
+      id: "cerita-kami",
+      title: "Cerita Kami",
       description: "Perjalanan & visi misi komunitas.",
       icon: BookOpen,
       color: "bg-gradient-to-br from-peach/20 to-amber/30",
       gradientFrom: "from-peach/10",
       gradientTo: "to-amber/20",
-      path: "/brand-story",
+      path: "/cerita-kami",
       colSpan: "lg:col-span-1",
       rowSpan: "lg:row-span-1",
       pattern: "hexagon",
@@ -251,7 +250,7 @@ const Index = () => {
                   tile.id === 'pengumuman' ? '1 / 1 / 3 / 3' : // 2x2 large tile
                   tile.id === 'tim-kami' ? '1 / 3 / 2 / 4' : // top right
                   tile.id === 'karya-kami' ? '2 / 3 / 4 / 4' : // tall right tile
-                  tile.id === 'brand-story' ? '3 / 1 / 4 / 2' : // bottom left
+                  tile.id === 'cerita-kami' ? '3 / 1 / 4 / 2' : // bottom left
                   tile.id === 'informasi' ? '3 / 2 / 4 / 3' : // bottom middle
                   tile.id === 'terms' ? '4 / 1 / 5 / 4' : // bottom wide
                   'auto'
@@ -287,7 +286,7 @@ const Index = () => {
                         <tile.icon className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 ${tile.textColor === "text-white" ? "text-white" : "text-primary-light"} drop-shadow-lg`} />
                       </div>
                       
-                      {index < 2 && ( // Show "Populer" tag for the first two tiles as an example
+                      {index < 2 && (
                         <motion.div
                           className={`absolute top-4 right-4 px-3 py-1.5 ${tile.textColor === "text-white" ? 'bg-white/20' : 'bg-primary-light/30'} backdrop-blur-md rounded-full text-xs font-semibold ${tile.textColor === "text-white" ? 'text-white/95' : 'text-primary-foreground'} border ${tile.textColor === "text-white" ? 'border-white/30' : 'border-primary-light/40'} font-sans shadow-md`}
                           animate={{ scale: [1, 1.05, 1] }}
@@ -300,7 +299,7 @@ const Index = () => {
                     </motion.div>
 
                     <div className="space-y-3 md:space-y-4">
-                      <motion.h3 className={`text-2xl md:text-3xl lg:text-4xl font-sans font-bold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-lg`}>
+                      <motion.h3 className={`text-2xl md:text-3xl lg:text-4xl font-serif font-bold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-lg`}>
                         {tile.title}
                       </motion.h3>
                       <p className={`${tile.textColor === "text-white" ? "text-white/80" : (tile.textColor || "text-foreground") + "/80"} group-hover:${tile.textColor === "text-white" ? "text-white/95" : (tile.textColor || "text-foreground") + "/95"} leading-relaxed drop-shadow-sm text-base md:text-lg lg:text-xl font-sans font-medium max-w-md mx-auto transition-colors duration-300`}>

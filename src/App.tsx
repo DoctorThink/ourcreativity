@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Importing pages with normal imports instead of dynamic imports
 import Index from "./pages/Index";
-import BrandStory from "./pages/BrandStory";
+import CeritaKami from "./pages/CeritaKami";
 import Informasi from "./pages/Informasi";
 import Pengumuman from "./pages/Pengumuman";
 import TimKami from "./pages/TimKami";
@@ -54,7 +54,8 @@ function AppContent() {
         <PageTransition key={location.pathname}>
           <Routes location={location}>
             <Route path="/" element={<Index />} />
-            <Route path="/brand-story" element={<BrandStory />} />
+            <Route path="/cerita-kami" element={<CeritaKami />} />
+            <Route path="/brand-story" element={<CeritaKami />} /> {/* Keep old route for backward compatibility */}
             <Route path="/informasi" element={<Informasi />} />
             <Route path="/pengumuman" element={<Pengumuman />} />
             <Route path="/tim-kami" element={<TimKami />} />

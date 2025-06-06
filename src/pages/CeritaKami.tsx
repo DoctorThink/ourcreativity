@@ -1,12 +1,12 @@
+
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
 import BentoCard from "../components/ui/BentoCard";
-import BentoGrid from "../components/ui/BentoGrid";
 import { AnimateInView } from "@/hooks/useElementInView";
 import { BookOpen, Quote, History, BarChart, Target, Users, Award, Calendar } from "lucide-react";
 
-const BrandStory = () => {
+const CeritaKami = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -35,10 +35,10 @@ const BrandStory = () => {
             <div className="h-full flex flex-col justify-between">
               <div>
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-semibold mb-4 sm:mb-6 pt-8">Bagaimana Semua Dimulai</h2>
-                <p className="text-foreground/80 text-sm sm:text-base md:text-lg leading-relaxed mb-4 sm:mb-6">
+                <p className="text-foreground/80 text-sm sm:text-base md:text-lg leading-relaxed mb-4 sm:mb-6 font-sans">
                   OUR CREATIVITY berawal dari sekelompok mahasiswa yang berbagi hasrat yang sama untuk menciptakan ruang kolaboratif bagi para kreator muda. Kami melihat betapa banyaknya bakat yang tersebar namun tidak memiliki wadah untuk dieksplorasi dan dikembangkan bersama.
                 </p>
-                <p className="text-foreground/80 text-sm sm:text-base md:text-lg leading-relaxed">
+                <p className="text-foreground/80 text-sm sm:text-base md:text-lg leading-relaxed font-sans">
                   Pada awal 2022, dimulai dengan kelompok kecil beranggotakan 5 orang, kami mulai membangun komunitas yang berfokus pada pengembangan ide kreatif dan kolaborasi antar disiplin ilmu. Dari sini, komunitas kami mulai berkembang secara organik menjadi jaringan kreator yang lebih luas.
                 </p>
               </div>
@@ -66,7 +66,7 @@ const BrandStory = () => {
                 Tanpa keberanian seseorang tidak akan pernah berkarya.
                 <span className="absolute -right-2 sm:-right-4 -bottom-2 sm:-bottom-6 text-2xl sm:text-4xl opacity-30">"</span>
               </blockquote>
-              <p className="mt-4 text-xs sm:text-sm text-foreground/70">- Pendiri OUR CREATIVITY</p>
+              <p className="mt-4 text-xs sm:text-sm text-foreground/70 font-sans">- Pendiri OUR CREATIVITY</p>
             </div>
           </BentoCard>
 
@@ -95,7 +95,7 @@ const BrandStory = () => {
             iconColor="bg-mint text-background"
           >
             <h3 className="text-lg sm:text-xl font-serif font-semibold mb-3 sm:mb-4 pt-8">Pertumbuhan Komunitas</h3>
-            <p className="text-foreground/80 text-xs sm:text-sm md:text-base leading-relaxed mb-3 sm:mb-4">
+            <p className="text-foreground/80 text-xs sm:text-sm md:text-base leading-relaxed mb-3 sm:mb-4 font-sans">
               Dari 5 anggota awal, kini OUR CREATIVITY telah berkembang menjadi komunitas dengan lebih dari:
             </p>
             <div className="grid grid-cols-2 gap-4">
@@ -116,7 +116,7 @@ const BrandStory = () => {
             iconColor="bg-amethyst text-background"
           >
             <h3 className="text-lg sm:text-xl font-serif font-semibold mb-3 sm:mb-4 pt-8">Visi Ke Depan</h3>
-            <p className="text-foreground/80 text-sm sm:text-base md:text-lg leading-relaxed">
+            <p className="text-foreground/80 text-sm sm:text-base md:text-lg leading-relaxed font-sans">
               OUR CREATIVITY memiliki visi untuk terus mengembangkan ekosistem kreator muda Indonesia. Kami berencana memperluas jangkauan ke lebih banyak kota, menyelenggarakan festival tahunan, dan membangun platform digital yang lebih komprehensif untuk karya-karya anggota.
             </p>
             <div className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-3">
@@ -138,7 +138,7 @@ const BrandStory = () => {
               iconColor="bg-coral text-background"
             >
               <h3 className="text-sm sm:text-base md:text-lg font-medium mt-8 mb-2">Komunitas</h3>
-              <p className="text-xs sm:text-sm md:text-base text-foreground/70">Membangun hubungan yang kuat dan saling mendukung antar kreator</p>
+              <p className="text-xs sm:text-sm md:text-base text-foreground/70 font-sans">Membangun hubungan yang kuat dan saling mendukung antar kreator</p>
             </BentoCard>
           </AnimateInView>
           
@@ -150,7 +150,7 @@ const BrandStory = () => {
               iconColor="bg-turquoise text-background"
             >
               <h3 className="text-sm sm:text-base md:text-lg font-medium mt-8 mb-2">Kualitas</h3>
-              <p className="text-xs sm:text-sm md:text-base text-foreground/70">Mendorong standar tertinggi dalam setiap karya yang dihasilkan</p>
+              <p className="text-xs sm:text-sm md:text-base text-foreground/70 font-sans">Mendorong standar tertinggi dalam setiap karya yang dihasilkan</p>
             </BentoCard>
           </AnimateInView>
           
@@ -162,7 +162,7 @@ const BrandStory = () => {
               iconColor="bg-amethyst text-background"
             >
               <h3 className="text-sm sm:text-base md:text-lg font-medium mt-8 mb-2">Konsistensi</h3>
-              <p className="text-xs sm:text-sm md:text-base text-foreground/70">Berkomitmen untuk terus berkarya dan berkontribusi secara berkelanjutan</p>
+              <p className="text-xs sm:text-sm md:text-base text-foreground/70 font-sans">Berkomitmen untuk terus berkarya dan berkontribusi secara berkelanjutan</p>
             </BentoCard>
           </AnimateInView>
         </div>
@@ -171,7 +171,7 @@ const BrandStory = () => {
         <AnimateInView className="mt-8 sm:mt-12 md:mt-16 mb-6 sm:mb-8">
           <div className="text-center max-w-3xl mx-auto px-4">
             <h2 className="text-lg sm:text-xl md:text-3xl font-serif mb-3 sm:mb-4">Menjadi Bagian dari Perjalanan Kami</h2>
-            <p className="text-foreground/80 text-xs sm:text-sm md:text-base mb-4 sm:mb-6 md:mb-8">
+            <p className="text-foreground/80 text-xs sm:text-sm md:text-base mb-4 sm:mb-6 md:mb-8 font-sans">
               Kami mengundang para kreator muda Indonesia untuk bergabung dan menjadi bagian dari komunitas kami. 
               Bersama, kita akan menciptakan, menginspirasi, dan mengembangkan ekosistem kreativitas yang berkelanjutan.
             </p>
@@ -181,7 +181,7 @@ const BrandStory = () => {
               whileTap={{ scale: 0.98 }}
             >
               <motion.button 
-                className="px-4 sm:px-6 md:px-8 py-2 sm:py-3 bg-amethyst rounded-full text-background font-medium text-xs sm:text-sm md:text-base"
+                className="px-4 sm:px-6 md:px-8 py-2 sm:py-3 bg-amethyst rounded-full text-background font-medium text-xs sm:text-sm md:text-base font-sans"
                 whileHover={{ boxShadow: "0 0 15px rgba(155, 109, 255, 0.5)" }}
               >
                 Bergabung Sekarang
@@ -203,10 +203,10 @@ const TimelineItem = ({ date, event }: { date: string; event: string }) => (
     transition={{ duration: 0.5 }}
     viewport={{ once: true }}
   >
-    <span className="text-xs sm:text-sm font-medium text-coral whitespace-nowrap">{date}</span>
+    <span className="text-xs sm:text-sm font-medium text-coral whitespace-nowrap font-sans">{date}</span>
     <div className="flex gap-1 sm:gap-2 items-center flex-1">
       <span className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-coral mt-1.5"></span>
-      <span className="text-xs sm:text-sm text-foreground/80 flex-1">{event}</span>
+      <span className="text-xs sm:text-sm text-foreground/80 flex-1 font-sans">{event}</span>
     </div>
   </motion.li>
 );
@@ -219,14 +219,14 @@ const StatItem = ({ value, label }: { value: string; label: string }) => (
     transition={{ duration: 0.5 }}
     viewport={{ once: true }}
   >
-    <span className="text-lg sm:text-xl md:text-2xl font-medium text-mint">{value}</span>
-    <span className="text-xs sm:text-sm text-foreground/70">{label}</span>
+    <span className="text-lg sm:text-xl md:text-2xl font-medium text-mint font-sans">{value}</span>
+    <span className="text-xs sm:text-sm text-foreground/70 font-sans">{label}</span>
   </motion.div>
 );
 
 const VisionTag = ({ children }: { children: React.ReactNode }) => (
   <motion.span 
-    className="py-1 sm:py-1.5 px-2 sm:px-3 bg-amethyst/10 rounded-full text-xs sm:text-sm text-foreground/90"
+    className="py-1 sm:py-1.5 px-2 sm:px-3 bg-amethyst/10 rounded-full text-xs sm:text-sm text-foreground/90 font-sans"
     whileHover={{ scale: 1.05, backgroundColor: "rgba(155, 109, 255, 0.2)" }}
     transition={{ duration: 0.2 }}
   >
@@ -234,4 +234,4 @@ const VisionTag = ({ children }: { children: React.ReactNode }) => (
   </motion.span>
 );
 
-export default BrandStory;
+export default CeritaKami;
