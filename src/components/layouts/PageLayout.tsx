@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -34,6 +35,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   const [scrollY, setScrollY] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -45,6 +47,11 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  
+  // Close menu when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
   
   const handleBackClick = () => {
     if (backButtonPath) {
@@ -84,7 +91,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       <motion.header 
         className={cn(
           "fixed top-0 left-0 right-0 z-50 py-4 md:py-5 transition-all duration-300",
-          scrollY > 20 ? "bg-background/70 backdrop-blur-md border-b border-border/30 shadow-sm" : "",
+          scrollY > 20 ? "bg-background/95 backdrop-blur-md border-b border-border/30 shadow-sm" : "",
           headerClassName
         )}
         initial={{ y: -100 }}
@@ -135,11 +142,11 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         </div>
       </motion.header>
       
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Improved with solid background */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="fixed inset-0 z-40 pt-20 bg-background/95 backdrop-blur-md lg:hidden"
+            className="fixed inset-0 z-40 pt-20 bg-background border-b border-border/30 lg:hidden overflow-y-auto"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -152,10 +159,10 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                   to={item.path}
                   onClick={() => setIsMenuOpen(false)}
                   className={cn(
-                    "px-4 py-3 rounded-xl font-sans transition-all duration-300 text-lg",
+                    "px-4 py-3 rounded-xl font-sans transition-all duration-300 text-base",
                     isActive(item.path)
-                      ? "bg-white/10 text-white font-medium"
-                      : "text-white/80 hover:text-white hover:bg-white/5"
+                      ? "bg-amethyst/20 text-white font-medium"
+                      : "text-white/80 hover:text-white hover:bg-white/10"
                   )}
                 >
                   {item.name}
@@ -198,15 +205,44 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         </div>
       </main>
       
-      {/* Footer */}
+      {/* Footer - Improved for mobile */}
       <footer className={cn("mt-auto pt-12 pb-6", footerClassName)}>
         <div className={cn(
           "container mx-auto px-4 sm:px-6",
           fullWidth ? "max-w-full" : "max-w-7xl"
         )}>
           <div className="border-t border-border/30 pt-6 md:pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="flex items-center gap-3 mb-4 md:mb-0">
+            {/* Mobile Footer */}
+            <div className="flex flex-col items-center md:hidden space-y-6">
+              {/* Logo and Copyright */}
+              <div className="flex flex-col items-center space-y-4">
+                <img 
+                  src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
+                  alt="Logo" 
+                  className="h-10 w-auto" 
+                />
+                <p className="text-foreground/70 text-sm font-sans text-center">
+                  © 2025 OUR CREATIVITY. Hak Cipta Dilindungi.
+                </p>
+              </div>
+              
+              {/* Navigation */}
+              <div className="grid grid-cols-2 gap-3 w-full max-w-xs">
+                {navItems.slice(0, 6).map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className="text-sm text-center py-2 px-3 bg-secondary/50 rounded-lg text-foreground/80 hover:text-foreground hover:bg-secondary transition-colors duration-300 font-sans"
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop Footer */}
+            <div className="hidden md:flex md:flex-row justify-between items-center">
+              <div className="flex items-center gap-3">
                 <img 
                   src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
                   alt="Logo" 
