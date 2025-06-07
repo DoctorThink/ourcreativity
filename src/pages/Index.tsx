@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Users, Megaphone, BookOpen, Info, FileText, Palette, Trophy, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../components/layouts/PageLayout";
-import BentoGrid from "../components/ui/BentoGrid";
 import BentoCard from "../components/ui/BentoCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -236,7 +235,6 @@ const Index = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="mb-6 md:mb-12"
       >
         {/* Optimized Bento Grid with smaller cards on desktop */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 auto-rows-fr max-w-6xl mx-auto">
@@ -318,35 +316,6 @@ const Index = () => {
             </motion.div>
           ))}
         </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4"
-      >
-        {[
-          { label: "Anggota Aktif", value: "500+", icon: Users },
-          { label: "Karya Terbit", value: "1.2K+", icon: Palette },
-          { label: "Proyek Sukses", value: "250+", icon: Trophy },
-          { label: "Event Seru", value: "50+", icon: Calendar }
-        ].map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            className="text-center p-3 md:p-4 rounded-xl md:rounded-2xl bg-background/80 dark:bg-secondary-dark/80 backdrop-blur-md border border-border/70 hover:border-border transition-all duration-300 group shadow-sm hover:shadow-lg"
-            whileHover={{ scale: 1.03, y: -3 }}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.6 + (index * 0.06) }}
-          >
-            <div className="w-8 h-8 md:w-10 md:h-10 mx-auto mb-1.5 md:mb-2 rounded-lg md:rounded-xl bg-amethyst/10 dark:bg-amethyst/20 flex items-center justify-center group-hover:bg-amethyst/20 dark:group-hover:bg-amethyst/30 transition-colors">
-              <stat.icon className="w-4 h-4 md:w-5 md:h-5 text-amethyst" />
-            </div>
-            <div className="text-base md:text-lg lg:text-xl font-bold text-foreground dark:text-foreground-dark mb-0.5 font-sans">{stat.value}</div>
-            <div className="text-xs md:text-sm text-foreground/70 dark:text-foreground-dark/70 font-sans">{stat.label}</div>
-          </motion.div>
-        ))}
       </motion.div>
     </PageLayout>
   );
