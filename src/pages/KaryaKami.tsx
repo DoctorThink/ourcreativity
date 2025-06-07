@@ -133,7 +133,7 @@ const KaryaKami: React.FC = () => {
         {/* Floating Navigation */}
         <FloatingNav toggleFilters={toggleFilters} showFilters={false} />
         
-        {/* Header Section with simplified animations */}
+        {/* Header Section with proper alignment and font composition */}
         <div className="pt-16 pb-12 px-4 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -141,7 +141,7 @@ const KaryaKami: React.FC = () => {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="relative inline-block"
           >
-            <h1 className="text-4xl md:text-6xl font-serif font-bold bg-clip-text text-transparent bg-gradient-to-r from-amethyst via-white to-turquoise tracking-tight">
+            <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amethyst via-white to-turquoise tracking-tight font-sans">
               Karya Kami
             </h1>
             <motion.div
@@ -182,12 +182,12 @@ const KaryaKami: React.FC = () => {
             viewport={{ once: true, margin: "-50px" }}
             className="container mx-auto px-4 mb-6"
           >
-            <h2 className="text-xl md:text-2xl font-semibold relative inline-block font-serif">
+            <h2 className="text-xl md:text-2xl font-semibold relative inline-block font-sans text-center w-full">
               Gallery Karya
               <motion.div
-                className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-amethyst to-transparent rounded-full"
+                className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 h-0.5 bg-gradient-to-r from-amethyst to-transparent rounded-full"
                 initial={{ width: 0 }}
-                whileInView={{ width: "100%" }}
+                whileInView={{ width: "100px" }}
                 transition={{ delay: 0.2, duration: 0.5 }}
                 viewport={{ once: true }}
               />

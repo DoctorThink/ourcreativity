@@ -75,7 +75,7 @@ const Hero = () => {
             
             <div className="text-center space-y-6">
               <motion.h1 
-                className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold tracking-tight glow-text"
+                className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight glow-text font-sans"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
@@ -87,7 +87,7 @@ const Hero = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.45, duration: 0.4 }}
-                className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed font-serif"
+                className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed font-sans"
               >
                 Dimana imajinasi bertemu dengan inovasi. Bergabunglah dengan komunitas kreatif kami dan wujudkan ide-ide Anda.
               </motion.p>
@@ -109,7 +109,7 @@ const Hero = () => {
                     boxShadow: "0 0 12px rgba(255,255,255,0.15)"
                   }}
                   whileTap={{ scale: 0.97 }}
-                  className={`rounded-full px-4 py-2.5 bg-white/5 backdrop-blur-md border border-white/10 text-white font-serif text-center transition-all hover:bg-white/10 relative overflow-hidden group`}
+                  className={`rounded-full px-4 py-2.5 bg-white/5 backdrop-blur-md border border-white/10 text-white font-sans text-center transition-all hover:bg-white/10 relative overflow-hidden group`}
                 >
                   {/* Interactive gradient effect */}
                   <div className={`absolute inset-0 bg-gradient-to-r ${button.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />

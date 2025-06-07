@@ -17,8 +17,7 @@ export const CategorySelector: React.FC<CategoryProps> = ({
     { id: "design", name: "Design", icon: "/lovable-uploads/design.png" },
     { id: "video", name: "Video", icon: "/lovable-uploads/video.png" },
     { id: "writing", name: "Karya Tulis", icon: "/lovable-uploads/karyatulis.png" },
-    { id: "meme", name: "Meme", icon: "/lovable-uploads/meme.png" },
-    { id: "game", name: "Game", icon: "/lovable-uploads/game.png" }
+    { id: "meme", name: "Meme", icon: "/lovable-uploads/meme.png" }
   ];
 
   return (
@@ -28,7 +27,7 @@ export const CategorySelector: React.FC<CategoryProps> = ({
           key={category.id}
           onClick={() => onSelectCategory(category.id)}
           className={cn(
-            "px-4 py-2 rounded-full flex items-center space-x-2 transition-all",
+            "px-4 py-2 rounded-full flex items-center space-x-2 transition-all font-sans",
             selectedCategory === category.id
               ? "bg-primary text-primary-foreground shadow-md shadow-primary/30"
               : "bg-secondary hover:bg-secondary/80 backdrop-blur-md border border-border/20"
