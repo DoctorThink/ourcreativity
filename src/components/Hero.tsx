@@ -7,16 +7,16 @@ import { Users, Play, Info, Bell } from "lucide-react";
 const Hero = () => {
   const navigate = useNavigate();
 
-  // Performance optimized animations
+  // Simplified animations for better performance
   const logoVariants = {
     hidden: { scale: 0 },
     visible: { 
       scale: 1, 
       transition: { 
         type: "spring",
-        stiffness: 200,
-        damping: 20,
-        duration: 0.8
+        stiffness: 180,
+        damping: 18,
+        duration: 0.6
       }
     }
   };
@@ -35,24 +35,24 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-background/50 to-background z-0 backdrop-blur-lg" />
         
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }}
           className="container max-w-7xl mx-auto relative z-10"
         >
-          <div className="flex flex-col items-center justify-center space-y-12">
+          <div className="flex flex-col items-center justify-center space-y-10">
             {/* Logo Container with optimized animations */}
-            <div className="flex items-center justify-center gap-8">
+            <div className="flex items-center justify-center gap-6">
               <motion.div
                 variants={logoVariants}
                 initial="hidden"
                 animate="visible"
-                className="w-24 h-24 rounded-full bg-white/5 p-4 flex items-center justify-center animate-float backdrop-blur-md border border-white/10"
+                className="w-20 h-20 rounded-full bg-white/5 p-3 flex items-center justify-center backdrop-blur-md border border-white/10"
               >
                 <img
                   src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
                   alt="Fish Logo"
-                  className="w-16 h-16 object-contain"
+                  className="w-14 h-14 object-contain"
                   loading="eager"
                 />
               </motion.div>
@@ -61,21 +61,24 @@ const Hero = () => {
                 variants={logoVariants}
                 initial="hidden"
                 animate="visible"
-                transition={{ delay: 0.2 }}
-                className="w-32 h-32 rounded-full bg-white/5 p-4 flex items-center justify-center animate-float backdrop-blur-md border border-white/10"
+                transition={{ delay: 0.15 }}
+                className="w-28 h-28 rounded-full bg-white/5 p-3 flex items-center justify-center backdrop-blur-md border border-white/10"
               >
                 <img
                   src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png"
                   alt="Text Logo"
-                  className="w-24 h-24 object-contain"
+                  className="w-20 h-20 object-contain"
                   loading="eager"
                 />
               </motion.div>
             </div>
             
-            <div className="text-center space-y-8">
+            <div className="text-center space-y-6">
               <motion.h1 
-                className="text-4xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight glow-text"
+                className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold tracking-tight glow-text"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
               >
                 OUR CREATIVITY
               </motion.h1>
@@ -83,46 +86,46 @@ const Hero = () => {
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.45, duration: 0.4 }}
                 className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed font-serif"
               >
                 Dimana imajinasi bertemu dengan inovasi. Bergabunglah dengan komunitas kreatif kami dan wujudkan ide-ide Anda.
               </motion.p>
             </div>
 
-            {/* Navigation Buttons with enhanced interactivity */}
+            {/* Navigation Buttons with simplified animations */}
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl mx-auto mt-8"
+              transition={{ delay: 0.6, duration: 0.4 }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-2xl mx-auto mt-6"
             >
               {navigationItems.map((button, index) => (
                 <motion.button
                   key={button.text}
                   onClick={() => navigate(button.href)}
                   whileHover={{ 
-                    scale: 1.05, 
-                    boxShadow: "0 0 15px rgba(255,255,255,0.2)"
+                    scale: 1.03, 
+                    boxShadow: "0 0 12px rgba(255,255,255,0.15)"
                   }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`rounded-full px-6 py-3 bg-white/5 backdrop-blur-md border border-white/10 text-white font-serif text-center transition-all hover:bg-white/10 relative overflow-hidden group`}
+                  whileTap={{ scale: 0.97 }}
+                  className={`rounded-full px-4 py-2.5 bg-white/5 backdrop-blur-md border border-white/10 text-white font-serif text-center transition-all hover:bg-white/10 relative overflow-hidden group`}
                 >
                   {/* Interactive gradient effect */}
                   <div className={`absolute inset-0 bg-gradient-to-r ${button.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                   
                   {/* Show little icon on hover */}
                   <div className="relative z-10 flex items-center justify-center">
-                    <span>{button.text}</span>
+                    <span className="text-sm md:text-base">{button.text}</span>
                     <motion.span 
                       initial={{ opacity: 0, width: 0, marginLeft: 0 }}
-                      whileHover={{ opacity: 1, width: "auto", marginLeft: 8 }}
+                      whileHover={{ opacity: 1, width: "auto", marginLeft: 6 }}
                       className="overflow-hidden"
                     >
-                      {index === 0 && <Users className="w-4 h-4" />}
-                      {index === 1 && <Play className="w-4 h-4" />}
-                      {index === 2 && <Info className="w-4 h-4" />}
-                      {index === 3 && <Bell className="w-4 h-4" />}
+                      {index === 0 && <Users className="w-3.5 h-3.5" />}
+                      {index === 1 && <Play className="w-3.5 h-3.5" />}
+                      {index === 2 && <Info className="w-3.5 h-3.5" />}
+                      {index === 3 && <Bell className="w-3.5 h-3.5" />}
                     </motion.span>
                   </div>
                 </motion.button>

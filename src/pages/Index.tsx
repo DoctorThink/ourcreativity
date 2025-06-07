@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Users, Megaphone, BookOpen, Info, FileText, Palette, Trophy, Sparkles } from "lucide-react";
@@ -27,21 +28,21 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2
+      staggerChildren: 0.08,
+      delayChildren: 0.15
     },
   },
 };
 
 const tileVariants = {
-  hidden: { opacity: 0, y: 25, scale: 0.98 },
+  hidden: { opacity: 0, y: 20, scale: 0.98 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      duration: 0.5,
-      ease: [0.35, 0, 0.2, 1],
+      duration: 0.4,
+      ease: [0.25, 0, 0.2, 1],
     },
   },
 };
@@ -142,8 +143,8 @@ const Index = () => {
   ];
 
   const getPatternSvg = (pattern: string, id: string, tileTextColor: string = "text-white") => {
-    const baseOpacity = "opacity-20"; // Increased base opacity for patterns
-    const colorClass = tileTextColor === "text-white" ? "text-white/50" : "text-black/25"; // Adjusted pattern color intensity
+    const baseOpacity = "opacity-20";
+    const colorClass = tileTextColor === "text-white" ? "text-white/50" : "text-black/25";
 
     switch (pattern) {
       case "dots":
@@ -169,7 +170,7 @@ const Index = () => {
         );
       case "hexagon":
         return (
-          <svg className={`absolute inset-0 w-full h-full opacity-15 ${colorClass}`} viewBox="0 0 100 100"> {/* Increased opacity for this pattern type */}
+          <svg className={`absolute inset-0 w-full h-full opacity-15 ${colorClass}`} viewBox="0 0 100 100">
             <defs><pattern id={`hexagon-${id}`} x="0" y="0" width="20" height="17.32" patternUnits="userSpaceOnUse"><polygon points="10,2 18,7 18,14 10,19 2,14 2,7" fill="none" stroke="currentColor" strokeWidth="1" /></pattern></defs>
             <rect width="100%" height="100%" fill={`url(#hexagon-${id})`} />
           </svg>
@@ -183,7 +184,7 @@ const Index = () => {
         );
       case "grid":
         return (
-          <svg className={`absolute inset-0 w-full h-full opacity-15 ${colorClass}`} viewBox="0 0 100 100"> {/* Increased opacity for this pattern type */}
+          <svg className={`absolute inset-0 w-full h-full opacity-15 ${colorClass}`} viewBox="0 0 100 100">
             <defs><pattern id={`grid-${id}`} x="0" y="0" width="15" height="15" patternUnits="userSpaceOnUse"><path d="M15,0 L0,0 L0,15" fill="none" stroke="currentColor" strokeWidth="1" /></pattern></defs>
             <rect width="100%" height="100%" fill={`url(#grid-${id})`} />
           </svg>
@@ -198,22 +199,22 @@ const Index = () => {
       showBackButton={false}
     >
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="mb-8 md:mb-12"
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="mb-6 md:mb-8"
       >
-        <div className="text-center space-y-3 md:space-y-5">
+        <div className="text-center space-y-2 md:space-y-4">
           <motion.div 
             className="flex flex-col items-center leading-tight"
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <span className="text-lg md:text-xl lg:text-2xl font-sans font-medium text-foreground/80 dark:text-foreground-dark/80 mb-1">
+            <span className="text-base md:text-lg lg:text-xl font-sans font-medium text-foreground/80 dark:text-foreground-dark/80 mb-1">
               Selamat Datang di
             </span>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold bg-gradient-to-r from-amethyst via-turquoise to-coral bg-clip-text text-transparent animate-gradient-cycle bg-300%">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold bg-gradient-to-r from-amethyst via-turquoise to-coral bg-clip-text text-transparent">
               OUR CREATIVITY
             </h1>
           </motion.div>
@@ -222,7 +223,7 @@ const Index = () => {
             className="flex items-center justify-center gap-2 text-xs md:text-sm text-foreground/60 dark:text-foreground-dark/60"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
           >
             <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-amethyst" />
             <span className="font-sans">Dunia kreativitas tanpa batas menanti</span>
@@ -235,34 +236,33 @@ const Index = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="mb-8 md:mb-16"
+        className="mb-6 md:mb-12"
       >
-        {/* Custom Bento Grid with proper responsive layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 auto-rows-fr">
+        {/* Optimized Bento Grid with smaller cards on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 auto-rows-fr max-w-6xl mx-auto">
           {bentoTiles.map((tile, index) => (
             <motion.div
               key={tile.id}
               variants={tileVariants}
               className={`${tile.colSpan} ${tile.rowSpan} col-span-1 md:col-span-1`}
               style={{
-                // Custom grid area for desktop bento layout
                 gridArea: isMobile ? 'auto' : 
-                  tile.id === 'pengumuman' ? '1 / 1 / 3 / 3' : // 2x2 large tile
-                  tile.id === 'tim-kami' ? '1 / 3 / 2 / 4' : // top right
-                  tile.id === 'karya-kami' ? '2 / 3 / 4 / 4' : // tall right tile
-                  tile.id === 'cerita-kami' ? '3 / 1 / 4 / 2' : // bottom left
-                  tile.id === 'informasi' ? '3 / 2 / 4 / 3' : // bottom middle
-                  tile.id === 'terms' ? '4 / 1 / 5 / 4' : // bottom wide
+                  tile.id === 'pengumuman' ? '1 / 1 / 3 / 3' :
+                  tile.id === 'tim-kami' ? '1 / 3 / 2 / 4' :
+                  tile.id === 'karya-kami' ? '2 / 3 / 4 / 4' :
+                  tile.id === 'cerita-kami' ? '3 / 1 / 4 / 2' :
+                  tile.id === 'informasi' ? '3 / 2 / 4 / 3' :
+                  tile.id === 'terms' ? '4 / 1 / 5 / 4' :
                   'auto'
               }}
             >
               <BentoCard
-                className={`relative group cursor-pointer h-full min-h-[200px] md:min-h-[240px] ${tile.color} border-border/50 hover:border-border/70 transition-all duration-300`}
+                className={`relative group cursor-pointer h-full min-h-[160px] md:min-h-[180px] lg:min-h-[200px] ${tile.color} border-border/50 hover:border-border/70 transition-all duration-300`}
                 onClick={() => handleTileClick(tile)}
                 interactive={true}
-                hoverScale={1.02}
+                hoverScale={1.015}
                 motionProps={{
-                  whileHover: { y: -6 },
+                  whileHover: { y: -4 },
                   whileTap: { scale: 0.98 }
                 }}
               >
@@ -271,65 +271,49 @@ const Index = () => {
                 </div>
                 
                 <div className={`absolute inset-0 bg-gradient-to-br ${tile.gradientFrom} ${tile.gradientTo} opacity-80 group-hover:opacity-70 transition-opacity duration-300`} />
-                
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-black/5"
-                  animate={{ opacity: [0.2, 0.6, 0.2] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                />
 
-                <div className="relative z-10 p-6 md:p-8 h-full flex flex-col justify-center text-center">
-                  <div className="space-y-6 md:space-y-8">
+                <div className="relative z-10 p-4 md:p-5 lg:p-6 h-full flex flex-col justify-center text-center">
+                  <div className="space-y-4 md:space-y-5">
                     <motion.div className="flex items-center justify-center">
-                      <div className={`w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-2xl md:rounded-3xl ${tile.textColor === "text-white" ? 'bg-white/15 group-hover:bg-white/20' : 'bg-primary-light/15 group-hover:bg-primary-light/20'} backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-xl border ${tile.textColor === "text-white" ? 'border-white/25' : 'border-primary-light/25'}`}>
-                        {/* Fixed the strokeWidth error here by using proper prop types for Lucide icons */}
-                        <tile.icon className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 ${tile.textColor === "text-white" ? "text-white" : "text-primary-light"} drop-shadow-lg`} />
+                      <div className={`w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-xl md:rounded-2xl ${tile.textColor === "text-white" ? 'bg-white/15 group-hover:bg-white/20' : 'bg-primary-light/15 group-hover:bg-primary-light/20'} backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-lg border ${tile.textColor === "text-white" ? 'border-white/25' : 'border-primary-light/25'}`}>
+                        <tile.icon className={`w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 ${tile.textColor === "text-white" ? "text-white" : "text-primary-light"} drop-shadow-lg`} />
                       </div>
                       
                       {index < 2 && (
-                        <motion.div
-                          className={`absolute top-4 right-4 px-3 py-1.5 ${tile.textColor === "text-white" ? 'bg-white/20' : 'bg-primary-light/30'} backdrop-blur-md rounded-full text-xs font-semibold ${tile.textColor === "text-white" ? 'text-white/95' : 'text-primary-foreground'} border ${tile.textColor === "text-white" ? 'border-white/30' : 'border-primary-light/40'} font-sans shadow-md`}
-                          animate={{ scale: [1, 1.05, 1] }}
-                          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                        >
-                          <Trophy className="w-3 h-3 inline mr-1.5" />
+                        <div className={`absolute top-3 right-3 px-2 py-1 ${tile.textColor === "text-white" ? 'bg-white/20' : 'bg-primary-light/30'} backdrop-blur-md rounded-full text-xs font-semibold ${tile.textColor === "text-white" ? 'text-white/95' : 'text-primary-foreground'} border ${tile.textColor === "text-white" ? 'border-white/30' : 'border-primary-light/40'} font-sans shadow-md`}>
+                          <Trophy className="w-2.5 h-2.5 inline mr-1" />
                           Populer
-                        </motion.div>
+                        </div>
                       )}
                     </motion.div>
 
-                    <div className="space-y-3 md:space-y-4">
-                      <motion.h3 className={`text-2xl md:text-3xl lg:text-4xl font-serif font-bold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-lg`}>
+                    <div className="space-y-2 md:space-y-3">
+                      <h3 className={`text-lg md:text-xl lg:text-2xl font-serif font-bold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-lg`}>
                         {tile.title}
-                      </motion.h3>
-                      <p className={`${tile.textColor === "text-white" ? "text-white/80" : (tile.textColor || "text-foreground") + "/80"} group-hover:${tile.textColor === "text-white" ? "text-white/95" : (tile.textColor || "text-foreground") + "/95"} leading-relaxed drop-shadow-sm text-base md:text-lg lg:text-xl font-sans font-medium max-w-md mx-auto transition-colors duration-300`}>
+                      </h3>
+                      <p className={`${tile.textColor === "text-white" ? "text-white/80" : (tile.textColor || "text-foreground") + "/80"} group-hover:${tile.textColor === "text-white" ? "text-white/95" : (tile.textColor || "text-foreground") + "/95"} leading-relaxed drop-shadow-sm text-sm md:text-base lg:text-lg font-sans font-medium max-w-md mx-auto transition-colors duration-300`}>
                         {tile.description}
                       </p>
                     </div>
                   </div>
 
                   <motion.div 
-                    className="flex items-center justify-between mt-8 md:mt-12 pt-4 md:pt-6 border-t border-white/20"
+                    className="flex items-center justify-between mt-6 md:mt-8 pt-3 md:pt-4 border-t border-white/20"
                     initial={{ opacity: 0.8 }}
                     whileHover={{ opacity: 1 }}
                   >
-                    <div className={`flex items-center gap-2 ${tile.textColor || "text-foreground"}/70 text-sm font-sans`}>
-                      <Calendar className="w-4 h-4" />
+                    <div className={`flex items-center gap-1.5 ${tile.textColor || "text-foreground"}/70 text-xs md:text-sm font-sans`}>
+                      <Calendar className="w-3.5 h-3.5" />
                       <span>Update</span>
                     </div>
-                    <motion.div className={`flex items-center gap-2 md:gap-2.5 ${tile.textColor || "text-foreground"} font-semibold transition-all duration-300 font-sans`}>
-                      <span className="text-base md:text-lg">Jelajahi</span>
-                      <ArrowRight className="w-5 h-5 md:w-6 md:h-6 drop-shadow-sm transition-transform duration-300 group-hover:translate-x-1" />
-                    </motion.div>
+                    <div className={`flex items-center gap-1.5 md:gap-2 ${tile.textColor || "text-foreground"} font-semibold transition-all duration-300 font-sans`}>
+                      <span className="text-sm md:text-base">Jelajahi</span>
+                      <ArrowRight className="w-4 h-4 md:w-5 md:h-5 drop-shadow-sm transition-transform duration-300 group-hover:translate-x-1" />
+                    </div>
                   </motion.div>
                 </div>
 
-                <motion.div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
-                  style={{
-                    background: `radial-gradient(circle at 50% 50%, ${tile.textColor === "text-white" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.04)"} 0%, rgba(255,255,255,0.0) 65%)` // Softer radial gradient
-                  }}
-                />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-radial from-white/5 via-transparent to-transparent" />
               </BentoCard>
             </motion.div>
           ))}
@@ -337,9 +321,9 @@ const Index = () => {
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.6 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
         className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4"
       >
         {[
@@ -350,16 +334,16 @@ const Index = () => {
         ].map((stat, index) => (
           <motion.div
             key={stat.label}
-            className="text-center p-4 md:p-5 rounded-xl md:rounded-2xl bg-background/80 dark:bg-secondary-dark/80 backdrop-blur-md border border-border/70 hover:border-border transition-all duration-300 group shadow-sm hover:shadow-lg"
-            whileHover={{ scale: 1.04, y: -4 }}
-            initial={{ opacity: 0, y: 15 }}
+            className="text-center p-3 md:p-4 rounded-xl md:rounded-2xl bg-background/80 dark:bg-secondary-dark/80 backdrop-blur-md border border-border/70 hover:border-border transition-all duration-300 group shadow-sm hover:shadow-lg"
+            whileHover={{ scale: 1.03, y: -3 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.7 + (index * 0.08) }}
+            transition={{ duration: 0.3, delay: 0.6 + (index * 0.06) }}
           >
-            <div className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-2 md:mb-2.5 rounded-lg md:rounded-xl bg-amethyst/10 dark:bg-amethyst/20 flex items-center justify-center group-hover:bg-amethyst/20 dark:group-hover:bg-amethyst/30 transition-colors">
-              <stat.icon className="w-5 h-5 md:w-6 md:h-6 text-amethyst" />
+            <div className="w-8 h-8 md:w-10 md:h-10 mx-auto mb-1.5 md:mb-2 rounded-lg md:rounded-xl bg-amethyst/10 dark:bg-amethyst/20 flex items-center justify-center group-hover:bg-amethyst/20 dark:group-hover:bg-amethyst/30 transition-colors">
+              <stat.icon className="w-4 h-4 md:w-5 md:h-5 text-amethyst" />
             </div>
-            <div className="text-lg md:text-xl lg:text-2xl font-bold text-foreground dark:text-foreground-dark mb-0.5 md:mb-1 font-sans">{stat.value}</div>
+            <div className="text-base md:text-lg lg:text-xl font-bold text-foreground dark:text-foreground-dark mb-0.5 font-sans">{stat.value}</div>
             <div className="text-xs md:text-sm text-foreground/70 dark:text-foreground-dark/70 font-sans">{stat.label}</div>
           </motion.div>
         ))}
