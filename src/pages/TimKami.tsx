@@ -1,17 +1,13 @@
-
-// --- START OF FILE TimKami.tsx ---
-// src/pages/TimKami.tsx
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
-import TeamMemberCard from "@/components/TeamMemberCard"; // Fixed import
-import TeamMemberBio from "@/components/TeamMemberBio"; // Fixed import
+import TeamMemberCard from "@/components/TeamMemberCard";
+import TeamMemberBio from "@/components/TeamMemberBio";
 import BentoCard from "@/components/ui/BentoCard";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Users, User, Video, PenTool, Monitor, MessageSquare } from "lucide-react";
 
-// --- Animation Variants ---
+// Animation Variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -25,14 +21,13 @@ const memberVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
-// --- Team Data Structure with updated names and bios ---
-// Use the provided data structure
+// Team Data Structure with updated names and bios
 const teamMembers = [
   {
     id: "1",
     name: "Muhammad Syahid Al Haqi",
     role: "Founder",
-    imageSrc: null, // No specific image provided for founder card itself
+    imageSrc: null,
     accent: "gold",
     category: "video",
     achievements: [
@@ -199,14 +194,14 @@ const teamMembers = [
     name: "Aljaan",
     role: "Discord Admin",
     instagram: "@snhrrr",
-    imageSrc: null, // No specific image
+    imageSrc: null,
     accent: "grayMid",
     category: "admin",
     bio: "Nanti ditambah"
   }
 ];
 
-// --- Team Categories ---
+// Team Categories
 const categories = [
   { id: "video", name: "Video Editing", icon: Video, color: "bg-coral", accentColor: "rgba(254, 198, 161, 0.3)" },
   { id: "design", name: "Graphic Design", icon: PenTool, color: "bg-turquoise", accentColor: "rgba(152, 245, 225, 0.3)" },
@@ -214,7 +209,7 @@ const categories = [
   { id: "karyatulis", name: "Karya Tulis", icon: MessageSquare, color: "bg-mint", accentColor: "rgba(152, 245, 225, 0.3)" },
 ];
 
-// --- Main TimKami Component ---
+// Main TimKami Component
 const TimKami = () => {
   const [selectedMember, setSelectedMember] = useState<any>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);

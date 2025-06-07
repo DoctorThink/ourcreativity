@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { KaryaGallery } from "../components/karya/KaryaGallery";
 import PageLayout from "../components/layouts/PageLayout";
 import { SpotlightSection } from "../components/karya/SpotlightSection";
@@ -25,21 +25,11 @@ const KaryaKami: React.FC = () => {
   const mainRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   
-  // Optimized scroll-triggered animations with reduced calculations
-  const { scrollYProgress } = useScroll({
-    target: mainRef,
-    offset: ["start start", "end start"]
-  });
-  
-  // Reduced transform calculations for better performance
-  const headerOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
-  const headerY = useTransform(scrollYProgress, [0, 0.1], [0, -20]);
-  
-  // Optimized loading effect
+  // Simplified loading effect
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 800);
+    }, 600);
     
     return () => clearTimeout(timer);
   }, []);
@@ -105,15 +95,11 @@ const KaryaKami: React.FC = () => {
 
   return (
     <PageLayout title="">
-      <motion.div
+      <div
         ref={mainRef}
-        className="relative min-h-screen w-full overflow-hidden"
-        style={{
-          willChange: 'transform',
-          transform: 'translateZ(0)', // Force GPU acceleration
-        }}
+        className="relative min-h-screen w-full"
       >
-        {/* Optimized Loading animation */}
+        {/* Simplified Loading animation */}
         <AnimatePresence>
           {isLoading && (
             <motion.div 
@@ -121,25 +107,19 @@ const KaryaKami: React.FC = () => {
               initial={{ opacity: 1 }}
               exit={{ 
                 opacity: 0,
-                transition: { duration: 0.6, ease: "easeInOut" }
-              }}
-              style={{
-                willChange: 'opacity',
-                transform: 'translateZ(0)',
+                transition: { duration: 0.4, ease: "easeInOut" }
               }}
             >
               <motion.div
-                className="relative w-20 h-20"
+                className="relative w-16 h-16"
                 animate={{ 
                   rotate: 360,
-                  scale: [1, 1.1, 1],
                 }}
                 transition={{
-                  rotate: { duration: 1.5, repeat: Infinity, ease: "linear" },
-                  scale: { duration: 0.8, repeat: Infinity, ease: "easeInOut" }
+                  rotate: { duration: 1.2, repeat: Infinity, ease: "linear" }
                 }}
               >
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amethyst via-turquoise to-coral opacity-80 blur-md" />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amethyst via-turquoise to-coral opacity-80 blur-sm" />
                 <img 
                   src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
                   alt="Loading..." 
@@ -153,15 +133,12 @@ const KaryaKami: React.FC = () => {
         {/* Floating Navigation */}
         <FloatingNav toggleFilters={toggleFilters} showFilters={false} />
         
-        {/* Header Section with optimized motion effects */}
-        <motion.div 
-          style={{ y: headerY, opacity: headerOpacity }}
-          className="pt-16 pb-12 px-4 text-center relative z-10"
-        >
+        {/* Header Section with simplified animations */}
+        <div className="pt-16 pb-12 px-4 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
             className="relative inline-block"
           >
             <h1 className="text-4xl md:text-6xl font-serif font-bold bg-clip-text text-transparent bg-gradient-to-r from-amethyst via-white to-turquoise tracking-tight">
@@ -171,25 +148,25 @@ const KaryaKami: React.FC = () => {
               className="h-1 w-0 bg-gradient-to-r from-amethyst to-turquoise mt-2 rounded-full mx-auto"
               initial={{ width: 0 }}
               animate={{ width: "80%" }}
-              transition={{ delay: 0.6, duration: 1, ease: "easeOut" }}
+              transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
             />
           </motion.div>
           
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.8 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
+            transition={{ delay: 0.6, duration: 0.4 }}
             className="text-foreground/70 mt-4 max-w-lg mx-auto text-base font-sans"
           >
             Temukan kreativitas tanpa batas dari komunitas kami
           </motion.p>
-        </motion.div>
+        </div>
         
         {/* Spotlight Section */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true, margin: "-50px" }}
           className="mb-12"
         >
@@ -197,13 +174,11 @@ const KaryaKami: React.FC = () => {
         </motion.div>
         
         {/* Gallery Section */}
-        <motion.section 
-          className="mt-6 mb-16 relative z-10"
-        >
+        <section className="mt-6 mb-16 relative z-10">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
             viewport={{ once: true, margin: "-50px" }}
             className="container mx-auto px-4 mb-6"
           >
@@ -213,7 +188,7 @@ const KaryaKami: React.FC = () => {
                 className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-amethyst to-transparent rounded-full"
                 initial={{ width: 0 }}
                 whileInView={{ width: "100%" }}
-                transition={{ delay: 0.2, duration: 0.6 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
                 viewport={{ once: true }}
               />
             </h2>
@@ -225,8 +200,8 @@ const KaryaKami: React.FC = () => {
             selectedCategory={selectedCategory}
             onSelectCategory={handleCategorySelect}
           />
-        </motion.section>
-      </motion.div>
+        </section>
+      </div>
     </PageLayout>
   );
 };

@@ -1,6 +1,6 @@
 
-import React, { useState, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
 import BentoCard from "@/components/ui/BentoCard";
 import { 
@@ -17,13 +17,6 @@ import {
 
 const Terms = () => {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [1, 0.8, 0.8, 0.6]);
   
   // Animation variants
   const containerVariants = {
@@ -51,11 +44,8 @@ const Terms = () => {
       title="Syarat & Ketentuan" 
       subtitle="Informasi penting mengenai keanggotaan dan partisipasi dalam komunitas"
     >
-      <div ref={containerRef} className="relative z-10">
-        <motion.div
-          style={{ opacity }}
-          className="mb-8 text-center"
-        >
+      <div className="relative z-10">
+        <motion.div className="mb-8 text-center">
           <motion.div 
             className="inline-block p-3 rounded-full bg-amethyst/20 mb-4"
             initial={{ scale: 0 }}

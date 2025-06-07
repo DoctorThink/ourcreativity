@@ -12,7 +12,7 @@ const FloatingNav: React.FC<FloatingNavProps> = ({ toggleFilters, showFilters })
   const [scrolled, setScrolled] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   
-  // Optimized scroll handler with throttling for better performance
+  // Optimized scroll handler with throttling
   useEffect(() => {
     let ticking = false;
     
@@ -20,8 +20,8 @@ const FloatingNav: React.FC<FloatingNavProps> = ({ toggleFilters, showFilters })
       if (!ticking) {
         requestAnimationFrame(() => {
           const scrollTop = window.scrollY;
-          setScrolled(scrollTop > 100);
-          setShowBackToTop(scrollTop > 600);
+          setScrolled(scrollTop > 80);
+          setShowBackToTop(scrollTop > 400);
           ticking = false;
         });
         ticking = true;
@@ -42,13 +42,13 @@ const FloatingNav: React.FC<FloatingNavProps> = ({ toggleFilters, showFilters })
   return (
     <>
       <motion.nav
-        initial={{ y: -100, opacity: 0 }}
+        initial={{ y: -60, opacity: 0 }}
         animate={{ 
           y: 0, 
           opacity: 1,
         }}
         transition={{ 
-          duration: 0.5,
+          duration: 0.4,
           ease: "easeOut"
         }}
         className={`fixed top-0 left-0 right-0 z-40 py-4 px-6 flex items-center justify-between transition-all duration-300 ${
@@ -56,10 +56,6 @@ const FloatingNav: React.FC<FloatingNavProps> = ({ toggleFilters, showFilters })
             ? "bg-background/95 backdrop-blur-md shadow-lg shadow-black/20 border-b border-border/30" 
             : "bg-transparent"
         }`}
-        style={{
-          willChange: 'transform, opacity, background-color',
-          transform: 'translateZ(0)', // Force GPU acceleration
-        }}
       >
         <motion.div 
           className="flex items-center space-x-3"
@@ -82,8 +78,6 @@ const FloatingNav: React.FC<FloatingNavProps> = ({ toggleFilters, showFilters })
             Karya Kami
           </motion.span>
         </motion.div>
-        
-        {/* Removed filter button - no longer needed */}
       </motion.nav>
       
       {/* Back to top button */}
@@ -99,10 +93,6 @@ const FloatingNav: React.FC<FloatingNavProps> = ({ toggleFilters, showFilters })
             onClick={scrollToTop}
             className="fixed bottom-6 right-6 p-3 rounded-full bg-amethyst/90 text-background shadow-lg z-40 shadow-amethyst/30 backdrop-blur-sm"
             aria-label="Back to top"
-            style={{
-              willChange: 'transform',
-              transform: 'translateZ(0)', // Force GPU acceleration
-            }}
           >
             <ArrowUp size={20} />
           </motion.button>
