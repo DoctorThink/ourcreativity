@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Users, Play, Info, Bell } from "lucide-react";
+import { Users, Play, Info, Bell, Sparkles } from "lucide-react";
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -21,12 +21,40 @@ const Hero = () => {
     }
   };
 
-  // Optimized navigation items
+  // Enhanced navigation items with better design
   const navigationItems = [
-    { text: "Jelajahi Grup", href: "/groups", color: "from-lavender/20 to-transparent" },
-    { text: "Mulai", href: "#", color: "from-mint/20 to-transparent" },
-    { text: "Informasi", href: "/informasi", color: "from-peach/20 to-transparent" },
-    { text: "Pengumuman", href: "/pengumuman", color: "from-softPink/20 to-transparent" }
+    { 
+      text: "Tim Kami", 
+      href: "/tim-kami", 
+      color: "from-amethyst/20 to-amethyst/40",
+      hoverColor: "hover:from-amethyst/30 hover:to-amethyst/60",
+      icon: Users,
+      description: "Kenali tim kreatif kami"
+    },
+    { 
+      text: "Karya Kami", 
+      href: "/karya-kami", 
+      color: "from-turquoise/20 to-turquoise/40",
+      hoverColor: "hover:from-turquoise/30 hover:to-turquoise/60", 
+      icon: Sparkles,
+      description: "Jelajahi karya komunitas"
+    },
+    { 
+      text: "Informasi", 
+      href: "/informasi", 
+      color: "from-coral/20 to-coral/40",
+      hoverColor: "hover:from-coral/30 hover:to-coral/60",
+      icon: Info,
+      description: "Pelajari lebih lanjut"
+    },
+    { 
+      text: "Pengumuman", 
+      href: "/pengumuman", 
+      color: "from-amber/20 to-amber/40",
+      hoverColor: "hover:from-amber/30 hover:to-amber/60",
+      icon: Bell,
+      description: "Berita terbaru"
+    }
   ];
 
   return (
@@ -38,7 +66,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="container max-w-7xl mx-auto relative z-10"
+          className="container max-w-6xl mx-auto relative z-10"
         >
           <div className="flex flex-col items-center justify-center space-y-10">
             {/* Logo Container with optimized animations */}
@@ -93,43 +121,69 @@ const Hero = () => {
               </motion.p>
             </div>
 
-            {/* Navigation Buttons with simplified animations */}
+            {/* Enhanced Navigation Cards */}
             <motion.div 
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.4 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-2xl mx-auto mt-6"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-5xl mx-auto mt-8"
             >
-              {navigationItems.map((button, index) => (
-                <motion.button
-                  key={button.text}
-                  onClick={() => navigate(button.href)}
-                  whileHover={{ 
-                    scale: 1.03, 
-                    boxShadow: "0 0 12px rgba(255,255,255,0.15)"
-                  }}
-                  whileTap={{ scale: 0.97 }}
-                  className={`rounded-full px-4 py-2.5 bg-white/5 backdrop-blur-md border border-white/10 text-white font-sans text-center transition-all hover:bg-white/10 relative overflow-hidden group`}
-                >
-                  {/* Interactive gradient effect */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${button.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
-                  
-                  {/* Show little icon on hover */}
-                  <div className="relative z-10 flex items-center justify-center">
-                    <span className="text-sm md:text-base">{button.text}</span>
-                    <motion.span 
-                      initial={{ opacity: 0, width: 0, marginLeft: 0 }}
-                      whileHover={{ opacity: 1, width: "auto", marginLeft: 6 }}
-                      className="overflow-hidden"
-                    >
-                      {index === 0 && <Users className="w-3.5 h-3.5" />}
-                      {index === 1 && <Play className="w-3.5 h-3.5" />}
-                      {index === 2 && <Info className="w-3.5 h-3.5" />}
-                      {index === 3 && <Bell className="w-3.5 h-3.5" />}
-                    </motion.span>
-                  </div>
-                </motion.button>
-              ))}
+              {navigationItems.map((button, index) => {
+                const IconComponent = button.icon;
+                return (
+                  <motion.button
+                    key={button.text}
+                    onClick={() => navigate(button.href)}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      y: -5,
+                      boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ 
+                      delay: 0.7 + (index * 0.1),
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 20
+                    }}
+                    className={`group relative overflow-hidden rounded-2xl p-6 bg-gradient-to-br ${button.color} ${button.hoverColor} backdrop-blur-md border border-white/10 text-white font-sans text-center transition-all duration-300 hover:border-white/20`}
+                  >
+                    {/* Background gradient animation */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    
+                    {/* Content */}
+                    <div className="relative z-10 flex flex-col items-center space-y-3">
+                      <motion.div
+                        whileHover={{ rotate: 12, scale: 1.1 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm"
+                      >
+                        <IconComponent className="w-6 h-6" />
+                      </motion.div>
+                      
+                      <div className="space-y-1">
+                        <h3 className="font-semibold text-base">{button.text}</h3>
+                        <p className="text-xs text-white/70 group-hover:text-white/90 transition-colors">
+                          {button.description}
+                        </p>
+                      </div>
+                      
+                      {/* Hover arrow */}
+                      <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        whileHover={{ opacity: 1, x: 0 }}
+                        className="absolute top-3 right-3"
+                      >
+                        <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
+                          <span className="text-xs">→</span>
+                        </div>
+                      </motion.div>
+                    </div>
+                  </motion.button>
+                );
+              })}
             </motion.div>
           </div>
         </motion.div>

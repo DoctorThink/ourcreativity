@@ -96,9 +96,9 @@ export const CustomCursor: React.FC = () => {
 
   return (
     <>
-      {/* Main cursor dot */}
+      {/* Main cursor dot - increased z-index to be above cards */}
       <motion.div
-        className="fixed top-0 left-0 w-4 h-4 rounded-full bg-white z-[9999] pointer-events-none mix-blend-difference"
+        className="fixed top-0 left-0 w-4 h-4 rounded-full bg-white z-[99999] pointer-events-none mix-blend-difference"
         animate={{
           scale: clicked ? 0.5 : hovering ? 0.8 : 1,
           opacity: hidden ? 0 : 1
@@ -115,9 +115,9 @@ export const CustomCursor: React.FC = () => {
         }}
       />
 
-      {/* Larger follower circle */}
+      {/* Larger follower circle - increased z-index to be above cards */}
       <motion.div
-        className="fixed top-0 left-0 w-10 h-10 rounded-full border border-white z-[9999] pointer-events-none opacity-70 mix-blend-difference"
+        className="fixed top-0 left-0 w-10 h-10 rounded-full border border-white z-[99999] pointer-events-none opacity-70 mix-blend-difference"
         animate={{
           scale: clicked ? 1.2 : hovering ? 1.5 : 1,
           opacity: hidden ? 0 : hovering ? 0.8 : 0.6

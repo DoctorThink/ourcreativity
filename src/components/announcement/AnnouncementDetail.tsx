@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { 
@@ -14,7 +13,11 @@ import {
   Heart,
   MessageCircle,
   Eye,
-  ArrowLeft
+  ArrowLeft,
+  CheckCircle,
+  Zap,
+  Users,
+  Globe
 } from "lucide-react";
 import { format } from "date-fns";
 import { Announcement } from "@/models/Announcement";
@@ -71,34 +74,119 @@ export const AnnouncementDetail: React.FC<AnnouncementDetailProps> = ({ announce
   // Check if this is Ardelyo related
   const isArdelyo = announcement.content.includes('Ardelyo') || announcement.content.includes('Unix Series');
 
-  // Enhanced content parsing for better formatting
+  // Enhanced content parsing for better markdown formatting
   const parseContent = (content: string) => {
+    // Special content for Version 4.0 based on README.md
+    if (isVersionFour) {
+      return (
+        <div className="space-y-6">
+          <div className="bg-gradient-to-r from-amethyst/10 to-turquoise/10 rounded-xl p-6 border border-amethyst/20">
+            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-amethyst" />
+              Fitur Baru Version 4.0
+            </h3>
+            <div className="grid gap-4">
+              <div className="flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-turquoise mt-0.5" />
+                <div>
+                  <h4 className="font-medium">React 18 + Vite Integration</h4>
+                  <p className="text-sm text-foreground/70">Modern build tools untuk performa optimal</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Zap className="w-5 h-5 text-coral mt-0.5" />
+                <div>
+                  <h4 className="font-medium">Tailwind CSS + Shadcn UI</h4>
+                  <p className="text-sm text-foreground/70">Design system yang konsisten dan modern</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Users className="w-5 h-5 text-amethyst mt-0.5" />
+                <div>
+                  <h4 className="font-medium">Supabase Integration</h4>
+                  <p className="text-sm text-foreground/70">Backend real-time untuk karya dan pengumuman</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Globe className="w-5 h-5 text-turquoise mt-0.5" />
+                <div>
+                  <h4 className="font-medium">Responsive Design</h4>
+                  <p className="text-sm text-foreground/70">Optimized untuk semua device</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-gradient-to-r from-coral/10 to-amethyst/10 rounded-xl p-6 border border-coral/20">
+            <h3 className="text-xl font-semibold mb-4">Changelog Version 4.0</h3>
+            <div className="space-y-3 text-sm">
+              <div className="flex items-start gap-3">
+                <span className="w-2 h-2 rounded-full bg-amethyst mt-2 flex-shrink-0" />
+                <p>Added comprehensive karya gallery with advanced filtering</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="w-2 h-2 rounded-full bg-turquoise mt-2 flex-shrink-0" />
+                <p>Implemented dynamic announcement system with moderation</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="w-2 h-2 rounded-full bg-coral mt-2 flex-shrink-0" />
+                <p>Enhanced team showcase with interactive profiles</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="w-2 h-2 rounded-full bg-amethyst mt-2 flex-shrink-0" />
+                <p>Added admin dashboard for content management</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="w-2 h-2 rounded-full bg-turquoise mt-2 flex-shrink-0" />
+                <p>Improved performance with React Query and optimized animations</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Regular content parsing for other announcements
     return content.split('\n\n').map((paragraph, idx) => {
       // Check for list items
       if (paragraph.includes('- ') || paragraph.includes('• ')) {
         const items = paragraph.split('\n').filter(line => line.trim());
         return (
-          <div key={idx} className="space-y-2">
+          <div key={idx} className="space-y-3">
             {items.map((item, itemIdx) => {
               if (item.includes('- ') || item.includes('• ')) {
                 return (
-                  <div key={itemIdx} className="flex items-start gap-3">
+                  <div key={itemIdx} className="flex items-start gap-3 p-3 rounded-lg bg-white/5">
                     <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${isGerakan27April ? 'bg-red-400' : 'bg-amethyst'}`} />
                     <p className="text-sm sm:text-base leading-relaxed">{item.replace(/^[•-]\s*/, '')}</p>
                   </div>
                 );
               }
-              return <p key={itemIdx} className="text-sm sm:text-base leading-relaxed font-medium">{item}</p>;
+              return <p key={itemIdx} className="text-sm sm:text-base leading-relaxed font-medium bg-white/5 p-3 rounded-lg">{item}</p>;
             })}
           </div>
         );
       }
       
-      // Regular paragraph
+      // Check for headers (lines starting with #)
+      if (paragraph.startsWith('#')) {
+        const level = paragraph.match(/^#+/)?.[0].length || 1;
+        const text = paragraph.replace(/^#+\s*/, '');
+        const headingClass = level === 1 ? 'text-2xl' : level === 2 ? 'text-xl' : 'text-lg';
+        return (
+          <h3 key={idx} className={`${headingClass} font-semibold mb-3 text-amethyst`}>
+            {text}
+          </h3>
+        );
+      }
+      
+      // Regular paragraph with better styling
       return (
-        <p key={idx} className="text-sm sm:text-base leading-relaxed">
-          {paragraph}
-        </p>
+        <div key={idx} className="bg-white/3 rounded-lg p-4 border border-white/10">
+          <p className="text-sm sm:text-base leading-relaxed">
+            {paragraph}
+          </p>
+        </div>
       );
     });
   };
@@ -322,9 +410,9 @@ export const AnnouncementDetail: React.FC<AnnouncementDetailProps> = ({ announce
           </motion.div>
         )}
         
-        {/* Enhanced content with better typography */}
+        {/* Enhanced content with better markdown typography */}
         <motion.div 
-          className={`prose prose-lg max-w-none space-y-6 ${isGerakan27April ? 'text-red-100/90 prose-headings:text-red-200 prose-strong:text-red-200' : 'text-foreground/90'}`}
+          className={`max-w-none space-y-6 ${isGerakan27April ? 'text-red-100/90' : 'text-foreground/90'}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
