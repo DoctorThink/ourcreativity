@@ -133,35 +133,6 @@ const KaryaKami: React.FC = () => {
         {/* Floating Navigation */}
         <FloatingNav toggleFilters={toggleFilters} showFilters={false} />
         
-        {/* Header Section with proper alignment and font composition */}
-        <div className="pt-16 pb-12 px-4 text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="relative inline-block"
-          >
-            <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amethyst via-white to-turquoise tracking-tight font-sans">
-              Karya Kami
-            </h1>
-            <motion.div
-              className="h-1 w-0 bg-gradient-to-r from-amethyst to-turquoise mt-2 rounded-full mx-auto"
-              initial={{ width: 0 }}
-              animate={{ width: "80%" }}
-              transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
-            />
-          </motion.div>
-          
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.8 }}
-            transition={{ delay: 0.6, duration: 0.4 }}
-            className="text-foreground/70 mt-4 max-w-lg mx-auto text-base font-sans"
-          >
-            Temukan kreativitas tanpa batas dari komunitas kami
-          </motion.p>
-        </div>
-        
         {/* Spotlight Section */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -175,25 +146,6 @@ const KaryaKami: React.FC = () => {
         
         {/* Gallery Section */}
         <section className="mt-6 mb-16 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4 }}
-            viewport={{ once: true, margin: "-50px" }}
-            className="container mx-auto px-4 mb-6"
-          >
-            <h2 className="text-xl md:text-2xl font-semibold relative inline-block font-sans text-center w-full">
-              Gallery Karya
-              <motion.div
-                className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 h-0.5 bg-gradient-to-r from-amethyst to-transparent rounded-full"
-                initial={{ width: 0 }}
-                whileInView={{ width: "100px" }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                viewport={{ once: true }}
-              />
-            </h2>
-          </motion.div>
-          
           <KaryaGallery 
             karyaData={filteredKarya}
             isLoading={isKaryaLoading}

@@ -24,21 +24,21 @@ const CeritaKami = () => {
     >
       <div ref={containerRef} className="relative z-10 px-4 sm:px-6 md:px-8">
         {/* Main Content with Bento Grid - Mobile Responsive */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
           {/* Main Story Card */}
           <BentoCard 
-            className="md:col-span-2 md:row-span-2 p-4 sm:p-6 md:p-8"
+            className="lg:col-span-2 p-4 sm:p-6 md:p-8"
             glowColor="rgba(229, 222, 255, 0.3)"
             icon={BookOpen}
             iconColor="bg-amethyst text-background"
           >
-            <div className="h-full flex flex-col justify-between">
+            <div className="h-full flex flex-col justify-between pt-12">
               <div>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-semibold mb-4 sm:mb-6 pt-8">Bagaimana Semua Dimulai</h2>
-                <p className="text-foreground/80 text-sm sm:text-base md:text-lg leading-relaxed mb-4 sm:mb-6 font-sans">
+                <h2 className="text-lg sm:text-xl md:text-2xl font-serif font-semibold mb-4 sm:mb-6">Bagaimana Semua Dimulai</h2>
+                <p className="text-foreground/80 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6 font-sans">
                   OUR CREATIVITY berawal dari sekelompok mahasiswa yang berbagi hasrat yang sama untuk menciptakan ruang kolaboratif bagi para kreator muda. Kami melihat betapa banyaknya bakat yang tersebar namun tidak memiliki wadah untuk dieksplorasi dan dikembangkan bersama.
                 </p>
-                <p className="text-foreground/80 text-sm sm:text-base md:text-lg leading-relaxed font-sans">
+                <p className="text-foreground/80 text-sm sm:text-base leading-relaxed font-sans">
                   Pada awal 2022, dimulai dengan kelompok kecil beranggotakan 5 orang, kami mulai membangun komunitas yang berfokus pada pengembangan ide kreatif dan kolaborasi antar disiplin ilmu. Dari sini, komunitas kami mulai berkembang secara organik menjadi jaringan kreator yang lebih luas.
                 </p>
               </div>
@@ -55,16 +55,16 @@ const CeritaKami = () => {
 
           {/* Quote */}
           <BentoCard 
-            className="p-4 sm:p-6 md:p-8 flex items-center justify-center min-h-[200px] md:min-h-[240px]"
+            className="p-4 sm:p-6 md:p-8 flex items-center justify-center"
             glowColor="rgba(152, 245, 225, 0.3)"
             icon={Quote}
             iconColor="bg-turquoise text-background"
           >
-            <div className="text-center">
-              <blockquote className="text-sm sm:text-lg md:text-xl font-serif italic text-foreground/90 relative">
-                <span className="absolute -left-2 sm:-left-4 -top-2 sm:-top-6 text-2xl sm:text-4xl opacity-30">"</span>
+            <div className="text-center pt-8">
+              <blockquote className="text-sm sm:text-base md:text-lg font-serif italic text-foreground/90 relative">
+                <span className="absolute -left-2 sm:-left-4 -top-2 sm:-top-6 text-xl sm:text-2xl opacity-30">"</span>
                 Tanpa keberanian seseorang tidak akan pernah berkarya.
-                <span className="absolute -right-2 sm:-right-4 -bottom-2 sm:-bottom-6 text-2xl sm:text-4xl opacity-30">"</span>
+                <span className="absolute -right-2 sm:-right-4 -bottom-2 sm:-bottom-6 text-xl sm:text-2xl opacity-30">"</span>
               </blockquote>
               <p className="mt-4 text-xs sm:text-sm text-foreground/70 font-sans">- Pendiri OUR CREATIVITY</p>
             </div>
@@ -72,37 +72,41 @@ const CeritaKami = () => {
 
           {/* Timeline */}
           <BentoCard 
-            className="p-4 sm:p-6 md:p-8 min-h-[280px]"
+            className="p-4 sm:p-6 md:p-8"
             glowColor="rgba(254, 198, 161, 0.3)"
             icon={History}
             iconColor="bg-coral text-background"
           >
-            <h3 className="text-lg sm:text-xl font-serif font-semibold mb-3 sm:mb-4 pt-8">Timeline Perjalanan</h3>
-            <ul className="space-y-3 sm:space-y-4">
-              <TimelineItem date="Jan 2022" event="Pertemuan pertama tim inti" />
-              <TimelineItem date="Apr 2022" event="Peluncuran media sosial resmi" />
-              <TimelineItem date="Jul 2022" event="Workshop kolaborasi pertama" />
-              <TimelineItem date="Jan 2023" event="Mencapai 500+ anggota" />
-              <TimelineItem date="Jul 2023" event="Showcase karya pertama" />
-            </ul>
+            <div className="pt-12">
+              <h3 className="text-base sm:text-lg font-serif font-semibold mb-3 sm:mb-4">Timeline Perjalanan</h3>
+              <ul className="space-y-3 sm:space-y-4">
+                <TimelineItem date="Jan 2022" event="Pertemuan pertama tim inti" />
+                <TimelineItem date="Apr 2022" event="Peluncuran media sosial resmi" />
+                <TimelineItem date="Jul 2022" event="Workshop kolaborasi pertama" />
+                <TimelineItem date="Jan 2023" event="Mencapai 500+ anggota" />
+                <TimelineItem date="Jul 2023" event="Showcase karya pertama" />
+              </ul>
+            </div>
           </BentoCard>
 
           {/* Growth */}
           <BentoCard 
-            className="p-4 sm:p-6 md:p-8 md:col-span-2 min-h-[280px]"
+            className="p-4 sm:p-6 md:p-8 lg:col-span-2"
             glowColor="rgba(152, 245, 225, 0.3)"
             icon={BarChart}
             iconColor="bg-mint text-background"
           >
-            <h3 className="text-lg sm:text-xl font-serif font-semibold mb-3 sm:mb-4 pt-8">Pertumbuhan Komunitas</h3>
-            <p className="text-foreground/80 text-xs sm:text-sm md:text-base leading-relaxed mb-3 sm:mb-4 font-sans">
-              Dari 5 anggota awal, kini OUR CREATIVITY telah berkembang menjadi komunitas dengan lebih dari:
-            </p>
-            <div className="grid grid-cols-2 gap-4">
-              <StatItem value="1,000+" label="Anggota Aktif" />
-              <StatItem value="50+" label="Kolaborasi Project" />
-              <StatItem value="12+" label="Kota di Indonesia" />
-              <StatItem value="4" label="Kategori Kreatif" />
+            <div className="pt-12">
+              <h3 className="text-base sm:text-lg font-serif font-semibold mb-3 sm:mb-4">Pertumbuhan Komunitas</h3>
+              <p className="text-foreground/80 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 font-sans">
+                Dari 5 anggota awal, kini OUR CREATIVITY telah berkembang menjadi komunitas dengan lebih dari:
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <StatItem value="1,000+" label="Anggota Aktif" />
+                <StatItem value="50+" label="Kolaborasi Project" />
+                <StatItem value="12+" label="Kota di Indonesia" />
+                <StatItem value="4" label="Kategori Kreatif" />
+              </div>
             </div>
           </BentoCard>
         </div>
@@ -115,15 +119,17 @@ const CeritaKami = () => {
             icon={Target}
             iconColor="bg-amethyst text-background"
           >
-            <h3 className="text-lg sm:text-xl font-serif font-semibold mb-3 sm:mb-4 pt-8">Visi Ke Depan</h3>
-            <p className="text-foreground/80 text-sm sm:text-base md:text-lg leading-relaxed font-sans">
-              OUR CREATIVITY memiliki visi untuk terus mengembangkan ekosistem kreator muda Indonesia. Kami berencana memperluas jangkauan ke lebih banyak kota, menyelenggarakan festival tahunan, dan membangun platform digital yang lebih komprehensif untuk karya-karya anggota.
-            </p>
-            <div className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-3">
-              <VisionTag>Ekspansi Nasional</VisionTag>
-              <VisionTag>Festival Kreativitas Tahunan</VisionTag>
-              <VisionTag>Platform Digital Terintegrasi</VisionTag>
-              <VisionTag>Kolaborasi Internasional</VisionTag>
+            <div className="pt-12">
+              <h3 className="text-base sm:text-lg font-serif font-semibold mb-3 sm:mb-4">Visi Ke Depan</h3>
+              <p className="text-foreground/80 text-sm sm:text-base leading-relaxed font-sans mb-4">
+                OUR CREATIVITY memiliki visi untuk terus mengembangkan ekosistem kreator muda Indonesia. Kami berencana memperluas jangkauan ke lebih banyak kota, menyelenggarakan festival tahunan, dan membangun platform digital yang lebih komprehensif untuk karya-karya anggota.
+              </p>
+              <div className="flex flex-wrap gap-2 sm:gap-3">
+                <VisionTag>Ekspansi Nasional</VisionTag>
+                <VisionTag>Festival Kreativitas Tahunan</VisionTag>
+                <VisionTag>Platform Digital Terintegrasi</VisionTag>
+                <VisionTag>Kolaborasi Internasional</VisionTag>
+              </div>
             </div>
           </BentoCard>
         </AnimateInView>
@@ -132,37 +138,43 @@ const CeritaKami = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
           <AnimateInView>
             <BentoCard 
-              className="p-4 sm:p-6 min-h-[140px] sm:min-h-[180px] md:min-h-[200px] flex flex-col items-center justify-center text-center"
+              className="p-4 sm:p-6 flex flex-col items-center justify-center text-center"
               glowColor="rgba(254, 198, 161, 0.2)"
               icon={Users}
               iconColor="bg-coral text-background"
             >
-              <h3 className="text-sm sm:text-base md:text-lg font-medium mt-8 mb-2">Komunitas</h3>
-              <p className="text-xs sm:text-sm md:text-base text-foreground/70 font-sans">Membangun hubungan yang kuat dan saling mendukung antar kreator</p>
+              <div className="pt-12">
+                <h3 className="text-sm sm:text-base font-medium mb-2">Komunitas</h3>
+                <p className="text-xs sm:text-sm text-foreground/70 font-sans">Membangun hubungan yang kuat dan saling mendukung antar kreator</p>
+              </div>
             </BentoCard>
           </AnimateInView>
           
           <AnimateInView>
             <BentoCard 
-              className="p-4 sm:p-6 min-h-[140px] sm:min-h-[180px] md:min-h-[200px] flex flex-col items-center justify-center text-center"
+              className="p-4 sm:p-6 flex flex-col items-center justify-center text-center"
               glowColor="rgba(152, 245, 225, 0.2)"
               icon={Award}
               iconColor="bg-turquoise text-background"
             >
-              <h3 className="text-sm sm:text-base md:text-lg font-medium mt-8 mb-2">Kualitas</h3>
-              <p className="text-xs sm:text-sm md:text-base text-foreground/70 font-sans">Mendorong standar tertinggi dalam setiap karya yang dihasilkan</p>
+              <div className="pt-12">
+                <h3 className="text-sm sm:text-base font-medium mb-2">Kualitas</h3>
+                <p className="text-xs sm:text-sm text-foreground/70 font-sans">Mendorong standar tertinggi dalam setiap karya yang dihasilkan</p>
+              </div>
             </BentoCard>
           </AnimateInView>
           
           <AnimateInView>
             <BentoCard 
-              className="p-4 sm:p-6 min-h-[140px] sm:min-h-[180px] md:min-h-[200px] flex flex-col items-center justify-center text-center"
+              className="p-4 sm:p-6 flex flex-col items-center justify-center text-center"
               glowColor="rgba(229, 222, 255, 0.2)"
               icon={Calendar}
               iconColor="bg-amethyst text-background"
             >
-              <h3 className="text-sm sm:text-base md:text-lg font-medium mt-8 mb-2">Konsistensi</h3>
-              <p className="text-xs sm:text-sm md:text-base text-foreground/70 font-sans">Berkomitmen untuk terus berkarya dan berkontribusi secara berkelanjutan</p>
+              <div className="pt-12">
+                <h3 className="text-sm sm:text-base font-medium mb-2">Konsistensi</h3>
+                <p className="text-xs sm:text-sm text-foreground/70 font-sans">Berkomitmen untuk terus berkarya dan berkontribusi secara berkelanjutan</p>
+              </div>
             </BentoCard>
           </AnimateInView>
         </div>
@@ -170,8 +182,8 @@ const CeritaKami = () => {
         {/* Final CTA Section */}
         <AnimateInView className="mt-8 sm:mt-12 md:mt-16 mb-6 sm:mb-8">
           <div className="text-center max-w-3xl mx-auto px-4">
-            <h2 className="text-lg sm:text-xl md:text-3xl font-serif mb-3 sm:mb-4">Menjadi Bagian dari Perjalanan Kami</h2>
-            <p className="text-foreground/80 text-xs sm:text-sm md:text-base mb-4 sm:mb-6 md:mb-8 font-sans">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-serif mb-3 sm:mb-4">Menjadi Bagian dari Perjalanan Kami</h2>
+            <p className="text-foreground/80 text-xs sm:text-sm mb-4 sm:mb-6 md:mb-8 font-sans">
               Kami mengundang para kreator muda Indonesia untuk bergabung dan menjadi bagian dari komunitas kami. 
               Bersama, kita akan menciptakan, menginspirasi, dan mengembangkan ekosistem kreativitas yang berkelanjutan.
             </p>
@@ -181,7 +193,7 @@ const CeritaKami = () => {
               whileTap={{ scale: 0.98 }}
             >
               <motion.button 
-                className="px-4 sm:px-6 md:px-8 py-2 sm:py-3 bg-amethyst rounded-full text-background font-medium text-xs sm:text-sm md:text-base font-sans"
+                className="px-4 sm:px-6 md:px-8 py-2 sm:py-3 bg-amethyst rounded-full text-background font-medium text-xs sm:text-sm font-sans"
                 whileHover={{ boxShadow: "0 0 15px rgba(155, 109, 255, 0.5)" }}
               >
                 Bergabung Sekarang
@@ -219,7 +231,7 @@ const StatItem = ({ value, label }: { value: string; label: string }) => (
     transition={{ duration: 0.5 }}
     viewport={{ once: true }}
   >
-    <span className="text-lg sm:text-xl md:text-2xl font-medium text-mint font-sans">{value}</span>
+    <span className="text-lg sm:text-xl font-medium text-mint font-sans">{value}</span>
     <span className="text-xs sm:text-sm text-foreground/70 font-sans">{label}</span>
   </motion.div>
 );

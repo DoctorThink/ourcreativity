@@ -5,7 +5,7 @@ import TeamMemberCard from "@/components/TeamMemberCard";
 import TeamMemberBio from "@/components/TeamMemberBio";
 import BentoCard from "@/components/ui/BentoCard";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Users, User, Video, PenTool, Monitor, MessageSquare } from "lucide-react";
+import { Users, User } from "lucide-react";
 
 // Animation Variants
 const containerVariants = {
@@ -201,12 +201,36 @@ const teamMembers = [
   }
 ];
 
-// Team Categories
+// Team Categories with proper icons
 const categories = [
-  { id: "video", name: "Video Editing", icon: Video, color: "bg-coral", accentColor: "rgba(254, 198, 161, 0.3)" },
-  { id: "design", name: "Graphic Design", icon: PenTool, color: "bg-turquoise", accentColor: "rgba(152, 245, 225, 0.3)" },
-  { id: "meme", name: "Meme", icon: Monitor, color: "bg-softPink", accentColor: "rgba(255, 209, 220, 0.3)" },
-  { id: "karyatulis", name: "Karya Tulis", icon: MessageSquare, color: "bg-mint", accentColor: "rgba(152, 245, 225, 0.3)" },
+  { 
+    id: "video", 
+    name: "Video Editing", 
+    iconSrc: "/lovable-uploads/video.png",
+    color: "bg-coral", 
+    accentColor: "rgba(254, 198, 161, 0.3)" 
+  },
+  { 
+    id: "design", 
+    name: "Graphic Design", 
+    iconSrc: "/lovable-uploads/design.png",
+    color: "bg-turquoise", 
+    accentColor: "rgba(152, 245, 225, 0.3)" 
+  },
+  { 
+    id: "meme", 
+    name: "Meme", 
+    iconSrc: "/lovable-uploads/meme.png",
+    color: "bg-softPink", 
+    accentColor: "rgba(255, 209, 220, 0.3)" 
+  },
+  { 
+    id: "karyatulis", 
+    name: "Karya Tulis", 
+    iconSrc: "/lovable-uploads/karyatulis.png",
+    color: "bg-mint", 
+    accentColor: "rgba(152, 245, 225, 0.3)" 
+  },
 ];
 
 // Main TimKami Component
@@ -219,7 +243,7 @@ const TimKami = () => {
       title="Tim Kami"
       subtitle="Kenali para kreator berbakat di balik OUR CREATIVITY"
     >
-      {/* Category selector - Bento-style */}
+      {/* Category selector - Bento-style with proper icons */}
       <motion.div 
         className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
         variants={containerVariants}
@@ -227,7 +251,6 @@ const TimKami = () => {
         animate="visible"
       >
         {categories.map((category) => {
-          const Icon = category.icon;
           const isActive = activeCategory === category.id;
           
           return (
@@ -241,13 +264,17 @@ const TimKami = () => {
             >
               <motion.div className="flex flex-col items-center justify-center gap-3 text-center h-full">
                 <motion.div 
-                  className={`w-14 h-14 rounded-full flex items-center justify-center ${category.color}`}
+                  className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center p-2"
                   whileHover={{ rotate: 5 }}
                   transition={{ type: "spring", stiffness: 200 }}
                 >
-                  <Icon className="w-7 h-7 text-background" />
+                  <img 
+                    src={category.iconSrc} 
+                    alt={category.name}
+                    className="w-10 h-10 object-contain"
+                  />
                 </motion.div>
-                <span className="font-medium text-foreground/90">{category.name}</span>
+                <span className="font-medium text-foreground/90 text-sm">{category.name}</span>
                 
                 {isActive && (
                   <motion.div 
@@ -274,10 +301,10 @@ const TimKami = () => {
       >
         <div className="flex flex-wrap justify-center gap-8 md:gap-16 pt-6">
           <StatCard icon={User} label="Total Anggota" value="32" />
-          <StatCard icon={Video} label="Video Editing" value="8" />
-          <StatCard icon={PenTool} label="Graphic Design" value="12" />
-          <StatCard icon={Monitor} label="Meme" value="6" />
-          <StatCard icon={MessageSquare} label="Karya Tulis" value="6" />
+          <StatCard iconSrc="/lovable-uploads/video.png" label="Video Editing" value="8" />
+          <StatCard iconSrc="/lovable-uploads/design.png" label="Graphic Design" value="12" />
+          <StatCard iconSrc="/lovable-uploads/meme.png" label="Meme" value="6" />
+          <StatCard iconSrc="/lovable-uploads/karyatulis.png" label="Karya Tulis" value="6" />
         </div>
       </BentoCard>
 
@@ -334,14 +361,19 @@ const TimKami = () => {
   );
 };
 
-// StatCard component for team stats
-const StatCard = ({ icon: Icon, label, value }: { icon: any; label: string; value: string }) => (
+// StatCard component for team stats - updated to support both icons and images
+const StatCard = ({ icon: Icon, iconSrc, label, value }: { icon?: any; iconSrc?: string; label: string; value: string }) => (
   <motion.div 
     className="flex flex-col items-center justify-center p-2"
     whileHover={{ y: -5 }}
     transition={{ type: "spring", stiffness: 400, damping: 10 }}
   >
-    <Icon className="w-6 h-6 mb-2 text-foreground/70" />
+    {Icon && <Icon className="w-6 h-6 mb-2 text-foreground/70" />}
+    {iconSrc && (
+      <div className="w-6 h-6 mb-2 flex items-center justify-center">
+        <img src={iconSrc} alt={label} className="w-5 h-5 object-contain opacity-70" />
+      </div>
+    )}
     <span className="text-3xl font-medium font-serif">{value}</span>
     <span className="text-sm text-foreground/60">{label}</span>
   </motion.div>
