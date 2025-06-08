@@ -280,60 +280,14 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         </div>
       </main>
       
-      {/* Enhanced Mobile-First Footer */}
+      {/* Simplified Footer */}
       <footer className={cn("mt-auto pt-12 pb-6", footerClassName)}>
         <div className={cn(
           "container mx-auto px-4 sm:px-6",
           fullWidth ? "max-w-full" : "max-w-7xl"
         )}>
           <div className="border-t border-border/30 pt-8">
-            {/* Mobile Footer */}
-            <div className="flex flex-col items-center md:hidden space-y-8">
-              {/* Logo and Copyright */}
-              <motion.div 
-                className="flex flex-col items-center space-y-4"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-              >
-                <img 
-                  src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
-                  alt="Logo" 
-                  className="h-12 w-auto" 
-                />
-                <p className="text-foreground/60 text-sm font-sans text-center max-w-xs">
-                  © 2025 OUR CREATIVITY. Hak Cipta Dilindungi.
-                </p>
-              </motion.div>
-              
-              {/* Navigation Grid */}
-              <motion.div 
-                className="grid grid-cols-2 gap-4 w-full max-w-sm"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                viewport={{ once: true }}
-              >
-                {navItems.slice(0, 6).map((item, index) => (
-                  <motion.div
-                    key={item.path}
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Link
-                      to={item.path}
-                      className="block text-sm text-center py-3 px-4 bg-secondary/60 rounded-xl text-foreground/70 hover:text-foreground hover:bg-secondary/80 transition-all duration-300 font-sans border border-border/20 hover:border-border/40"
-                    >
-                      {item.name}
-                    </Link>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-
-            {/* Desktop Footer */}
-            <div className="hidden md:flex md:flex-row justify-between items-center">
+            <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4">
               <div className="flex items-center gap-3">
                 <img 
                   src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
@@ -341,17 +295,6 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                   className="h-7 w-auto" 
                 />
                 <span className="text-foreground/70 text-sm font-sans">© 2025 OUR CREATIVITY. Hak Cipta Dilindungi.</span>
-              </div>
-              <div className="flex gap-6">
-                {navItems.slice(0, 4).map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className="text-sm text-foreground/60 hover:text-foreground/90 transition-colors duration-300 font-sans"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
               </div>
             </div>
           </div>
