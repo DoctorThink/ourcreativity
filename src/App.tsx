@@ -18,6 +18,14 @@ import OurAdmin from "./pages/OurAdmin";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 import { Toaster } from "./components/ui/toaster";
+import GSAPSplashScreen from "./components/animations/GSAPSplashScreen";
+import GSAPPageTransition from "./components/animations/GSAPPageTransition";
+import { AnimatePresence } from "framer-motion";
+import { CustomCursor } from "./components/karya/CustomCursor";
+import { ScrollProgressIndicator } from "./components/karya/ScrollProgressIndicator";
+import { ParticleBackground } from "./components/karya/ParticleBackground";
+import { GlobalAnimations } from "./components/GlobalAnimations";
+import RequireAuth from "./components/admin/RequireAuth";
 import "./App.css";
 
 // Create React Query client with retry configuration for better reliability
@@ -31,17 +39,18 @@ const queryClient = new QueryClient({
   },
 });
 
-import { PageTransition } from "./components/PageTransition";
-import { AnimatePresence } from "framer-motion";
-import { CustomCursor } from "./components/karya/CustomCursor";
-import { ScrollProgressIndicator } from "./components/karya/ScrollProgressIndicator";
-import { ParticleBackground } from "./components/karya/ParticleBackground";
-import { GlobalAnimations } from "./components/GlobalAnimations";
-import RequireAuth from "./components/admin/RequireAuth";
-
 // Create AppContent component that uses router hooks
 function AppContent() {
   const location = useLocation();
+  const [showSplash, setShowSplash] = useState(true);
+
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+  };
+
+  if (showSplash) {
+    return <GSAPSplashScreen onComplete={handleSplashComplete} />;
+  }
 
   return (
     <>
@@ -51,7 +60,7 @@ function AppContent() {
       <GlobalAnimations />
       
       <AnimatePresence mode="wait">
-        <PageTransition key={location.pathname}>
+        <GSAPPageTransition key={location.pathname}>
           <Routes location={location}>
             <Route path="/" element={<Index />} />
             <Route path="/cerita-kami" element={<CeritaKami />} />
@@ -75,7 +84,7 @@ function AppContent() {
               </RequireAuth>
             } />
           </Routes>
-        </PageTransition>
+        </GSAPPageTransition>
       </AnimatePresence>
     </>
   );
