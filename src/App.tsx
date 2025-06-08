@@ -31,44 +31,27 @@ const queryClient = new QueryClient({
   },
 });
 
-import { GSAPPageTransition } from "./components/animations/GSAPPageTransition";
-import { GSAPLoadingScreen } from "./components/animations/GSAPLoadingScreen";
+import { PageTransition } from "./components/PageTransition";
 import { AnimatePresence } from "framer-motion";
 import { CustomCursor } from "./components/karya/CustomCursor";
 import { ScrollProgressIndicator } from "./components/karya/ScrollProgressIndicator";
+import { ParticleBackground } from "./components/karya/ParticleBackground";
+import { GlobalAnimations } from "./components/GlobalAnimations";
 import RequireAuth from "./components/admin/RequireAuth";
 
 // Create AppContent component that uses router hooks
 function AppContent() {
   const location = useLocation();
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Handle loading screen completion
-  const handleLoadingComplete = () => {
-    setIsLoading(false);
-  };
-
-  // Show loading screen on first load
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (isLoading) {
-    return <GSAPLoadingScreen onComplete={handleLoadingComplete} />;
-  }
 
   return (
     <>
       {/* Apply global design elements */}
       <CustomCursor />
       <ScrollProgressIndicator />
+      <GlobalAnimations />
       
       <AnimatePresence mode="wait">
-        <GSAPPageTransition key={location.pathname}>
+        <PageTransition key={location.pathname}>
           <Routes location={location}>
             <Route path="/" element={<Index />} />
             <Route path="/cerita-kami" element={<CeritaKami />} />
@@ -92,7 +75,7 @@ function AppContent() {
               </RequireAuth>
             } />
           </Routes>
-        </GSAPPageTransition>
+        </PageTransition>
       </AnimatePresence>
     </>
   );
