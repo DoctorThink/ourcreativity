@@ -99,6 +99,17 @@ const KaryaKami: React.FC = () => {
         ref={mainRef}
         className="relative min-h-screen w-full"
       >
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="text-center mb-12 pt-28"
+      >
+        <h1 className="text-5xl font-bold text-white">KARYA KAMI</h1>
+        <p className="text-xl text-gray-300 mt-2">
+          Koleksi karya kreatif dari komunitas Our Creativity
+        </p>
+      </motion.div>
         {/* Simplified Loading animation */}
         <AnimatePresence>
           {isLoading && (
