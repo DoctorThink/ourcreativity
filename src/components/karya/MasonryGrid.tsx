@@ -39,7 +39,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
     <Masonry
       breakpointCols={breakpointColumnsObj}
       className="flex w-auto -ml-4 my-masonry-grid"
-      columnClassName="pl-4 bg-background my-masonry-grid_column"
+      columnClassName="pl-4 bg-transparent my-masonry-grid_column"
     >
       {items.map((item) => (
         <motion.div
