@@ -298,7 +298,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           <img
             src={categoryIcons[karya.category] || '/lovable-uploads/design.png'}
             alt={karya.category}
-            className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
+            className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
           />
         </div>
       </Card>
