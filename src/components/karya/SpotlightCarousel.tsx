@@ -51,7 +51,7 @@ export const SpotlightCarousel: React.FC<SpotlightCarouselProps> = ({ spotlightI
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.2 }}
-        className="relative px-4 md:px-8"
+        className="relative px-8 md:px-10"
       >
         <Carousel
           opts={{
