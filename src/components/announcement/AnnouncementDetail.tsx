@@ -181,11 +181,13 @@ export const AnnouncementDetail: React.FC<AnnouncementDetailProps> = ({ announce
       }
       
       // Regular paragraph with better styling
+      const lines = paragraph.split('\n');
       return (
         <div key={idx} className="bg-white/3 rounded-lg p-4 border border-white/10">
-          <p className="text-sm sm:text-base leading-relaxed">
-            {paragraph}
-          </p>
+          <p
+            className="text-sm sm:text-base leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: lines.join('<br />') }}
+          />
         </div>
       );
     });
