@@ -61,7 +61,7 @@ export const KaryaGallery: React.FC<KaryaGalleryProps> = ({
           />
         ) : (
           <div className="text-center py-12 bg-secondary/30 backdrop-blur-sm rounded-3xl border border-border/30 shadow-md">
-            <p className="text-foreground/70">Tidak ada karya dalam kategori ini.</p>
+            <p className="text-foreground/70 font-sans text-lg">Tidak ada karya dalam kategori ini.</p>
           </div>
         )}
       </div>

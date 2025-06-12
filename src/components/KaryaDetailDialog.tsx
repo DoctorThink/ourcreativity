@@ -16,6 +16,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -61,12 +62,10 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
   
   // Extract tags from description only
   const extractTags = (): string[] => {
-    // Only look for hashtags in the description
     if (karya.description) {
-      // Look for hashtags in the description
       const hashtags = karya.description.match(/#[\w\u0080-\uFFFF]+/g);
       if (hashtags && hashtags.length > 0) {
-        return hashtags.map(tag => tag.slice(1)); // Remove # symbol
+        return hashtags.map(tag => tag.slice(1));
       }
     }
     return [];
@@ -78,24 +77,39 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="p-0 overflow-hidden border-border/30 backdrop-blur-xl shadow-xl transition-all duration-300 max-w-[100vw] max-h-[100vh] w-[100vw] h-[100vh] rounded-none">
         <div className="flex flex-col h-full overflow-hidden">
-          {/* Content preview with enhanced media display - takes full height in fullscreen mode */}
+          {/* Content preview with enhanced media display */}
           <div className="relative w-full bg-black/50 flex-grow" 
                style={{ height: isText ? 'auto' : '100vh' }}>
             {isText ? (
-              <div className="w-full h-full overflow-auto p-8 bg-gradient-to-b from-secondary/90 to-secondary/70 backdrop-blur-md flex items-center justify-center">
-                <div className="max-w-3xl prose prose-invert">
-                  <div className="mb-6 text-center">
-                    <img 
-                      src="/lovable-uploads/karyatulis.png" 
-                      alt="Karya Tulis" 
-                      className="w-16 h-16 mx-auto mb-4 opacity-70" 
-                    />
-                    <h2 className="text-2xl font-serif mb-2">{karya.title}</h2>
-                    <p className="text-sm text-foreground/70">Oleh {karya.creator_name}</p>
-                  </div>
-                  <p className="text-foreground/90 whitespace-pre-wrap text-readable leading-relaxed font-serif text-base sm:text-lg">
-                    {karya.description}
-                  </p>
+              <div className="w-full h-full flex flex-col bg-gradient-to-b from-secondary/95 to-secondary/85 backdrop-blur-md">
+                <div className="flex-shrink-0 p-8 text-center border-b border-border/20">
+                  <img 
+                    src="/lovable-uploads/karyatulis.png" 
+                    alt="Karya Tulis" 
+                    className="w-16 h-16 mx-auto mb-4 opacity-80" 
+                  />
+                  <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground font-sans">{karya.title}</h2>
+                  <p className="text-sm text-foreground/70 font-medium">Oleh {karya.creator_name}</p>
+                </div>
+                
+                {/* Scrollable Text Content */}
+                <div className="flex-1 min-h-0 p-6 md:p-8">
+                  <ScrollArea className="h-full w-full">
+                    <div className="max-w-4xl mx-auto">
+                      <div 
+                        className="prose prose-lg prose-invert max-w-none text-foreground/90 font-sans leading-relaxed"
+                        style={{ 
+                          fontSize: '1.125rem',
+                          lineHeight: '1.75',
+                          letterSpacing: '0.025em'
+                        }}
+                      >
+                        <p className="whitespace-pre-wrap break-words">
+                          {karya.description}
+                        </p>
+                      </div>
+                    </div>
+                  </ScrollArea>
                 </div>
               </div>
             ) : mediaUrls.length > 1 ? (
@@ -110,7 +124,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                           className="w-full h-full object-contain max-h-full"
                           playsInline
                           preload="metadata"
-                          poster="#1C1C1E" // Dark background as poster
+                          poster="#1C1C1E"
                         />
                       ) : (
                         <img 
@@ -138,7 +152,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                     className="w-full h-full object-contain max-h-full"
                     playsInline
                     preload="metadata"
-                    poster="#1C1C1E" // Dark background color as poster
+                    poster="#1C1C1E"
                   />
                 ) : (
                   <img 
@@ -150,9 +164,9 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
               </>
             )}
             
-            {/* Floating control buttons with glossy effect */}
+            {/* Floating control buttons */}
             <div className="absolute top-4 right-4 z-10 flex gap-2">
-              {/* Info panel toggle button - always shown now */}
+              {!isText && (
                 <button
                   onClick={toggleInfoPanel}
                   className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
@@ -160,20 +174,20 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                   {showInfoPanel ? <ChevronDown className="h-5 w-5" /> : <ChevronDown className="h-5 w-5 rotate-180" />}
                   <span className="sr-only">{showInfoPanel ? 'Hide info' : 'Show info'}</span>
                 </button>
-              {/* Close button - always shown now */}
-                <button
-                  onClick={onClose}
-                  className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
-                >
-                  <X className="h-5 w-5" />
-                  <span className="sr-only">Close</span>
-                </button>
+              )}
+              <button
+                onClick={onClose}
+                className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
+              >
+                <X className="h-5 w-5" />
+                <span className="sr-only">Close</span>
+              </button>
             </div>
           </div>
           
-          {/* Info panel with title, description, and actions - conditionally shown in fullscreen */}
+          {/* Info panel - only show for non-text items or when showInfoPanel is true */}
           <AnimatePresence>
-            {showInfoPanel && (
+            {(!isText && showInfoPanel) && (
               <motion.div 
                 initial={{ y: '100%' }}
                 animate={{ y: 0 }}
@@ -184,8 +198,8 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                 {/* Header with title and category info */}
                 <div className="flex justify-between items-start p-6 border-b border-border/20">
                   <div className="flex-1">
-                    <h2 className="text-2xl font-bold tracking-tight">{karya.title}</h2>
-                    <p className="text-foreground/70 mt-1">
+                    <h2 className="text-2xl font-bold tracking-tight text-foreground font-sans">{karya.title}</h2>
+                    <p className="text-foreground/70 mt-1 font-medium">
                       by {karya.creator_name}
                     </p>
                   </div>
@@ -203,7 +217,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                   </div>
                 </div>
                 
-                {/* Tags section - new! */}
+                {/* Tags section */}
                 {tags.length > 0 && (
                   <div className="px-6 pt-4 pb-2 border-b border-border/20">
                     <div className="flex items-center gap-2 mb-2">
@@ -214,7 +228,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                       {tags.map((tag, index) => (
                         <Badge 
                           key={index} 
-                          className="bg-foreground/10 hover:bg-foreground/15 text-foreground/90 border-none"
+                          className="bg-foreground/10 hover:bg-foreground/15 text-foreground/90 border-none font-medium"
                         >
                           #{tag}
                         </Badge>
@@ -223,41 +237,43 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                   </div>
                 )}
                 
-                {/* Expandable description section */}
-                {!isText && karya.description && (
+                {/* Expandable description section with proper scrolling */}
+                {karya.description && (
                   <div className="p-6">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2 mb-3">
                       <span className="text-sm font-medium text-foreground/80">Description</span>
                     </div>
-                    <div 
-                      className={`relative overflow-hidden transition-all duration-300 ${
-                        isDescriptionExpanded ? 'max-h-[800px]' : 'max-h-[100px]'
-                      }`}
-                    >
-                      <p className="text-foreground/90 leading-relaxed text-readable whitespace-pre-wrap">
-                        {karya.description}
-                      </p>
+                    <div className={`transition-all duration-300 ${
+                      isDescriptionExpanded ? 'max-h-[400px]' : 'max-h-[120px]'
+                    } overflow-hidden relative`}>
+                      <ScrollArea className={isDescriptionExpanded ? 'h-[400px]' : 'h-[120px]'}>
+                        <p className="text-foreground/90 leading-relaxed font-sans text-base whitespace-pre-wrap break-words pr-4">
+                          {karya.description}
+                        </p>
+                      </ScrollArea>
                       {!isDescriptionExpanded && (
-                        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background/95 to-transparent pointer-events-none"></div>
+                        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-secondary/95 to-transparent pointer-events-none"></div>
                       )}
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={toggleDescription}
-                      className="mt-2 text-foreground/60 hover:text-foreground hover:bg-foreground/5 gap-1 rounded-full"
-                    >
-                      {isDescriptionExpanded ? 'Show Less' : 'Read More'}
-                      <ChevronDown 
-                        className={`h-4 w-4 transition-transform ${isDescriptionExpanded ? 'rotate-180' : ''}`} 
-                      />
-                    </Button>
+                    {karya.description.length > 200 && (
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={toggleDescription}
+                        className="mt-3 text-foreground/60 hover:text-foreground hover:bg-foreground/5 gap-1 rounded-full font-medium"
+                      >
+                        {isDescriptionExpanded ? 'Show Less' : 'Read More'}
+                        <ChevronDown 
+                          className={`h-4 w-4 transition-transform ${isDescriptionExpanded ? 'rotate-180' : ''}`} 
+                        />
+                      </Button>
+                    )}
                   </div>
                 )}
                 
                 {/* Date and action buttons */}
                 <div className="p-6 pt-0 flex flex-col sm:flex-row justify-between items-center">
-                  <p className="text-xs text-foreground/60 mb-4 sm:mb-0">
+                  <p className="text-xs text-foreground/60 mb-4 sm:mb-0 font-medium">
                     Dibuat pada {new Date(karya.created_at).toLocaleDateString('id-ID', {
                       year: 'numeric',
                       month: 'long',
@@ -269,7 +285,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                     {karya.content_url && (
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                         <Button 
-                          className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10" 
+                          className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium" 
                           size="sm"
                           onClick={() => window.open(karya.content_url, '_blank')}
                         >
@@ -281,7 +297,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                     {karya.link_url && (
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                         <Button 
-                          className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-lavender to-purpleLight text-white border border-white/10" 
+                          className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-lavender to-purpleLight text-white border border-white/10 font-medium" 
                           size="sm"
                           onClick={() => window.open(karya.link_url, '_blank')}
                         >

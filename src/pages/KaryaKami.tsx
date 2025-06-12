@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { KaryaGallery } from "../components/karya/KaryaGallery";
 import PageLayout from "../components/layouts/PageLayout";
-import { SpotlightSection } from "../components/karya/SpotlightSection";
+import { SpotlightCarousel } from "../components/karya/SpotlightCarousel";
 import FloatingNav from "../components/karya/FloatingNav";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
@@ -133,16 +133,33 @@ const KaryaKami: React.FC = () => {
         {/* Floating Navigation */}
         <FloatingNav toggleFilters={toggleFilters} showFilters={false} />
         
-        {/* Spotlight Section */}
+        {/* Page Title */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true, margin: "-50px" }}
-          className="mb-12"
+          className="text-center mb-12"
         >
-          <SpotlightSection spotlightItems={spotlightItems} />
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-tight">
+            KARYA KAMI
+          </h1>
+          <p className="text-foreground/70 mt-4 text-lg max-w-2xl mx-auto font-medium">
+            Koleksi karya kreatif dari komunitas Our Creativity
+          </p>
         </motion.div>
+        
+        {/* Spotlight Carousel Section */}
+        {spotlightItems.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, margin: "-50px" }}
+            className="mb-16"
+          >
+            <SpotlightCarousel spotlightItems={spotlightItems} />
+          </motion.div>
+        )}
         
         {/* Gallery Section */}
         <section className="mt-6 mb-16 relative z-10">

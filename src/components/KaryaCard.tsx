@@ -21,14 +21,11 @@ interface KaryaCardProps {
 
 // Helper function to generate transformed image URLs with lower resolution for cards
 const getTransformedUrl = (baseUrl: string | null | undefined, options: { format?: 'webp' | 'avif' | 'jpeg', width?: number, quality?: number } = {}): string => {
-  if (!baseUrl) return '/placeholder.svg'; // Fallback placeholder
+  if (!baseUrl) return '/placeholder.svg';
   try {
-    // For thumbnails in cards, use lower resolution
     const url = new URL(baseUrl);
-    
-    // Use much lower quality and size for card previews to improve performance
-    const cardPreviewWidth = options.width || 400; // Small width for cards
-    const cardPreviewQuality = options.quality || 60; // Lower quality for cards
+    const cardPreviewWidth = options.width || 400;
+    const cardPreviewQuality = options.quality || 60;
     
     if (options.format) url.searchParams.set('format', options.format);
     url.searchParams.set('resize', `width:${cardPreviewWidth}`);
@@ -37,7 +34,7 @@ const getTransformedUrl = (baseUrl: string | null | undefined, options: { format
     return url.toString();
   } catch (e) {
     console.error("Error creating URL:", e);
-    return baseUrl; // Return original if URL parsing fails
+    return baseUrl;
   }
 };
 
@@ -73,14 +70,12 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   const hasVideo = mediaUrls.some(url => isVideo(url));
 
   // Calculate aspect ratio based on media dimensions if available
-  // Default to 4:3 if dimensions aren't available
   const aspectRatio = karya.media_width && karya.media_height 
     ? `${karya.media_width} / ${karya.media_height}`
     : '4 / 3';
 
   const handleImageLoad = () => {
     setImageLoaded(true);
-    // Optional: remove placeholder background if needed
     if (imageRef.current) {
        imageRef.current.style.backgroundImage = 'none';
     }
@@ -97,21 +92,18 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
         setImageLoaded(true);
       });
       
-      // Setting a poster and preloading metadata helps prevent flickering
       if (videoRef.current) {
-        videoRef.current.poster = "#1C1C1E"; // Dark background as poster
+        videoRef.current.poster = "#1C1C1E";
       }
     }
   }, [hasVideo]);
 
   // Extract tags from description only
   const extractTags = (): string[] => {
-    // Only look for hashtags in the description
     if (karya.description) {
-      // Look for hashtags in the description
       const hashtags = karya.description.match(/#[\w\u0080-\uFFFF]+/g);
       if (hashtags && hashtags.length > 0) {
-        return hashtags.map(tag => tag.slice(1)); // Remove # symbol
+        return hashtags.map(tag => tag.slice(1));
       }
     }
     return [];
@@ -138,13 +130,14 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
         >
           {isText ? (
             <div className="h-full w-full p-6 flex items-center justify-center bg-gradient-to-br from-secondary to-background/80 overflow-hidden">
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-3 text-center">
                 <img 
                   src="/lovable-uploads/karyatulis.png" 
                   alt="Karya Tulis" 
                   className="w-12 h-12 mb-2 opacity-70" 
                 />
-                <p className="text-foreground/80 text-sm line-clamp-6 text-center font-serif leading-relaxed">
+                <h3 className="text-lg font-bold text-foreground font-sans mb-2 line-clamp-2">{karya.title}</h3>
+                <p className="text-foreground/80 text-sm line-clamp-4 leading-relaxed font-sans">
                   {karya.description ? karya.description.substring(0, 120) + "..." : "Artikel Tulisan"}
                 </p>
               </div>
@@ -168,7 +161,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                           preload="metadata"
                           playsInline
                           muted
-                          poster="#1C1C1E" // Dark background as poster
+                          poster="#1C1C1E"
                         />
                         <div className="absolute inset-0 flex items-center justify-center">
                           <div className="bg-black/30 backdrop-blur-sm p-3 rounded-full border border-white/10">
@@ -178,7 +171,6 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                       </div>
                     ) : (
                       <picture>
-                        {/* Use progressively loading images with much lower resolution for cards */}
                         <source srcSet={getTransformedUrl(url, { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
                         <source srcSet={getTransformedUrl(url, { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
                         <img
@@ -207,7 +199,6 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
               />
             </Carousel>
           ) : (
-            // Single media display
             <>
               {isVideo(mediaUrls[0]) ? (
                 <div className="relative w-full h-full bg-black">
@@ -218,7 +209,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                     preload="metadata"
                     playsInline
                     muted
-                    poster="#1C1C1E" // Dark background color as poster
+                    poster="#1C1C1E"
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="bg-black/30 backdrop-blur-sm p-3 rounded-full border border-white/10">
@@ -228,7 +219,6 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                 </div>
               ) : (
                 <picture>
-                  {/* Use much lower resolution for card previews */}
                   <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
                   <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
                   <img
@@ -253,7 +243,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           )}
         </div>
 
-        {/* Content overlay with gradient background for better readability */}
+        {/* Content overlay with better typography */}
         <div 
           className={`absolute bottom-0 left-0 right-0 p-5 text-foreground opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t ${
             hasVideo ? 'from-black/95 to-transparent' : 'from-background/95 to-transparent'
@@ -261,8 +251,8 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
         >
           <div className="flex justify-between items-end gap-3">
             <div className="flex-1 min-w-0">
-              <h3 className="text-base sm:text-lg font-semibold truncate tracking-tight">{karya.title}</h3>
-              <p className="text-foreground/80 text-xs sm:text-sm truncate mt-1">{karya.creator_name}</p>
+              <h3 className="text-base sm:text-lg font-bold truncate tracking-tight font-sans text-white">{karya.title}</h3>
+              <p className="text-white/80 text-xs sm:text-sm truncate mt-1 font-medium">{karya.creator_name}</p>
               
               {/* Tags display on hover */}
               {tags.length > 0 && (
@@ -270,13 +260,13 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                   {tags.slice(0, 3).map((tag, index) => (
                     <span 
                       key={index}
-                      className="text-[10px] bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/80"
+                      className="text-[10px] bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/90 font-medium"
                     >
                       #{tag}
                     </span>
                   ))}
                   {tags.length > 3 && (
-                    <span className="text-[10px] bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/80">
+                    <span className="text-[10px] bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/90 font-medium">
                       +{tags.length - 3}
                     </span>
                   )}
@@ -291,7 +281,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                 onClick={stopPropagation}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className="flex items-center gap-1.5 text-foreground/70 bg-black/30 backdrop-blur-sm rounded-full px-2.5 py-1 hover:bg-black/50 transition-colors border border-white/10"
+                className="flex items-center gap-1.5 text-white/80 bg-black/30 backdrop-blur-sm rounded-full px-2.5 py-1 hover:bg-black/50 transition-colors border border-white/10"
                 aria-label="Visit related link"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
@@ -300,7 +290,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
           </div>
         </div>
 
-        {/* Category Icon - Improved with gradient background */}
+        {/* Category Icon */}
         <div 
           className="absolute top-3 right-3 bg-gradient-to-br from-white/95 to-white/85 backdrop-blur-md p-2 rounded-full scale-100 transition-all duration-300 shadow-md"
           aria-label={`Category: ${karya.category}`}
