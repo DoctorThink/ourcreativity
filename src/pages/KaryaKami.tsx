@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { KaryaGallery } from "../components/karya/KaryaGallery";
 import PageLayout from "../components/layouts/PageLayout";
 import { SpotlightCarousel } from "../components/karya/SpotlightCarousel";
-import FloatingNav from "../components/karya/FloatingNav";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -140,9 +139,6 @@ const KaryaKami: React.FC = () => {
             </motion.div>
           )}
         </AnimatePresence>
-        
-        {/* Floating Navigation */}
-        <FloatingNav toggleFilters={toggleFilters} showFilters={false} />
         
         {/* Spotlight Carousel Section */}
         {spotlightItems.length > 0 && (
