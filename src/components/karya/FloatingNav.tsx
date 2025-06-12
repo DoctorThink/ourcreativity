@@ -11,6 +11,7 @@ interface FloatingNavProps {
 const FloatingNav: React.FC<FloatingNavProps> = ({ toggleFilters, showFilters }) => {
   const [scrolled, setScrolled] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
   
   // Optimized scroll handler with throttling
   useEffect(() => {
@@ -30,6 +31,13 @@ const FloatingNav: React.FC<FloatingNavProps> = ({ toggleFilters, showFilters })
     
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const header = document.querySelector('header.fixed') as HTMLElement;
+    if (header) {
+      setHeaderHeight(header.offsetHeight);
+    }
   }, []);
   
   const scrollToTop = () => {
@@ -51,11 +59,14 @@ const FloatingNav: React.FC<FloatingNavProps> = ({ toggleFilters, showFilters })
           duration: 0.4,
           ease: "easeOut"
         }}
-        className={`fixed top-0 left-0 right-0 z-40 py-4 px-6 flex items-center justify-between transition-all duration-300 ${
+        style={{
+          top: scrolled ? `${headerHeight}px` : '0px',
+        }}
+        className={`fixed left-0 right-0 z-40 py-4 px-6 flex items-center justify-between transition-all duration-300 ${
           scrolled 
             ? "bg-background/95 backdrop-blur-md shadow-lg shadow-black/20 border-b border-border/30" 
             : "bg-transparent"
-        }`}
+        } ${scrolled ? "" : "top-0"}`} // Conditionally add top-0 when not scrolled
       >
         <motion.div 
           className="flex items-center space-x-3"
