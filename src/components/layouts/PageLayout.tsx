@@ -109,7 +109,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
             <img 
               src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png" 
               alt="Our Creativity" 
-              className="h-6 sm:h-7 w-auto hidden sm:block" 
+              className="h-7 w-auto"
             />
           </Link>
           

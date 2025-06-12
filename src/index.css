@@ -52,7 +52,7 @@
     position: relative;
   }
 
-  body::before {
+  /* body::before {
     content: "";
     position: fixed;
     top: 0;
@@ -68,7 +68,7 @@
     animation: flowingGradient 60s ease-in-out infinite alternate;
     opacity: 0.9;
     will-change: background-position;
-  }
+  } */
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif; /* Explicitly set headings to font-serif */
