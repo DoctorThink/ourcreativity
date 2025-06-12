@@ -6,6 +6,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+const MotionLink = motion(Link);
+
 interface PageLayoutProps {
   children: ReactNode;
   title?: string;
@@ -91,7 +93,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       <motion.header 
         className={cn(
           "fixed top-0 left-0 right-0 z-50 py-4 md:py-5 transition-all duration-300",
-          scrollY > 20 ? "bg-background/95 backdrop-blur-md border-b border-border/30 shadow-sm" : "",
+          scrollY > 20 ? "bg-background/90 backdrop-blur-lg border-b border-border/30 shadow-sm" : "",
           headerClassName
         )}
         initial={{ y: -100 }}
@@ -116,18 +118,20 @@ const PageLayout: React.FC<PageLayoutProps> = ({
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1">
             {navItems.map((item) => (
-              <Link
+              <MotionLink
                 key={item.path}
                 to={item.path}
                 className={cn(
                   "px-3 py-2 rounded-full text-sm font-sans transition-all duration-300",
                   isActive(item.path)
-                    ? "bg-white/10 text-white font-medium"
-                    : "text-white/70 hover:text-white hover:bg-white/5"
+                    ? "bg-white/15 text-white font-medium"
+                    : "text-white/70 hover:text-white hover:bg-white/10"
                 )}
+                whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+                whileTap={{ scale: 0.95 }}
               >
                 {item.name}
-              </Link>
+              </MotionLink>
             ))}
           </nav>
           
@@ -220,7 +224,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                           "flex items-center px-4 py-4 rounded-2xl font-sans transition-all duration-300 text-base group",
                           isActive(item.path)
                             ? "bg-amethyst/20 text-white font-medium border border-amethyst/30"
-                            : "text-foreground/80 hover:text-foreground hover:bg-background/50"
+                            : "text-foreground/80 hover:text-foreground hover:bg-white/10"
                         )}
                       >
                         <motion.span
