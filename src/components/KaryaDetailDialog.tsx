@@ -81,7 +81,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
           <div className="relative w-full bg-black/50 flex-grow" 
                style={{ height: isText ? 'auto' : '100vh' }}>
             {isText ? (
-              <div className="w-full h-full flex flex-col bg-gradient-to-b from-secondary/95 to-secondary/85 backdrop-blur-md">
+              <div className="w-full h-full flex flex-col bg-secondary backdrop-blur-md">
                 <div className="flex-shrink-0 p-8 text-center border-b border-border/20">
                   <img 
                     src="/lovable-uploads/karyatulis.png" 
@@ -94,7 +94,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                 
                 {/* Scrollable Text Content */}
                 <div className="flex-1 min-h-0 p-6 md:p-8">
-                  <ScrollArea className="h-full w-full">
+                  <ScrollArea className="h-full w-full max-h-[60vh]">
                     <div className="max-w-4xl mx-auto">
                       <div 
                         className="prose prose-lg prose-invert max-w-none text-foreground/90 font-sans leading-relaxed"
@@ -244,9 +244,11 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                       <span className="text-sm font-medium text-foreground/80">Description</span>
                     </div>
                     <div className={`transition-all duration-300 ${
-                      isDescriptionExpanded ? 'max-h-[400px]' : 'max-h-[120px]'
+                      isDescriptionExpanded ? 'max-h-none' : 'max-h-[120px]'
                     } overflow-hidden relative`}>
-                      <ScrollArea className={isDescriptionExpanded ? 'h-[400px]' : 'h-[120px]'}>
+                      <ScrollArea className={`${
+                        isDescriptionExpanded ? 'h-auto max-h-[40vh]' : 'h-[120px]'
+                      }`}>
                         <p className="text-foreground/90 leading-relaxed font-sans text-base whitespace-pre-wrap break-words pr-4">
                           {karya.description}
                         </p>

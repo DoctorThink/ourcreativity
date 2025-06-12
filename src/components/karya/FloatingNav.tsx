@@ -67,16 +67,6 @@ const FloatingNav: React.FC<FloatingNavProps> = ({ toggleFilters, showFilters })
             alt="Logo"
             className="w-8 h-8"
           />
-          <motion.span 
-            className="font-serif text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amethyst via-white to-turquoise"
-            animate={{
-              opacity: scrolled ? 1 : 0,
-              x: scrolled ? 0 : -10
-            }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-          >
-            Karya Kami
-          </motion.span>
         </motion.div>
       </motion.nav>
       
