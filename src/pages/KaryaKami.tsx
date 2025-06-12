@@ -131,7 +131,7 @@ const KaryaKami: React.FC = () => {
         </AnimatePresence>
         
         {/* Floating Navigation */}
-        <FloatingNav toggleFilters={toggleFilters} showFilters={false} />
+        {/* <FloatingNav toggleFilters={toggleFilters} showFilters={false} /> */}
         
         {/* Page Title */}
         <motion.div
