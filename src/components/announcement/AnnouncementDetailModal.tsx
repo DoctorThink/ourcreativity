@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, X } from "lucide-react";
 import { format } from "date-fns";
 import { Announcement } from "@/models/Announcement";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -38,6 +38,69 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
     }
   };
 
+  const parseContent = (content: string): JSX.Element[] => {
+    const elements: JSX.Element[] = [];
+    if (!content) return elements;
+
+    // Split by any number of newlines to get all potential lines/blocks
+    const lines = content.split(/\n+/);
+
+    let currentListItems: string[] = [];
+    let keyIndex = 0; // Unique key for React elements
+
+    const flushListItems = () => {
+      if (currentListItems.length > 0) {
+        elements.push(
+          <div key={`list-${keyIndex++}`} className="space-y-2 my-4"> {/* Added my-4 for spacing around lists */}
+            {currentListItems.map((item, itemIdx) => (
+              <div key={`list-item-${keyIndex}-${itemIdx}`} className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 rounded-full bg-amethyst mt-2.5 flex-shrink-0" />
+                <p className="text-base leading-relaxed text-foreground/90">
+                  {item.replace(/^[•-]\s*/, '')}
+                </p>
+              </div>
+            ))}
+          </div>
+        );
+        currentListItems = [];
+      }
+    };
+
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+
+      if (!trimmedLine) { // Skip empty lines that only contain whitespace
+        continue;
+      }
+
+      if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('• ')) {
+        currentListItems.push(trimmedLine);
+      } else {
+        // If there were pending list items, flush them first
+        flushListItems();
+
+        // This line is a paragraph. Check for bold text: **text**
+        const parts = trimmedLine.split(/(\*\*.*?\*\*)/g).filter(part => part); // Split by bold markers and remove empty strings
+
+        elements.push(
+          <p key={`paragraph-${keyIndex++}`} className="text-base leading-relaxed text-foreground/90 my-2"> {/* Added my-2 for spacing */}
+            {parts.map((part, partIdx) => {
+              if (part.startsWith('**') && part.endsWith('**')) {
+                return <strong key={`bold-${keyIndex}-${partIdx}`} className="font-bold text-foreground">{part.slice(2, -2)}</strong>;
+              }
+              return part; // Regular text
+            })}
+          </p>
+        );
+      }
+    }
+
+    // Flush any remaining list items at the end of content
+    flushListItems();
+
+    return elements;
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[95vh] p-0 border-0 bg-secondary/95 backdrop-blur-xl overflow-hidden">
@@ -51,7 +114,8 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="overflow-y-auto max-h-[95vh] scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent"
             >
-              <DialogHeader className="sticky top-0 z-20 bg-secondary/90 backdrop-blur-xl border-b border-white/10 p-6">
+              {/* Header */}
+              <div className="sticky top-0 z-20 bg-secondary/90 backdrop-blur-xl border-b border-white/10 p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
@@ -65,9 +129,9 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                       )}
                     </div>
                     
-                    <DialogTitle className="text-2xl sm:text-3xl font-serif font-bold text-foreground leading-tight text-left">
+                    <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground leading-tight">
                       {announcement.title}
-                    </DialogTitle>
+                    </h1>
                     
                     <div className="flex items-center gap-2 mt-3 text-sm text-foreground/60">
                       <Calendar className="w-4 h-4" />
@@ -75,21 +139,19 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                     </div>
                   </div>
                   
-                  {/* The DialogClose is part of DialogContent in ui/dialog.tsx, so no explicit Button with X here if we follow strict Radix structure inside DialogHeader */}
-                  {/* However, the original design has the X button aligned with the title area. Let's keep the explicit close button for now. */}
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={onClose}
-                    className="p-2 hover:bg-white/10 rounded-full absolute top-4 right-4 sm:top-6 sm:right-6" // Adjusted positioning
+                    className="p-2 hover:bg-white/10 rounded-full"
                   >
                     <X className="w-5 h-5" />
                   </Button>
                 </div>
-              </DialogHeader>
+              </div>
 
               {/* Content */}
-              <div className="p-6 space-y-6 prose prose-lg max-w-none"> {/* Added prose classes here for overall content styling if DialogDescription doesn't cover everything */}
+              <div className="p-6 space-y-6">
                 {/* Image */}
                 {announcement.image_url && (
                   <div className="relative overflow-hidden rounded-xl border border-white/10">
@@ -105,17 +167,10 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                 )}
                 
                 {/* Content */}
-                <DialogDescription asChild>
-                  {/* The wrapping div for prose styling might be redundant if DialogDescription itself can take className, or if the parent div has prose */}
-                  <div>
-                    {announcement.content.split('\n').map((line, index) => (
-                      <span key={index}>
-                        {line}
-                        <br />
-                      </span>
-                    ))}
-                  </div>
-                </Dialog.Description>
+                {/* The `prose` classes might add their own margins, so `my-2` and `my-4` might need adjustment if there's too much space */}
+                <div className="prose prose-lg max-w-none"> {/* Removed space-y-6 from here to let parseContent handle spacing */}
+                  {parseContent(announcement.content)}
+                </div>
                 
                 {/* Link */}
                 {announcement.link_url && (
