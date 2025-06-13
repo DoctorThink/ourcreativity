@@ -1,6 +1,5 @@
 
 import { Announcement } from "@/models/Announcement";
-import announcementsData from '../../../data/announcements.json';
 
 // Simulate network delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -8,6 +7,10 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const fetchLocalAnnouncements = async (filter: string = 'all'): Promise<Announcement[]> => {
   console.log(`Fetching local announcements with filter: ${filter}`);
   await delay(300); // Simulate network delay
+
+  const response = await fetch('/data/announcements.json');
+  if (!response.ok) throw new Error('Failed to fetch announcements');
+  const announcementsData: Announcement[] = await response.json();
   
   let filteredAnnouncements = announcementsData.filter(announcement => announcement.published);
   
@@ -29,6 +32,10 @@ export const fetchLocalAnnouncements = async (filter: string = 'all'): Promise<A
 export const fetchLocalFeaturedAnnouncement = async (): Promise<Announcement | null> => {
   console.log('Fetching local featured announcement...');
   await delay(200);
+
+  const response = await fetch('/data/announcements.json');
+  if (!response.ok) throw new Error('Failed to fetch announcements');
+  const announcementsData: Announcement[] = await response.json();
   
   const featured = announcementsData.find(announcement => announcement.published && announcement.important);
   console.log('Local featured announcement result:', featured);
