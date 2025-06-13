@@ -38,69 +38,6 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
     }
   };
 
-  const parseContent = (content: string): JSX.Element[] => {
-    const elements: JSX.Element[] = [];
-    if (!content) return elements;
-
-    // Split by any number of newlines to get all potential lines/blocks
-    const lines = content.split(/\n+/);
-
-    let currentListItems: string[] = [];
-    let keyIndex = 0; // Unique key for React elements
-
-    const flushListItems = () => {
-      if (currentListItems.length > 0) {
-        elements.push(
-          <div key={`list-${keyIndex++}`} className="space-y-2 my-4"> {/* Added my-4 for spacing around lists */}
-            {currentListItems.map((item, itemIdx) => (
-              <div key={`list-item-${keyIndex}-${itemIdx}`} className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-amethyst mt-2.5 flex-shrink-0" />
-                <p className="text-base leading-relaxed text-foreground/90">
-                  {item.replace(/^[•-]\s*/, '')}
-                </p>
-              </div>
-            ))}
-          </div>
-        );
-        currentListItems = [];
-      }
-    };
-
-    for (const line of lines) {
-      const trimmedLine = line.trim();
-
-      if (!trimmedLine) { // Skip empty lines that only contain whitespace
-        continue;
-      }
-
-      if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('• ')) {
-        currentListItems.push(trimmedLine);
-      } else {
-        // If there were pending list items, flush them first
-        flushListItems();
-
-        // This line is a paragraph. Check for bold text: **text**
-        const parts = trimmedLine.split(/(\*\*.*?\*\*)/g).filter(part => part); // Split by bold markers and remove empty strings
-
-        elements.push(
-          <p key={`paragraph-${keyIndex++}`} className="text-base leading-relaxed text-foreground/90 my-2"> {/* Added my-2 for spacing */}
-            {parts.map((part, partIdx) => {
-              if (part.startsWith('**') && part.endsWith('**')) {
-                return <strong key={`bold-${keyIndex}-${partIdx}`} className="font-bold text-foreground">{part.slice(2, -2)}</strong>;
-              }
-              return part; // Regular text
-            })}
-          </p>
-        );
-      }
-    }
-
-    // Flush any remaining list items at the end of content
-    flushListItems();
-
-    return elements;
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[95vh] p-0 border-0 bg-secondary/95 backdrop-blur-xl overflow-hidden">
@@ -168,9 +105,19 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                 
                 {/* Content */}
                 {/* The `prose` classes might add their own margins, so `my-2` and `my-4` might need adjustment if there's too much space */}
-                <div className="prose prose-lg max-w-none"> {/* Removed space-y-6 from here to let parseContent handle spacing */}
-                  {parseContent(announcement.content)}
-                </div>
+                <Dialog.Description asChild>
+                  <div className="prose prose-lg max-w-none"> {/* Removed space-y-6 from here to let parseContent handle spacing */}
+                    {announcement.content.split('\n').map((line, index) => (
+                      // Render each line. Using a simple text line with a line break,
+                      // or a <p> tag for each block separated by '\n\n'.
+                      // This simple version handles both cases gracefully.
+                      <span key={index}>
+                        {line}
+                        <br />
+                      </span>
+                    ))}
+                  </div>
+                </Dialog.Description>
                 
                 {/* Link */}
                 {announcement.link_url && (
