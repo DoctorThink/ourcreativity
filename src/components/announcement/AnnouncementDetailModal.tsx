@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, X } from "lucide-react";
 import { format } from "date-fns";
 import { Announcement } from "@/models/Announcement";
-import { Dialog, DialogContent, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -51,8 +51,7 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="overflow-y-auto max-h-[95vh] scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent"
             >
-              {/* Header */}
-              <div className="sticky top-0 z-20 bg-secondary/90 backdrop-blur-xl border-b border-white/10 p-6">
+              <DialogHeader className="sticky top-0 z-20 bg-secondary/90 backdrop-blur-xl border-b border-white/10 p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
@@ -66,9 +65,9 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                       )}
                     </div>
                     
-                    <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground leading-tight">
+                    <DialogTitle className="text-2xl sm:text-3xl font-serif font-bold text-foreground leading-tight text-left">
                       {announcement.title}
-                    </h1>
+                    </DialogTitle>
                     
                     <div className="flex items-center gap-2 mt-3 text-sm text-foreground/60">
                       <Calendar className="w-4 h-4" />
@@ -76,19 +75,21 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                     </div>
                   </div>
                   
+                  {/* The DialogClose is part of DialogContent in ui/dialog.tsx, so no explicit Button with X here if we follow strict Radix structure inside DialogHeader */}
+                  {/* However, the original design has the X button aligned with the title area. Let's keep the explicit close button for now. */}
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={onClose}
-                    className="p-2 hover:bg-white/10 rounded-full"
+                    className="p-2 hover:bg-white/10 rounded-full absolute top-4 right-4 sm:top-6 sm:right-6" // Adjusted positioning
                   >
                     <X className="w-5 h-5" />
                   </Button>
                 </div>
-              </div>
+              </DialogHeader>
 
               {/* Content */}
-              <div className="p-6 space-y-6">
+              <div className="p-6 space-y-6 prose prose-lg max-w-none"> {/* Added prose classes here for overall content styling if DialogDescription doesn't cover everything */}
                 {/* Image */}
                 {announcement.image_url && (
                   <div className="relative overflow-hidden rounded-xl border border-white/10">
@@ -104,13 +105,10 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                 )}
                 
                 {/* Content */}
-                {/* The `prose` classes might add their own margins, so `my-2` and `my-4` might need adjustment if there's too much space */}
                 <DialogDescription asChild>
-                  <div className="prose prose-lg max-w-none"> {/* Removed space-y-6 from here to let parseContent handle spacing */}
+                  {/* The wrapping div for prose styling might be redundant if DialogDescription itself can take className, or if the parent div has prose */}
+                  <div>
                     {announcement.content.split('\n').map((line, index) => (
-                      // Render each line. Using a simple text line with a line break,
-                      // or a <p> tag for each block separated by '\n\n'.
-                      // This simple version handles both cases gracefully.
                       <span key={index}>
                         {line}
                         <br />
