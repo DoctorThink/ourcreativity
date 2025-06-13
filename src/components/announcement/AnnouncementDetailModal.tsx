@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, X } from "lucide-react";
 import { format } from "date-fns";
 import { Announcement } from "@/models/Announcement";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -116,6 +116,12 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
             >
               {/* Header */}
               <div className="sticky top-0 z-20 bg-secondary/90 backdrop-blur-xl border-b border-white/10 p-6">
+                {/* Accessibility: Title and Description */}
+                <DialogTitle className="sr-only">Pengumuman: {announcement.title}</DialogTitle>
+                <DialogDescription className="sr-only">
+                  Detail pengumuman: {announcement.content.substring(0, 150)}
+                  {announcement.content.length > 150 ? "..." : ""}
+                </DialogDescription>
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
@@ -168,7 +174,7 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                 
                 {/* Content */}
                 {/* The `prose` classes might add their own margins, so `my-2` and `my-4` might need adjustment if there's too much space */}
-                <div className="prose prose-lg max-w-none"> {/* Removed space-y-6 from here to let parseContent handle spacing */}
+                <div className="max-w-none"> {/* Removed prose and prose-lg, space-y-6 from here to let parseContent handle spacing */}
                   {parseContent(announcement.content)}
                 </div>
                 
