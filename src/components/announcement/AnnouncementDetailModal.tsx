@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, X } from "lucide-react";
 import { format } from "date-fns";
 import { Announcement } from "@/models/Announcement";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -105,7 +105,7 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                 
                 {/* Content */}
                 {/* The `prose` classes might add their own margins, so `my-2` and `my-4` might need adjustment if there's too much space */}
-                <Dialog.Description asChild>
+                <DialogDescription asChild>
                   <div className="prose prose-lg max-w-none"> {/* Removed space-y-6 from here to let parseContent handle spacing */}
                     {announcement.content.split('\n').map((line, index) => (
                       // Render each line. Using a simple text line with a line break,
