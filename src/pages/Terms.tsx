@@ -45,7 +45,7 @@ const Terms = () => {
       subtitle="Informasi penting mengenai keanggotaan dan partisipasi dalam komunitas"
     >
       <div className="relative z-10">
-        <motion.div className="mb-8 text-center">
+        <motion.div className="mb-12 text-center">
           <motion.div 
             className="inline-block p-3 rounded-full bg-amethyst/20 mb-4"
             initial={{ scale: 0 }}

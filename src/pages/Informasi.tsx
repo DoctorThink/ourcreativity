@@ -11,7 +11,8 @@ import {
   Users, 
   Star, 
   Heart, 
-  MessageCircle 
+  MessageCircle,
+  ChevronRight
 } from "lucide-react";
 
 const Informasi = () => {
@@ -160,9 +161,9 @@ const Informasi = () => {
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3 + index * 0.1, duration: 0.6 }}
                       viewport={{ once: true }}
-                      className="flex items-start gap-3"
+                      className="flex items-start gap-2"
                     >
-                      <span className="inline-block w-2 h-2 rounded-full bg-coral flex-shrink-0 mt-3"></span>
+                      <ChevronRight className="w-4 h-4 text-foreground/50 flex-shrink-0 mt-1" />
                       <span>{item}</span>
                     </motion.li>
                   ))}
@@ -176,7 +177,7 @@ const Informasi = () => {
             <BentoCard 
               className="p-6 md:p-8 h-full"
               icon={Star}
-              iconColor="bg-mint text-background"
+              iconColor="bg-mint text-white"
               glowColor="rgba(152, 245, 225, 0.3)"
             >
               <div className="pt-12">
@@ -268,13 +269,13 @@ const StatBadge = ({ value, label }: { value: string, label: string }) => (
 
 const ValueItem = ({ children }: { children: React.ReactNode }) => (
   <motion.li 
-    className="flex items-center gap-3"
+    className="flex items-start gap-2"
     initial={{ opacity: 0, x: -10 }}
     whileInView={{ opacity: 1, x: 0 }}
     transition={{ duration: 0.5 }}
     viewport={{ once: true }}
   >
-    <span className="w-2 h-2 rounded-full bg-softPink"></span>
+    <ChevronRight className="w-4 h-4 text-foreground/50 flex-shrink-0 mt-1" />
     <span className="text-foreground/80 text-sm">{children}</span>
   </motion.li>
 );
