@@ -1,9 +1,10 @@
+
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, X } from "lucide-react";
 import { format } from "date-fns";
 import { Announcement } from "@/models/Announcement";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -38,67 +39,39 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
     }
   };
 
-  const parseContent = (content: string): JSX.Element[] => {
-    const elements: JSX.Element[] = [];
-    if (!content) return elements;
-
-    // Split by any number of newlines to get all potential lines/blocks
-    const lines = content.split(/\n+/);
-
-    let currentListItems: string[] = [];
-    let keyIndex = 0; // Unique key for React elements
-
-    const flushListItems = () => {
-      if (currentListItems.length > 0) {
-        elements.push(
-          <div key={`list-${keyIndex++}`} className="space-y-2 my-4"> {/* Added my-4 for spacing around lists */}
-            {currentListItems.map((item, itemIdx) => (
-              <div key={`list-item-${keyIndex}-${itemIdx}`} className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-amethyst mt-2.5 flex-shrink-0" />
-                <p className="text-base leading-relaxed text-foreground/90">
-                  {item.replace(/^[•-]\s*/, '')}
+  const parseContent = (content: string) => {
+    return content.split('\n\n').map((paragraph, idx) => {
+      if (paragraph.includes('- ') || paragraph.includes('• ')) {
+        const items = paragraph.split('\n').filter(line => line.trim());
+        return (
+          <div key={idx} className="space-y-2">
+            {items.map((item, itemIdx) => {
+              if (item.includes('- ') || item.includes('• ')) {
+                return (
+                  <div key={itemIdx} className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-amethyst mt-2.5 flex-shrink-0" />
+                    <p className="text-base leading-relaxed text-foreground/90">
+                      {item.replace(/^[•-]\s*/, '')}
+                    </p>
+                  </div>
+                );
+              }
+              return (
+                <p key={itemIdx} className="text-base leading-relaxed font-medium text-foreground">
+                  {item}
                 </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         );
-        currentListItems = [];
       }
-    };
-
-    for (const line of lines) {
-      const trimmedLine = line.trim();
-
-      if (!trimmedLine) { // Skip empty lines that only contain whitespace
-        continue;
-      }
-
-      if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('• ')) {
-        currentListItems.push(trimmedLine);
-      } else {
-        // If there were pending list items, flush them first
-        flushListItems();
-
-        // This line is a paragraph. Check for bold text: **text**
-        const parts = trimmedLine.split(/(\*\*.*?\*\*)/g).filter(part => part); // Split by bold markers and remove empty strings
-
-        elements.push(
-          <p key={`paragraph-${keyIndex++}`} className="text-base leading-relaxed text-foreground/90 my-2"> {/* Added my-2 for spacing */}
-            {parts.map((part, partIdx) => {
-              if (part.startsWith('**') && part.endsWith('**')) {
-                return <strong key={`bold-${keyIndex}-${partIdx}`} className="font-bold text-foreground">{part.slice(2, -2)}</strong>;
-              }
-              return part; // Regular text
-            })}
-          </p>
-        );
-      }
-    }
-
-    // Flush any remaining list items at the end of content
-    flushListItems();
-
-    return elements;
+      
+      return (
+        <p key={idx} className="text-base leading-relaxed text-foreground/90">
+          {paragraph}
+        </p>
+      );
+    });
   };
 
   return (
@@ -116,12 +89,6 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
             >
               {/* Header */}
               <div className="sticky top-0 z-20 bg-secondary/90 backdrop-blur-xl border-b border-white/10 p-6">
-                {/* Accessibility: Title and Description */}
-                <DialogTitle className="sr-only">Pengumuman: {announcement.title}</DialogTitle>
-                <DialogDescription className="sr-only">
-                  Detail pengumuman: {announcement.content.substring(0, 150)}
-                  {announcement.content.length > 150 ? "..." : ""}
-                </DialogDescription>
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
@@ -173,14 +140,13 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                 )}
                 
                 {/* Content */}
-                {/* The `prose` classes might add their own margins, so `my-2` and `my-4` might need adjustment if there's too much space */}
-                <div className="max-w-none"> {/* Removed prose and prose-lg, space-y-6 from here to let parseContent handle spacing */}
+                <div className="prose prose-lg max-w-none space-y-6">
                   {parseContent(announcement.content)}
                 </div>
                 
                 {/* Link */}
                 {announcement.link_url && (
-                  <div className="pt-6 border-t border-white/10"> {/* This pt-6 might also interact with paragraph/list margins */}
+                  <div className="pt-6 border-t border-white/10">
                     <a
                       href={announcement.link_url}
                       target="_blank"

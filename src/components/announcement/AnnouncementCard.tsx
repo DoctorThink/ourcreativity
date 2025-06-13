@@ -239,7 +239,7 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
             {announcement.title}
           </motion.h3>
           
-          <p className={`line-clamp-3 text-sm mb-4 leading-relaxed whitespace-pre-line
+          <p className={`line-clamp-3 text-sm mb-4 leading-relaxed
             ${isGerakan27April ? 'text-red-100/80' : 'text-foreground/75'}`}>
             {announcement.content.substring(0, isMobile ? 100 : 120)}...
           </p>

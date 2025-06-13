@@ -183,7 +183,7 @@ export const AnnouncementDetail: React.FC<AnnouncementDetailProps> = ({ announce
       // Regular paragraph with better styling
       return (
         <div key={idx} className="bg-white/3 rounded-lg p-4 border border-white/10">
-          <p className="text-sm sm:text-base leading-relaxed whitespace-pre-line">
+          <p className="text-sm sm:text-base leading-relaxed">
             {paragraph}
           </p>
         </div>
