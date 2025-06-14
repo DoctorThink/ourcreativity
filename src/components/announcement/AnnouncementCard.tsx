@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { 
@@ -15,6 +14,7 @@ import { format } from "date-fns";
 import { Announcement } from "@/models/Announcement";
 import GlassCard from "@/components/ui/GlassCard";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 interface AnnouncementCardProps {
   announcement: Announcement;
