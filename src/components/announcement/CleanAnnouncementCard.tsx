@@ -18,9 +18,9 @@ export const CleanAnnouncementCard: React.FC<CleanAnnouncementCardProps> = ({
   const getDisplayDate = () => {
     try {
       const date = announcement.date ? new Date(announcement.date) : new Date(announcement.created_at);
-      return format(date, "dd MMM");
+      return format(date, "dd MMM yyyy");
     } catch (error) {
-      return "Invalid";
+      return "Invalid date";
     }
   };
 
@@ -66,11 +66,12 @@ export const CleanAnnouncementCard: React.FC<CleanAnnouncementCardProps> = ({
         onClick={onClick}
       >
         <CardContent className="p-6 h-full flex flex-col">
-          {/* Header with improved spacing */}
-          <div className="flex items-start justify-between mb-5">
+          {/* Header with category and importance tags */}
+          <div className="flex items-start justify-between mb-5 gap-2">
             <div className={`px-3 py-1.5 rounded-full text-xs font-semibold border ${categoryInfo.color}`}>
               {categoryInfo.label}
             </div>
+            
             {announcement.important && (
               <div className="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-semibold">
                 Penting
@@ -80,17 +81,16 @@ export const CleanAnnouncementCard: React.FC<CleanAnnouncementCardProps> = ({
 
           {/* Content with enhanced typography */}
           <div className="flex-1 space-y-4">
-            <h3 className="text-xl font-serif font-bold text-foreground leading-tight group-hover:text-opacity-90 transition-all duration-200 text-readable"
+            <h3 className="font-serif font-bold text-xl leading-snug text-foreground group-hover:text-opacity-90 transition-all duration-200"
                 style={{ 
-                  lineHeight: '1.3',
-                  letterSpacing: '0.005em'
+                  letterSpacing: '0.01em'
                 }}>
               {announcement.title}
             </h3>
             
-            <p className="text-sm text-foreground/80 leading-relaxed text-readable"
+            <p className="text-sm text-foreground/80 leading-relaxed"
                style={{ 
-                 lineHeight: '1.6',
+                 lineHeight: '1.7',
                  letterSpacing: '0.01em',
                  fontWeight: '400'
                }}>
@@ -100,14 +100,14 @@ export const CleanAnnouncementCard: React.FC<CleanAnnouncementCardProps> = ({
 
           {/* Footer with better spacing and typography */}
           <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/5">
-            <div className="flex items-center gap-2 text-sm text-foreground/60 font-medium">
+            <div className="flex items-center gap-2 text-sm text-foreground/60">
               <Calendar className="w-4 h-4" />
               <span>{displayDate}</span>
             </div>
             
-            <div className="flex items-center gap-2 text-sm text-foreground/80 group-hover:text-foreground group-hover:gap-3 transition-all duration-200 font-semibold">
-              <span style={{ letterSpacing: '0.02em' }}>Baca Selengkapnya</span>
-              <ArrowRight className="w-4 h-4 group-hover:rotate-12 transition-transform duration-200" />
+            <div className="flex items-center gap-2 text-sm text-foreground/80 group-hover:text-foreground group-hover:gap-3 transition-all duration-200">
+              <span className="font-medium">Baca Selengkapnya</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
             </div>
           </div>
         </CardContent>
