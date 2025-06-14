@@ -1,0 +1,164 @@
+
+/* Liquid Glass Design System - Design Tokens */
+
+:root {
+  /* Glass Effects */
+  --glass-blur-intensity-deep: 20px;
+  --glass-blur-intensity-medium: 12px;
+  --glass-blur-intensity-shallow: 8px;
+  --glass-border-color: rgba(255, 255, 255, 0.15);
+  --glass-border-color-hover: rgba(255, 255, 255, 0.25);
+  --glass-inner-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  --glass-outer-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
+  /* Glass Background Layers */
+  --glass-bg-primary: rgba(255, 255, 255, 0.08);
+  --glass-bg-secondary: rgba(255, 255, 255, 0.12);
+  --glass-bg-tertiary: rgba(255, 255, 255, 0.05);
+  
+  /* Color System */
+  --color-glow-primary: rgba(155, 109, 255, 0.6);
+  --color-glow-secondary: rgba(64, 224, 208, 0.5);
+  --color-glow-accent: rgba(255, 127, 80, 0.4);
+  --color-glow-success: rgba(80, 200, 120, 0.5);
+  --color-glow-warning: rgba(255, 191, 0, 0.5);
+  
+  /* Gradient Definitions */
+  --gradient-liquid-bg: linear-gradient(
+    135deg,
+    rgba(155, 109, 255, 0.1) 0%,
+    rgba(64, 224, 208, 0.08) 25%,
+    rgba(255, 127, 80, 0.06) 50%,
+    rgba(152, 245, 225, 0.08) 75%,
+    rgba(155, 109, 255, 0.1) 100%
+  );
+  
+  --gradient-glass-reflection: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  
+  --gradient-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  
+  /* Animation Properties */
+  --animation-duration-fast: 0.2s;
+  --animation-duration-medium: 0.4s;
+  --animation-duration-slow: 0.8s;
+  --animation-easing-liquid: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --animation-easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --animation-easing-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* Typography */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  
+  --font-family-heading: 'Playfair Display', serif;
+  --font-family-body: 'Inter', sans-serif;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-full: 9999px;
+  
+  /* Z-Index Layers */
+  --z-base: 1;
+  --z-elevated: 10;
+  --z-floating: 50;
+  --z-modal: 100;
+  --z-tooltip: 200;
+}
+
+/* Utility Classes for Liquid Glass Effects */
+.glass-morphism {
+  background: var(--glass-bg-primary);
+  backdrop-filter: blur(var(--glass-blur-intensity-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-intensity-medium));
+  border: 1px solid var(--glass-border-color);
+  box-shadow: var(--glass-outer-shadow), var(--glass-inner-shadow);
+}
+
+.glass-morphism-deep {
+  background: var(--glass-bg-secondary);
+  backdrop-filter: blur(var(--glass-blur-intensity-deep));
+  -webkit-backdrop-filter: blur(var(--glass-blur-intensity-deep));
+  border: 1px solid var(--glass-border-color);
+  box-shadow: var(--glass-outer-shadow), var(--glass-inner-shadow);
+}
+
+.glass-morphism-shallow {
+  background: var(--glass-bg-tertiary);
+  backdrop-filter: blur(var(--glass-blur-intensity-shallow));
+  -webkit-backdrop-filter: blur(var(--glass-blur-intensity-shallow));
+  border: 1px solid var(--glass-border-color);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), var(--glass-inner-shadow);
+}
+
+.liquid-glow {
+  box-shadow: 0 0 20px var(--color-glow-primary);
+  transition: box-shadow var(--animation-duration-medium) var(--animation-easing-liquid);
+}
+
+.liquid-glow:hover {
+  box-shadow: 0 0 30px var(--color-glow-primary), 0 0 60px var(--color-glow-primary);
+}
+
+.glass-reflection {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-reflection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-glass-reflection);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.shimmer-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-shimmer);
+  transition: left var(--animation-duration-slow) var(--animation-easing-liquid);
+}
+
+.shimmer-effect:hover::after {
+  left: 100%;
+}
