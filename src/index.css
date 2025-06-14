@@ -768,11 +768,20 @@ video {
 
 /* Enhanced modal z-index to ensure it appears above everything */
 [data-radix-dialog-overlay] {
-  z-index: 9998 !important;
+  z-index: 9999 !important;
 }
 
 [data-radix-dialog-content] {
+  z-index: 10000 !important;
+}
+
+/* Ensure the announcement modal specifically has the highest z-index */
+.announcement-modal-overlay {
   z-index: 9999 !important;
+}
+
+.announcement-modal-content {
+  z-index: 10000 !important;
 }
 
 /* Markdown content styling for announcement modals */

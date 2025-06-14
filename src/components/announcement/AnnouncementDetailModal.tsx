@@ -53,7 +53,7 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent 
         className="max-w-5xl max-h-[95vh] p-0 border-0 bg-secondary/95 backdrop-blur-xl overflow-hidden"
-        style={{ zIndex: 9999 }}
+        style={{ zIndex: 10000 }}
       >
         <DialogTitle className="sr-only">{announcement.title}</DialogTitle>
         <DialogDescription className="sr-only">
