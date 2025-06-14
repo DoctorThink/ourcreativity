@@ -132,7 +132,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
     title: '',
     category: '',
     description: '',
-    content: '',
+    content: '', // This will store the main content for written works
   });
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -325,17 +325,31 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
   };
 
   const saveToDatabase = async (filePath?: string) => {
+    // CRITICAL FIX: Properly map the data based on content type
+    const karyaData: any = {
+      title: formData.title,
+      category: formData.category,
+      creator_name: 'Anonymous',
+      status: 'pending'
+    };
+
+    if (isWrittenWork) {
+      // For written works: save main content to content_url and description separately
+      karyaData.content_url = formData.content; // Main written content
+      karyaData.description = formData.description || null; // Short description
+      karyaData.image_url = '/lovable-uploads/karyatulis.png'; // Default image for text entries
+    } else {
+      // For media works: save file path and description
+      karyaData.image_url = filePath || '';
+      karyaData.description = formData.description || null;
+      karyaData.content_url = null;
+    }
+
+    console.log('Saving karya data:', karyaData); // Debug log to verify data structure
+
     const { data, error } = await supabase
       .from('karya')
-      .insert({
-        title: formData.title,
-        description: formData.description || null,
-        category: formData.category,
-        creator_name: 'Anonymous',
-        image_url: filePath || '',
-        content_url: isWrittenWork ? formData.content : (filePath || ''),
-        status: 'pending'
-      });
+      .insert(karyaData);
 
     if (error) throw error;
     return data;
@@ -406,7 +420,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto backdrop-blur-xl bg-black/90 border border-white/30 text-white rounded-3xl shadow-2xl p-4 md:p-6">
         <DialogHeader className="space-y-2">
-          <DialogTitle className="text-2xl md:text-3xl font-serif text-white text-center">
+          <DialogTitle className="text-xl md:text-2xl font-serif text-white text-center">
             Unggah Karya Baru
           </DialogTitle>
           <p className="text-gray-300 text-sm text-center">
@@ -424,10 +438,10 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
           </DialogClose>
         </DialogHeader>
 
-        <div className="space-y-6 mt-6">
+        <div className="space-y-4 mt-6">
           {/* Title Input */}
           <div className="space-y-2">
-            <Label htmlFor="title" className="text-white font-medium">
+            <Label htmlFor="title" className="text-white font-medium text-sm">
               Judul Karya
             </Label>
             <Input
@@ -451,7 +465,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
 
           {/* Category Select */}
           <div className="space-y-2">
-            <Label htmlFor="category" className="text-white font-medium">
+            <Label htmlFor="category" className="text-white font-medium text-sm">
               Kategori
             </Label>
             <Select
@@ -474,11 +488,11 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
                     className="text-white hover:bg-white/20 focus:bg-white/20 rounded-lg m-1"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
-                        <category.icon className="w-4 h-4 text-white" />
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] flex items-center justify-center">
+                        <category.icon className="w-3 h-3 text-black" />
                       </div>
                       <div>
-                        <div className="font-medium">{category.label}</div>
+                        <div className="font-medium text-sm">{category.label}</div>
                         <div className="text-xs text-gray-400">{category.description}</div>
                       </div>
                     </div>
@@ -503,8 +517,8 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
                 <div className="space-y-4">
                   {/* Template Selection */}
                   <div className="space-y-2">
-                    <Label className="text-white font-medium">Template</Label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <Label className="text-white font-medium text-sm">Template</Label>
+                    <div className="grid grid-cols-2 gap-2">
                       {writingTemplates.map((template) => (
                         <Button
                           key={template.id}
@@ -514,9 +528,9 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
                             setSelectedTemplate(template.id);
                             setFormData({ ...formData, content: template.content });
                           }}
-                          className={`rounded-xl p-3 text-sm ${
+                          className={`rounded-xl p-2 text-xs ${
                             selectedTemplate === template.id 
-                              ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white' 
+                              ? 'bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] text-black' 
                               : 'border-white/30 bg-white/10 hover:bg-white/20 text-white'
                           }`}
                         >
@@ -529,7 +543,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
                   {/* Markdown Editor with Toolbar */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="content" className="text-white font-medium">
+                      <Label htmlFor="content" className="text-white font-medium text-sm">
                         Konten Karya Tulis
                       </Label>
                       <Button
@@ -537,9 +551,9 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
                         variant="outline"
                         size="sm"
                         onClick={() => setShowPreview(!showPreview)}
-                        className="border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg"
+                        className="border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs"
                       >
-                        {showPreview ? <Edit3 className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        {showPreview ? <Edit3 className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
                         {showPreview ? 'Edit' : 'Preview'}
                       </Button>
                     </div>
@@ -551,45 +565,45 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
                         variant="ghost"
                         size="sm"
                         onClick={() => insertMarkdown('bold')}
-                        className="text-white hover:bg-white/20 rounded-lg p-2"
+                        className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
                       >
-                        <Bold className="w-4 h-4" />
+                        <Bold className="w-3 h-3" />
                       </Button>
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => insertMarkdown('italic')}
-                        className="text-white hover:bg-white/20 rounded-lg p-2"
+                        className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
                       >
-                        <Italic className="w-4 h-4" />
+                        <Italic className="w-3 h-3" />
                       </Button>
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => insertMarkdown('quote')}
-                        className="text-white hover:bg-white/20 rounded-lg p-2"
+                        className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
                       >
-                        <Quote className="w-4 h-4" />
+                        <Quote className="w-3 h-3" />
                       </Button>
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => insertMarkdown('link')}
-                        className="text-white hover:bg-white/20 rounded-lg p-2"
+                        className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
                       >
-                        <Link className="w-4 h-4" />
+                        <Link className="w-3 h-3" />
                       </Button>
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => insertMarkdown('list')}
-                        className="text-white hover:bg-white/20 rounded-lg p-2"
+                        className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
                       >
-                        <List className="w-4 h-4" />
+                        <List className="w-3 h-3" />
                       </Button>
                     </div>
 
@@ -601,15 +615,15 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
                           id="content"
                           value={formData.content}
                           onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                          className="min-h-[250px] bg-white/10 border-white/30 backdrop-blur-lg text-white placeholder-gray-400 rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50 resize-none"
+                          className="min-h-[200px] bg-white/10 border-white/30 backdrop-blur-lg text-white placeholder-gray-400 rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50 resize-none text-sm"
                           placeholder="Tulis karya kamu di sini... Gunakan Markdown untuk formatting!"
                         />
                       ) : null}
                       
                       {showPreview && (
-                        <div className="min-h-[250px] p-4 bg-white/5 border border-white/20 rounded-xl overflow-y-auto">
+                        <div className="min-h-[200px] p-3 bg-white/5 border border-white/20 rounded-xl overflow-y-auto">
                           <div 
-                            className="text-white prose prose-invert max-w-none"
+                            className="text-white prose prose-invert max-w-none text-sm"
                             dangerouslySetInnerHTML={{ __html: renderMarkdownPreview() }}
                           />
                         </div>
@@ -627,26 +641,26 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
               ) : (
                 // File Upload Section
                 <div className="space-y-4">
-                  <Label className="text-white font-medium">
+                  <Label className="text-white font-medium text-sm">
                     Upload File
                   </Label>
                   
                   {file ? (
                     <div className="space-y-4">
                       {/* File Preview */}
-                      <div className="flex items-center gap-4 p-4 bg-white/10 border border-white/30 rounded-xl">
+                      <div className="flex items-center gap-4 p-3 bg-white/10 border border-white/30 rounded-xl">
                         {previewUrl && (
                           <div className="flex-shrink-0">
                             {file.type.startsWith('image/') ? (
                               <img 
                                 src={previewUrl} 
                                 alt="Preview" 
-                                className="w-16 h-16 object-cover rounded-lg border-2 border-white/30"
+                                className="w-12 h-12 object-cover rounded-lg border-2 border-white/30"
                               />
                             ) : (
                               <video 
                                 src={previewUrl} 
-                                className="w-16 h-16 object-cover rounded-lg border-2 border-white/30"
+                                className="w-12 h-12 object-cover rounded-lg border-2 border-white/30"
                                 muted
                               />
                             )}
@@ -654,10 +668,10 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
                         )}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            {selectedCategory && <selectedCategory.icon className="w-5 h-5 text-cyan-400 flex-shrink-0" />}
+                            {selectedCategory && <selectedCategory.icon className="w-4 h-4 text-cyan-400 flex-shrink-0" />}
                             <div className="min-w-0">
-                              <p className="text-white font-medium truncate">{file.name}</p>
-                              <p className="text-gray-400 text-sm">
+                              <p className="text-white font-medium truncate text-sm">{file.name}</p>
+                              <p className="text-gray-400 text-xs">
                                 {(file.size / 1024 / 1024).toFixed(2)} MB
                               </p>
                             </div>
@@ -665,13 +679,13 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
                           
                           {uploading && uploadProgress > 0 && (
                             <div className="mt-2">
-                              <div className="flex justify-between text-sm text-gray-400 mb-1">
+                              <div className="flex justify-between text-xs text-gray-400 mb-1">
                                 <span>Mengupload...</span>
                                 <span>{Math.round(uploadProgress)}%</span>
                               </div>
-                              <div className="w-full bg-white/20 rounded-full h-2">
+                              <div className="w-full bg-white/20 rounded-full h-1">
                                 <div 
-                                  className="bg-gradient-to-r from-cyan-400 to-blue-500 h-2 rounded-full transition-all duration-300"
+                                  className="bg-gradient-to-r from-cyan-400 to-blue-500 h-1 rounded-full transition-all duration-300"
                                   style={{ width: `${uploadProgress}%` }}
                                 />
                               </div>
@@ -687,7 +701,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
                             setPreviewUrl(null);
                             setUploadProgress(0);
                           }}
-                          className="border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg flex-shrink-0"
+                          className="border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg flex-shrink-0 text-xs"
                           disabled={uploading}
                         >
                           Ganti
@@ -716,21 +730,21 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
                             : 'border-white/30 hover:border-cyan-400/50 hover:bg-white/10'
                         }`}
                       >
-                        <div className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-xl bg-white/5">
-                          <div className="p-3 rounded-full bg-white/10 mb-3">
-                            <Upload className="w-8 h-8 text-cyan-400" />
+                        <div className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl bg-white/5">
+                          <div className="p-2 rounded-full bg-white/10 mb-2">
+                            <Upload className="w-6 h-6 text-cyan-400" />
                           </div>
-                          <p className="text-white font-medium mb-2">Drag & Drop file di sini</p>
-                          <p className="text-gray-400 text-sm mb-3">atau klik untuk pilih file</p>
+                          <p className="text-white font-medium mb-1 text-sm">Drag & Drop file di sini</p>
+                          <p className="text-gray-400 text-xs mb-2">atau klik untuk pilih file</p>
                           <div className="flex items-center gap-2 text-xs text-gray-500">
                             {selectedCategory?.value === 'video' ? (
                               <>
-                                <Play className="w-4 h-4" />
+                                <Play className="w-3 h-3" />
                                 <span>MP4, MOV, WEBM • Max 5MB</span>
                               </>
                             ) : (
                               <>
-                                <Camera className="w-4 h-4" />
+                                <Camera className="w-3 h-3" />
                                 <span>JPG, PNG, GIF, WEBP • Max 5MB</span>
                               </>
                             )}
@@ -750,15 +764,15 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
 
           {/* Description Input */}
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-white font-medium">
-              Deskripsi Singkat
+            <Label htmlFor="description" className="text-white font-medium text-sm">
+              Deskripsi Singkat {isWrittenWork ? '(Opsional)' : ''}
             </Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="h-20 bg-white/10 border-white/30 backdrop-blur-lg text-white placeholder-gray-400 rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50 resize-none"
-              placeholder="Ceritakan sedikit tentang karya kamu (opsional)"
+              className="h-16 bg-white/10 border-white/30 backdrop-blur-lg text-white placeholder-gray-400 rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50 resize-none text-sm"
+              placeholder={isWrittenWork ? "Ringkasan singkat karya tulis kamu" : "Ceritakan sedikit tentang karya kamu"}
             />
           </div>
 
@@ -769,7 +783,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
               variant="outline"
               onClick={handleClose}
               disabled={uploading}
-              className="flex-1 border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-xl h-12"
+              className="flex-1 border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-xl h-10 text-sm"
             >
               Batal
             </Button>
@@ -777,11 +791,11 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
               type="button"
               onClick={handleSubmit}
               disabled={uploading}
-              className="flex-1 bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] hover:from-[#9B6DFF] hover:via-[#40E0D0] hover:to-[#FF7F50] text-black hover:text-white rounded-xl h-12 font-semibold shadow-lg"
+              className="flex-1 bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] hover:from-[#9B6DFF] hover:via-[#40E0D0] hover:to-[#FF7F50] text-black hover:text-white rounded-xl h-10 font-semibold shadow-lg text-sm"
             >
               {uploading ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
                   Mengunggah...
                 </>
               ) : (
