@@ -1,12 +1,9 @@
-
 import React, { useState, useEffect, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import LiquidBackground from "@/components/ui/LiquidBackground";
-import FloatingParticles from "@/components/ui/FloatingParticles";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -95,34 +92,30 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   
   return (
     <div className={cn("relative min-h-screen flex flex-col", className)}>
-      {/* Permanent Liquid Background */}
-      <LiquidBackground />
-      <FloatingParticles />
-      
       {/* Enhanced Glass Morphism Header */}
       <motion.header 
         className={cn(
           "fixed top-3 left-3 right-3 z-50 transition-all duration-500",
-          "glass-morphism-deep rounded-3xl",
-          "shadow-[0_16px_48px_rgba(0,0,0,0.4)]",
+          "backdrop-blur-xl border border-white/15",
+          "rounded-[24px] shadow-[0_12px_40px_rgba(0,0,0,0.4)]",
+          "bg-gradient-to-r from-white/12 via-white/8 to-white/12",
           headerClassName
         )}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
         style={{
-          backdropFilter: scrollY > 20 ? 'blur(24px)' : 'blur(16px)',
           background: scrollY > 20 
-            ? 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.10) 50%, rgba(255,255,255,0.15) 100%)' 
-            : 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.12) 100%)'
+            ? "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.12) 100%)" 
+            : "linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.10) 100%)"
         }}
       >
-        {/* Enhanced glass reflection */}
-        <div className="absolute inset-0 rounded-3xl glass-reflection" />
-        <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent" />
+        {/* Glass reflection effect */}
+        <div className="absolute inset-0 rounded-[24px] bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-60" />
+        <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
         
         <div className={cn("container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center relative z-10", fullWidth ? "max-w-full" : "max-w-7xl")}>
-          {/* Enhanced Logo with Glow */}
+          {/* Enhanced Logo */}
           <Link to="/" className="flex items-center group">
             <motion.div className="relative">
               <motion.img 
@@ -131,27 +124,13 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                 className="h-8 sm:h-9 w-auto transition-transform duration-300 group-hover:scale-110 relative z-10" 
                 whileHover={{ rotate: 5 }}
               />
-              {/* Enhanced logo glow */}
-              <motion.div
-                className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
-                style={{
-                  background: 'radial-gradient(circle, var(--color-glow-primary) 0%, var(--color-glow-secondary) 50%, transparent 70%)',
-                  filter: 'blur(12px)',
-                }}
-                animate={{
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
+              {/* Logo glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-amethyst/30 to-coral/30 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
             </motion.div>
           </Link>
           
-          {/* Enhanced Desktop Navigation with Morphing Glass Pills */}
-          <nav className="hidden lg:flex items-center glass-morphism-shallow rounded-full px-3 py-2 shadow-inner">
+          {/* Enhanced Desktop Navigation with Glass Pills */}
+          <nav className="hidden lg:flex items-center bg-white/8 backdrop-blur-sm rounded-full px-3 py-2 border border-white/15 shadow-inner">
             {navItems.map((item) => (
               <motion.button
                 key={item.path}
@@ -159,70 +138,42 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                 className={cn(
                   "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 relative overflow-hidden",
                   isActive(item.path) && !item.external
-                    ? "glass-morphism-accent text-white shadow-lg border border-white/30"
+                    ? "bg-white/20 text-white shadow-lg backdrop-blur-sm border border-white/25"
                     : item.name === 'Ayo Gabung'
-                    ? "bg-gradient-to-r from-emerald-500/90 to-emerald-600/90 text-white font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 border border-emerald-400/50 liquid-glow"
-                    : "text-white/70 hover:text-white hover:bg-white/10"
+                    ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 border border-emerald-400/50"
+                    : "text-white/70 hover:text-white hover:bg-white/15"
                 )}
-                whileHover={{ 
-                  scale: 1.05,
-                  y: -2
-                }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {/* Morphing active background */}
+                {/* Button glass effect */}
+                {item.name === 'Ayo Gabung' && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-emerald-600/20 rounded-full" />
+                )}
+                <span className="relative z-10">{item.name}</span>
                 {isActive(item.path) && !item.external && (
                   <motion.div
-                    className="absolute inset-0 rounded-full"
-                    style={{
-                      background: 'linear-gradient(45deg, var(--color-glow-primary), transparent, var(--color-glow-secondary))',
-                      backgroundSize: '200% 200%',
-                    }}
-                    animate={{
-                      backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
+                    className="absolute inset-0 bg-gradient-to-r from-amethyst/30 to-coral/30 rounded-full -z-10"
                     layoutId="activeTab"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
                   />
                 )}
-                
-                {/* Enhanced Join Button Glow */}
-                {item.name === 'Ayo Gabung' && (
-                  <motion.div
-                    className="absolute inset-0 rounded-full opacity-0"
-                    style={{
-                      background: 'radial-gradient(circle, var(--color-emerald-glow) 0%, transparent 70%)',
-                    }}
-                    whileHover={{ opacity: 0.6 }}
-                    animate={{
-                      scale: [1, 1.1, 1],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                  />
-                )}
-                
-                <span className="relative z-10">{item.name}</span>
               </motion.button>
             ))}
           </nav>
           
           {/* Enhanced Mobile Menu Button */}
           <motion.button
-            className="lg:hidden p-3 rounded-2xl glass-morphism-shallow hover:glass-morphism transition-all duration-300 shadow-lg"
+            className="lg:hidden p-3 rounded-2xl bg-white/12 backdrop-blur-sm border border-white/25 hover:bg-white/20 transition-all duration-300 shadow-lg"
             onClick={toggleMenu}
             aria-label="Toggle menu"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className="absolute inset-0 rounded-2xl glass-reflection" />
+            {/* Button glass reflection */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent opacity-60" />
             <AnimatePresence mode="wait">
               {isMenuOpen ? (
                 <motion.div
@@ -252,7 +203,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         </div>
       </motion.header>
       
-      {/* Enhanced Mobile Menu */}
+      {/* Enhanced Mobile Menu with Glass Morphism */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
@@ -266,13 +217,14 @@ const PageLayout: React.FC<PageLayoutProps> = ({
             />
             
             <motion.div
-              className="fixed inset-x-4 top-24 z-40 glass-morphism-deep rounded-3xl shadow-2xl shadow-black/40 lg:hidden overflow-hidden"
+              className="fixed inset-x-4 top-24 z-40 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl shadow-black/40 lg:hidden overflow-hidden"
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <div className="absolute inset-0 glass-reflection rounded-3xl" />
+              {/* Glass reflection for mobile menu */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/15 via-transparent to-transparent opacity-80 rounded-3xl" />
               <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
               
               <nav className="p-6 relative z-10">
@@ -306,47 +258,27 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                           setIsMenuOpen(false);
                         }}
                         className={cn(
-                          "flex items-center px-4 py-4 rounded-2xl font-medium transition-all duration-300 text-base group w-full text-left relative overflow-hidden",
+                          "flex items-center px-4 py-4 rounded-2xl font-medium transition-all duration-300 text-base group w-full text-left",
                           isActive(item.path) && !item.external
-                            ? "glass-morphism-accent text-white font-semibold border border-white/30"
+                            ? "bg-amethyst/20 text-white font-semibold border border-amethyst/30"
                             : item.name === 'Ayo Gabung'
                             ? "bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30"
                             : "text-foreground/80 hover:text-foreground hover:bg-white/10"
                         )}
                       >
-                        {/* Active indicator glow */}
-                        {isActive(item.path) && !item.external && (
-                          <motion.div
-                            className="absolute inset-0 rounded-2xl opacity-0"
-                            style={{
-                              background: 'radial-gradient(circle, var(--color-glow-primary) 0%, transparent 70%)',
-                            }}
-                            animate={{ opacity: [0, 0.3, 0] }}
-                            transition={{
-                              duration: 2,
-                              repeat: Infinity,
-                              ease: "easeInOut"
-                            }}
-                          />
-                        )}
-                        
                         <motion.span
-                          className="flex-1 relative z-10"
+                          className="flex-1"
                           whileHover={{ x: 4 }}
                           transition={{ duration: 0.2 }}
                         >
                           {item.name}
                         </motion.span>
-                        
                         {isActive(item.path) && !item.external && (
                           <motion.div
-                            className="w-2 h-2 rounded-full bg-white shadow-lg relative z-10"
+                            className="w-2 h-2 rounded-full bg-amethyst"
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ duration: 0.2 }}
-                            style={{
-                              boxShadow: '0 0 8px var(--color-glow-primary)'
-                            }}
                           />
                         )}
                       </button>
@@ -359,26 +291,24 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         )}
       </AnimatePresence>
       
-      {/* Main Content */}
-      <main className={cn("flex-grow pt-24 md:pt-28 relative z-10", contentClassName)}>
+      {/* Main Content with proper spacing for fixed header */}
+      <main className={cn("flex-grow pt-24 md:pt-28", contentClassName)}>
         {/* Page Title Section */}
         {title && (
           <div className="container mx-auto px-4 sm:px-6 mb-8 md:mb-10">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="text-center md:text-left w-full">
                 {showBackButton && (
-                  <motion.button
+                  <button
                     onClick={handleBackClick}
-                    className="mb-4 inline-flex items-center text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 font-medium glass-morphism-shallow px-3 py-2 rounded-xl"
-                    whileHover={{ scale: 1.05, x: -2 }}
-                    whileTap={{ scale: 0.95 }}
+                    className="mb-4 inline-flex items-center text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 font-medium"
                   >
                     <ArrowLeft className="mr-1 h-4 w-4" />
                     <span>Kembali</span>
-                  </motion.button>
+                  </button>
                 )}
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-serif mb-2 md:mb-3 text-center md:text-left text-glow">{title}</h1>
-                {subtitle && <p className="text-foreground/80 text-lg md:text-xl font-sans text-center md:text-left text-readable">{subtitle}</p>}
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-serif mb-2 md:mb-3 text-center md:text-left">{title}</h1>
+                {subtitle && <p className="text-foreground/80 text-lg md:text-xl font-sans text-center md:text-left">{subtitle}</p>}
               </div>
             </div>
           </div>
@@ -386,7 +316,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         
         {/* Page Content */}
         <div className={cn(
-          "container mx-auto px-4 sm:px-6 relative z-10",
+          "container mx-auto px-4 sm:px-6",
           fullWidth ? "max-w-full" : "max-w-7xl"
         )}>
           {children}
@@ -394,7 +324,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       </main>
       
       {/* Footer */}
-      <footer className={cn("mt-auto pt-12 pb-6 relative z-10", footerClassName)}>
+      <footer className={cn("mt-auto pt-12 pb-6", footerClassName)}>
         <div className={cn(
           "container mx-auto px-4 sm:px-6",
           fullWidth ? "max-w-full" : "max-w-7xl"
@@ -405,7 +335,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                 <img 
                   src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
                   alt="Logo" 
-                  className="h-7 w-auto opacity-80" 
+                  className="h-7 w-auto" 
                 />
                 <span className="text-foreground/70 text-sm font-medium">© 2025 OUR CREATIVITY. Hak Cipta Dilindungi.</span>
               </div>

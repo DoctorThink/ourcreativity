@@ -2,7 +2,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Palette, Video, FileText, Smile, Grid3X3 } from "lucide-react";
-import LiquidButton from "@/components/ui/LiquidButton";
+import { CategoryButton } from "../ui/CategoryButton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Select,
@@ -18,11 +18,11 @@ type CategoryProps = {
 };
 
 const categories = [
-  { id: "all", name: "Semua", icon: Grid3X3, glowColor: "rgba(80, 200, 120, 0.4)" },
-  { id: "design", name: "Design", icon: Palette, glowColor: "rgba(30, 144, 255, 0.4)" },
-  { id: "video", name: "Video", icon: Video, glowColor: "rgba(255, 127, 80, 0.4)" },
-  { id: "writing", name: "Karya Tulis", icon: FileText, glowColor: "rgba(155, 109, 255, 0.4)" },
-  { id: "meme", name: "Meme", icon: Smile, glowColor: "rgba(255, 209, 220, 0.4)" }
+  { id: "all", name: "Semua", icon: Grid3X3, color: "mint" as const },
+  { id: "design", name: "Design", icon: Palette, color: "turquoise" as const },
+  { id: "video", name: "Video", icon: Video, color: "coral" as const },
+  { id: "writing", name: "Karya Tulis", icon: FileText, color: "amethyst" as const },
+  { id: "meme", name: "Meme", icon: Smile, color: "softPink" as const }
 ];
 
 export const CategorySelector: React.FC<CategoryProps> = ({
@@ -35,7 +35,7 @@ export const CategorySelector: React.FC<CategoryProps> = ({
     return (
       <div className="px-4">
         <Select value={selectedCategory} onValueChange={onSelectCategory}>
-          <SelectTrigger className="w-full glass-morphism-shallow border border-white/10 rounded-2xl text-foreground hover:glass-morphism transition-all shadow-md">
+          <SelectTrigger className="w-full bg-secondary/80 border border-white/10 backdrop-blur-md rounded-2xl text-foreground hover:bg-secondary/90 transition-colors shadow-md">
             <SelectValue>
               <div className="flex items-center gap-3">
                 {(() => {
@@ -43,8 +43,8 @@ export const CategorySelector: React.FC<CategoryProps> = ({
                   const Icon = category?.icon || Grid3X3;
                   return (
                     <>
-                      <div className="glass-morphism p-1.5 rounded-full">
-                        <Icon className="w-4 h-4 text-white" />
+                      <div className="bg-white/90 p-1.5 rounded-full">
+                        <Icon className="w-4 h-4 text-gray-700" />
                       </div>
                       <span>{category?.name || 'Pilih Kategori'}</span>
                     </>
@@ -53,7 +53,7 @@ export const CategorySelector: React.FC<CategoryProps> = ({
               </div>
             </SelectValue>
           </SelectTrigger>
-          <SelectContent className="glass-morphism-deep border-white/10 rounded-2xl shadow-lg overflow-hidden">
+          <SelectContent className="bg-secondary/90 border-white/10 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden">
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -70,8 +70,8 @@ export const CategorySelector: React.FC<CategoryProps> = ({
                     className="text-foreground hover:bg-foreground/10 focus:bg-foreground/10 rounded-xl my-1"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="glass-morphism p-1.5 rounded-full">
-                        <Icon className="w-4 h-4 text-white" />
+                      <div className="bg-white/90 p-1.5 rounded-full">
+                        <Icon className="w-4 h-4 text-gray-700" />
                       </div>
                       <span>{category.name}</span>
                     </div>
@@ -88,58 +88,16 @@ export const CategorySelector: React.FC<CategoryProps> = ({
   return (
     <div className="flex justify-center">
       <div className="grid grid-cols-5 gap-4 max-w-5xl w-full">
-        {categories.map((category) => {
-          const Icon = category.icon;
-          const isActive = selectedCategory === category.id;
-          
-          return (
-            <motion.div
-              key={category.id}
-              whileHover={{ scale: 1.05, y: -4 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <LiquidButton
-                variant={isActive ? "primary" : "secondary"}
-                onClick={() => onSelectCategory(category.id)}
-                className={`
-                  w-full flex flex-col items-center gap-3 p-6 rounded-2xl transition-all duration-300
-                  ${isActive ? 'liquid-glow' : 'glass-morphism-shallow hover:glass-morphism'}
-                `}
-                glowColor={isActive ? category.glowColor : undefined}
-              >
-                <motion.div
-                  className={`p-4 rounded-2xl transition-all duration-300 ${
-                    isActive 
-                      ? 'glass-morphism-accent shadow-lg' 
-                      : 'glass-morphism-shallow'
-                  }`}
-                  whileHover={{ rotate: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-white/80'}`} />
-                </motion.div>
-                
-                <span className={`text-sm font-medium transition-colors duration-200 ${
-                  isActive ? 'text-white' : 'text-white/80'
-                }`}>
-                  {category.name}
-                </span>
-                
-                {/* Active indicator */}
-                {isActive && (
-                  <motion.div
-                    className="w-2 h-2 rounded-full bg-white shadow-lg"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    style={{
-                      boxShadow: `0 0 8px ${category.glowColor}`
-                    }}
-                  />
-                )}
-              </LiquidButton>
-            </motion.div>
-          );
-        })}
+        {categories.map((category) => (
+          <CategoryButton
+            key={category.id}
+            icon={category.icon}
+            text={category.name}
+            color={category.color}
+            isActive={selectedCategory === category.id}
+            onClick={() => onSelectCategory(category.id)}
+          />
+        ))}
       </div>
     </div>
   );

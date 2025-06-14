@@ -1,30 +1,25 @@
 
 import React, { ReactNode, useState } from 'react';
-import { motion, MotionProps } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface GlassCardProps {
   children: ReactNode;
   className?: string;
   onClick?: () => void;
-  onMouseMove?: (e: React.MouseEvent<HTMLDivElement>) => void;
   interactive?: boolean;
   glowColor?: string;
   size?: 'sm' | 'md' | 'lg';
-  style?: React.CSSProperties;
 }
 
 const GlassCard = ({
   children,
   className,
   onClick,
-  onMouseMove,
   interactive = false,
   glowColor = 'rgba(155, 109, 255, 0.3)',
-  size = 'md',
-  style,
-  ...motionProps
-}: GlassCardProps & MotionProps) => {
+  size = 'md'
+}: GlassCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   
   const sizeClasses = {
@@ -45,15 +40,19 @@ const GlassCard = ({
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onMouseMove={onMouseMove}
       onClick={onClick}
+      whileHover={interactive ? {
+        scale: 1.02,
+        y: -8,
+        rotateX: 5,
+        rotateY: 5,
+      } : {}}
+      whileTap={interactive ? { scale: 0.98 } : {}}
       style={{
         boxShadow: isHovered && interactive 
           ? `0 20px 40px rgba(0,0,0,0.4), 0 0 30px ${glowColor}` 
-          : undefined,
-        ...style
+          : undefined
       }}
-      {...motionProps}
     >
       {/* Glass reflection effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

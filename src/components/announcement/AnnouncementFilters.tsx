@@ -2,7 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Calendar, Users, Megaphone } from "lucide-react";
-import LiquidButton from "@/components/ui/LiquidButton";
+import { Button } from "@/components/ui/button";
 
 interface AnnouncementFiltersProps {
   currentFilter: string;
@@ -21,41 +21,28 @@ export const AnnouncementFilters: React.FC<AnnouncementFiltersProps> = ({
   onFilterChange,
 }) => {
   return (
-    <div className="flex flex-wrap gap-3 p-2 glass-morphism-shallow rounded-2xl border border-white/10">
+    <div className="flex flex-wrap gap-3 p-1 bg-secondary/40 backdrop-blur-sm rounded-2xl border border-white/10">
       {filters.map((filter) => {
         const Icon = filter.icon;
         const isActive = currentFilter === filter.id;
         
         return (
-          <motion.div 
-            key={filter.id} 
-            whileHover={{ scale: 1.02 }} 
-            whileTap={{ scale: 0.98 }}
-          >
-            <LiquidButton
-              variant={isActive ? "primary" : "secondary"}
+          <motion.div key={filter.id} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              variant={isActive ? "default" : "ghost"}
               size="sm"
               onClick={() => onFilterChange(filter.id)}
               className={`
                 flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200
                 ${isActive 
-                  ? 'liquid-glow' 
-                  : 'hover:bg-white/10'
+                  ? 'bg-foreground text-background shadow-lg' 
+                  : 'text-foreground/70 hover:text-foreground hover:bg-foreground/10'
                 }
               `}
-              glowColor={isActive ? 'var(--color-glow-primary)' : undefined}
             >
-              {Icon && (
-                <motion.div
-                  className="flex items-center justify-center"
-                  whileHover={{ rotate: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Icon className="w-4 h-4" />
-                </motion.div>
-              )}
-              <span className="text-sm font-medium">{filter.label}</span>
-            </LiquidButton>
+              {Icon && <Icon className="w-4 h-4" />}
+              <span className="text-sm">{filter.label}</span>
+            </Button>
           </motion.div>
         );
       })}
