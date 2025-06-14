@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { 
@@ -55,8 +54,6 @@ export const FeaturedAnnouncement: React.FC<FeaturedAnnouncementProps> = ({
       <BentoCard
         colSpan="col-span-1 md:col-span-full"
         className={`p-4 sm:p-8 relative overflow-hidden ${isGerakan27April ? 'bg-black/80 border-red-800/30' : ''}`}
-        iconColor={isGerakan27April ? "bg-red-600 text-white" : "bg-amethyst text-background"}
-        icon={isGerakan27April ? AlertTriangle : Bell}
         glowColor={isGerakan27April ? "rgba(234, 56, 76, 0.3)" : "rgba(229, 222, 255, 0.4)"}
         interactive={true}
         onClick={onClick}

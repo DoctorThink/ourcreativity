@@ -235,8 +235,6 @@ const TermsSection = ({
       <BentoCard
         className="overflow-hidden h-full"
         glowColor={glowColor}
-        icon={icon}
-        iconColor={iconColor}
         interactive={true}
         onClick={onToggle}
       >
