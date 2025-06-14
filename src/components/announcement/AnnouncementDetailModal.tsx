@@ -20,26 +20,6 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
   isOpen,
   onClose,
 }) => {
-  const [scrollY, setScrollY] = useState(0);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = (e: Event) => {
-      const target = e.target as HTMLElement;
-      const scrollTop = target.scrollTop;
-      setScrollY(scrollTop);
-      setIsScrolled(scrollTop > 50);
-    };
-
-    if (isOpen) {
-      const modalContent = document.querySelector('[data-radix-dialog-content]');
-      if (modalContent) {
-        modalContent.addEventListener('scroll', handleScroll);
-        return () => modalContent.removeEventListener('scroll', handleScroll);
-      }
-    }
-  }, [isOpen]);
-
   if (!announcement) return null;
 
   const getDisplayDate = () => {
@@ -90,33 +70,12 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
               transition={{ duration: 0.3, ease: "easeOut" }}
               className="overflow-y-auto max-h-[95vh] scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent"
             >
-              {/* Dynamic Shrinking Header */}
-              <motion.div 
-                className="sticky top-0 z-20 bg-secondary/95 backdrop-blur-xl border-b border-white/10 transition-all duration-300"
-                animate={{
-                  paddingTop: isScrolled ? "0.75rem" : "1.5rem",
-                  paddingBottom: isScrolled ? "0.5rem" : "1rem",
-                  paddingLeft: "1.5rem",
-                  paddingRight: "1.5rem"
-                }}
-              >
+              {/* Static Header - No longer sticky */}
+              <div className="bg-secondary/95 backdrop-blur-xl border-b border-white/10 p-6">
                 <div className="flex items-start justify-between gap-4">
-                  <motion.div 
-                    className="flex-1"
-                    animate={{
-                      marginBottom: isScrolled ? "0" : "1rem"
-                    }}
-                  >
-                    {/* Badges Row - Hide when scrolled */}
-                    <motion.div 
-                      className="flex items-center gap-3 overflow-hidden"
-                      animate={{
-                        height: isScrolled ? 0 : "auto",
-                        marginBottom: isScrolled ? 0 : "1rem",
-                        opacity: isScrolled ? 0 : 1
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
+                  <div className="flex-1">
+                    {/* Badges Row */}
+                    <div className="flex items-center gap-3 mb-4">
                       <Badge className={getCategoryColor()}>
                         {getCategoryLabel()}
                       </Badge>
@@ -125,36 +84,21 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                           ⚠️ Penting
                         </Badge>
                       )}
-                    </motion.div>
+                    </div>
                     
-                    {/* Title - Shrinks when scrolled */}
-                    <motion.h1 
-                      className="font-serif font-bold text-foreground leading-tight"
-                      animate={{
-                        fontSize: isScrolled ? "1.25rem" : "2rem",
-                        lineHeight: isScrolled ? "1.4" : "1.2"
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
+                    {/* Title */}
+                    <h1 className="text-2xl font-serif font-bold text-foreground leading-tight mb-3">
                       {announcement.title}
-                    </motion.h1>
+                    </h1>
                     
-                    {/* Date - Hide when scrolled */}
-                    <motion.div 
-                      className="flex items-center gap-2 text-sm text-foreground/60 overflow-hidden"
-                      animate={{
-                        height: isScrolled ? 0 : "auto",
-                        marginTop: isScrolled ? 0 : "0.75rem",
-                        opacity: isScrolled ? 0 : 1
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
+                    {/* Date */}
+                    <div className="flex items-center gap-2 text-sm text-foreground/60">
                       <Calendar className="w-4 h-4" />
                       <span>{getDisplayDate()}</span>
-                    </motion.div>
-                  </motion.div>
+                    </div>
+                  </div>
                   
-                  {/* Close Button - Always visible */}
+                  {/* Close Button */}
                   <Button
                     variant="ghost"
                     size="sm"
@@ -164,39 +108,14 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                     <X className="w-5 h-5" />
                   </Button>
                 </div>
-
-                {/* Compact badges when scrolled */}
-                <motion.div
-                  className="flex items-center gap-2 overflow-hidden"
-                  animate={{
-                    height: isScrolled ? "auto" : 0,
-                    opacity: isScrolled ? 1 : 0,
-                    marginTop: isScrolled ? "0.5rem" : 0
-                  }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Badge className={`${getCategoryColor()} text-xs`}>
-                    {getCategoryLabel()}
-                  </Badge>
-                  <span className="text-xs text-foreground/50">•</span>
-                  <span className="text-xs text-foreground/60">{getDisplayDate()}</span>
-                  {announcement.important && (
-                    <>
-                      <span className="text-xs text-foreground/50">•</span>
-                      <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-xs">
-                        Penting
-                      </Badge>
-                    </>
-                  )}
-                </motion.div>
-              </motion.div>
+              </div>
 
               {/* Content Section */}
               <div className="px-6 pb-6">
                 {/* Image */}
                 {announcement.image_url && (
                   <motion.div 
-                    className="relative overflow-hidden rounded-2xl border border-white/10 group mb-8"
+                    className="relative overflow-hidden rounded-2xl border border-white/10 group mb-8 mt-6"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
