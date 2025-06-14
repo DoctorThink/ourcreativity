@@ -96,19 +96,12 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       <motion.header 
         className={cn(
           "fixed top-3 left-3 right-3 z-50 transition-all duration-500",
-          "backdrop-blur-xl border border-white/15",
-          "rounded-[24px] shadow-[0_12px_40px_rgba(0,0,0,0.4)]",
-          "bg-gradient-to-r from-white/12 via-white/8 to-white/12",
+          "glass-morphism rounded-[24px]", // Replaced complex styles with single utility class
           headerClassName
         )}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
-        style={{
-          background: scrollY > 20 
-            ? "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.12) 100%)" 
-            : "linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.10) 100%)"
-        }}
       >
         {/* Glass reflection effect */}
         <div className="absolute inset-0 rounded-[24px] bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-60" />
@@ -217,7 +210,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
             />
             
             <motion.div
-              className="fixed inset-x-4 top-24 z-40 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl shadow-black/40 lg:hidden overflow-hidden"
+              className="fixed inset-x-4 top-24 z-40 glass-morphism-deep rounded-3xl shadow-2xl shadow-black/40 lg:hidden overflow-hidden"
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}

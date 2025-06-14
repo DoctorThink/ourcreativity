@@ -2,37 +2,57 @@
 /* Liquid Glass Design System - Design Tokens */
 
 :root {
-  /* Glass Effects */
+  /* Brand Colors (Creative Constellations) */
+  --color-background-dark: #1C1C1E;
+  --color-card-dark: #2C2C2E;
+  --color-text-primary: #F5F5F7;
+  --color-text-secondary: #A0A0A5;
+  --color-border-subtle: #3A3A3C;
+  --color-border-strong: #4A4A4C;
+
+  /* Accent Colors */
+  --color-accent-amethyst: #9B6DFF;
+  --color-accent-amethyst-soft: #E5DEFF;
+  --color-accent-coral: #FF7F50;
+  --color-accent-coral-soft: #FEC6A1;
+  --color-accent-emerald: #50C878;
+  --color-accent-emerald-soft: #98F5E1;
+  --color-accent-azure: #1E90FF;
+  --color-accent-azure-soft: #87CEFA;
+  --color-accent-amber: #FFBF00;
+
+  /* Glass Effects - Updated */
   --glass-blur-intensity-deep: 20px;
   --glass-blur-intensity-medium: 12px;
   --glass-blur-intensity-shallow: 8px;
-  --glass-border-color: rgba(255, 255, 255, 0.15);
-  --glass-border-color-hover: rgba(255, 255, 255, 0.25);
-  --glass-inner-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  --glass-border-color: var(--color-border-subtle);
+  --glass-border-color-hover: var(--color-border-strong);
+  --glass-inner-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   --glass-outer-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   
-  /* Glass Background Layers */
-  --glass-bg-primary: rgba(255, 255, 255, 0.08);
-  --glass-bg-secondary: rgba(255, 255, 255, 0.12);
-  --glass-bg-tertiary: rgba(255, 255, 255, 0.05);
+  /* Glass Background Layers - Updated for dark theme */
+  --glass-bg-primary: rgba(44, 44, 46, 0.5); /* --color-card-dark with alpha */
+  --glass-bg-secondary: rgba(44, 44, 46, 0.7); /* --color-card-dark with alpha */
+  --glass-bg-tertiary: rgba(44, 44, 46, 0.3); /* --color-card-dark with alpha */
   
-  /* Color System */
-  --color-glow-primary: rgba(155, 109, 255, 0.6);
-  --color-glow-secondary: rgba(64, 224, 208, 0.5);
-  --color-glow-accent: rgba(255, 127, 80, 0.4);
-  --color-glow-success: rgba(80, 200, 120, 0.5);
-  --color-glow-warning: rgba(255, 191, 0, 0.5);
+  /* Color System - Mapped to new accents */
+  --color-glow-primary: rgba(155, 109, 255, 0.6); /* Amethyst */
+  --color-glow-secondary: rgba(80, 200, 120, 0.5);  /* Emerald */
+  --color-glow-accent: rgba(255, 127, 80, 0.4);   /* Coral */
+  --color-glow-success: var(--color-glow-secondary);
+  --color-glow-warning: rgba(255, 191, 0, 0.5); /* Amber */
   
   /* Gradient Definitions */
   --gradient-liquid-bg: linear-gradient(
     135deg,
     rgba(155, 109, 255, 0.1) 0%,
-    rgba(64, 224, 208, 0.08) 25%,
+    rgba(80, 200, 120, 0.08) 25%,
     rgba(255, 127, 80, 0.06) 50%,
-    rgba(152, 245, 225, 0.08) 75%,
+    rgba(80, 200, 120, 0.08) 75%,
     rgba(155, 109, 255, 0.1) 100%
   );
   
+  /* ... keep existing code (gradient-glass-reflection, gradient-shimmer) */
   --gradient-glass-reflection: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.2) 0%,
@@ -116,7 +136,7 @@
   border: 1px solid var(--glass-border-color);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), var(--glass-inner-shadow);
 }
-
+/* ... keep existing code (liquid-glow, glass-reflection, shimmer-effect) */
 .liquid-glow {
   box-shadow: 0 0 20px var(--color-glow-primary);
   transition: box-shadow var(--animation-duration-medium) var(--animation-easing-liquid);

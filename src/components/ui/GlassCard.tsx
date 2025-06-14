@@ -1,4 +1,3 @@
-
 import React, { ReactNode, useState } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -31,32 +30,29 @@ const GlassCard = ({
   return (
     <motion.div
       className={cn(
-        'relative overflow-hidden border border-white/20 backdrop-blur-xl',
-        'bg-gradient-to-br from-white/10 via-white/5 to-transparent',
+        'relative overflow-hidden',
         'shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-500',
+        'glass-morphism-deep', // Use new class for deeper glass effect
         interactive && 'cursor-pointer',
         sizeClasses[size],
         className
       )}
+      style={{
+        borderColor: isHovered && interactive ? 'var(--glass-border-color-hover)' : 'var(--glass-border-color)',
+        boxShadow: isHovered && interactive 
+          ? `0 12px 35px rgba(0,0,0,0.4), 0 0 25px ${glowColor}` 
+          : '0 8px 32px rgba(0,0,0,0.3)'
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
       whileHover={interactive ? {
         scale: 1.02,
-        y: -8,
-        rotateX: 5,
-        rotateY: 5,
+        y: -5,
       } : {}}
       whileTap={interactive ? { scale: 0.98 } : {}}
-      style={{
-        boxShadow: isHovered && interactive 
-          ? `0 20px 40px rgba(0,0,0,0.4), 0 0 30px ${glowColor}` 
-          : undefined
-      }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
-      {/* Glass reflection effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
       {/* Inner glow */}
       <motion.div
         className="absolute inset-0 rounded-[inherit] opacity-0"
@@ -64,53 +60,10 @@ const GlassCard = ({
           background: `radial-gradient(circle at 50% 0%, ${glowColor}, transparent 70%)`,
         }}
         animate={{
-          opacity: isHovered ? 0.6 : 0,
+          opacity: isHovered && interactive ? 0.6 : 0,
         }}
         transition={{ duration: 0.3 }}
       />
-      
-      {/* Liquid shimmer effect */}
-      <motion.div
-        className="absolute inset-0 opacity-0"
-        style={{
-          background: 'linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)',
-          backgroundSize: '200% 200%',
-        }}
-        animate={{
-          backgroundPosition: isHovered ? ['0% 0%', '100% 100%'] : '0% 0%',
-          opacity: isHovered ? [0, 0.5, 0] : 0,
-        }}
-        transition={{
-          duration: 1.5,
-          ease: "easeInOut",
-        }}
-      />
-      
-      {/* Floating particles inside card */}
-      {isHovered && interactive && (
-        <div className="absolute inset-0 pointer-events-none">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 rounded-full bg-white/60"
-              style={{
-                left: `${20 + Math.random() * 60}%`,
-                top: `${20 + Math.random() * 60}%`,
-              }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{
-                opacity: [0, 1, 0],
-                scale: [0, 1, 0],
-                y: [0, -20],
-              }}
-              transition={{
-                duration: 2,
-                delay: Math.random() * 0.5,
-              }}
-            />
-          ))}
-        </div>
-      )}
       
       {/* Content */}
       <div className="relative z-10">

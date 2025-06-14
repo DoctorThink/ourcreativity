@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -53,13 +52,9 @@ const LiquidButton: React.FC<LiquidButtonProps> = ({
       disabled={disabled}
       whileHover={disabled ? {} : { 
         scale: 1.05,
-        rotateX: 5,
-        rotateY: 5,
       }}
       whileTap={disabled ? {} : { 
         scale: 0.98,
-        rotateX: 0,
-        rotateY: 0,
       }}
       transition={{
         type: "spring",
