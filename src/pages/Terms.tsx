@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -241,7 +240,7 @@ const TermsSection = ({
         interactive={true}
         onClick={onToggle}
       >
-        <div className="p-4 md:p-6 pt-12">
+        <div className="p-4 md:p-6">
           <div className="flex items-center justify-between mb-2">
             <IconTitleRow 
               icon={icon} 

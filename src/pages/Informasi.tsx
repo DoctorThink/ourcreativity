@@ -1,4 +1,3 @@
-
 import React, { useRef } from "react";
 import PageLayout from "../components/layouts/PageLayout";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -65,11 +64,9 @@ const Informasi = () => {
           <motion.div variants={itemVariants} className="lg:col-span-2">
             <BentoCard 
               className="p-6 md:p-8 h-full"
-              icon={Info}
-              iconColor="bg-amethyst text-background"
               glowColor="rgba(229, 222, 255, 0.3)"
             >
-              <div className="pt-12">
+              <div>
                 <IconTitleRow 
                   icon={Info}
                   iconColor="bg-amethyst text-background"
@@ -103,11 +100,9 @@ const Informasi = () => {
           <motion.div variants={itemVariants}>
             <BentoCard 
               className="p-6 md:p-8 h-full"
-              icon={Target}
-              iconColor="bg-turquoise text-background"
               glowColor="rgba(152, 245, 225, 0.3)"
             >
-              <div className="pt-12">
+              <div>
                 <IconTitleRow 
                   icon={Target}
                   iconColor="bg-turquoise text-background"
@@ -133,11 +128,9 @@ const Informasi = () => {
           <motion.div variants={itemVariants}>
             <BentoCard 
               className="p-6 md:p-8 h-full"
-              icon={Heart}
-              iconColor="bg-softPink text-background"
               glowColor="rgba(255, 209, 220, 0.3)"
             >
-              <div className="pt-12">
+              <div>
                 <IconTitleRow 
                   icon={Heart}
                   iconColor="bg-softPink text-background"
@@ -159,11 +152,9 @@ const Informasi = () => {
           <motion.div variants={itemVariants} className="lg:col-span-2">
             <BentoCard 
               className="p-6 md:p-8 h-full"
-              icon={CheckSquare}
-              iconColor="bg-coral text-background"
               glowColor="rgba(254, 198, 161, 0.3)"
             >
-              <div className="pt-12">
+              <div>
                 <IconTitleRow 
                   icon={CheckSquare}
                   iconColor="bg-coral text-background"
@@ -198,11 +189,9 @@ const Informasi = () => {
           <motion.div variants={itemVariants}>
             <BentoCard 
               className="p-6 md:p-8 h-full"
-              icon={Star}
-              iconColor="bg-mint text-white"
               glowColor="rgba(152, 245, 225, 0.3)"
             >
-              <div className="pt-12">
+              <div>
                 <IconTitleRow 
                   icon={Star}
                   iconColor="bg-mint text-white"
@@ -229,11 +218,9 @@ const Informasi = () => {
           <motion.div variants={itemVariants} className="lg:col-span-3">
             <BentoCard 
               className="p-6 md:p-8"
-              icon={MessageCircle}
-              iconColor="bg-amethyst text-background"
               glowColor="rgba(229, 222, 255, 0.3)"
             >
-              <div className="pt-12">
+              <div>
                 <IconTitleRow 
                   icon={MessageCircle}
                   iconColor="bg-amethyst text-background"
@@ -266,11 +253,9 @@ const Informasi = () => {
           <motion.div variants={itemVariants} className="lg:col-span-3">
             <BentoCard 
               className="p-6 md:p-8 text-center"
-              icon={Users}
-              iconColor="bg-turquoise text-background"
               glowColor="rgba(152, 245, 225, 0.3)"
             >
-              <div className="pt-12">
+              <div>
                 <IconTitleRow 
                   icon={Users}
                   iconColor="bg-turquoise text-background"

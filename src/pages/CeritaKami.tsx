@@ -30,7 +30,7 @@ const CeritaKami = () => {
             className="lg:col-span-2 p-4 sm:p-6 md:p-8"
             glowColor="rgba(229, 222, 255, 0.3)"
           >
-            <div className="h-full flex flex-col justify-between pt-12">
+            <div className="h-full flex flex-col justify-between">
               <div>
                 <IconTitleRow 
                   icon={BookOpen}
@@ -61,7 +61,7 @@ const CeritaKami = () => {
             className="p-4 sm:p-6 md:p-8 flex items-center justify-center"
             glowColor="rgba(152, 245, 225, 0.3)"
           >
-            <div className="text-center pt-8">
+            <div className="text-center">
               <blockquote className="text-sm sm:text-base md:text-lg font-serif italic text-foreground/90 relative">
                 <span className="absolute -left-2 sm:-left-4 -top-2 sm:-top-6 text-xl sm:text-2xl opacity-30">"</span>
                 Tanpa keberanian seseorang tidak akan pernah berkarya.
@@ -76,7 +76,7 @@ const CeritaKami = () => {
             className="p-4 sm:p-6 md:p-8"
             glowColor="rgba(254, 198, 161, 0.3)"
           >
-            <div className="pt-12">
+            <div>
               <IconTitleRow 
                 icon={History}
                 iconColor="bg-coral text-background"
@@ -100,7 +100,7 @@ const CeritaKami = () => {
             className="p-4 sm:p-6 md:p-8 lg:col-span-2"
             glowColor="rgba(152, 245, 225, 0.3)"
           >
-            <div className="pt-12">
+            <div>
               <IconTitleRow 
                 icon={BarChart}
                 iconColor="bg-mint text-background"
@@ -128,7 +128,7 @@ const CeritaKami = () => {
             className="p-4 sm:p-6 md:p-8"
             glowColor="rgba(155, 109, 255, 0.3)"
           >
-            <div className="pt-12">
+            <div>
               <IconTitleRow 
                 icon={Target}
                 iconColor="bg-amethyst text-background"
@@ -157,7 +157,7 @@ const CeritaKami = () => {
               className="p-4 sm:p-6 flex flex-col items-center justify-center text-center"
               glowColor="rgba(254, 198, 161, 0.2)"
             >
-              <div className="pt-12">
+              <div>
                 <IconTitleRow 
                   icon={Users}
                   iconColor="bg-coral text-background"
@@ -176,7 +176,7 @@ const CeritaKami = () => {
               className="p-4 sm:p-6 flex flex-col items-center justify-center text-center"
               glowColor="rgba(152, 245, 225, 0.2)"
             >
-              <div className="pt-12">
+              <div>
                 <IconTitleRow 
                   icon={Award}
                   iconColor="bg-turquoise text-background"
@@ -195,7 +195,7 @@ const CeritaKami = () => {
               className="p-4 sm:p-6 flex flex-col items-center justify-center text-center"
               glowColor="rgba(229, 222, 255, 0.2)"
             >
-              <div className="pt-12">
+              <div>
                 <IconTitleRow 
                   icon={Calendar}
                   iconColor="bg-amethyst text-background"

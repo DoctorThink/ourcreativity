@@ -1,8 +1,6 @@
-
 import React, { ReactNode } from 'react';
 import { motion, type MotionProps } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { LucideIcon } from 'lucide-react';
 
 // Define more specific props to avoid type conflicts
 interface BentoCardProps {
@@ -10,8 +8,6 @@ interface BentoCardProps {
   className?: string;
   colSpan?: string;
   rowSpan?: string;
-  icon?: LucideIcon;
-  iconColor?: string;
   glassEffect?: boolean;
   glowColor?: string;
   interactive?: boolean;
@@ -26,8 +22,6 @@ const BentoCard = ({
   className,
   colSpan = "col-span-1",
   rowSpan = "row-span-1",
-  icon: Icon,
-  iconColor = "text-foreground",
   glassEffect = true,
   glowColor,
   interactive = true,
@@ -89,14 +83,6 @@ const BentoCard = ({
       {/* Enhanced shimmer on hover for interactive cards */}
       {interactive && (
         <div className="absolute inset-0 bg-shimmer-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-shimmer" />
-      )}
-
-      {Icon && (
-        <div className="absolute top-4 left-4">
-          <div className={cn("p-2 rounded-full", iconColor)}>
-            <Icon className="w-5 h-5" />
-          </div>
-        </div>
       )}
 
       {children}
