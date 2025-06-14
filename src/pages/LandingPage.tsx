@@ -1,13 +1,73 @@
-
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { TextPlugin } from 'gsap/TextPlugin';
-import { motion } from 'framer-motion';
 import { Users, Target, Infinity, Palette, Video, Smile, FileText, ArrowRight } from 'lucide-react';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+// Helper component for Brand-specific styles and fonts
+const BrandStyles = () => (
+  <style jsx global>{`
+    @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;700&display=swap');
+
+    :root {
+      --bg-dark: #1A1A1A;
+      --bg-secondary-dark: #242424;
+      --text-light: #F5F5F5;
+      --text-muted: #A0A0A0;
+      --brand-red: #FF0000;
+      --brand-red-darker: #CC0000;
+    }
+
+    .font-display {
+      font-family: 'Anton', sans-serif;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .font-body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .bg-dark { background-color: var(--bg-dark); }
+    .text-light { color: var(--text-light); }
+    .text-muted { color: var(--text-muted); }
+    .bg-brand-red { background-color: var(--brand-red); }
+
+    .animated-gradient-text-red {
+      background: linear-gradient(90deg, var(--text-light) 50%, var(--brand-red) 110%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+    }
+
+    .glass-card-dark {
+      background: rgba(36, 36, 36, 0.5); /* --bg-secondary-dark with alpha */
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .checkerboard-bg {
+      background-color: var(--bg-dark);
+      background-image: 
+        linear-gradient(45deg, var(--brand-red) 25%, transparent 25%), 
+        linear-gradient(-45deg, var(--brand-red) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, var(--brand-red) 75%),
+        linear-gradient(-45deg, transparent 75%, var(--brand-red) 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+
+    .text-readable {
+        line-height: 1.75;
+    }
+  `}</style>
+);
+
 
 const LandingPage: React.FC = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -22,40 +82,20 @@ const LandingPage: React.FC = () => {
     const ctx = gsap.context(() => {
       // Hero animations
       if (titleRef.current && subtitleRef.current) {
-        const tl = gsap.timeline();
-        
-        // Animate title with character reveal
-        tl.from(titleRef.current, {
-          opacity: 0,
-          y: 50,
-          duration: 1,
-          ease: "power3.out"
-        })
-        .from(subtitleRef.current, {
-          opacity: 0,
-          y: 30,
-          duration: 0.8,
-          ease: "power2.out"
-        }, "-=0.3");
+        gsap.timeline()
+          .from(titleRef.current.querySelectorAll('span'), {
+            opacity: 0, y: 80, duration: 1, ease: "power3.out", stagger: 0.1
+          })
+          .from(subtitleRef.current, {
+            opacity: 0, y: 30, duration: 0.8, ease: "power2.out"
+          }, "-=0.6");
       }
 
       // Bento grid staggered animation
       if (bentoGridRef.current) {
-        const bentoItems = bentoGridRef.current.querySelectorAll('.bento-item');
-        
-        gsap.from(bentoItems, {
-          opacity: 0,
-          y: 60,
-          scale: 0.9,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: bentoGridRef.current,
-            start: "top 80%",
-            end: "bottom 20%",
-            toggleActions: "play none none reverse"
-          }
+        gsap.from(bentoGridRef.current.querySelectorAll('.bento-item'), {
+          opacity: 0, y: 60, scale: 0.95, duration: 0.8, stagger: 0.1, ease: "power2.out",
+          scrollTrigger: { trigger: bentoGridRef.current, start: "top 80%", toggleActions: "play none none reverse" }
         });
       }
 
@@ -64,15 +104,9 @@ const LandingPage: React.FC = () => {
         const counterElement = counterRef.current.querySelector('.counter-number');
         if (counterElement) {
           gsap.to(counterElement, {
-            textContent: "3000+",
-            duration: 2,
-            ease: "power2.out",
+            textContent: "3000", innerHTML: "3000+", duration: 2.5, ease: "power2.out",
             snap: { textContent: 1 },
-            scrollTrigger: {
-              trigger: counterRef.current,
-              start: "top 80%",
-              toggleActions: "play none none reverse"
-            }
+            scrollTrigger: { trigger: counterRef.current, start: "top 80%", toggleActions: "play none none reverse" }
           });
         }
       }
@@ -82,83 +116,51 @@ const LandingPage: React.FC = () => {
         const journeySteps = journeyRef.current.querySelectorAll('.journey-step');
         const journeyLine = journeyRef.current.querySelector('.journey-line');
         
-        if (journeyLine) {
-          gsap.from(journeyLine, {
-            scaleX: 0,
-            transformOrigin: "left center",
-            duration: 2,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: journeyRef.current,
-              start: "top 70%",
-              toggleActions: "play none none reverse"
-            }
-          });
-        }
-
-        gsap.from(journeySteps, {
-          opacity: 0,
-          y: 30,
-          duration: 0.6,
-          stagger: 0.2,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: journeyRef.current,
-            start: "top 70%",
-            toggleActions: "play none none reverse"
-          }
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: journeyRef.current, start: "top 70%", toggleActions: "play none none reverse" }
         });
+
+        if (journeyLine) {
+          tl.from(journeyLine, { scaleX: 0, transformOrigin: "left center", duration: 1.5, ease: "power2.inOut" });
+        }
+        tl.from(journeySteps, { opacity: 0, y: 50, scale: 0.9, duration: 0.6, stagger: 0.2, ease: "back.out(1.7)" }, "-=1");
       }
 
-      // CTA magnetic button effect
+      // CTA button hover effect
       if (ctaRef.current) {
         const ctaButton = ctaRef.current.querySelector('.cta-button');
         if (ctaButton) {
-          ctaButton.addEventListener('mouseenter', () => {
-            gsap.to(ctaButton, {
-              scale: 1.05,
-              duration: 0.3,
-              ease: "power2.out"
-            });
+          const hoverTween = gsap.to(ctaButton, {
+            scale: 1.05,
+            boxShadow: "0px 10px 40px -10px var(--brand-red)",
+            duration: 0.3,
+            ease: "power2.out",
+            paused: true
           });
-
-          ctaButton.addEventListener('mouseleave', () => {
-            gsap.to(ctaButton, {
-              scale: 1,
-              duration: 0.3,
-              ease: "power2.out"
-            });
-          });
+          ctaButton.addEventListener('mouseenter', () => hoverTween.play());
+          ctaButton.addEventListener('mouseleave', () => hoverTween.reverse());
         }
       }
-
     });
-
     return () => ctx.revert();
   }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+    <div className="min-h-screen bg-dark text-light font-body overflow-x-hidden">
+      <BrandStyles />
+      
       {/* Hero Section */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center px-6">
-        <div className="absolute inset-0 bg-grid-pattern opacity-20"></div>
+        <div className="absolute inset-0 checkerboard-bg opacity-5"></div>
         <div className="relative z-10 text-center max-w-6xl mx-auto">
-          <h1 
-            ref={titleRef}
-            className="text-6xl md:text-8xl lg:text-9xl font-serif font-bold mb-6 animated-gradient-text"
-          >
-            OUR CREATIVITY
+          <h1 ref={titleRef} className="text-6xl md:text-8xl lg:text-9xl font-display mb-6 animated-gradient-text-red">
+            {'THIS IS OURCREATIVITY'.split(' ').map((word, i) => <span key={i} className="inline-block">{word} </span>)}
           </h1>
-          <p 
-            ref={subtitleRef}
-            className="text-xl md:text-2xl text-foreground/80 font-sans max-w-3xl mx-auto text-readable"
-          >
-            Perjalanan kreativitas dan inspirasi di balik komunitas kami
+          <p ref={subtitleRef} className="text-xl md:text-2xl text-muted font-body max-w-3xl mx-auto text-readable">
+            OurCreativityIDN adalah komunitas kreatif yang didirikan untuk memberikan manfaat dan menciptakan lebih banyak anak muda kreatif di Indonesia.
           </p>
-          
-          {/* Floating OC Logo */}
           <div className="absolute top-1/4 right-1/4 opacity-10 animate-float">
-            <Infinity className="w-32 h-32 text-foreground" />
+            <Infinity className="w-32 h-32 text-brand-red" />
           </div>
         </div>
       </section>
@@ -168,205 +170,119 @@ const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6 auto-rows-fr">
             
-            {/* Box 1: About Us (2x2 Large) */}
-            <div className="bento-item md:col-span-2 lg:col-span-3 md:row-span-2 glass-card rounded-3xl p-8 relative overflow-hidden group hover-lift">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#40E0D0]/10 to-[#FF7F50]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="bento-item md:col-span-2 lg:col-span-3 md:row-span-2 glass-card-dark rounded-3xl p-8 relative overflow-hidden group">
               <div className="relative z-10">
                 <div className="flex items-center gap-4 mb-6">
-                  <Infinity className="w-12 h-12 text-[#40E0D0]" />
-                  <h2 className="text-3xl font-serif font-bold text-foreground">APA ITU OURCREATIVITY</h2>
+                  <Infinity className="w-12 h-12 text-brand-red" />
+                  <h2 className="text-3xl font-display text-light">APA ITU OURCREATIVITY</h2>
                 </div>
-                <p className="text-foreground/80 text-lg leading-relaxed text-readable">
-                  OurCreativity adalah komunitas digital yang menghubungkan para kreator muda Indonesia. 
-                  Kami memberikan ruang untuk berbagi, belajar, dan tumbuh bersama dalam dunia kreativitas digital. 
-                  Dari desain grafis hingga konten video, kami memfasilitasi perjalanan kreatif setiap anggota.
+                <p className="text-muted text-lg leading-relaxed text-readable">
+                  Sebenarnya Komunitas ini diciptakan karena banyaknya komentar yang bertebaran di internet yang berisi kemauan mereka untuk mempelajari suatu hal, namun sayangnya mereka tidak memiliki tempat untuk bertanya, karena itulah dibuat komunitas ini, dengan harapan mereka dapat bertanya sekaligus menghasilkan karya dari komunitas ini.
                 </p>
               </div>
             </div>
 
-            {/* Box 2: Vision & Mission (2x1 Medium) */}
-            <div className="bento-item md:col-span-2 lg:col-span-3 glass-card rounded-3xl p-8 relative overflow-hidden group hover-lift">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#9B6DFF]/10 to-[#98F5E1]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="bento-item md:col-span-2 lg:col-span-3 glass-card-dark rounded-3xl p-8 relative overflow-hidden group">
               <div className="relative z-10">
                 <div className="flex items-center gap-4 mb-6">
-                  <Target className="w-10 h-10 text-[#9B6DFF]" />
-                  <h2 className="text-2xl font-serif font-bold text-foreground">MISI KAMI</h2>
+                  <Target className="w-10 h-10 text-brand-red" />
+                  <h2 className="text-2xl font-display text-light">MISI KAMI</h2>
                 </div>
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-[#40E0D0] rounded-full mt-2 flex-shrink-0"></div>
-                    <span className="text-foreground/80 text-readable">Membangun komunitas kreatif yang inspiratif</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-[#FF7F50] rounded-full mt-2 flex-shrink-0"></div>
-                    <span className="text-foreground/80 text-readable">Memberikan platform untuk berbagi karya</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-[#FFBF00] rounded-full mt-2 flex-shrink-0"></div>
-                    <span className="text-foreground/80 text-readable">Mengembangkan skill kreativitas digital</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-[#98F5E1] rounded-full mt-2 flex-shrink-0"></div>
-                    <span className="text-foreground/80 text-readable">Menghubungkan kreator se-Indonesia</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-[#FFD1DC] rounded-full mt-2 flex-shrink-0"></div>
-                    <span className="text-foreground/80 text-readable">Menciptakan peluang kolaborasi</span>
-                  </li>
+                <ul className="space-y-4">
+                  {[
+                    "Menyaring dan menghubungkan anak muda berbakat melalui media sosial.",
+                    "Menyediakan platform diskusi dan kolaborasi.",
+                    "Mempublikasikan setiap karya anggota untuk apresiasi lebih luas.",
+                    "Menyelenggarakan program gratis untuk pengembangan keterampilan.",
+                    "Mendorong anggota untuk menciptakan karya yang lebih inovatif."
+                  ].map((mission, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <ArrowRight className="w-4 h-4 text-brand-red mt-1.5 flex-shrink-0" />
+                      <span className="text-muted text-readable">{mission}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
 
-            {/* Box 3: 3000+ Members (1x1 Small) */}
-            <div ref={counterRef} className="bento-item glass-card rounded-3xl p-8 relative overflow-hidden group hover-lift">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#FF7F50] to-[#FFBF00] opacity-20"></div>
-              <div className="relative z-10 text-center">
-                <Users className="w-12 h-12 text-[#FF7F50] mx-auto mb-4" />
-                <div className="counter-number text-4xl font-serif font-bold text-foreground mb-2">0</div>
-                <p className="text-lg font-medium text-foreground/80">MEMBER</p>
-              </div>
+            <div ref={counterRef} className="bento-item glass-card-dark rounded-3xl p-8 relative text-center flex flex-col justify-center">
+              <Users className="w-12 h-12 text-brand-red mx-auto mb-4" />
+              <div className="counter-number text-5xl font-display text-light mb-2">0</div>
+              <p className="text-lg font-display text-muted">MEMBER</p>
             </div>
 
-            {/* Box 4: Logo Philosophy (1x1 Small) */}
-            <div className="bento-item glass-card rounded-3xl p-8 relative overflow-hidden group hover-lift">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#9B6DFF]/20 to-[#40E0D0]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative z-10 text-center">
-                <Infinity className="w-16 h-16 text-[#9B6DFF] mx-auto mb-4 group-hover:rotate-180 transition-transform duration-700" />
-                <p className="text-sm font-medium text-foreground/80 text-readable">
-                  "Simbol kreativitas tanpa batas"
-                </p>
-              </div>
+            <div className="bento-item glass-card-dark rounded-3xl p-8 relative text-center flex flex-col justify-center">
+              <Infinity className="w-16 h-16 text-brand-red mx-auto mb-4 group-hover:rotate-180 transition-transform duration-700" />
+              <p className="text-sm font-body text-muted text-readable italic">
+                "Simbol kreativitas tanpa batas, menunjukkan bahwa kreativitas manusia tidak seharusnya dibatasi."
+              </p>
             </div>
 
-            {/* Box 5: 4 Jenis Grup (2x2 Interactive) */}
-            <div className="bento-item md:col-span-2 lg:col-span-2 md:row-span-2 glass-card rounded-3xl p-8 relative overflow-hidden">
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-6 text-center">4 JENIS GRUP</h2>
-              <div className="grid grid-cols-2 gap-4 h-full">
-                
-                {/* Desain Grafis */}
-                <div className="group relative bg-secondary/50 rounded-2xl p-6 cursor-pointer hover:bg-[#40E0D0]/20 transition-all duration-300">
-                  <Palette className="w-12 h-12 text-[#40E0D0] mx-auto mb-4" />
-                  <div className="absolute inset-0 bg-[#40E0D0]/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="text-lg font-bold text-foreground">DESAIN GRAFIS</span>
+            <div className="bento-item md:col-span-2 lg:col-span-2 md:row-span-2 glass-card-dark rounded-3xl p-8 relative overflow-hidden">
+              <h2 className="text-2xl font-display text-light mb-6 text-center">4 JENIS GRUP</h2>
+              <div className="grid grid-cols-2 gap-4 h-5/6">
+                {[
+                  { icon: Palette, label: "DESAIN GRAFIS", color: "#40E0D0" },
+                  { icon: Video, label: "VIDEO EDITING", color: "#FF7F50" },
+                  { icon: Smile, label: "MEME CREATOR", color: "#FFD1DC" },
+                  { icon: FileText, label: "KARYA TULIS", color: "#98F5E1" },
+                ].map((item, i) => (
+                  <div key={i} className="group relative bg-black/20 rounded-2xl p-4 flex items-center justify-center cursor-pointer transition-all duration-300" style={{'--hover-color': item.color} as React.CSSProperties}>
+                    <item.icon className="w-12 h-12 text-muted group-hover:opacity-0 transition-opacity duration-300" style={{color: item.color}}/>
+                    <div className="absolute inset-0 bg-black/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span className="text-base font-display text-light text-center">{item.label}</span>
+                    </div>
                   </div>
-                </div>
-
-                {/* Video Editing */}
-                <div className="group relative bg-secondary/50 rounded-2xl p-6 cursor-pointer hover:bg-[#FF7F50]/20 transition-all duration-300">
-                  <Video className="w-12 h-12 text-[#FF7F50] mx-auto mb-4" />
-                  <div className="absolute inset-0 bg-[#FF7F50]/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="text-lg font-bold text-foreground">VIDEO EDITING</span>
-                  </div>
-                </div>
-
-                {/* Meme Creator */}
-                <div className="group relative bg-secondary/50 rounded-2xl p-6 cursor-pointer hover:bg-[#FFD1DC]/20 transition-all duration-300">
-                  <Smile className="w-12 h-12 text-[#FFD1DC] mx-auto mb-4" />
-                  <div className="absolute inset-0 bg-[#FFD1DC]/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="text-lg font-bold text-foreground">MEME CREATOR</span>
-                  </div>
-                </div>
-
-                {/* Karya Tulis */}
-                <div className="group relative bg-secondary/50 rounded-2xl p-6 cursor-pointer hover:bg-[#98F5E1]/20 transition-all duration-300">
-                  <FileText className="w-12 h-12 text-[#98F5E1] mx-auto mb-4" />
-                  <div className="absolute inset-0 bg-[#98F5E1]/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="text-lg font-bold text-foreground">KARYA TULIS</span>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
       {/* The Journey Section */}
-      <section ref={journeyRef} className="py-20 px-6 bg-secondary/20">
+      <section ref={journeyRef} className="py-20 px-6 bg-black/20">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-serif font-bold text-center mb-16 text-foreground">PERJALANAN KAMI</h2>
-          
+          <h2 className="text-4xl font-display text-center mb-16 text-light">PERJALANAN KAMI</h2>
           <div className="relative">
-            {/* Journey Line */}
-            <div className="journey-line absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-[#40E0D0] via-[#FF7F50] to-[#FFBF00] transform -translate-y-1/2 hidden md:block"></div>
-            
-            {/* Journey Steps */}
+            <div className="journey-line absolute top-8 left-0 w-full h-1 bg-brand-red transform -translate-y-1/2 hidden md:block"></div>
             <div className="grid grid-cols-1 md:grid-cols-5 gap-8 relative z-10">
-              <div className="journey-step text-center">
-                <div className="w-16 h-16 bg-[#40E0D0] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-background">1</span>
+              {[
+                { num: 1, title: "Konten Pemicu", desc: "Ide kreatif yang menginspirasi dari media sosial." },
+                { num: 2, title: "Minat Didapat", desc: "Menemukan passion dan keinginan untuk belajar." },
+                { num: 3, title: "Bergabung", desc: "Menjadi bagian dari komunitas OurCreativity." },
+                { num: 4, title: "Berkarya & Konsisten", desc: "Berdiskusi, kolaborasi, dan menghasilkan karya." },
+                { num: 5, title: "Komunitas Baru", desc: "Membangun jaringan dan menginspirasi orang lain." },
+              ].map((step) => (
+                <div key={step.num} className="journey-step text-center">
+                  <div className="w-16 h-16 bg-brand-red rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-bg-secondary-dark">
+                    <span className="text-2xl font-display text-light">{step.num}</span>
+                  </div>
+                  <h3 className="font-display text-lg mb-2 text-light">{step.title}</h3>
+                  <p className="text-sm text-muted text-readable">{step.desc}</p>
                 </div>
-                <h3 className="font-serif font-bold text-lg mb-2">Konten Pemicu</h3>
-                <p className="text-sm text-foreground/70 text-readable">Ide kreatif yang menginspirasi</p>
-              </div>
-              
-              <div className="journey-step text-center">
-                <div className="w-16 h-16 bg-[#98F5E1] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-background">2</span>
-                </div>
-                <h3 className="font-serif font-bold text-lg mb-2">Minat Didapat</h3>
-                <p className="text-sm text-foreground/70 text-readable">Passion untuk berkreasi</p>
-              </div>
-              
-              <div className="journey-step text-center">
-                <div className="w-16 h-16 bg-[#FF7F50] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-background">3</span>
-                </div>
-                <h3 className="font-serif font-bold text-lg mb-2">Bergabung</h3>
-                <p className="text-sm text-foreground/70 text-readable">Menjadi bagian komunitas</p>
-              </div>
-              
-              <div className="journey-step text-center">
-                <div className="w-16 h-16 bg-[#FFBF00] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-background">4</span>
-                </div>
-                <h3 className="font-serif font-bold text-lg mb-2">Berkarya & Konsisten</h3>
-                <p className="text-sm text-foreground/70 text-readable">Menghasilkan karya terbaik</p>
-              </div>
-              
-              <div className="journey-step text-center">
-                <div className="w-16 h-16 bg-[#9B6DFF] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-background">5</span>
-                </div>
-                <h3 className="font-serif font-bold text-lg mb-2">Komunitas Baru</h3>
-                <p className="text-sm text-foreground/70 text-readable">Membangun jaringan luas</p>
-              </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section ref={ctaRef} className="py-20 px-6 relative">
-        {/* Checkerboard Pattern */}
-        <div className="absolute bottom-0 left-0 w-full h-32 opacity-20">
-          <div className="grid grid-cols-16 h-full">
-            {Array.from({ length: 32 }, (_, i) => (
-              <div 
-                key={i} 
-                className={`${i % 2 === 0 ? 'bg-[#FF0000]' : 'bg-white'}`}
-              ></div>
-            ))}
-          </div>
-        </div>
-        
+      <section ref={ctaRef} className="py-24 px-6 relative bg-dark">
+        <div className="absolute bottom-0 left-0 w-full h-24 checkerboard-bg opacity-10"></div>
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-5xl md:text-6xl font-serif font-bold mb-8 text-foreground">
+          <h2 className="text-5xl md:text-6xl font-display mb-8 text-light">
             Jadilah Bagian dari Perjalanan Kami
           </h2>
-          <p className="text-xl text-foreground/80 mb-12 max-w-2xl mx-auto text-readable">
+          <p className="text-xl text-muted mb-12 max-w-2xl mx-auto text-readable">
             Bergabunglah dengan ribuan kreator Indonesia dan wujudkan potensi kreatif Anda bersama komunitas OurCreativity.
           </p>
-          
           <a 
             href="https://linktr.ee/ourcreativity" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="cta-button inline-flex items-center gap-4 bg-gradient-to-r from-[#40E0D0] to-[#FF7F50] text-background px-12 py-6 rounded-full text-xl font-bold transition-all duration-300 hover:shadow-2xl hover:shadow-[#40E0D0]/25"
+            className="cta-button inline-flex items-center gap-4 bg-brand-red text-light px-12 py-5 rounded-full text-xl font-display transition-all duration-300 hover:bg-brand-red-darker"
           >
             GABUNG SEKARANG
             <ArrowRight className="w-6 h-6" />
