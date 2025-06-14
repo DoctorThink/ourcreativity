@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -231,12 +232,12 @@ const categories = [
   },
 ];
 
-// StatCard component with standardized IconDisplay
+// StatCard component with standardized IconDisplay - fix the color type
 const StatCard = ({ icon, label, value, color }: { 
   icon: React.ComponentType<any>; 
   label: string; 
   value: string;
-  color: "amethyst" | "turquoise" | "coral" | "mint";
+  color: "amethyst" | "turquoise" | "coral" | "mint" | "amber" | "emerald" | "softPink";
 }) => (
   <motion.div 
     className="flex flex-col items-center justify-center p-4 gap-3"
