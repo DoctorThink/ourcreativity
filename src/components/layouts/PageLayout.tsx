@@ -84,16 +84,23 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   
   return (
     <div className={cn("relative min-h-screen flex flex-col", className)}>
-      {/* Fixed Header with Glassmorphism */}
+      {/* Modern Sticky Header with Enhanced Glassmorphism */}
       <motion.header 
         className={cn(
-          "fixed top-4 left-4 right-4 z-50 transition-all duration-500 rounded-2xl",
-          "bg-background/20 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/20",
+          "fixed top-3 left-3 right-3 z-50 transition-all duration-500",
+          "bg-background/80 backdrop-blur-xl border border-white/10",
+          "rounded-[20px] shadow-2xl shadow-black/20",
+          "hover:shadow-2xl hover:shadow-black/30",
           headerClassName
         )}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
+        style={{
+          background: scrollY > 20 
+            ? "rgba(28, 28, 30, 0.9)" 
+            : "rgba(28, 28, 30, 0.8)"
+        }}
       >
         <div className={cn("container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center", fullWidth ? "max-w-full" : "max-w-7xl")}>
           {/* Logo Only */}
@@ -250,7 +257,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         )}
       </AnimatePresence>
       
-      {/* Main Content */}
+      {/* Main Content with proper spacing for fixed header */}
       <main className={cn("flex-grow pt-24 md:pt-28", contentClassName)}>
         {/* Page Title Section */}
         {title && (
