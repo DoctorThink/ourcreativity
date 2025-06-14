@@ -1,3 +1,4 @@
+
 import React from "react";
 import { motion } from "framer-motion";
 import { 
@@ -48,11 +49,9 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
     }
   };
   
-  // Handle unknown category gracefully
   const categoryStyle = categoryStyles[announcement.category as keyof typeof categoryStyles] || categoryStyles.update;
   const CategoryIcon = categoryStyle.icon;
   
-  // Format date safely
   const getDisplayDate = () => {
     try {
       if (announcement.date) {
@@ -81,17 +80,29 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
       return "";
     }
   };
+
+  // Function to clean markdown from text for better readability
+  const cleanTextForPreview = (text: string, maxLength: number = 140) => {
+    // Remove markdown syntax
+    const cleanText = text
+      .replace(/[#*_>`]/g, '') // Remove markdown characters
+      .replace(/\n/g, ' ') // Replace newlines with spaces
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .trim();
+    
+    if (cleanText.length <= maxLength) {
+      return cleanText;
+    }
+    return cleanText.slice(0, maxLength).trim() + '...';
+  };
   
   const displayDate = getDisplayDate();
   const timeAgo = getTimeAgo();
+  const cleanContent = cleanTextForPreview(announcement.content, isMobile ? 100 : 140);
 
-  // Check if this is the Gerakan 27 April event
+  // Check for special announcement types
   const isGerakan27April = announcement.title.includes('Gerakan 27 April') || announcement.content.includes('Gerakan 27 April');
-  
-  // Check if this is the Version 4.0 announcement
   const isVersionFour = announcement.title.includes('4.0') || announcement.title.includes('Versi 4');
-  
-  // Check if this is Ardelyo related
   const isArdelyo = announcement.content.includes('Ardelyo') || announcement.content.includes('Unix Series');
   
   return (
@@ -101,7 +112,7 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
       <BentoCard
-        className={`p-4 sm:p-5 h-full relative overflow-hidden group cursor-pointer 
+        className={`p-5 sm:p-6 h-full relative overflow-hidden group cursor-pointer 
           ${isGerakan27April ? 'bg-black/80 border-red-900/50 hover:border-red-800/70' : 'hover:border-white/20'} 
           transition-all duration-300`}
         interactive={true}
@@ -161,41 +172,41 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
           />
         )}
         
-        {/* Header with category and badges */}
-        <div className="flex items-start justify-between mb-3 z-10 relative">
-          <div className={`px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 shadow-lg
+        {/* Header with improved spacing and typography */}
+        <div className="flex items-start justify-between mb-4 z-10 relative">
+          <div className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-lg
             ${isGerakan27April 
               ? 'bg-gradient-to-r from-red-900/80 to-red-600/60 text-white' 
               : `bg-gradient-to-r ${categoryStyle.gradientColor} ${categoryStyle.textColor}`}`}
           >
             {isGerakan27April ? (
-              <AlertTriangle className="w-3 h-3" />
+              <AlertTriangle className="w-3.5 h-3.5" />
             ) : (
-              <CategoryIcon className="w-3 h-3" />
+              <CategoryIcon className="w-3.5 h-3.5" />
             )}
-            <span className="font-semibold">
+            <span className="font-bold tracking-wide">
               {announcement.category === "event" ? "Acara" : 
                announcement.category === "recruitment" ? "Rekrutmen" : "Update"}
             </span>
           </div>
           
-          <div className="flex flex-col items-end gap-1">
+          <div className="flex flex-col items-end gap-1.5">
             {(isGerakan27April || isVersionFour || isArdelyo || announcement.important) && (
-              <div className="flex gap-1">
+              <div className="flex gap-1.5">
                 {isGerakan27April && (
                   <motion.span 
-                    className="bg-gradient-to-r from-red-800 to-red-600 text-white text-xs px-2 py-0.5 rounded-full flex items-center shadow-lg"
+                    className="bg-gradient-to-r from-red-800 to-red-600 text-white text-xs px-2.5 py-1 rounded-full flex items-center shadow-lg font-semibold"
                     animate={{ scale: [1, 1.08, 1] }}
                     transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
                   >
-                    <AlertTriangle className="w-2.5 h-2.5 mr-1" />
+                    <AlertTriangle className="w-3 h-3 mr-1" />
                     Penting
                   </motion.span>
                 )}
                 
                 {isVersionFour && (
                   <motion.span 
-                    className="bg-gradient-to-r from-amethyst/90 to-turquoise/80 text-white text-xs px-2 py-0.5 rounded-full shadow-lg"
+                    className="bg-gradient-to-r from-amethyst/90 to-turquoise/80 text-white text-xs px-2.5 py-1 rounded-full shadow-lg font-semibold"
                     animate={{ y: [0, -3, 0] }}
                     transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
                   >
@@ -204,18 +215,18 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                 )}
                 
                 {announcement.important && !isGerakan27April && (
-                  <span className="bg-red-500/90 text-white text-xs px-2 py-0.5 rounded-full animate-pulse shadow-lg">
+                  <span className="bg-red-500/90 text-white text-xs px-2.5 py-1 rounded-full animate-pulse shadow-lg font-semibold">
                     Penting
                   </span>
                 )}
                 
                 {isArdelyo && (
                   <motion.span 
-                    className="bg-gradient-to-r from-turquoise/80 to-coral/80 text-white text-xs px-2 py-0.5 rounded-full flex items-center shadow-lg"
+                    className="bg-gradient-to-r from-turquoise/80 to-coral/80 text-white text-xs px-2.5 py-1 rounded-full flex items-center shadow-lg font-semibold"
                     animate={{ scale: [1, 1.05, 1] }}
                     transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
                   >
-                    <Code className="w-2.5 h-2.5 mr-1" />
+                    <Code className="w-3 h-3 mr-1" />
                     Unix
                   </motion.span>
                 )}
@@ -228,39 +239,46 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
           </div>
         </div>
         
-        {/* Enhanced content section */}
-        <div className="flex-1 z-10 relative">
+        {/* Enhanced content section with better typography */}
+        <div className="flex-1 z-10 relative space-y-3">
           <motion.h3 
-            className={`text-base sm:text-lg font-serif font-bold mb-2 leading-tight group-hover:text-opacity-90 transition-all duration-200 
-              ${isGerakan27April ? 'text-red-200' : 'text-foreground'}`}
+            className={`text-lg sm:text-xl font-serif font-bold leading-tight group-hover:text-opacity-90 transition-all duration-200 
+              ${isGerakan27April ? 'text-red-200' : 'text-foreground'} text-readable`}
             initial={{ opacity: 0.9 }}
             whileHover={{ opacity: 1 }}
           >
             {announcement.title}
           </motion.h3>
           
-          <p className={`line-clamp-3 text-sm mb-4 leading-relaxed
-            ${isGerakan27April ? 'text-red-100/80' : 'text-foreground/75'}`}>
-            {announcement.content.substring(0, isMobile ? 100 : 120)}...
+          <p className={`text-sm leading-relaxed mb-4 text-readable
+            ${isGerakan27April ? 'text-red-100/80' : 'text-foreground/80'}`}
+            style={{ 
+              lineHeight: '1.6',
+              letterSpacing: '0.01em',
+              fontWeight: '400',
+              fontSize: isMobile ? '0.875rem' : '0.9rem'
+            }}
+          >
+            {cleanContent}
           </p>
         </div>
         
-        {/* Enhanced footer with engagement metrics */}
-        <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/5 z-10 relative">
-          <div className="flex items-center gap-3">
-            <span className={`flex items-center gap-1.5 text-xs font-medium
+        {/* Enhanced footer with better typography */}
+        <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5 z-10 relative">
+          <div className="flex items-center gap-4">
+            <span className={`flex items-center gap-2 text-sm font-medium
               ${isGerakan27April ? 'text-red-200/70' : 'text-foreground/60'}`}>
-              <Calendar className="w-3 h-3" />
+              <Calendar className="w-3.5 h-3.5" />
               {displayDate}
             </span>
             
-            <div className="flex items-center gap-2">
-              <span className={`flex items-center gap-1 text-xs
+            <div className="flex items-center gap-3">
+              <span className={`flex items-center gap-1.5 text-xs
                 ${isGerakan27April ? 'text-red-200/60' : 'text-foreground/50'}`}>
                 <Eye className="w-3 h-3" />
                 {Math.floor(Math.random() * 500) + 50}
               </span>
-              <span className={`flex items-center gap-1 text-xs
+              <span className={`flex items-center gap-1.5 text-xs
                 ${isGerakan27April ? 'text-red-200/60' : 'text-foreground/50'}`}>
                 <Heart className="w-3 h-3" />
                 {Math.floor(Math.random() * 30) + 5}
@@ -269,12 +287,16 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
           </div>
           
           <motion.span 
-            className={`text-xs font-semibold flex items-center gap-1 group-hover:gap-2 transition-all duration-200
+            className={`text-sm font-semibold flex items-center gap-1.5 group-hover:gap-2.5 transition-all duration-200
               ${isGerakan27April ? 'text-red-200 group-hover:text-red-100' : 'text-foreground/80 group-hover:text-foreground'}`}
             whileHover={{ x: 3 }}
+            style={{ 
+              letterSpacing: '0.02em',
+              fontWeight: '600'
+            }}
           >
-            Baca
-            <ArrowUpRight className="w-3 h-3 group-hover:rotate-12 transition-transform duration-200" />
+            Baca Selengkapnya
+            <ArrowUpRight className="w-4 h-4 group-hover:rotate-12 transition-transform duration-200" />
           </motion.span>
         </div>
         

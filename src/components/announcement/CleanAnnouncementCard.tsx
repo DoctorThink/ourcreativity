@@ -37,8 +37,23 @@ export const CleanAnnouncementCard: React.FC<CleanAnnouncementCardProps> = ({
     }
   };
 
+  // Clean markdown and create readable preview
+  const createCleanPreview = (text: string, maxLength: number = 140) => {
+    const cleanText = text
+      .replace(/[#*_>`]/g, '') // Remove markdown characters
+      .replace(/\n/g, ' ') // Replace newlines with spaces
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .trim();
+    
+    if (cleanText.length <= maxLength) {
+      return cleanText;
+    }
+    return cleanText.slice(0, maxLength).trim() + '...';
+  };
+
   const categoryInfo = getCategoryInfo();
   const displayDate = getDisplayDate();
+  const cleanContent = createCleanPreview(announcement.content);
 
   return (
     <motion.div 
@@ -50,40 +65,49 @@ export const CleanAnnouncementCard: React.FC<CleanAnnouncementCardProps> = ({
         className="h-full cursor-pointer bg-secondary/60 backdrop-blur-sm border-white/10 hover:border-white/20 hover:bg-secondary/80 transition-all duration-300 group"
         onClick={onClick}
       >
-        <CardContent className="p-5 h-full flex flex-col">
-          {/* Header */}
-          <div className="flex items-start justify-between mb-4">
-            <div className={`px-2.5 py-1 rounded-full text-xs font-medium border ${categoryInfo.color}`}>
+        <CardContent className="p-6 h-full flex flex-col">
+          {/* Header with improved spacing */}
+          <div className="flex items-start justify-between mb-5">
+            <div className={`px-3 py-1.5 rounded-full text-xs font-semibold border ${categoryInfo.color}`}>
               {categoryInfo.label}
             </div>
             {announcement.important && (
-              <div className="px-2 py-0.5 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-medium">
+              <div className="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-semibold">
                 Penting
               </div>
             )}
           </div>
 
-          {/* Content */}
-          <div className="flex-1 space-y-3">
-            <h3 className="text-lg font-serif font-bold text-foreground leading-tight group-hover:text-opacity-90 transition-all duration-200">
+          {/* Content with enhanced typography */}
+          <div className="flex-1 space-y-4">
+            <h3 className="text-xl font-serif font-bold text-foreground leading-tight group-hover:text-opacity-90 transition-all duration-200 text-readable"
+                style={{ 
+                  lineHeight: '1.3',
+                  letterSpacing: '0.005em'
+                }}>
               {announcement.title}
             </h3>
             
-            <p className="text-sm text-foreground/75 leading-relaxed line-clamp-3">
-              {announcement.content.substring(0, 120)}...
+            <p className="text-sm text-foreground/80 leading-relaxed text-readable"
+               style={{ 
+                 lineHeight: '1.6',
+                 letterSpacing: '0.01em',
+                 fontWeight: '400'
+               }}>
+              {cleanContent}
             </p>
           </div>
 
-          {/* Footer */}
-          <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/5">
-            <div className="flex items-center gap-1.5 text-xs text-foreground/60">
-              <Calendar className="w-3 h-3" />
+          {/* Footer with better spacing and typography */}
+          <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/5">
+            <div className="flex items-center gap-2 text-sm text-foreground/60 font-medium">
+              <Calendar className="w-4 h-4" />
               <span>{displayDate}</span>
             </div>
             
-            <div className="flex items-center gap-1 text-xs text-foreground/80 group-hover:text-foreground group-hover:gap-2 transition-all duration-200">
-              <span className="font-medium">Baca</span>
-              <ArrowRight className="w-3 h-3 group-hover:rotate-12 transition-transform duration-200" />
+            <div className="flex items-center gap-2 text-sm text-foreground/80 group-hover:text-foreground group-hover:gap-3 transition-all duration-200 font-semibold">
+              <span style={{ letterSpacing: '0.02em' }}>Baca Selengkapnya</span>
+              <ArrowRight className="w-4 h-4 group-hover:rotate-12 transition-transform duration-200" />
             </div>
           </div>
         </CardContent>
