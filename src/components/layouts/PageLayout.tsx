@@ -92,13 +92,13 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   
   return (
     <div className={cn("relative min-h-screen flex flex-col", className)}>
-      {/* Modern Sticky Header with Enhanced Glassmorphism */}
+      {/* Enhanced Glass Morphism Header */}
       <motion.header 
         className={cn(
           "fixed top-3 left-3 right-3 z-50 transition-all duration-500",
-          "bg-background/80 backdrop-blur-xl border border-white/10",
-          "rounded-[20px] shadow-2xl shadow-black/20",
-          "hover:shadow-2xl hover:shadow-black/30",
+          "backdrop-blur-xl border border-white/15",
+          "rounded-[24px] shadow-[0_12px_40px_rgba(0,0,0,0.4)]",
+          "bg-gradient-to-r from-white/12 via-white/8 to-white/12",
           headerClassName
         )}
         initial={{ y: -100, opacity: 0 }}
@@ -106,37 +106,51 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
         style={{
           background: scrollY > 20 
-            ? "rgba(28, 28, 30, 0.9)" 
-            : "rgba(28, 28, 30, 0.8)"
+            ? "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.12) 100%)" 
+            : "linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.10) 100%)"
         }}
       >
-        <div className={cn("container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center", fullWidth ? "max-w-full" : "max-w-7xl")}>
-          {/* Logo Only */}
+        {/* Glass reflection effect */}
+        <div className="absolute inset-0 rounded-[24px] bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-60" />
+        <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+        
+        <div className={cn("container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center relative z-10", fullWidth ? "max-w-full" : "max-w-7xl")}>
+          {/* Enhanced Logo */}
           <Link to="/" className="flex items-center group">
-            <motion.img 
-              src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
-              alt="Logo" 
-              className="h-8 sm:h-9 w-auto transition-transform duration-300 group-hover:scale-110" 
-              whileHover={{ rotate: 5 }}
-            />
+            <motion.div className="relative">
+              <motion.img 
+                src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
+                alt="Logo" 
+                className="h-8 sm:h-9 w-auto transition-transform duration-300 group-hover:scale-110 relative z-10" 
+                whileHover={{ rotate: 5 }}
+              />
+              {/* Logo glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-amethyst/30 to-coral/30 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+            </motion.div>
           </Link>
           
-          {/* Modern Desktop Navigation */}
-          <nav className="hidden lg:flex items-center bg-white/5 backdrop-blur-sm rounded-full px-2 py-1 border border-white/10">
+          {/* Enhanced Desktop Navigation with Glass Pills */}
+          <nav className="hidden lg:flex items-center bg-white/8 backdrop-blur-sm rounded-full px-3 py-2 border border-white/15 shadow-inner">
             {navItems.map((item) => (
-              <button
+              <motion.button
                 key={item.path}
                 onClick={() => handleNavClick(item)}
                 className={cn(
-                  "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 relative",
+                  "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 relative overflow-hidden",
                   isActive(item.path) && !item.external
-                    ? "bg-white/15 text-white shadow-lg"
+                    ? "bg-white/20 text-white shadow-lg backdrop-blur-sm border border-white/25"
                     : item.name === 'Ayo Gabung'
-                    ? "bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-500/30 hover:bg-emerald-600"
-                    : "text-white/70 hover:text-white hover:bg-white/10"
+                    ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 border border-emerald-400/50"
+                    : "text-white/70 hover:text-white hover:bg-white/15"
                 )}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {item.name}
+                {/* Button glass effect */}
+                {item.name === 'Ayo Gabung' && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-emerald-600/20 rounded-full" />
+                )}
+                <span className="relative z-10">{item.name}</span>
                 {isActive(item.path) && !item.external && (
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-amethyst/30 to-coral/30 rounded-full -z-10"
@@ -146,18 +160,20 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                     transition={{ duration: 0.3 }}
                   />
                 )}
-              </button>
+              </motion.button>
             ))}
           </nav>
           
-          {/* Modern Mobile Menu Button */}
+          {/* Enhanced Mobile Menu Button */}
           <motion.button
-            className="lg:hidden p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300"
+            className="lg:hidden p-3 rounded-2xl bg-white/12 backdrop-blur-sm border border-white/25 hover:bg-white/20 transition-all duration-300 shadow-lg"
             onClick={toggleMenu}
             aria-label="Toggle menu"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
+            {/* Button glass reflection */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent opacity-60" />
             <AnimatePresence mode="wait">
               {isMenuOpen ? (
                 <motion.div
@@ -166,6 +182,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                   animate={{ rotate: 0, opacity: 1 }}
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
+                  className="relative z-10"
                 >
                   <X className="h-5 w-5 text-white" />
                 </motion.div>
@@ -176,6 +193,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                   animate={{ rotate: 0, opacity: 1 }}
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
+                  className="relative z-10"
                 >
                   <Menu className="h-5 w-5 text-white" />
                 </motion.div>
@@ -185,11 +203,10 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         </div>
       </motion.header>
       
-      {/* Enhanced Mobile Menu */}
+      {/* Enhanced Mobile Menu with Glass Morphism */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
               initial={{ opacity: 0 }}
@@ -199,15 +216,18 @@ const PageLayout: React.FC<PageLayoutProps> = ({
               onClick={() => setIsMenuOpen(false)}
             />
             
-            {/* Menu Content */}
             <motion.div
-              className="fixed inset-x-4 top-24 z-40 bg-secondary/95 backdrop-blur-xl border border-border/30 rounded-3xl shadow-2xl shadow-black/20 lg:hidden overflow-hidden"
+              className="fixed inset-x-4 top-24 z-40 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl shadow-black/40 lg:hidden overflow-hidden"
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <nav className="p-6">
+              {/* Glass reflection for mobile menu */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/15 via-transparent to-transparent opacity-80 rounded-3xl" />
+              <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+              
+              <nav className="p-6 relative z-10">
                 <motion.div 
                   className="space-y-2"
                   initial="hidden"
