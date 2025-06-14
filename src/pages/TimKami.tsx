@@ -1,28 +1,10 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
-import TeamMemberCard from "@/components/TeamMemberCard";
 import TeamMemberBio from "@/components/TeamMemberBio";
-import { StandardCard } from "@/components/ui/StandardCard";
-import { CategoryButton } from "@/components/ui/CategoryButton";
-import { IconDisplay } from "@/components/ui/IconDisplay";
+import { TeamOverviewStats } from "@/components/team/TeamOverviewStats";
+import { TeamCategoryFilters } from "@/components/team/TeamCategoryFilters";
+import { TeamMemberGrid } from "@/components/team/TeamMemberGrid";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Users, User, Video, Palette, Smile, FileText } from "lucide-react";
-import { LucideIcon } from "lucide-react";
-
-// Animation Variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 }
-  }
-};
-
-const memberVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-};
 
 // Team Data Structure with updated names and bios
 const teamMembers = [
@@ -204,54 +186,6 @@ const teamMembers = [
   }
 ];
 
-// Team Categories with standardized design
-const categories = [
-  {
-    id: "video",
-    name: "Video Editing",
-    icon: Video,
-    color: "coral" as const
-  },
-  {
-    id: "design",
-    name: "Graphic Design",
-    icon: Palette,
-    color: "turquoise" as const
-  },
-  {
-    id: "meme",
-    name: "Meme",
-    icon: Smile,
-    color: "softPink" as const
-  },
-  {
-    id: "karyatulis",
-    name: "Karya Tulis",
-    icon: FileText,
-    color: "mint" as const
-  },
-];
-
-// StatCard component with corrected icon type
-const StatCard = ({ icon, label, value, color }: { 
-  icon: LucideIcon; 
-  label: string; 
-  value: string;
-  color: "amethyst" | "turquoise" | "coral" | "mint" | "amber" | "emerald" | "softPink";
-}) => (
-  <motion.div 
-    className="flex flex-col items-center justify-center p-4 gap-3"
-    whileHover={{ y: -5 }}
-    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-  >
-    <IconDisplay icon={icon} color={color} size="lg" />
-    <div className="text-center">
-      <span className="text-3xl font-bold font-serif text-foreground block">{value}</span>
-      <span className="text-sm text-foreground/60 font-medium">{label}</span>
-    </div>
-  </motion.div>
-);
-
 // Main TimKami Component
 const TimKami = () => {
   const [selectedMember, setSelectedMember] = useState<any>(null);
@@ -262,81 +196,21 @@ const TimKami = () => {
       title="Tim Kami"
       subtitle="Kenali para kreator berbakat di balik OUR CREATIVITY"
     >
-      {/* Category selector with standardized design */}
-      <motion.div 
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {categories.map((category) => (
-          <CategoryButton
-            key={category.id}
-            icon={category.icon}
-            text={category.name}
-            color={category.color}
-            isActive={activeCategory === category.id}
-            onClick={() => setActiveCategory(activeCategory === category.id ? null : category.id)}
-          />
-        ))}
-      </motion.div>
+      {/* Category selector */}
+      <TeamCategoryFilters 
+        activeCategory={activeCategory}
+        onCategoryChange={setActiveCategory}
+      />
 
-      {/* Team Overview Stats Card with standardized design */}
-      <StandardCard className="mb-10" glowColor="rgba(229, 222, 255, 0.3)">
-        <div className="flex items-center gap-4 mb-6">
-          <IconDisplay icon={Users} color="amethyst" size="lg" />
-          <div>
-            <h3 className="text-xl font-serif font-bold text-foreground">Tim Overview</h3>
-            <p className="text-sm text-foreground/60">Statistik anggota komunitas</p>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <StatCard icon={User} label="Total Anggota" value="32" color="amethyst" />
-          <StatCard icon={Video} label="Video Editing" value="8" color="coral" />
-          <StatCard icon={Palette} label="Graphic Design" value="12" color="turquoise" />
-          <StatCard icon={Smile} label="Meme" value="6" color="softPink" />
-          <StatCard icon={FileText} label="Karya Tulis" value="6" color="mint" />
-        </div>
-      </StandardCard>
+      {/* Team Overview Stats */}
+      <TeamOverviewStats />
 
       {/* Team members grid */}
-      <motion.div 
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {teamMembers
-          .filter(member => !activeCategory || member.category === activeCategory)
-          .map((member) => (
-            <motion.div 
-              key={member.id} 
-              variants={memberVariants}
-            >
-              <TeamMemberCard
-                name={member.name}
-                role={member.role}
-                instagram={member.instagram}
-                accentColor={member.accent}
-                bio={member.bio}
-                achievements={member.achievements}
-                onClick={() => setSelectedMember(member)}
-              />
-            </motion.div>
-          ))}
-      </motion.div>
-
-      {/* Empty state when no members match filter */}
-      {teamMembers.filter(member => !activeCategory || member.category === activeCategory).length === 0 && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center py-16"
-        >
-          <p className="text-foreground/60 text-lg">Tim untuk kategori ini akan segera diperkenalkan.</p>
-        </motion.div>
-      )}
+      <TeamMemberGrid 
+        members={teamMembers}
+        activeCategory={activeCategory}
+        onMemberClick={setSelectedMember}
+      />
 
       {/* Member bio dialog */}
       <Dialog open={!!selectedMember} onOpenChange={(open) => !open && setSelectedMember(null)}>
