@@ -79,9 +79,9 @@ const FlowingTypography: React.FC<FlowingTypographyProps> = ({
             className="inline-block"
             variants={characterVariants}
             style={{ 
-              textShadow: animationType === 'subtle-glow' 
-                ? `0 0 10px var(--color-glow-primary), 0 0 20px var(--color-glow-primary)` 
-                : undefined 
+              textShadow: glowColor 
+                ? `0 0 10px ${glowColor}, 0 0 20px ${glowColor}` 
+                : `0 0 10px var(--color-glow-primary), 0 0 20px var(--color-glow-primary)`
             }}
           >
             {char === ' ' ? '\u00A0' : char}
@@ -123,7 +123,9 @@ const FlowingTypography: React.FC<FlowingTypographyProps> = ({
         )}
         style={{
           textShadow: animationType === 'subtle-glow' 
-            ? `0 0 10px var(--color-glow-primary), 0 0 20px var(--color-glow-primary)` 
+            ? glowColor 
+              ? `0 0 10px ${glowColor}, 0 0 20px ${glowColor}`
+              : `0 0 10px var(--color-glow-primary), 0 0 20px var(--color-glow-primary)`
             : undefined
         }}
       >
