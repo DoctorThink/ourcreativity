@@ -84,69 +84,70 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   
   return (
     <div className={cn("relative min-h-screen flex flex-col", className)}>
-      {/* Floating Modern Header */}
+      {/* Fixed Glassmorphism Header */}
       <motion.header 
         className={cn(
-          "fixed top-4 left-4 right-4 z-50 transition-all duration-500 rounded-2xl",
-          scrollY > 20 
-            ? "bg-background/70 backdrop-blur-xl border border-border/30 shadow-2xl shadow-black/10" 
-            : "bg-background/50 backdrop-blur-lg border border-border/20 shadow-lg shadow-black/5",
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+          "bg-background/10 backdrop-blur-2xl border-b border-white/10",
+          "shadow-lg shadow-black/5 supports-[backdrop-filter]:bg-background/10",
+          scrollY > 50 && "bg-background/20 backdrop-blur-3xl shadow-2xl shadow-black/10",
           headerClassName
         )}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >
-        <div className={cn("container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center", fullWidth ? "max-w-full" : "max-w-7xl")}>
+        <div className={cn("container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center", fullWidth ? "max-w-full" : "max-w-7xl")}>
           {/* Enhanced Logo Area */}
           <Link to="/" className="flex items-center gap-3 group">
             <motion.img 
               src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
               alt="Logo" 
-              className="h-8 sm:h-9 w-auto transition-transform duration-300 group-hover:scale-110" 
+              className="h-8 sm:h-9 w-auto transition-transform duration-300 group-hover:scale-110 drop-shadow-lg" 
               whileHover={{ rotate: 5 }}
             />
             <div className="relative overflow-hidden">
               <div className="animated-gradient-text text-lg sm:text-xl font-bold tracking-wide glow-text">
                 OUR CREATIVITY
               </div>
-              {/* Glow effect for header text */}
-              <div className="absolute inset-0 animated-gradient-text text-lg sm:text-xl font-bold tracking-wide blur-sm opacity-50 -z-10">
+              {/* Enhanced glow effect for header text */}
+              <div className="absolute inset-0 animated-gradient-text text-lg sm:text-xl font-bold tracking-wide blur-md opacity-40 -z-10">
                 OUR CREATIVITY
               </div>
             </div>
           </Link>
           
-          {/* Modern Desktop Navigation */}
-          <nav className="hidden lg:flex items-center bg-white/5 backdrop-blur-sm rounded-full px-2 py-1 border border-white/10">
+          {/* Enhanced Desktop Navigation with Glassmorphism */}
+          <nav className="hidden lg:flex items-center bg-white/5 backdrop-blur-xl rounded-full px-3 py-2 border border-white/10 shadow-inner">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 relative",
+                  "px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-300 relative group",
                   isActive(item.path)
-                    ? "bg-white/15 text-white shadow-lg"
+                    ? "bg-white/20 text-white shadow-lg backdrop-blur-sm"
                     : "text-white/70 hover:text-white hover:bg-white/10"
                 )}
               >
                 {item.name}
                 {isActive(item.path) && (
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-amethyst/30 to-coral/30 rounded-full -z-10"
+                    className="absolute inset-0 bg-gradient-to-r from-amethyst/30 to-coral/30 rounded-full -z-10 blur-sm"
                     layoutId="activeTab"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                   />
                 )}
+                <div className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-white/5 transition-all duration-300" />
               </Link>
             ))}
           </nav>
           
-          {/* Modern Mobile Menu Button */}
+          {/* Enhanced Mobile Menu Button */}
           <motion.button
-            className="lg:hidden p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300"
+            className="lg:hidden p-3 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg"
             onClick={toggleMenu}
             aria-label="Toggle menu"
             whileHover={{ scale: 1.05 }}
@@ -161,7 +162,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <X className="h-5 w-5 text-white" />
+                  <X className="h-5 w-5 text-white drop-shadow-sm" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -171,7 +172,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Menu className="h-5 w-5 text-white" />
+                  <Menu className="h-5 w-5 text-white drop-shadow-sm" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -179,13 +180,13 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         </div>
       </motion.header>
       
-      {/* Enhanced Mobile Menu */}
+      {/* Enhanced Mobile Menu with Better Glassmorphism */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
-            {/* Backdrop */}
+            {/* Enhanced Backdrop */}
             <motion.div
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-40 bg-black/50 backdrop-blur-md lg:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -193,9 +194,9 @@ const PageLayout: React.FC<PageLayoutProps> = ({
               onClick={() => setIsMenuOpen(false)}
             />
             
-            {/* Menu Content */}
+            {/* Enhanced Menu Content */}
             <motion.div
-              className="fixed inset-x-4 top-24 z-40 bg-secondary/95 backdrop-blur-xl border border-border/30 rounded-3xl shadow-2xl shadow-black/20 lg:hidden overflow-hidden"
+              className="fixed inset-x-4 top-24 z-40 bg-secondary/80 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl shadow-black/30 lg:hidden overflow-hidden"
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
@@ -230,9 +231,9 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                         to={item.path}
                         onClick={() => setIsMenuOpen(false)}
                         className={cn(
-                          "flex items-center px-4 py-4 rounded-2xl font-medium transition-all duration-300 text-base group",
+                          "flex items-center px-4 py-4 rounded-2xl font-medium transition-all duration-300 text-base group backdrop-blur-sm",
                           isActive(item.path)
-                            ? "bg-amethyst/20 text-white font-semibold border border-amethyst/30"
+                            ? "bg-amethyst/20 text-white font-semibold border border-amethyst/30 shadow-lg"
                             : "text-foreground/80 hover:text-foreground hover:bg-white/10"
                         )}
                       >
@@ -245,7 +246,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                         </motion.span>
                         {isActive(item.path) && (
                           <motion.div
-                            className="w-2 h-2 rounded-full bg-amethyst"
+                            className="w-2 h-2 rounded-full bg-amethyst shadow-lg"
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ duration: 0.2 }}
@@ -261,8 +262,8 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         )}
       </AnimatePresence>
       
-      {/* Main Content */}
-      <main className={cn("flex-grow pt-24 md:pt-28", contentClassName)}>
+      {/* Main Content - Added top padding to account for fixed header */}
+      <main className={cn("flex-grow pt-20 md:pt-24", contentClassName)}>
         {/* Page Title Section */}
         {title && (
           <div className="container mx-auto px-4 sm:px-6 mb-8 md:mb-10">
