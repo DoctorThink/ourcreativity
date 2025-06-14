@@ -2,7 +2,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Palette, Video, FileText, Smile, Grid3X3 } from "lucide-react";
-import LiquidButton from "@/components/ui/LiquidButton";
+import { CategoryButton } from "../ui/CategoryButton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Select,
@@ -18,11 +18,11 @@ type CategoryProps = {
 };
 
 const categories = [
-  { id: "all", name: "Semua", icon: Grid3X3, color: "rgba(152, 245, 225, 0.3)" },
-  { id: "design", name: "Design", icon: Palette, color: "rgba(64, 224, 208, 0.3)" },
-  { id: "video", name: "Video", icon: Video, color: "rgba(255, 127, 80, 0.3)" },
-  { id: "writing", name: "Karya Tulis", icon: FileText, color: "rgba(155, 109, 255, 0.3)" },
-  { id: "meme", name: "Meme", icon: Smile, color: "rgba(255, 209, 220, 0.3)" }
+  { id: "all", name: "Semua", icon: Grid3X3, color: "mint" as const },
+  { id: "design", name: "Design", icon: Palette, color: "turquoise" as const },
+  { id: "video", name: "Video", icon: Video, color: "coral" as const },
+  { id: "writing", name: "Karya Tulis", icon: FileText, color: "amethyst" as const },
+  { id: "meme", name: "Meme", icon: Smile, color: "softPink" as const }
 ];
 
 export const CategorySelector: React.FC<CategoryProps> = ({
@@ -35,7 +35,7 @@ export const CategorySelector: React.FC<CategoryProps> = ({
     return (
       <div className="px-4">
         <Select value={selectedCategory} onValueChange={onSelectCategory}>
-          <SelectTrigger className="w-full glass-morphism-shallow rounded-2xl text-foreground hover:glass-morphism transition-colors shadow-md">
+          <SelectTrigger className="w-full bg-secondary/80 border border-white/10 backdrop-blur-md rounded-2xl text-foreground hover:bg-secondary/90 transition-colors shadow-md">
             <SelectValue>
               <div className="flex items-center gap-3">
                 {(() => {
@@ -53,7 +53,7 @@ export const CategorySelector: React.FC<CategoryProps> = ({
               </div>
             </SelectValue>
           </SelectTrigger>
-          <SelectContent className="glass-morphism-deep rounded-2xl shadow-lg overflow-hidden">
+          <SelectContent className="bg-secondary/90 border-white/10 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden">
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -88,27 +88,16 @@ export const CategorySelector: React.FC<CategoryProps> = ({
   return (
     <div className="flex justify-center">
       <div className="grid grid-cols-5 gap-4 max-w-5xl w-full">
-        {categories.map((category) => {
-          const Icon = category.icon;
-          const isActive = selectedCategory === category.id;
-          
-          return (
-            <LiquidButton
-              key={category.id}
-              variant={isActive ? "primary" : "secondary"}
-              onClick={() => onSelectCategory(category.id)}
-              className="flex flex-col items-center gap-3 p-6 h-auto min-h-[120px] rounded-2xl"
-              glowColor={isActive ? category.color : undefined}
-            >
-              <div className={`p-4 rounded-full transition-all duration-300 ${
-                isActive ? 'bg-white/20 shadow-lg' : 'bg-white/10'
-              }`}>
-                <Icon className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-sm font-medium text-white">{category.name}</span>
-            </LiquidButton>
-          );
-        })}
+        {categories.map((category) => (
+          <CategoryButton
+            key={category.id}
+            icon={category.icon}
+            text={category.name}
+            color={category.color}
+            isActive={selectedCategory === category.id}
+            onClick={() => onSelectCategory(category.id)}
+          />
+        ))}
       </div>
     </div>
   );

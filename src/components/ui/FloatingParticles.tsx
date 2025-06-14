@@ -5,8 +5,7 @@ import { motion } from 'framer-motion';
 const FloatingParticles = () => {
   return (
     <div className="fixed inset-0 pointer-events-none -z-40 overflow-hidden">
-      {/* Reduced particle count from 20 to 12 */}
-      {Array.from({ length: 12 }).map((_, i) => (
+      {Array.from({ length: 20 }).map((_, i) => (
         <motion.div
           key={i}
           className="absolute w-1 h-1 rounded-full"
@@ -31,8 +30,8 @@ const FloatingParticles = () => {
         />
       ))}
       
-      {/* Reduced bubble count from 8 to 5 */}
-      {Array.from({ length: 5 }).map((_, i) => (
+      {/* Larger floating bubbles */}
+      {Array.from({ length: 8 }).map((_, i) => (
         <motion.div
           key={`bubble-${i}`}
           className="absolute rounded-full border border-white/20"
