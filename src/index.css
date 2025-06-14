@@ -1,3 +1,4 @@
+
 /* src/index.css */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap'); /* Added Inter 700 for font-semibold */
@@ -52,24 +53,6 @@
     position: relative;
   }
 
-  /* body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -10;
-    background: 
-      radial-gradient(circle at 20% 20%, var(--gradient-dark-2), var(--gradient-dark-1) 60%),
-      radial-gradient(circle at 80% 80%, var(--gradient-dark-3), transparent 60%),
-      linear-gradient(135deg, var(--gradient-dark-1), var(--gradient-dark-2), var(--gradient-dark-3));
-    background-size: 200% 200%, 200% 200%, 400% 400%;
-    animation: flowingGradient 60s ease-in-out infinite alternate;
-    opacity: 0.9;
-    will-change: background-position;
-  } */
-
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif; /* Explicitly set headings to font-serif */
   }
@@ -93,7 +76,6 @@
     font-family: 'Playfair Display', Georgia, Cambria, "Times New Roman", Times, serif;
   }
 
-
   video {
     -webkit-backface-visibility: hidden;
     -moz-backface-visibility: hidden;
@@ -105,6 +87,46 @@
     backface-visibility: hidden;
     perspective: 1000;
     transform-style: preserve-3d;
+  }
+}
+
+/* Animated Gradient Text for OUR CREATIVITY */
+.animated-gradient-text {
+  background: linear-gradient(
+    -45deg,
+    #9B6DFF,    /* Amethyst */
+    #40E0D0,    /* Turquoise */
+    #FF7F50,    /* Coral */
+    #98F5E1,    /* Mint */
+    #FFD1DC,    /* Soft Pink */
+    #FEC6A1,    /* Peach */
+    #FFBF00,    /* Amber */
+    #9B6DFF     /* Back to Amethyst */
+  );
+  background-size: 400% 400%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradientShift 6s ease-in-out infinite;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 
@@ -143,6 +165,8 @@
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+/* ... keep existing code (all the rest of the CSS remains the same) */
 
 .bg-grid-pattern {
   background-image: 

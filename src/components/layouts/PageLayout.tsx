@@ -1,12 +1,10 @@
+
 import React, { useState, useEffect, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-// Use motion.create() instead of deprecated motion()
-const MotionLink = motion.create(Link);
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -84,16 +82,15 @@ const PageLayout: React.FC<PageLayoutProps> = ({
     return location.pathname.startsWith(path);
   };
   
-  // Detect if we're on a dark background page
-  const isDarkPage = location.pathname === "/";
-  
   return (
     <div className={cn("relative min-h-screen flex flex-col", className)}>
-      {/* Header */}
+      {/* Modern Sticky Header */}
       <motion.header 
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 py-4 md:py-5 transition-all duration-300",
-          scrollY > 20 ? "bg-background/90 backdrop-blur-lg border-b border-border/30 shadow-sm" : "",
+          "fixed top-0 left-0 right-0 z-50 py-3 md:py-4 transition-all duration-500",
+          scrollY > 20 
+            ? "bg-background/80 backdrop-blur-xl border-b border-border/20 shadow-lg shadow-black/5" 
+            : "bg-transparent",
           headerClassName
         )}
         initial={{ y: -100 }}
@@ -101,43 +98,51 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >
         <div className={cn("container mx-auto px-4 sm:px-6 flex justify-between items-center", fullWidth ? "max-w-full" : "max-w-7xl")}>
-          {/* Logo Area */}
-          <Link to="/" className="flex items-center gap-3">
-            <img 
+          {/* Enhanced Logo Area with Gradient Animation */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <motion.img 
               src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
               alt="Logo" 
-              className="h-8 sm:h-9 w-auto" 
+              className="h-8 sm:h-9 w-auto transition-transform duration-300 group-hover:scale-110" 
+              whileHover={{ rotate: 5 }}
             />
-            <img 
-              src="/lovable-uploads/0bec5fdf-43d7-47af-b1cd-ba7fd2b949ec.png" 
-              alt="Our Creativity" 
-              className="h-7 w-auto"
-            />
+            <div className="relative overflow-hidden">
+              <div className="animated-gradient-text text-lg sm:text-xl font-bold tracking-wide">
+                OUR CREATIVITY
+              </div>
+            </div>
           </Link>
           
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1">
+          {/* Modern Desktop Navigation */}
+          <nav className="hidden lg:flex items-center bg-white/5 backdrop-blur-sm rounded-full px-2 py-1 border border-white/10">
             {navItems.map((item) => (
-              <MotionLink
+              <Link
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "px-3 py-2 rounded-full text-sm font-sans transition-all duration-300",
+                  "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 relative",
                   isActive(item.path)
-                    ? "bg-white/15 text-white font-medium"
+                    ? "bg-white/15 text-white shadow-lg"
                     : "text-white/70 hover:text-white hover:bg-white/10"
                 )}
-                whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                whileTap={{ scale: 0.95 }}
               >
                 {item.name}
-              </MotionLink>
+                {isActive(item.path) && (
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-amethyst/30 to-coral/30 rounded-full -z-10"
+                    layoutId="activeTab"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
+              </Link>
             ))}
           </nav>
           
-          {/* Mobile Menu Button */}
+          {/* Modern Mobile Menu Button */}
           <motion.button
-            className="lg:hidden p-3 rounded-2xl bg-secondary/80 backdrop-blur-sm border border-border/30 hover:bg-secondary transition-all duration-300"
+            className="lg:hidden p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300"
             onClick={toggleMenu}
             aria-label="Toggle menu"
             whileHover={{ scale: 1.05 }}
@@ -152,7 +157,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <X className="h-5 w-5 text-foreground" />
+                  <X className="h-5 w-5 text-white" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -162,7 +167,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Menu className="h-5 w-5 text-foreground" />
+                  <Menu className="h-5 w-5 text-white" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -186,7 +191,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
             
             {/* Menu Content */}
             <motion.div
-              className="fixed inset-x-4 top-24 z-40 bg-secondary/95 backdrop-blur-xl border border-border/30 rounded-3xl shadow-2xl shadow-black/20 lg:hidden overflow-hidden"
+              className="fixed inset-x-4 top-20 z-40 bg-secondary/95 backdrop-blur-xl border border-border/30 rounded-3xl shadow-2xl shadow-black/20 lg:hidden overflow-hidden"
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
@@ -221,9 +226,9 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                         to={item.path}
                         onClick={() => setIsMenuOpen(false)}
                         className={cn(
-                          "flex items-center px-4 py-4 rounded-2xl font-sans transition-all duration-300 text-base group",
+                          "flex items-center px-4 py-4 rounded-2xl font-medium transition-all duration-300 text-base group",
                           isActive(item.path)
-                            ? "bg-amethyst/20 text-white font-medium border border-amethyst/30"
+                            ? "bg-amethyst/20 text-white font-semibold border border-amethyst/30"
                             : "text-foreground/80 hover:text-foreground hover:bg-white/10"
                         )}
                       >
@@ -253,8 +258,8 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       </AnimatePresence>
       
       {/* Main Content */}
-      <main className={cn("flex-grow pt-24 md:pt-28", contentClassName)}>
-        {/* Page Title Section with improved alignment and font composition */}
+      <main className={cn("flex-grow pt-20 md:pt-24", contentClassName)}>
+        {/* Page Title Section */}
         {title && (
           <div className="container mx-auto px-4 sm:px-6 mb-8 md:mb-10">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -262,13 +267,13 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                 {showBackButton && (
                   <button
                     onClick={handleBackClick}
-                    className="mb-4 inline-flex items-center text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 font-sans"
+                    className="mb-4 inline-flex items-center text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 font-medium"
                   >
                     <ArrowLeft className="mr-1 h-4 w-4" />
                     <span>Kembali</span>
                   </button>
                 )}
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-sans mb-2 md:mb-3 text-center md:text-left">{title}</h1>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-serif mb-2 md:mb-3 text-center md:text-left">{title}</h1>
                 {subtitle && <p className="text-foreground/80 text-lg md:text-xl font-sans text-center md:text-left">{subtitle}</p>}
               </div>
             </div>
@@ -284,7 +289,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         </div>
       </main>
       
-      {/* Simplified Footer */}
+      {/* Footer */}
       <footer className={cn("mt-auto pt-12 pb-6", footerClassName)}>
         <div className={cn(
           "container mx-auto px-4 sm:px-6",
@@ -298,7 +303,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                   alt="Logo" 
                   className="h-7 w-auto" 
                 />
-                <span className="text-foreground/70 text-sm font-sans">© 2025 OUR CREATIVITY. Hak Cipta Dilindungi.</span>
+                <span className="text-foreground/70 text-sm font-medium">© 2025 OUR CREATIVITY. Hak Cipta Dilindungi.</span>
               </div>
             </div>
           </div>
