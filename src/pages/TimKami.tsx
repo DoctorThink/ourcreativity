@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -128,11 +129,11 @@ const teamMembers = [
   {
     id: "10",
     name: "Ardellio",
-    role: "Designer",
+    role: "Admin OC Edisi Coding",
     instagram: "ardel.yo",
-    imageSrc: "/lovable-uploads/design.png",
-    accent: "amethyst",
-    category: "design",
+    imageSrc: "/lovable-uploads/bot.png",
+    accent: "orangeLight",
+    category: "bot",
     bio: "Ardellio adalah seorang siswa kelas 9 di SMPN 20 Bandung. Suka dengan coding dan programming, dan suka menulis. Meneliti dan Eksperimen dengan membuat juga menggunakan AI.",
     achievements: [
       "Juara 2 dalam kompetisi menulis RedGolden Media",
@@ -198,7 +199,7 @@ const teamMembers = [
     role: "Discord Admin",
     instagram: "@snhrrr",
     imageSrc: null,
-    accent: "grayMid",
+    accent: "blueLight",
     category: "admin",
     bio: "Nanti ditambah"
   }
@@ -291,8 +292,7 @@ const TimKami = () => {
           </div>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <StatCard icon={User} label="Total Anggota" value="32" color="amethyst" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard icon={Video} label="Video Editing" value="8" color="coral" />
           <StatCard icon={Palette} label="Graphic Design" value="12" color="turquoise" />
           <StatCard icon={Smile} label="Meme" value="6" color="softPink" />
