@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { KaryaGallery } from "../components/karya/KaryaGallery";
@@ -14,6 +13,7 @@ import {
   sortKaryaByRecency,
   sortKaryaByPopularity
 } from "@/lib/karyaUtils";
+import UploadWizard from "../components/karya/UploadWizard";
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -106,6 +106,9 @@ const KaryaKami: React.FC = () => {
             Koleksi karya kreatif dari komunitas Our Creativity
           </p>
         </motion.div>
+        
+        {/* --- NEW MULTI-STEP UPLOAD WIZARD AT THE TOP --- */}
+        <UploadWizard />
 
         {/* Simplified Loading animation with standardized design */}
         <AnimatePresence>
