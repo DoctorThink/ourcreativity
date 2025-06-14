@@ -3,6 +3,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, X, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
+import ReactMarkdown from "react-markdown";
 import { Announcement } from "@/models/Announcement";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -48,120 +49,12 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
     }
   };
 
-  // Enhanced markdown-like parsing with better formatting
-  const parseContent = (content: string) => {
-    return content.split('\n\n').map((paragraph, idx) => {
-      // Handle headers (lines starting with #)
-      if (paragraph.startsWith('# ')) {
-        return (
-          <h2 key={idx} className="text-2xl font-serif font-bold text-foreground mb-4 mt-6 first:mt-0">
-            {paragraph.replace('# ', '')}
-          </h2>
-        );
-      }
-      
-      if (paragraph.startsWith('## ')) {
-        return (
-          <h3 key={idx} className="text-xl font-serif font-semibold text-foreground mb-3 mt-5 first:mt-0">
-            {paragraph.replace('## ', '')}
-          </h3>
-        );
-      }
-
-      if (paragraph.startsWith('### ')) {
-        return (
-          <h4 key={idx} className="text-lg font-serif font-semibold text-foreground mb-2 mt-4 first:mt-0">
-            {paragraph.replace('### ', '')}
-          </h4>
-        );
-      }
-
-      // Handle lists (lines with - or *)
-      if (paragraph.includes('- ') || paragraph.includes('* ') || paragraph.includes('• ')) {
-        const items = paragraph.split('\n').filter(line => line.trim());
-        return (
-          <div key={idx} className="space-y-3 my-6">
-            {items.map((item, itemIdx) => {
-              if (item.includes('- ') || item.includes('* ') || item.includes('• ')) {
-                return (
-                  <div key={itemIdx} className="flex items-start gap-3 group">
-                    <div className="w-2 h-2 rounded-full bg-amethyst mt-2.5 flex-shrink-0 group-hover:bg-coral transition-colors duration-200" />
-                    <p className="text-base leading-relaxed text-foreground/90 flex-1">
-                      {item.replace(/^[•*-]\s*/, '')}
-                    </p>
-                  </div>
-                );
-              }
-              return (
-                <p key={itemIdx} className="text-lg leading-relaxed font-medium text-foreground mb-3">
-                  {item}
-                </p>
-              );
-            })}
-          </div>
-        );
-      }
-
-      // Handle numbered lists
-      if (/^\d+\./.test(paragraph)) {
-        const items = paragraph.split('\n').filter(line => line.trim());
-        return (
-          <ol key={idx} className="space-y-3 my-6 counter-reset-list">
-            {items.map((item, itemIdx) => {
-              if (/^\d+\./.test(item)) {
-                const number = item.match(/^\d+/)?.[0];
-                const text = item.replace(/^\d+\.\s*/, '');
-                return (
-                  <li key={itemIdx} className="flex items-start gap-3 group">
-                    <div className="w-6 h-6 rounded-full bg-amethyst/20 text-amethyst flex items-center justify-center text-sm font-medium flex-shrink-0 group-hover:bg-coral/20 group-hover:text-coral transition-colors duration-200">
-                      {number}
-                    </div>
-                    <p className="text-base leading-relaxed text-foreground/90 flex-1">
-                      {text}
-                    </p>
-                  </li>
-                );
-              }
-              return null;
-            }).filter(Boolean)}
-          </ol>
-        );
-      }
-
-      // Handle quotes (lines starting with >)
-      if (paragraph.startsWith('> ')) {
-        return (
-          <blockquote key={idx} className="border-l-4 border-amethyst/50 pl-6 py-4 my-6 bg-amethyst/5 rounded-r-lg">
-            <p className="text-lg leading-relaxed text-foreground/90 italic">
-              {paragraph.replace('> ', '')}
-            </p>
-          </blockquote>
-        );
-      }
-
-      // Handle bold text (**text**)
-      let processedText = paragraph.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-foreground">$1</strong>');
-      
-      // Handle italic text (*text*)
-      processedText = processedText.replace(/\*(.*?)\*/g, '<em class="italic text-foreground/90">$1</em>');
-
-      // Handle inline code (`code`)
-      processedText = processedText.replace(/`(.*?)`/g, '<code class="bg-secondary/50 px-2 py-1 rounded text-sm font-mono text-mint">$1</code>');
-
-      // Regular paragraph
-      return (
-        <p 
-          key={idx} 
-          className="text-base leading-relaxed text-foreground/90 mb-4"
-          dangerouslySetInnerHTML={{ __html: processedText }}
-        />
-      );
-    });
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[95vh] p-0 border-0 bg-secondary/95 backdrop-blur-xl overflow-hidden">
+      <DialogContent 
+        className="max-w-5xl max-h-[95vh] p-0 border-0 bg-secondary/95 backdrop-blur-xl overflow-hidden"
+        style={{ zIndex: 9999 }}
+      >
         <DialogTitle className="sr-only">{announcement.title}</DialogTitle>
         <DialogDescription className="sr-only">
           {getCategoryLabel()} - {getDisplayDate()}
@@ -215,7 +108,7 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                 </div>
               </div>
 
-              {/* Enhanced Content with better spacing and readability */}
+              {/* Enhanced Content with Markdown rendering */}
               <div className="px-6 pb-6">
                 {/* Image */}
                 {announcement.image_url && (
@@ -239,12 +132,39 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                 
                 {/* Enhanced Content with Markdown Support */}
                 <motion.div 
-                  className="max-w-none space-y-6 text-readable"
+                  className="max-w-none space-y-6 text-readable prose prose-invert prose-lg max-w-none"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  {parseContent(announcement.content)}
+                  <ReactMarkdown
+                    components={{
+                      h1: ({ children }) => <h1 className="text-3xl font-serif font-bold text-foreground mb-4">{children}</h1>,
+                      h2: ({ children }) => <h2 className="text-2xl font-serif font-semibold text-foreground mb-3">{children}</h2>,
+                      h3: ({ children }) => <h3 className="text-xl font-serif font-semibold text-foreground mb-2">{children}</h3>,
+                      p: ({ children }) => <p className="text-base leading-relaxed text-foreground/90 mb-4">{children}</p>,
+                      strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+                      em: ({ children }) => <em className="italic text-foreground/90">{children}</em>,
+                      ul: ({ children }) => <ul className="space-y-2 mb-4">{children}</ul>,
+                      ol: ({ children }) => <ol className="space-y-2 mb-4 list-decimal list-inside">{children}</ol>,
+                      li: ({ children }) => (
+                        <li className="flex items-start gap-3">
+                          <div className="w-2 h-2 rounded-full bg-amethyst mt-2.5 flex-shrink-0" />
+                          <span className="text-base leading-relaxed text-foreground/90 flex-1">{children}</span>
+                        </li>
+                      ),
+                      blockquote: ({ children }) => (
+                        <blockquote className="border-l-4 border-amethyst/50 pl-6 py-4 my-6 bg-amethyst/5 rounded-r-lg">
+                          <div className="text-lg leading-relaxed text-foreground/90 italic">{children}</div>
+                        </blockquote>
+                      ),
+                      code: ({ children }) => (
+                        <code className="bg-secondary/50 px-2 py-1 rounded text-sm font-mono text-mint">{children}</code>
+                      ),
+                    }}
+                  >
+                    {announcement.content}
+                  </ReactMarkdown>
                 </motion.div>
                 
                 {/* Enhanced Link */}

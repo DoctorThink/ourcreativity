@@ -765,3 +765,83 @@ video {
     0 0 40px rgba(152, 245, 225, 0.1);
   filter: drop-shadow(0 0 15px rgba(155, 109, 255, 0.4));
 }
+
+/* Enhanced modal z-index to ensure it appears above everything */
+[data-radix-dialog-overlay] {
+  z-index: 9998 !important;
+}
+
+[data-radix-dialog-content] {
+  z-index: 9999 !important;
+}
+
+/* Markdown content styling for announcement modals */
+.prose-announcement {
+  max-width: none;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.prose-announcement h1,
+.prose-announcement h2,
+.prose-announcement h3,
+.prose-announcement h4,
+.prose-announcement h5,
+.prose-announcement h6 {
+  color: #ffffff;
+  font-family: 'Playfair Display', serif;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose-announcement p {
+  line-height: 1.7;
+  margin-bottom: 1em;
+}
+
+.prose-announcement strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.prose-announcement ul,
+.prose-announcement ol {
+  margin: 1em 0;
+  padding-left: 0;
+}
+
+.prose-announcement li {
+  margin: 0.5em 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.prose-announcement li::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #9B6DFF;
+  border-radius: 50%;
+  margin-top: 0.625rem;
+  flex-shrink: 0;
+}
+
+.prose-announcement blockquote {
+  border-left: 4px solid rgba(155, 109, 255, 0.5);
+  padding-left: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin: 1.5rem 0;
+  background: rgba(155, 109, 255, 0.05);
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-style: italic;
+}
+
+.prose-announcement code {
+  background-color: rgba(44, 44, 46, 0.5);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+  color: #98F5E1;
+}
