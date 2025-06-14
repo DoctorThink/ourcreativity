@@ -1,3 +1,4 @@
+
 import React, { ReactNode, useState } from 'react';
 import { motion, type MotionProps } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -57,7 +58,6 @@ const BentoCard = ({
   const mergedStyles: React.CSSProperties = { 
     transformStyle: 'preserve-3d',
     borderColor: isHovered && interactive ? 'var(--glass-border-color-hover)' : 'var(--glass-border-color)',
-    '--glow-color': glowColor,
     ...(style || {})
   };
 
@@ -78,11 +78,11 @@ const BentoCard = ({
       onMouseLeave={() => setIsHovered(false)}
       {...motionConfig}
     >
-      {/* Subtle border glow on hover */}
+      {/* Subtle border glow on hover - using CSS custom property properly */}
       <motion.div
         className="absolute -inset-px rounded-3xl border-2 border-transparent"
         style={{
-          borderColor: 'var(--glow-color)',
+          borderColor: glowColor,
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: isHovered && interactive ? 0.5 : 0 }}

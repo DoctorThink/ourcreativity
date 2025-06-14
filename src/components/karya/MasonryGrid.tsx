@@ -35,26 +35,65 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
     }
   };
 
+  // Container variants for stagger animation
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      }
+    }
+  };
+
+  // Item variants for individual animation
+  const itemVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 20,
+      scale: 0.9
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut"
+      }
+    }
+  };
+
   return (
-    <Masonry
-      breakpointCols={breakpointColumnsObj}
-      className="flex w-auto -ml-4 my-masonry-grid"
-      columnClassName="pl-4 bg-transparent my-masonry-grid_column"
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="w-full"
     >
-      {items.map((item) => (
-        <motion.div
-          key={item.id}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="mb-6"
-        >
-          <KaryaCard 
-            karya={item} 
-            onClick={() => handleItemClick(item)} 
-          />
-        </motion.div>
-      ))}
-    </Masonry>
+      <Masonry
+        breakpointCols={breakpointColumnsObj}
+        className="flex w-auto -ml-4 my-masonry-grid"
+        columnClassName="pl-4 bg-transparent my-masonry-grid_column"
+      >
+        {items.map((item, index) => (
+          <motion.div
+            key={item.id}
+            variants={itemVariants}
+            className="mb-6"
+            whileHover={{ 
+              y: -5,
+              transition: { duration: 0.2 }
+            }}
+          >
+            <KaryaCard 
+              karya={item} 
+              onClick={() => handleItemClick(item)} 
+            />
+          </motion.div>
+        ))}
+      </Masonry>
+    </motion.div>
   );
 };
