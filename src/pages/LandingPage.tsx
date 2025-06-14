@@ -15,8 +15,17 @@ import {
   Play,
   Eye,
   MessageCircle,
-  Share2
+  Share2,
+  Palette,
+  Video,
+  FileText,
+  Laugh,
+  Award,
+  Calendar,
+  MapPin
 } from 'lucide-react';
+import BentoGrid from '@/components/ui/BentoGrid';
+import BentoCard from '@/components/ui/BentoCard';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
@@ -70,17 +79,17 @@ const LandingPage = () => {
         stagger: 0.2
       });
 
-      // Cards animation on scroll
-      gsap.from(".feature-card", {
+      // Bento cards animation on scroll
+      gsap.from(".bento-card", {
         scrollTrigger: {
-          trigger: ".features-section",
+          trigger: ".bento-section",
           start: "top 80%",
           toggleActions: "play none none reverse"
         },
         y: 100,
         opacity: 0,
         duration: 1,
-        stagger: 0.2,
+        stagger: 0.15,
         ease: "power3.out"
       });
 
@@ -129,20 +138,6 @@ const LandingPage = () => {
         ease: "none"
       });
 
-      // Text reveal animation
-      gsap.from(".reveal-text", {
-        scrollTrigger: {
-          trigger: ".reveal-text",
-          start: "top 90%",
-          toggleActions: "play none none reverse"
-        },
-        x: -100,
-        opacity: 0,
-        duration: 1.5,
-        ease: "power3.out",
-        stagger: 0.1
-      });
-
     }, containerRef);
 
     return () => ctx.revert();
@@ -157,7 +152,7 @@ const LandingPage = () => {
       views: "15.2K",
       likes: "892",
       thumbnail: "/lovable-uploads/video.png",
-      gradient: "from-purple-500 to-pink-500"
+      description: "Karya motion graphics yang memukau dengan efek visual yang menawan"
     },
     {
       id: 2,
@@ -167,7 +162,7 @@ const LandingPage = () => {
       views: "8.7K",
       likes: "456",
       thumbnail: "/lovable-uploads/design.png",
-      gradient: "from-blue-500 to-cyan-500"
+      description: "Desain logo yang clean dan modern dengan filosofi yang mendalam"
     },
     {
       id: 3,
@@ -177,7 +172,7 @@ const LandingPage = () => {
       views: "25.1K",
       likes: "1.2K",
       thumbnail: "/lovable-uploads/meme.png",
-      gradient: "from-orange-500 to-yellow-500"
+      description: "Konten meme yang menghibur dan relevan dengan isu terkini"
     },
     {
       id: 4,
@@ -187,7 +182,7 @@ const LandingPage = () => {
       views: "5.3K",
       likes: "289",
       thumbnail: "/lovable-uploads/karyatulis.png",
-      gradient: "from-green-500 to-emerald-500"
+      description: "Karya sastra digital yang menyentuh hati dengan kata-kata indah"
     }
   ];
 
@@ -195,17 +190,17 @@ const LandingPage = () => {
     <div ref={containerRef} className="min-h-screen bg-black text-white overflow-hidden">
       {/* Animated Background */}
       <div className="fixed inset-0 parallax-bg">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black to-blue-900/20" />
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-900/10 via-black to-orange-900/10" />
         <div className="absolute top-0 left-0 w-full h-full">
-          {Array.from({ length: 50 }).map((_, i) => (
+          {Array.from({ length: 100 }).map((_, i) => (
             <div
               key={i}
-              className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
+              className="absolute w-1 h-1 bg-gradient-to-r from-teal-400 to-orange-400 rounded-full animate-pulse"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 2}s`,
-                opacity: Math.random() * 0.5 + 0.1
+                animationDelay: `${Math.random() * 3}s`,
+                opacity: Math.random() * 0.7 + 0.1
               }}
             />
           ))}
@@ -218,7 +213,7 @@ const LandingPage = () => {
           {/* Logo */}
           <div className="hero-logo floating mb-8">
             <div className="relative w-32 h-32 mx-auto mb-6">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-lg opacity-60 animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-orange-400 rounded-full blur-lg opacity-60 animate-pulse" />
               <img
                 src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png"
                 alt="OUR CREATIVITY Logo"
@@ -227,96 +222,149 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Main Title */}
-          <h1 ref={titleRef} className="hero-title text-6xl md:text-8xl lg:text-9xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent leading-tight">
+          {/* Main Title with Brand Colors */}
+          <h1 ref={titleRef} className="hero-title text-6xl md:text-8xl lg:text-9xl font-bold mb-6 bg-gradient-to-r from-teal-400 via-orange-400 to-teal-400 bg-clip-text text-transparent leading-tight">
             OUR CREATIVITY
           </h1>
 
           {/* Subtitle */}
-          <p className="hero-subtitle text-xl md:text-2xl lg:text-3xl text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed">
+          <p className="hero-subtitle text-xl md:text-2xl lg:text-3xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed">
             Komunitas Kreatif Indonesia yang Menginspirasi
             <br />
-            <span className="text-purple-400 font-semibold">Dimana Imajinasi Bertemu Inovasi</span>
+            <span className="text-transparent bg-gradient-to-r from-teal-400 to-orange-400 bg-clip-text font-semibold">
+              Dimana Imajinasi Bertemu Inovasi
+            </span>
           </p>
 
           {/* CTA Buttons */}
           <div className="hero-cta flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
               onClick={() => navigate('/karya-kami')}
-              className="group px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-lg font-semibold hover:scale-105 transition-all duration-300 flex items-center gap-2 shadow-2xl shadow-purple-500/25"
+              className="group px-8 py-4 bg-gradient-to-r from-teal-500 to-orange-500 rounded-full text-lg font-semibold hover:scale-105 transition-all duration-300 flex items-center gap-2 shadow-2xl shadow-teal-500/25"
             >
               <Play className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               Jelajahi Karya Kami
             </button>
             <button
               onClick={() => navigate('/tim-kami')}
-              className="group px-8 py-4 border-2 border-purple-500 rounded-full text-lg font-semibold hover:bg-purple-500/20 transition-all duration-300 flex items-center gap-2"
+              className="group px-8 py-4 border-2 border-teal-500 rounded-full text-lg font-semibold hover:bg-teal-500/20 transition-all duration-300 flex items-center gap-2"
             >
               <Users className="w-5 h-5 group-hover:scale-110 transition-transform" />
               Kenali Tim Kami
             </button>
           </div>
         </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 floating">
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-bounce" />
-          </div>
-        </div>
       </section>
 
-      {/* Features Section */}
-      <section className="features-section py-20 px-4 relative">
+      {/* Bento Grid Section */}
+      <section className="bento-section py-20 px-4 relative">
         <div className="container max-w-7xl mx-auto">
-          <h2 className="reveal-text text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Mengapa Bergabung dengan Kami?
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-teal-400 to-orange-400 bg-clip-text text-transparent">
+            Tentang Komunitas Kami
           </h2>
           
-          <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                icon: <Sparkles className="w-8 h-8" />,
-                title: "Kreativitas Tanpa Batas",
-                description: "Ekspresikan ide-ide brillian Anda tanpa batasan",
-                gradient: "from-yellow-500 to-orange-500"
-              },
-              {
-                icon: <Users className="w-8 h-8" />,
-                title: "Komunitas Solid",
-                description: "Bergabung dengan 200+ kreator berbakat Indonesia",
-                gradient: "from-green-500 to-emerald-500"
-              },
-              {
-                icon: <Trophy className="w-8 h-8" />,
-                title: "Prestasi Gemilang",
-                description: "Raih pencapaian dan pengakuan atas karya Anda",
-                gradient: "from-purple-500 to-pink-500"
-              },
-              {
-                icon: <Heart className="w-8 h-8" />,
-                title: "Passion Driven",
-                description: "Dikerjakan dengan cinta dan dedikasi penuh",
-                gradient: "from-red-500 to-pink-500"
-              }
-            ].map((feature, index) => (
-              <div
-                key={index}
-                className="feature-card group relative p-8 rounded-3xl bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-md border border-white/10 hover:border-white/30 transition-all duration-500 hover:scale-105"
-              >
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-bold mb-4 text-white group-hover:text-purple-300 transition-colors">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-400 leading-relaxed">
-                  {feature.description}
+          <BentoGrid cols={4} mdCols={2} smCols={1} gap="lg" className="max-w-6xl mx-auto">
+            {/* Large Feature Card */}
+            <BentoCard 
+              className="bento-card col-span-2 row-span-2 p-8 bg-gradient-to-br from-teal-900/30 to-orange-900/30 border-teal-400/20"
+              glowColor="rgba(20, 184, 166, 0.3)"
+            >
+              <div className="h-full flex flex-col justify-center">
+                <Sparkles className="w-12 h-12 text-teal-400 mb-6" />
+                <h3 className="text-3xl font-bold mb-4 text-white">Kreativitas Tanpa Batas</h3>
+                <p className="text-gray-300 text-lg leading-relaxed mb-6">
+                  Bergabunglah dengan komunitas kreatif terbesar Indonesia. Kami menyediakan platform untuk 
+                  mengekspresikan ide-ide brilliant tanpa batasan, dengan dukungan penuh dari sesama kreator.
                 </p>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600/0 to-pink-600/0 group-hover:from-purple-600/5 group-hover:to-pink-600/5 rounded-3xl transition-all duration-500" />
+                <div className="flex items-center gap-4 text-sm text-teal-400">
+                  <div className="flex items-center gap-1">
+                    <Users className="w-4 h-4" />
+                    <span>200+ Anggota</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Trophy className="w-4 h-4" />
+                    <span>25+ Awards</span>
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
+            </BentoCard>
+
+            {/* Video Editing Card */}
+            <BentoCard 
+              className="bento-card p-6 bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-purple-400/20"
+              onClick={() => navigate('/tim-kami')}
+            >
+              <Video className="w-8 h-8 text-purple-400 mb-4" />
+              <h3 className="text-xl font-bold mb-2 text-white">Video Editing</h3>
+              <p className="text-gray-400 text-sm mb-4">
+                Tim ahli dalam motion graphics, cinematic editing, dan visual effects
+              </p>
+              <div className="text-purple-400 text-sm font-semibold">5 Anggota Aktif</div>
+            </BentoCard>
+
+            {/* Graphic Design Card */}
+            <BentoCard 
+              className="bento-card p-6 bg-gradient-to-br from-emerald-900/30 to-teal-900/30 border-emerald-400/20"
+              onClick={() => navigate('/tim-kami')}
+            >
+              <Palette className="w-8 h-8 text-emerald-400 mb-4" />
+              <h3 className="text-xl font-bold mb-2 text-white">Graphic Design</h3>
+              <p className="text-gray-400 text-sm mb-4">
+                Desainer berbakat dalam branding, ilustrasi, dan desain digital
+              </p>
+              <div className="text-emerald-400 text-sm font-semibold">8 Anggota Aktif</div>
+            </BentoCard>
+
+            {/* Meme Creation Card */}
+            <BentoCard 
+              className="bento-card p-6 bg-gradient-to-br from-yellow-900/30 to-orange-900/30 border-yellow-400/20"
+              onClick={() => navigate('/tim-kami')}
+            >
+              <Laugh className="w-8 h-8 text-yellow-400 mb-4" />
+              <h3 className="text-xl font-bold mb-2 text-white">Meme Creation</h3>
+              <p className="text-gray-400 text-sm mb-4">
+                Kreator konten viral dan hiburan digital yang mengena
+              </p>
+              <div className="text-yellow-400 text-sm font-semibold">6 Anggota Aktif</div>
+            </BentoCard>
+
+            {/* Karya Tulis Card */}
+            <BentoCard 
+              className="bento-card p-6 bg-gradient-to-br from-pink-900/30 to-red-900/30 border-pink-400/20"
+              onClick={() => navigate('/tim-kami')}
+            >
+              <FileText className="w-8 h-8 text-pink-400 mb-4" />
+              <h3 className="text-xl font-bold mb-2 text-white">Karya Tulis</h3>
+              <p className="text-gray-400 text-sm mb-4">
+                Penulis dan penyair digital dengan karya-karya menyentuh hati
+              </p>
+              <div className="text-pink-400 text-sm font-semibold">4 Anggota Aktif</div>
+            </BentoCard>
+
+            {/* Stats Card */}
+            <BentoCard 
+              className="bento-card col-span-2 p-6 bg-gradient-to-r from-gray-900/50 to-gray-800/30 border-gray-600/20"
+            >
+              <div className="grid grid-cols-2 gap-8 h-full">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-teal-400 mb-2">1500+</div>
+                  <div className="text-gray-400">Karya Dipublikasi</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-orange-400 mb-2">50K+</div>
+                  <div className="text-gray-400">Total Views</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-teal-400 mb-2">8</div>
+                  <div className="text-gray-400">Kategori Kreatif</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-orange-400 mb-2">#1</div>
+                  <div className="text-gray-400">Komunitas ID</div>
+                </div>
+              </div>
+            </BentoCard>
+          </BentoGrid>
         </div>
       </section>
 
@@ -324,10 +372,10 @@ const LandingPage = () => {
       <section ref={karyaRef} className="karya-section py-20 px-4 relative">
         <div className="container max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="reveal-text text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-teal-400 to-orange-400 bg-clip-text text-transparent">
               Karya Kami Terbaru
             </h2>
-            <p className="reveal-text text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               Jelajahi koleksi karya luar biasa dari para kreator berbakat di komunitas kami
             </p>
           </div>
@@ -336,12 +384,12 @@ const LandingPage = () => {
             {karyaItems.map((item, index) => (
               <div
                 key={item.id}
-                className="karya-item group relative rounded-3xl overflow-hidden bg-gradient-to-br from-gray-900/80 to-gray-800/50 backdrop-blur-md border border-white/10 hover:border-white/30 transition-all duration-500 hover:scale-105 cursor-pointer"
+                className="karya-item group relative rounded-3xl overflow-hidden bg-gradient-to-br from-gray-900/80 to-gray-800/50 backdrop-blur-md border border-white/10 hover:border-teal-400/30 transition-all duration-500 hover:scale-105 cursor-pointer"
                 onClick={() => navigate('/karya-kami')}
               >
                 {/* Thumbnail */}
                 <div className="relative h-48 overflow-hidden">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-80`} />
+                  <div className="absolute inset-0 bg-gradient-to-br from-teal-500/60 to-orange-500/60 opacity-80" />
                   <img
                     src={item.thumbnail}
                     alt={item.title}
@@ -360,17 +408,21 @@ const LandingPage = () => {
                 {/* Content */}
                 <div className="p-6">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${item.gradient} text-white`}>
+                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-teal-500 to-orange-500 text-white">
                       {item.category}
                     </span>
                   </div>
                   
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-teal-300 transition-colors">
                     {item.title}
                   </h3>
                   
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-400 text-sm mb-2">
                     oleh {item.creator}
+                  </p>
+
+                  <p className="text-gray-500 text-xs mb-4 line-clamp-2">
+                    {item.description}
                   </p>
 
                   {/* Stats */}
@@ -397,7 +449,7 @@ const LandingPage = () => {
           <div className="text-center mt-12">
             <button
               onClick={() => navigate('/karya-kami')}
-              className="group px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-lg font-semibold hover:scale-105 transition-all duration-300 flex items-center gap-2 mx-auto shadow-2xl shadow-purple-500/25"
+              className="group px-8 py-4 bg-gradient-to-r from-teal-500 to-orange-500 rounded-full text-lg font-semibold hover:scale-105 transition-all duration-300 flex items-center gap-2 mx-auto shadow-2xl shadow-teal-500/25"
             >
               Lihat Semua Karya
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -406,37 +458,13 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section ref={statsRef} className="stats-section py-20 px-4 relative">
-        <div className="container max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { label: "Anggota Aktif", value: 200, suffix: "+" },
-              { label: "Karya Dipublikasi", value: 1500, suffix: "+" },
-              { label: "Kategori Kreatif", value: 8, suffix: "" },
-              { label: "Awards Diraih", value: 25, suffix: "+" }
-            ].map((stat, index) => (
-              <div key={index} className="text-center group">
-                <div className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  <span className="stat-number" data-final={stat.value}>0</span>
-                  <span>{stat.suffix}</span>
-                </div>
-                <p className="text-gray-400 text-lg group-hover:text-white transition-colors">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-20 px-4 relative">
         <div className="container max-w-4xl mx-auto text-center">
-          <div className="relative p-12 rounded-3xl bg-gradient-to-br from-purple-900/30 to-pink-900/30 backdrop-blur-md border border-white/20">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-3xl" />
+          <div className="relative p-12 rounded-3xl bg-gradient-to-br from-teal-900/30 to-orange-900/30 backdrop-blur-md border border-teal-400/20">
+            <div className="absolute inset-0 bg-gradient-to-r from-teal-600/10 to-orange-600/10 rounded-3xl" />
             
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-teal-200 bg-clip-text text-transparent">
               Siap Bergabung?
             </h2>
             
@@ -447,14 +475,14 @@ const LandingPage = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={() => navigate('/informasi')}
-                className="group px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-lg font-semibold hover:scale-105 transition-all duration-300 flex items-center gap-2 justify-center shadow-2xl shadow-purple-500/25"
+                className="group px-8 py-4 bg-gradient-to-r from-teal-500 to-orange-500 rounded-full text-lg font-semibold hover:scale-105 transition-all duration-300 flex items-center gap-2 justify-center shadow-2xl shadow-teal-500/25"
               >
                 <Users className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 Bergabung Sekarang
               </button>
               <button
                 onClick={() => navigate('/pengumuman')}
-                className="group px-8 py-4 border-2 border-purple-500 rounded-full text-lg font-semibold hover:bg-purple-500/20 transition-all duration-300 flex items-center gap-2 justify-center"
+                className="group px-8 py-4 border-2 border-teal-500 rounded-full text-lg font-semibold hover:bg-teal-500/20 transition-all duration-300 flex items-center gap-2 justify-center"
               >
                 <MessageCircle className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                 Pelajari Lebih Lanjut
