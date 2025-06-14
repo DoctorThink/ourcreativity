@@ -1,167 +1,182 @@
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ExternalLink, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface NavigationItem {
+interface NavItem {
   label: string;
   href: string;
-  isActive?: boolean;
   external?: boolean;
+  badge?: string;
 }
 
 interface LiquidNavigationProps {
-  items: NavigationItem[];
-  onItemClick: (item: NavigationItem) => void;
+  items: NavItem[];
   className?: string;
   orientation?: 'horizontal' | 'vertical';
+  glowColor?: string;
 }
 
 const LiquidNavigation: React.FC<LiquidNavigationProps> = ({
   items,
-  onItemClick,
   className,
-  orientation = 'horizontal'
+  orientation = 'horizontal',
+  glowColor = 'rgba(155, 109, 255, 0.4)'
 }) => {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
   const containerClasses = cn(
-    "relative glass-morphism rounded-full p-2",
-    {
-      'flex items-center space-x-1': orientation === 'horizontal',
-      'flex flex-col space-y-1': orientation === 'vertical',
-    },
+    "relative flex glass-morphism rounded-2xl p-2 border border-white/20",
+    orientation === 'horizontal' ? "flex-row gap-2" : "flex-col gap-2",
     className
   );
 
+  const glowStyle = { '--color-glow-primary': glowColor } as React.CSSProperties;
+
   return (
-    <nav className={containerClasses}>
-      {/* Floating background for active item */}
+    <motion.nav
+      className={containerClasses}
+      style={glowStyle}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
+      {/* Background glow effect */}
       <motion.div
-        className="absolute bg-white/20 rounded-full"
-        layoutId="activeBackground"
-        transition={{
-          type: "spring",
-          stiffness: 300,
-          damping: 30
+        className="absolute inset-0 rounded-2xl opacity-0"
+        style={{
+          background: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), ${glowColor}, transparent 70%)`,
         }}
+        animate={{
+          opacity: hoveredIndex !== null ? 0.6 : 0,
+        }}
+        transition={{ duration: 0.3 }}
       />
-      
+
       {items.map((item, index) => (
-        <motion.button
-          key={item.href}
-          className={cn(
-            "relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
-            "hover:text-white focus:outline-none focus:ring-2 focus:ring-white/50",
-            {
-              'text-white font-semibold': item.isActive,
-              'text-white/70 hover:text-white': !item.isActive,
-            }
-          )}
-          onClick={() => onItemClick(item)}
-          whileHover={{ 
-            scale: 1.05,
-            y: orientation === 'horizontal' ? -2 : 0,
-            x: orientation === 'vertical' ? 2 : 0,
-          }}
-          whileTap={{ scale: 0.95 }}
-          transition={{
-            type: "spring",
-            stiffness: 400,
-            damping: 25
-          }}
-        >
-          {/* Active background */}
-          {item.isActive && (
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 rounded-full"
-              layoutId="activePill"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 30
-              }}
-            />
-          )}
-          
-          {/* Hover glow effect */}
-          <motion.div
-            className="absolute inset-0 rounded-full opacity-0"
-            style={{
-              boxShadow: "0 0 20px var(--color-glow-primary)"
-            }}
-            whileHover={{ opacity: 0.5 }}
-            transition={{ duration: 0.2 }}
-          />
-          
-          {/* Liquid ripple effect */}
-          <motion.div
-            className="absolute inset-0 bg-white/10 rounded-full opacity-0"
-            whileTap={{ 
-              opacity: [0, 0.5, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{ duration: 0.4 }}
-          />
-          
-          {/* Text content */}
-          <span className="relative z-10 flex items-center gap-2">
-            {item.label}
-            {item.external && (
-              <motion.svg
-                className="w-3 h-3 opacity-70"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                initial={{ rotate: 0 }}
-                whileHover={{ rotate: 45 }}
-                transition={{ duration: 0.2 }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                />
-              </motion.svg>
-            )}
-          </span>
-          
-          {/* Morphing border */}
-          <motion.div
-            className="absolute inset-0 rounded-full border border-white/20"
-            whileHover={{ 
-              borderColor: "rgba(255, 255, 255, 0.4)",
-              scale: 1.02
-            }}
-            transition={{ duration: 0.2 }}
-          />
-        </motion.button>
-      ))}
-      
-      {/* Floating particles effect */}
-      {Array.from({ length: 3 }).map((_, i) => (
         <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-white/30 rounded-full"
-          style={{
-            top: `${20 + i * 20}%`,
-            left: `${10 + i * 30}%`,
-          }}
-          animate={{
-            y: [-10, 10, -10],
-            opacity: [0.3, 0.8, 0.3],
-          }}
-          transition={{
-            duration: 3 + i,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: i * 0.5
-          }}
-        />
+          key={item.href}
+          className="relative"
+          onMouseEnter={() => setHoveredIndex(index)}
+          onMouseLeave={() => setHoveredIndex(null)}
+        >
+          <motion.a
+            href={item.href}
+            target={item.external ? '_blank' : undefined}
+            rel={item.external ? 'noopener noreferrer' : undefined}
+            className={cn(
+              "relative flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-300",
+              "text-white/80 hover:text-white",
+              "focus:outline-none focus:ring-2 focus:ring-white/30",
+              activeIndex === index && "bg-white/20 text-white"
+            )}
+            onClick={() => setActiveIndex(index)}
+            whileHover={{
+              scale: 1.05,
+              y: -2,
+            }}
+            whileTap={{ scale: 0.95 }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 25
+            }}
+          >
+            {/* Liquid background effect */}
+            <motion.div
+              className="absolute inset-0 rounded-xl bg-white/10 opacity-0"
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            />
+
+            {/* Content */}
+            <span className="relative z-10 flex items-center gap-2">
+              {item.label}
+              
+              {/* Badge */}
+              {item.badge && (
+                <motion.span
+                  className="px-2 py-1 text-xs bg-white/20 rounded-full"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
+                >
+                  {item.badge}
+                </motion.span>
+              )}
+              
+              {/* External link icon */}
+              {item.external && (
+                <motion.svg
+                  className="w-4 h-4 ml-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  initial={{ rotate: 0 }}
+                  whileHover={{ rotate: 45 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </motion.svg>
+              )}
+            </span>
+
+            {/* Ripple effect */}
+            <motion.div
+              className="absolute inset-0 rounded-xl bg-white/20 opacity-0"
+              whileTap={{
+                opacity: [0, 0.8, 0],
+                scale: [0.8, 1.2, 1],
+              }}
+              transition={{ duration: 0.6 }}
+            />
+          </motion.a>
+
+          {/* Active indicator */}
+          <AnimatePresence>
+            {activeIndex === index && (
+              <motion.div
+                className="absolute bottom-0 left-1/2 w-1 h-1 bg-white rounded-full"
+                style={{ x: '-50%' }}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0 }}
+                transition={{ duration: 0.2 }}
+              />
+            )}
+          </AnimatePresence>
+        </motion.div>
       ))}
-    </nav>
+
+      {/* Floating highlight */}
+      <AnimatePresence>
+        {hoveredIndex !== null && (
+          <motion.div
+            className="absolute rounded-xl bg-gradient-to-r from-white/10 to-white/5 pointer-events-none"
+            style={{
+              left: orientation === 'horizontal' 
+                ? `${hoveredIndex * (100 / items.length)}%`
+                : 0,
+              top: orientation === 'vertical'
+                ? `${hoveredIndex * (100 / items.length)}%`
+                : 0,
+              width: orientation === 'horizontal' 
+                ? `${100 / items.length}%`
+                : '100%',
+              height: orientation === 'vertical'
+                ? `${100 / items.length}%`
+                : '100%',
+            }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.2 }}
+          />
+        )}
+      </AnimatePresence>
+    </motion.nav>
   );
 };
 
