@@ -1,4 +1,3 @@
-
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -30,8 +29,6 @@ const CeritaKami = () => {
           <BentoCard 
             className="lg:col-span-2 p-4 sm:p-6 md:p-8"
             glowColor="rgba(229, 222, 255, 0.3)"
-            icon={BookOpen}
-            iconColor="bg-amethyst text-background"
           >
             <div className="h-full flex flex-col justify-between pt-12">
               <div>
@@ -63,8 +60,6 @@ const CeritaKami = () => {
           <BentoCard 
             className="p-4 sm:p-6 md:p-8 flex items-center justify-center"
             glowColor="rgba(152, 245, 225, 0.3)"
-            icon={Quote}
-            iconColor="bg-turquoise text-background"
           >
             <div className="text-center pt-8">
               <blockquote className="text-sm sm:text-base md:text-lg font-serif italic text-foreground/90 relative">
@@ -80,8 +75,6 @@ const CeritaKami = () => {
           <BentoCard 
             className="p-4 sm:p-6 md:p-8"
             glowColor="rgba(254, 198, 161, 0.3)"
-            icon={History}
-            iconColor="bg-coral text-background"
           >
             <div className="pt-12">
               <IconTitleRow 
@@ -106,8 +99,6 @@ const CeritaKami = () => {
           <BentoCard 
             className="p-4 sm:p-6 md:p-8 lg:col-span-2"
             glowColor="rgba(152, 245, 225, 0.3)"
-            icon={BarChart}
-            iconColor="bg-mint text-background"
           >
             <div className="pt-12">
               <IconTitleRow 
@@ -136,8 +127,6 @@ const CeritaKami = () => {
           <BentoCard 
             className="p-4 sm:p-6 md:p-8"
             glowColor="rgba(155, 109, 255, 0.3)"
-            icon={Target}
-            iconColor="bg-amethyst text-background"
           >
             <div className="pt-12">
               <IconTitleRow 
@@ -167,8 +156,6 @@ const CeritaKami = () => {
             <BentoCard 
               className="p-4 sm:p-6 flex flex-col items-center justify-center text-center"
               glowColor="rgba(254, 198, 161, 0.2)"
-              icon={Users}
-              iconColor="bg-coral text-background"
             >
               <div className="pt-12">
                 <IconTitleRow 
@@ -188,8 +175,6 @@ const CeritaKami = () => {
             <BentoCard 
               className="p-4 sm:p-6 flex flex-col items-center justify-center text-center"
               glowColor="rgba(152, 245, 225, 0.2)"
-              icon={Award}
-              iconColor="bg-turquoise text-background"
             >
               <div className="pt-12">
                 <IconTitleRow 
@@ -209,8 +194,6 @@ const CeritaKami = () => {
             <BentoCard 
               className="p-4 sm:p-6 flex flex-col items-center justify-center text-center"
               glowColor="rgba(229, 222, 255, 0.2)"
-              icon={Calendar}
-              iconColor="bg-amethyst text-background"
             >
               <div className="pt-12">
                 <IconTitleRow 
