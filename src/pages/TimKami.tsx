@@ -1,10 +1,11 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
 import TeamMemberCard from "@/components/TeamMemberCard";
 import TeamMemberBio from "@/components/TeamMemberBio";
-import BentoCard from "@/components/ui/BentoCard";
+import { StandardCard } from "@/components/ui/StandardCard";
+import { CategoryButton } from "@/components/ui/CategoryButton";
+import { IconDisplay } from "@/components/ui/IconDisplay";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Users, User, Video, Palette, Smile, FileText } from "lucide-react";
 
@@ -202,48 +203,51 @@ const teamMembers = [
   }
 ];
 
-// Team Categories with proper icons
+// Team Categories with standardized design
 const categories = [
   {
     id: "video",
     name: "Video Editing",
     icon: Video,
-    color: "bg-coral text-white",
-    accentColor: "rgba(254, 198, 161, 0.3)"
+    color: "coral" as const
   },
   {
     id: "design",
     name: "Graphic Design",
     icon: Palette,
-    color: "bg-turquoise text-white",
-    accentColor: "rgba(152, 245, 225, 0.3)"
+    color: "turquoise" as const
   },
   {
     id: "meme",
     name: "Meme",
     icon: Smile,
-    color: "bg-softPink text-white",
-    accentColor: "rgba(255, 209, 220, 0.3)"
+    color: "softPink" as const
   },
   {
     id: "karyatulis",
     name: "Karya Tulis",
     icon: FileText,
-    color: "bg-mint text-white",
-    accentColor: "rgba(152, 245, 225, 0.3)"
+    color: "mint" as const
   },
 ];
 
-// StatCard component for team stats - updated to use only Lucide icons
-const StatCard = ({ icon: Icon, label, value }: { icon?: React.ComponentType<any>; label: string; value: string }) => (
+// StatCard component with standardized IconDisplay
+const StatCard = ({ icon, label, value, color }: { 
+  icon: React.ComponentType<any>; 
+  label: string; 
+  value: string;
+  color: "amethyst" | "turquoise" | "coral" | "mint";
+}) => (
   <motion.div 
-    className="flex flex-col items-center justify-center p-2"
+    className="flex flex-col items-center justify-center p-4 gap-3"
     whileHover={{ y: -5 }}
     transition={{ type: "spring", stiffness: 400, damping: 10 }}
   >
-    {Icon && <Icon className="w-7 h-7 mb-2 text-foreground/90" />}
-    <span className="text-3xl font-medium font-serif">{value}</span>
-    <span className="text-sm text-foreground/60">{label}</span>
+    <IconDisplay icon={icon} color={color} size="lg" />
+    <div className="text-center">
+      <span className="text-3xl font-bold font-serif text-foreground block">{value}</span>
+      <span className="text-sm text-foreground/60 font-medium">{label}</span>
+    </div>
   </motion.div>
 );
 
@@ -257,61 +261,43 @@ const TimKami = () => {
       title="Tim Kami"
       subtitle="Kenali para kreator berbakat di balik OUR CREATIVITY"
     >
-      {/* Category selector - Bento-style with proper icons */}
+      {/* Category selector with standardized design */}
       <motion.div 
         className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        {categories.map((category) => {
-          const isActive = activeCategory === category.id;
-          
-          return (
-            <BentoCard
-              key={category.id}
-              icon={category.icon}
-              iconColor={category.color}
-              className={`p-6 transition-all duration-300 ${isActive ? 'ring-2 ring-offset-2 ring-offset-background' : ''}`}
-              interactive={true}
-              hoverScale={1.05}
-              onClick={() => setActiveCategory(activeCategory === category.id ? null : category.id)}
-              glowColor={isActive ? category.accentColor : undefined}
-            >
-              <div className="flex flex-col items-center justify-center text-center h-full">
-                <span className="font-medium text-foreground/90 text-sm">{category.name}</span>
-                
-                {isActive && (
-                  <motion.div 
-                    className="absolute bottom-3 left-0 right-0 mx-auto w-12 h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent"
-                    layoutId="categoryIndicator"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                  />
-                )}
-              </div>
-            </BentoCard>
-          );
-        })}
+        {categories.map((category) => (
+          <CategoryButton
+            key={category.id}
+            icon={category.icon}
+            text={category.name}
+            color={category.color}
+            isActive={activeCategory === category.id}
+            onClick={() => setActiveCategory(activeCategory === category.id ? null : category.id)}
+          />
+        ))}
       </motion.div>
 
-      {/* Team Overview Stats Card */}
-      <BentoCard
-        className="p-6 mb-10"
-        colSpan="col-span-1 md:col-span-full"
-        icon={Users}
-        iconColor="bg-amethyst text-background"
-        glowColor="rgba(229, 222, 255, 0.3)"
-        interactive={false}
-      >
-        <div className="flex flex-wrap justify-center gap-8 md:gap-16 pt-6">
-          <StatCard icon={User} label="Total Anggota" value="32" />
-          <StatCard icon={Video} label="Video Editing" value="8" />
-          <StatCard icon={Palette} label="Graphic Design" value="12" />
-          <StatCard icon={Smile} label="Meme" value="6" />
-          <StatCard icon={FileText} label="Karya Tulis" value="6" />
+      {/* Team Overview Stats Card with standardized design */}
+      <StandardCard className="mb-10" glowColor="rgba(229, 222, 255, 0.3)">
+        <div className="flex items-center gap-4 mb-6">
+          <IconDisplay icon={Users} color="amethyst" size="lg" />
+          <div>
+            <h3 className="text-xl font-serif font-bold text-foreground">Tim Overview</h3>
+            <p className="text-sm text-foreground/60">Statistik anggota komunitas</p>
+          </div>
         </div>
-      </BentoCard>
+        
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <StatCard icon={User} label="Total Anggota" value="32" color="amethyst" />
+          <StatCard icon={Video} label="Video Editing" value="8" color="coral" />
+          <StatCard icon={Palette} label="Graphic Design" value="12" color="turquoise" />
+          <StatCard icon={Smile} label="Meme" value="6" color="softPink" />
+          <StatCard icon={FileText} label="Karya Tulis" value="6" color="mint" />
+        </div>
+      </StandardCard>
 
       {/* Team members grid */}
       <motion.div 

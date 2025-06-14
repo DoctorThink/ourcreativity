@@ -89,27 +89,25 @@ const KaryaKami: React.FC = () => {
     setSelectedCategory(category);
   };
 
-  // Dummy handlers for FloatingNav props (no longer used)
-  const toggleFilters = () => {};
-
   return (
     <PageLayout title="">
       <div
         ref={mainRef}
         className="relative min-h-screen w-full"
       >
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="text-center mb-12 pt-28"
-      >
-        <h1 className="text-5xl font-bold text-white">KARYA KAMI</h1>
-        <p className="text-xl text-gray-300 mt-2">
-          Koleksi karya kreatif dari komunitas Our Creativity
-        </p>
-      </motion.div>
-        {/* Simplified Loading animation */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-center mb-12 pt-28"
+        >
+          <h1 className="text-5xl font-bold text-white font-serif">KARYA KAMI</h1>
+          <p className="text-xl text-gray-300 mt-4 font-sans">
+            Koleksi karya kreatif dari komunitas Our Creativity
+          </p>
+        </motion.div>
+
+        {/* Simplified Loading animation with standardized design */}
         <AnimatePresence>
           {isLoading && (
             <motion.div 
@@ -153,7 +151,7 @@ const KaryaKami: React.FC = () => {
           </motion.div>
         )}
         
-        {/* Gallery Section */}
+        {/* Gallery Section with standardized components */}
         <section className="mt-6 mb-16 relative z-10">
           <KaryaGallery 
             karyaData={filteredKarya}
