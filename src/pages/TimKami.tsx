@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -233,6 +234,19 @@ const categories = [
   },
 ];
 
+// StatCard component for team stats - updated to use only Lucide icons
+const StatCard = ({ icon: Icon, label, value }: { icon?: React.ComponentType<any>; label: string; value: string }) => (
+  <motion.div 
+    className="flex flex-col items-center justify-center p-2"
+    whileHover={{ y: -5 }}
+    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+  >
+    {Icon && <Icon className="w-7 h-7 mb-2 text-foreground/90" />}
+    <span className="text-3xl font-medium font-serif">{value}</span>
+    <span className="text-sm text-foreground/60">{label}</span>
+  </motion.div>
+);
+
 // Main TimKami Component
 const TimKami = () => {
   const [selectedMember, setSelectedMember] = useState<any>(null);
@@ -275,7 +289,7 @@ const TimKami = () => {
                     animate={{ opacity: 1 }}
                   />
                 )}
-              </motion.div>
+              </div>
             </BentoCard>
           );
         })}
@@ -351,18 +365,5 @@ const TimKami = () => {
     </PageLayout>
   );
 };
-
-// StatCard component for team stats - updated to use only Lucide icons
-const StatCard = ({ icon: Icon, label, value }: { icon?: React.ComponentType<any>; label: string; value: string }) => (
-  <motion.div 
-    className="flex flex-col items-center justify-center p-2"
-    whileHover={{ y: -5 }}
-    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-  >
-    {Icon && <Icon className="w-7 h-7 mb-2 text-foreground/90" />}
-    <span className="text-3xl font-medium font-serif">{value}</span>
-    <span className="text-sm text-foreground/60">{label}</span>
-  </motion.div>
-);
 
 export default TimKami;
