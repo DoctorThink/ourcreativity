@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -9,6 +8,7 @@ import { CategoryButton } from "@/components/ui/CategoryButton";
 import { IconDisplay } from "@/components/ui/IconDisplay";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Users, User, Video, Palette, Smile, FileText } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 
 // Animation Variants
 const containerVariants = {
@@ -232,9 +232,9 @@ const categories = [
   },
 ];
 
-// StatCard component with standardized IconDisplay - fix the color type
+// StatCard component with corrected icon type
 const StatCard = ({ icon, label, value, color }: { 
-  icon: React.ComponentType<any>; 
+  icon: LucideIcon; 
   label: string; 
   value: string;
   color: "amethyst" | "turquoise" | "coral" | "mint" | "amber" | "emerald" | "softPink";
