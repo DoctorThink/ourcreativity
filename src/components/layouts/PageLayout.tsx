@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Menu, X } from "lucide-react";
@@ -71,6 +70,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
     { name: "Tim Kami", path: "/tim-kami" },
     { name: "Cerita Kami", path: "/cerita-kami" },
     { name: "Karya Kami", path: "/karya-kami" },
+    { name: "Ayo Gabung", path: "#", external: true, url: "https://linktr.ee/ourcreativity" },
     { name: "Informasi", path: "/informasi" },
     { name: "Syarat & Ketentuan", path: "/terms" },
   ];
@@ -80,6 +80,14 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       return location.pathname === "/";
     }
     return location.pathname.startsWith(path);
+  };
+  
+  const handleNavClick = (item: any) => {
+    if (item.external) {
+      window.open(item.url, '_blank');
+    } else {
+      navigate(item.path);
+    }
   };
   
   return (
@@ -116,18 +124,18 @@ const PageLayout: React.FC<PageLayoutProps> = ({
           {/* Modern Desktop Navigation */}
           <nav className="hidden lg:flex items-center bg-white/5 backdrop-blur-sm rounded-full px-2 py-1 border border-white/10">
             {navItems.map((item) => (
-              <Link
+              <button
                 key={item.path}
-                to={item.path}
+                onClick={() => handleNavClick(item)}
                 className={cn(
                   "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 relative",
-                  isActive(item.path)
+                  isActive(item.path) && !item.external
                     ? "bg-white/15 text-white shadow-lg"
                     : "text-white/70 hover:text-white hover:bg-white/10"
                 )}
               >
                 {item.name}
-                {isActive(item.path) && (
+                {isActive(item.path) && !item.external && (
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-amethyst/30 to-coral/30 rounded-full -z-10"
                     layoutId="activeTab"
@@ -136,7 +144,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                     transition={{ duration: 0.3 }}
                   />
                 )}
-              </Link>
+              </button>
             ))}
           </nav>
           
@@ -222,12 +230,14 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                         visible: { opacity: 1, x: 0 }
                       }}
                     >
-                      <Link
-                        to={item.path}
-                        onClick={() => setIsMenuOpen(false)}
+                      <button
+                        onClick={() => {
+                          handleNavClick(item);
+                          setIsMenuOpen(false);
+                        }}
                         className={cn(
-                          "flex items-center px-4 py-4 rounded-2xl font-medium transition-all duration-300 text-base group",
-                          isActive(item.path)
+                          "flex items-center px-4 py-4 rounded-2xl font-medium transition-all duration-300 text-base group w-full text-left",
+                          isActive(item.path) && !item.external
                             ? "bg-amethyst/20 text-white font-semibold border border-amethyst/30"
                             : "text-foreground/80 hover:text-foreground hover:bg-white/10"
                         )}
@@ -239,7 +249,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                         >
                           {item.name}
                         </motion.span>
-                        {isActive(item.path) && (
+                        {isActive(item.path) && !item.external && (
                           <motion.div
                             className="w-2 h-2 rounded-full bg-amethyst"
                             initial={{ scale: 0 }}
@@ -247,7 +257,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                             transition={{ duration: 0.2 }}
                           />
                         )}
-                      </Link>
+                      </button>
                     </motion.div>
                   ))}
                 </motion.div>

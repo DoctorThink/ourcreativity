@@ -1,7 +1,6 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, Users, Megaphone, BookOpen, Info, FileText, Palette, Trophy, Sparkles } from "lucide-react";
+import { ArrowRight, Calendar, Users, Megaphone, BookOpen, Info, FileText, Palette, Trophy, Sparkles, UserPlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../components/layouts/PageLayout";
 import BentoCard from "../components/ui/BentoCard";
@@ -51,7 +50,12 @@ const Index = () => {
   const isMobile = useIsMobile();
 
   const handleTileClick = (tile: BentoTile) => {
-    navigate(tile.path);
+    if (tile.id === 'ayo-gabung') {
+      // Open Linktree in a new tab
+      window.open('https://linktr.ee/ourcreativity', '_blank');
+    } else {
+      navigate(tile.path);
+    }
   };
 
   const bentoTiles: BentoTile[] = [
@@ -123,6 +127,20 @@ const Index = () => {
       colSpan: "lg:col-span-1",
       rowSpan: "lg:row-span-1",
       pattern: "triangles",
+      textColor: "text-white"
+    },
+    {
+      id: "ayo-gabung",
+      title: "Ayo Gabung",
+      description: "Bergabung via Linktree atau Google Form.",
+      icon: UserPlus,
+      color: "bg-gradient-to-br from-emerald/20 to-green-500/30",
+      gradientFrom: "from-emerald/10",
+      gradientTo: "to-green-500/20",
+      path: "#",
+      colSpan: "lg:col-span-1",
+      rowSpan: "lg:row-span-1",
+      pattern: "circles",
       textColor: "text-white"
     },
     {
@@ -247,8 +265,8 @@ const Index = () => {
         animate="visible"
         className="relative z-10"
       >
-        {/* Optimized Bento Grid with smaller cards on desktop */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 auto-rows-fr max-w-6xl mx-auto">
+        {/* Smaller Bento Grid - reduced from 6xl to 4xl and smaller min heights */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 auto-rows-fr max-w-4xl mx-auto">
           {bentoTiles.map((tile, index) => (
             <motion.div
               key={tile.id}
@@ -261,12 +279,13 @@ const Index = () => {
                   tile.id === 'karya-kami' ? '2 / 3 / 4 / 4' :
                   tile.id === 'cerita-kami' ? '3 / 1 / 4 / 2' :
                   tile.id === 'informasi' ? '3 / 2 / 4 / 3' :
-                  tile.id === 'terms' ? '4 / 1 / 5 / 4' :
+                  tile.id === 'ayo-gabung' ? '4 / 1 / 5 / 2' :
+                  tile.id === 'terms' ? '4 / 2 / 5 / 4' :
                   'auto'
               }}
             >
               <BentoCard
-                className={`relative group cursor-pointer h-full min-h-[160px] md:min-h-[180px] lg:min-h-[200px] ${tile.color} border-border/50 hover:border-border/70 transition-all duration-300 backdrop-blur-sm`}
+                className={`relative group cursor-pointer h-full min-h-[140px] md:min-h-[150px] lg:min-h-[160px] ${tile.color} border-border/50 hover:border-border/70 transition-all duration-300 backdrop-blur-sm`}
                 onClick={() => handleTileClick(tile)}
                 interactive={true}
                 hoverScale={1.015}
@@ -281,43 +300,45 @@ const Index = () => {
                 
                 <div className={`absolute inset-0 bg-gradient-to-br ${tile.gradientFrom} ${tile.gradientTo} opacity-80 group-hover:opacity-70 transition-opacity duration-300`} />
 
-                <div className="relative z-10 p-4 md:p-5 lg:p-6 h-full flex flex-col justify-center text-center">
-                  <div className="space-y-4 md:space-y-5">
+                <div className="relative z-10 p-3 md:p-4 lg:p-5 h-full flex flex-col justify-center text-center">
+                  <div className="space-y-3 md:space-y-4">
                     <motion.div className="flex items-center justify-center">
-                      <div className={`w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-xl md:rounded-2xl ${tile.textColor === "text-white" ? 'bg-white/15 group-hover:bg-white/20' : 'bg-primary-light/15 group-hover:bg-primary-light/20'} backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-lg border ${tile.textColor === "text-white" ? 'border-white/25' : 'border-primary-light/25'}`}>
-                        <tile.icon className={`w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 ${tile.textColor === "text-white" ? "text-white" : "text-primary-light"} drop-shadow-lg`} />
+                      <div className={`w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-xl md:rounded-2xl ${tile.textColor === "text-white" ? 'bg-white/15 group-hover:bg-white/20' : 'bg-primary-light/15 group-hover:bg-primary-light/20'} backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-lg border ${tile.textColor === "text-white" ? 'border-white/25' : 'border-primary-light/25'}`}>
+                        <tile.icon className={`w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 ${tile.textColor === "text-white" ? "text-white" : "text-primary-light"} drop-shadow-lg`} />
                       </div>
                       
                       {index < 2 && (
-                        <div className={`absolute top-3 right-3 px-2 py-1 ${tile.textColor === "text-white" ? 'bg-white/20' : 'bg-primary-light/30'} backdrop-blur-md rounded-full text-xs font-semibold ${tile.textColor === "text-white" ? 'text-white/95' : 'text-primary-foreground'} border ${tile.textColor === "text-white" ? 'border-white/30' : 'border-primary-light/40'} font-sans shadow-md`}>
-                          <Trophy className="w-2.5 h-2.5 inline mr-1" />
+                        <div className={`absolute top-2 right-2 px-1.5 py-0.5 ${tile.textColor === "text-white" ? 'bg-white/20' : 'bg-primary-light/30'} backdrop-blur-md rounded-full text-xs font-semibold ${tile.textColor === "text-white" ? 'text-white/95' : 'text-primary-foreground'} border ${tile.textColor === "text-white" ? 'border-white/30' : 'border-primary-light/40'} font-sans shadow-md`}>
+                          <Trophy className="w-2 h-2 inline mr-1" />
                           Populer
                         </div>
                       )}
                     </motion.div>
 
-                    <div className="space-y-2 md:space-y-3">
-                      <h3 className={`text-lg md:text-xl lg:text-2xl font-serif font-bold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-lg`}>
+                    <div className="space-y-1.5 md:space-y-2">
+                      <h3 className={`text-base md:text-lg lg:text-xl font-serif font-bold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-lg`}>
                         {tile.title}
                       </h3>
-                      <p className={`${tile.textColor === "text-white" ? "text-white/80" : (tile.textColor || "text-foreground") + "/80"} group-hover:${tile.textColor === "text-white" ? "text-white/95" : (tile.textColor || "text-foreground") + "/95"} leading-relaxed drop-shadow-sm text-sm md:text-base lg:text-lg font-sans font-medium max-w-md mx-auto transition-colors duration-300`}>
+                      <p className={`${tile.textColor === "text-white" ? "text-white/80" : (tile.textColor || "text-foreground") + "/80"} group-hover:${tile.textColor === "text-white" ? "text-white/95" : (tile.textColor || "text-foreground") + "/95"} leading-relaxed drop-shadow-sm text-xs md:text-sm lg:text-base font-sans font-medium max-w-md mx-auto transition-colors duration-300`}>
                         {tile.description}
                       </p>
                     </div>
                   </div>
 
                   <motion.div 
-                    className="flex items-center justify-between mt-6 md:mt-8 pt-3 md:pt-4 border-t border-white/20"
+                    className="flex items-center justify-between mt-4 md:mt-6 pt-2 md:pt-3 border-t border-white/20"
                     initial={{ opacity: 0.8 }}
                     whileHover={{ opacity: 1 }}
                   >
-                    <div className={`flex items-center gap-1.5 ${tile.textColor || "text-foreground"}/70 text-xs md:text-sm font-sans`}>
-                      <Calendar className="w-3.5 h-3.5" />
+                    <div className={`flex items-center gap-1 ${tile.textColor || "text-foreground"}/70 text-xs font-sans`}>
+                      <Calendar className="w-3 h-3" />
                       <span>Update</span>
                     </div>
-                    <div className={`flex items-center gap-1.5 md:gap-2 ${tile.textColor || "text-foreground"} font-semibold transition-all duration-300 font-sans`}>
-                      <span className="text-sm md:text-base">Jelajahi</span>
-                      <ArrowRight className="w-4 h-4 md:w-5 md:h-5 drop-shadow-sm transition-transform duration-300 group-hover:translate-x-1" />
+                    <div className={`flex items-center gap-1 ${tile.textColor || "text-foreground"} font-semibold transition-all duration-300 font-sans`}>
+                      <span className="text-xs md:text-sm">
+                        {tile.id === 'ayo-gabung' ? 'Gabung' : 'Jelajahi'}
+                      </span>
+                      <ArrowRight className="w-3 h-3 md:w-4 md:h-4 drop-shadow-sm transition-transform duration-300 group-hover:translate-x-1" />
                     </div>
                   </motion.div>
                 </div>
