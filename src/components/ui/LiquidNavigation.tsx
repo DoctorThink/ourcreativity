@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface NavigationItem {
@@ -109,22 +110,13 @@ const LiquidNavigation: React.FC<LiquidNavigationProps> = ({
           <span className="relative z-10 flex items-center gap-2">
             {item.label}
             {item.external && (
-              <motion.svg
-                className="w-3 h-3 opacity-70"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+              <motion.div
                 initial={{ rotate: 0 }}
                 whileHover={{ rotate: 45 }}
                 transition={{ duration: 0.2 }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                />
-              </motion.svg>
+                <ExternalLink className="w-3 h-3 opacity-70" />
+              </motion.div>
             )}
           </span>
           

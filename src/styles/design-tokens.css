@@ -2,128 +2,210 @@
 /* Liquid Glass Design System - Design Tokens */
 
 :root {
-  /* Glass Effects */
-  --glass-blur-intensity-deep: 20px;
-  --glass-blur-intensity-medium: 12px;
-  --glass-blur-intensity-shallow: 8px;
-  --glass-border-color: rgba(255, 255, 255, 0.15);
-  --glass-border-color-hover: rgba(255, 255, 255, 0.25);
-  --glass-inner-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  --glass-outer-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  /* Enhanced Branding Colors - Creative Constellations */
+  --color-background-primary: #1C1C1E;
+  --color-background-secondary: #2C2C2E;
+  --color-foreground-primary: #FFFFFF;
+  --color-foreground-secondary: #F5F5F7;
+  --color-foreground-tertiary: #A0A0A5;
+  --color-border-subtle: #3A3A3C;
+  --color-border-medium: #4A4A4C;
   
-  /* Glass Background Layers */
+  /* Primary Brand Accent */
+  --color-amethyst-vibrant: #9B6DFF;
+  --color-amethyst-soft: #E5DEFF;
+  --color-amethyst-glow: rgba(155, 109, 255, 0.6);
+  
+  /* Secondary Accents */
+  --color-coral-vibrant: #FF7F50;
+  --color-coral-soft: #FEC6A1;
+  --color-coral-glow: rgba(255, 127, 80, 0.5);
+  
+  --color-emerald-vibrant: #50C878;
+  --color-emerald-soft: #98F5E1;
+  --color-emerald-glow: rgba(80, 200, 120, 0.5);
+  
+  --color-azure-vibrant: #1E90FF;
+  --color-azure-soft: #87CEFA;
+  --color-azure-glow: rgba(30, 144, 255, 0.5);
+  
+  --color-amber-vibrant: #FFBF00;
+  --color-amber-glow: rgba(255, 191, 0, 0.5);
+  
+  /* Glass Effects - Enhanced Multi-layer System */
+  --glass-blur-deep: 20px;
+  --glass-blur-medium: 12px;
+  --glass-blur-shallow: 8px;
+  --glass-blur-subtle: 6px;
+  
   --glass-bg-primary: rgba(255, 255, 255, 0.08);
   --glass-bg-secondary: rgba(255, 255, 255, 0.12);
   --glass-bg-tertiary: rgba(255, 255, 255, 0.05);
+  --glass-bg-accent: rgba(255, 255, 255, 0.15);
   
-  /* Color System */
-  --color-glow-primary: rgba(155, 109, 255, 0.6);
-  --color-glow-secondary: rgba(64, 224, 208, 0.5);
-  --color-glow-accent: rgba(255, 127, 80, 0.4);
-  --color-glow-success: rgba(80, 200, 120, 0.5);
-  --color-glow-warning: rgba(255, 191, 0, 0.5);
+  --glass-border-primary: rgba(255, 255, 255, 0.15);
+  --glass-border-secondary: rgba(255, 255, 255, 0.25);
+  --glass-border-accent: rgba(255, 255, 255, 0.35);
   
-  /* Gradient Definitions */
-  --gradient-liquid-bg: linear-gradient(
+  --glass-shadow-subtle: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --glass-shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.25);
+  --glass-shadow-deep: 0 16px 48px rgba(0, 0, 0, 0.4);
+  
+  --glass-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  --glass-inner-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  
+  /* Glow System */
+  --color-glow-primary: var(--color-amethyst-glow);
+  --color-glow-secondary: var(--color-emerald-glow);
+  --color-glow-accent: var(--color-coral-glow);
+  --color-glow-success: var(--color-emerald-glow);
+  --color-glow-warning: var(--color-amber-glow);
+  --color-glow-info: var(--color-azure-glow);
+  
+  /* Gradient System */
+  --gradient-glass-bg: linear-gradient(
     135deg,
-    rgba(155, 109, 255, 0.1) 0%,
-    rgba(64, 224, 208, 0.08) 25%,
-    rgba(255, 127, 80, 0.06) 50%,
-    rgba(152, 245, 225, 0.08) 75%,
-    rgba(155, 109, 255, 0.1) 100%
+    var(--glass-bg-accent) 0%,
+    var(--glass-bg-primary) 50%,
+    var(--glass-bg-tertiary) 100%
   );
   
   --gradient-glass-reflection: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.25) 0%,
     rgba(255, 255, 255, 0.05) 50%,
-    rgba(255, 255, 255, 0.1) 100%
+    rgba(255, 255, 255, 0.15) 100%
   );
   
-  --gradient-shimmer: linear-gradient(
+  --gradient-liquid-shimmer: linear-gradient(
     90deg,
     transparent 0%,
     rgba(255, 255, 255, 0.4) 50%,
     transparent 100%
   );
   
+  --gradient-border-glow: linear-gradient(
+    45deg,
+    var(--color-glow-primary),
+    transparent,
+    var(--color-glow-secondary)
+  );
+  
   /* Animation Properties */
-  --animation-duration-fast: 0.2s;
-  --animation-duration-medium: 0.4s;
-  --animation-duration-slow: 0.8s;
-  --animation-easing-liquid: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --animation-easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  --animation-easing-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --duration-instant: 0.1s;
+  --duration-fast: 0.2s;
+  --duration-medium: 0.4s;
+  --duration-slow: 0.8s;
+  --duration-epic: 1.5s;
   
-  /* Typography */
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 1.875rem;
-  --font-size-4xl: 2.25rem;
-  --font-size-5xl: 3rem;
+  --easing-liquid: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --easing-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   
+  /* Morphing Properties */
+  --morph-scale-subtle: 1.02;
+  --morph-scale-medium: 1.05;
+  --morph-scale-dramatic: 1.1;
+  --morph-rotate-subtle: 2deg;
+  --morph-rotate-medium: 5deg;
+  --morph-translate-subtle: 4px;
+  --morph-translate-medium: 8px;
+  
+  /* Typography Enhancement */
   --font-family-heading: 'Playfair Display', serif;
   --font-family-body: 'Inter', sans-serif;
+  --font-family-mono: 'SF Mono', monospace;
   
-  /* Spacing */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
+  --text-shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --text-shadow-glow: 0 0 8px var(--color-glow-primary);
   
-  /* Border Radius */
+  /* Spacing System */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  
+  /* Border Radius System */
   --radius-sm: 0.5rem;
   --radius-md: 1rem;
   --radius-lg: 1.5rem;
   --radius-xl: 2rem;
+  --radius-2xl: 2.5rem;
+  --radius-3xl: 3rem;
   --radius-full: 9999px;
   
-  /* Z-Index Layers */
+  /* Z-Index Management */
   --z-base: 1;
   --z-elevated: 10;
   --z-floating: 50;
   --z-modal: 100;
-  --z-tooltip: 200;
+  --z-popover: 200;
+  --z-tooltip: 300;
+  --z-toast: 400;
 }
 
-/* Utility Classes for Liquid Glass Effects */
+/* Enhanced Glass Morphism Classes */
 .glass-morphism {
-  background: var(--glass-bg-primary);
-  backdrop-filter: blur(var(--glass-blur-intensity-medium));
-  -webkit-backdrop-filter: blur(var(--glass-blur-intensity-medium));
-  border: 1px solid var(--glass-border-color);
-  box-shadow: var(--glass-outer-shadow), var(--glass-inner-shadow);
+  background: var(--gradient-glass-bg);
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  border: 1px solid var(--glass-border-primary);
+  box-shadow: var(--glass-shadow-medium), var(--glass-inner-light);
 }
 
 .glass-morphism-deep {
   background: var(--glass-bg-secondary);
-  backdrop-filter: blur(var(--glass-blur-intensity-deep));
-  -webkit-backdrop-filter: blur(var(--glass-blur-intensity-deep));
-  border: 1px solid var(--glass-border-color);
-  box-shadow: var(--glass-outer-shadow), var(--glass-inner-shadow);
+  backdrop-filter: blur(var(--glass-blur-deep));
+  -webkit-backdrop-filter: blur(var(--glass-blur-deep));
+  border: 1px solid var(--glass-border-secondary);
+  box-shadow: var(--glass-shadow-deep), var(--glass-inner-light), var(--glass-inner-shadow);
 }
 
 .glass-morphism-shallow {
   background: var(--glass-bg-tertiary);
-  backdrop-filter: blur(var(--glass-blur-intensity-shallow));
-  -webkit-backdrop-filter: blur(var(--glass-blur-intensity-shallow));
-  border: 1px solid var(--glass-border-color);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), var(--glass-inner-shadow);
+  backdrop-filter: blur(var(--glass-blur-shallow));
+  -webkit-backdrop-filter: blur(var(--glass-blur-shallow));
+  border: 1px solid var(--glass-border-primary);
+  box-shadow: var(--glass-shadow-subtle), var(--glass-inner-light);
 }
 
+.glass-morphism-accent {
+  background: var(--glass-bg-accent);
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  border: 1px solid var(--glass-border-accent);
+  box-shadow: var(--glass-shadow-medium), var(--glass-inner-light);
+}
+
+/* Liquid Effects */
 .liquid-glow {
   box-shadow: 0 0 20px var(--color-glow-primary);
-  transition: box-shadow var(--animation-duration-medium) var(--animation-easing-liquid);
+  transition: box-shadow var(--duration-medium) var(--easing-liquid);
 }
 
 .liquid-glow:hover {
-  box-shadow: 0 0 30px var(--color-glow-primary), 0 0 60px var(--color-glow-primary);
+  box-shadow: 
+    0 0 30px var(--color-glow-primary), 
+    0 0 60px var(--color-glow-primary);
+}
+
+.liquid-glow-pulsing {
+  animation: pulse-glow 2s var(--easing-smooth) infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px var(--color-glow-primary);
+    opacity: 0.8;
+  }
+  50% { 
+    box-shadow: 0 0 40px var(--color-glow-primary);
+    opacity: 1;
+  }
 }
 
 .glass-reflection {
@@ -141,24 +223,74 @@
   background: var(--gradient-glass-reflection);
   pointer-events: none;
   z-index: 1;
+  opacity: 0.6;
 }
 
-.shimmer-effect {
+.liquid-shimmer {
   position: relative;
   overflow: hidden;
 }
 
-.shimmer-effect::after {
+.liquid-shimmer::after {
   content: '';
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: var(--gradient-shimmer);
-  transition: left var(--animation-duration-slow) var(--animation-easing-liquid);
+  background: var(--gradient-liquid-shimmer);
+  transition: left var(--duration-epic) var(--easing-liquid);
 }
 
-.shimmer-effect:hover::after {
+.liquid-shimmer:hover::after {
   left: 100%;
+}
+
+/* Morphing Animations */
+.morph-hover {
+  transition: all var(--duration-medium) var(--easing-liquid);
+}
+
+.morph-hover:hover {
+  transform: 
+    scale(var(--morph-scale-subtle)) 
+    translateY(calc(-1 * var(--morph-translate-subtle)))
+    rotateX(var(--morph-rotate-subtle))
+    rotateY(var(--morph-rotate-subtle));
+}
+
+.morph-dramatic:hover {
+  transform: 
+    scale(var(--morph-scale-medium)) 
+    translateY(calc(-1 * var(--morph-translate-medium)))
+    rotateX(var(--morph-rotate-medium))
+    rotateY(var(--morph-rotate-medium));
+}
+
+/* Text Enhancement */
+.text-glow {
+  text-shadow: var(--text-shadow-glow);
+}
+
+.text-readable {
+  text-shadow: var(--text-shadow-subtle);
+  letter-spacing: 0.025em;
+}
+
+/* Utility Classes */
+.border-glow {
+  border-image: var(--gradient-border-glow) 1;
+}
+
+.border-glow-animated {
+  position: relative;
+  background: var(--gradient-border-glow);
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
