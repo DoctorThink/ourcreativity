@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Menu, X } from "lucide-react";
@@ -6,7 +5,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-const MotionLink = motion(Link);
+// Use motion.create() instead of deprecated motion()
+const MotionLink = motion.create(Link);
 
 interface PageLayoutProps {
   children: ReactNode;
