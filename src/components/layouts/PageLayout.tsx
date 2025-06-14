@@ -131,6 +131,8 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                   "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 relative",
                   isActive(item.path) && !item.external
                     ? "bg-white/15 text-white shadow-lg"
+                    : item.name === 'Ayo Gabung'
+                    ? "bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-500/30 hover:bg-emerald-600"
                     : "text-white/70 hover:text-white hover:bg-white/10"
                 )}
               >
@@ -239,6 +241,8 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                           "flex items-center px-4 py-4 rounded-2xl font-medium transition-all duration-300 text-base group w-full text-left",
                           isActive(item.path) && !item.external
                             ? "bg-amethyst/20 text-white font-semibold border border-amethyst/30"
+                            : item.name === 'Ayo Gabung'
+                            ? "bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30"
                             : "text-foreground/80 hover:text-foreground hover:bg-white/10"
                         )}
                       >

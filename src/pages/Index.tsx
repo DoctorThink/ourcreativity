@@ -134,9 +134,9 @@ const Index = () => {
       title: "Ayo Gabung",
       description: "Bergabung via Linktree atau Google Form.",
       icon: UserPlus,
-      color: "bg-gradient-to-br from-emerald/20 to-green-500/30",
-      gradientFrom: "from-emerald/10",
-      gradientTo: "to-green-500/20",
+      color: "bg-gradient-to-br from-emerald/40 to-green-600/50",
+      gradientFrom: "from-emerald/20",
+      gradientTo: "to-green-500/30",
       path: "#",
       colSpan: "lg:col-span-1",
       rowSpan: "lg:row-span-1",
@@ -285,7 +285,7 @@ const Index = () => {
               }}
             >
               <BentoCard
-                className={`relative group cursor-pointer h-full min-h-[140px] md:min-h-[150px] lg:min-h-[160px] ${tile.color} border-border/50 hover:border-border/70 transition-all duration-300 backdrop-blur-sm`}
+                className={`relative group cursor-pointer h-full min-h-[140px] md:min-h-[150px] lg:min-h-[160px] ${tile.color} ${tile.id === 'ayo-gabung' ? 'border-emerald-400 shadow-lg shadow-emerald-400/20' : 'border-border/50'} hover:border-border/70 transition-all duration-300 backdrop-blur-sm`}
                 onClick={() => handleTileClick(tile)}
                 interactive={true}
                 hoverScale={1.015}
