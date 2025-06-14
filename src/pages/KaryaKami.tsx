@@ -14,7 +14,7 @@ import {
   sortKaryaByRecency,
   sortKaryaByPopularity
 } from "@/lib/karyaUtils";
-import UploadWizard from "../components/karya/UploadWizard";
+import UploadButton from "../components/karya/UploadButton";
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -35,7 +35,7 @@ const KaryaKami: React.FC = () => {
   }, []);
   
   // Centralized Karya data fetching
-  const { data: karyaData, isLoading: isKaryaLoading } = useQuery({
+  const { data: karyaData, isLoading: isKaryaLoading, refetch } = useQuery({
     queryKey: ['karya'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -90,12 +90,18 @@ const KaryaKami: React.FC = () => {
     setSelectedCategory(category);
   };
 
+  // Upload success handler
+  const handleUploadSuccess = () => {
+    refetch(); // Refresh the karya data
+  };
+
   return (
     <PageLayout title="">
       <div
         ref={mainRef}
         className="relative min-h-screen w-full"
       >
+        {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -106,10 +112,12 @@ const KaryaKami: React.FC = () => {
           <p className="text-xl text-gray-300 mt-4 font-sans">
             Koleksi karya kreatif dari komunitas Our Creativity
           </p>
+          
+          {/* Upload Button */}
+          <div className="mt-8">
+            <UploadButton onSuccess={handleUploadSuccess} />
+          </div>
         </motion.div>
-        
-        {/* Enhanced Multi-Step Upload Wizard */}
-        <UploadWizard />
 
         {/* Simplified Loading animation with standardized design */}
         <AnimatePresence>
