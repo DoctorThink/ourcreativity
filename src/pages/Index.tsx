@@ -4,9 +4,6 @@ import { ArrowRight, Calendar, Users, Megaphone, BookOpen, Info, FileText, Palet
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../components/layouts/PageLayout";
 import BentoCard from "../components/ui/BentoCard";
-import LiquidBackground from "../components/ui/LiquidBackground";
-import FloatingParticles from "../components/ui/FloatingParticles";
-import GlassCard from "../components/ui/GlassCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface BentoTile {
@@ -54,6 +51,7 @@ const Index = () => {
 
   const handleTileClick = (tile: BentoTile) => {
     if (tile.id === 'ayo-gabung') {
+      // Open Linktree in a new tab
       window.open('https://linktr.ee/ourcreativity', '_blank');
     } else {
       navigate(tile.path);
@@ -216,83 +214,59 @@ const Index = () => {
     <PageLayout 
       title=""
       showBackButton={false}
-      className="relative min-h-screen"
+      className="relative min-h-screen backdrop-blur-sm"
     >
-      {/* Enhanced Liquid Glass Background */}
-      <LiquidBackground />
-      <FloatingParticles />
+      {/* Blurred Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/60 to-secondary/40 backdrop-blur-md -z-10" />
       
-      {/* Hero Section with Glass Morphism */}
       <motion.div
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="mb-8 md:mb-12 relative z-10"
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="mb-6 md:mb-8 relative z-10"
       >
-        <div className="text-center space-y-6 md:space-y-8">
+        <div className="text-center space-y-2 md:space-y-4">
           <motion.div 
             className="flex flex-col items-center leading-tight"
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <GlassCard className="mb-4 p-4" size="sm" glowColor="rgba(155, 109, 255, 0.4)">
-              <span className="text-base md:text-lg lg:text-xl font-sans font-medium text-white/90 block">
-                Selamat Datang di
-              </span>
-            </GlassCard>
-            
+            <span className="text-base md:text-lg lg:text-xl font-sans font-medium text-foreground/80 dark:text-foreground-dark/80 mb-1">
+              Selamat Datang di
+            </span>
             <div className="relative">
-              <motion.h1 
-                className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold animated-gradient-text glow-text"
-                animate={{
-                  textShadow: [
-                    "0 0 20px rgba(155, 109, 255, 0.5), 0 0 40px rgba(64, 224, 208, 0.3)",
-                    "0 0 30px rgba(255, 127, 80, 0.5), 0 0 50px rgba(152, 245, 225, 0.3)",
-                    "0 0 20px rgba(155, 109, 255, 0.5), 0 0 40px rgba(64, 224, 208, 0.3)"
-                  ]
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
+              <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold animated-gradient-text glow-text">
                 OUR CREATIVITY
-              </motion.h1>
-              
-              {/* Enhanced glow effect */}
-              <div className="absolute inset-0 text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold animated-gradient-text blur-xl opacity-40 -z-10">
+              </h1>
+              {/* Glow effect */}
+              <div className="absolute inset-0 text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold animated-gradient-text blur-lg opacity-30 -z-10">
                 OUR CREATIVITY
               </div>
             </div>
           </motion.div>
 
           <motion.div
-            className="flex items-center justify-center gap-3"
+            className="flex items-center justify-center gap-2 text-xs md:text-sm text-foreground/60 dark:text-foreground-dark/60"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <GlassCard className="px-6 py-3" size="sm">
-              <div className="flex items-center gap-2 text-sm md:text-base text-white/80">
-                <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-amethyst animate-pulse" />
-                <span className="font-sans font-medium">Dunia kreativitas tanpa batas menanti</span>
-                <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-coral animate-pulse" />
-              </div>
-            </GlassCard>
+            <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-amethyst animate-pulse" />
+            <span className="font-sans">Dunia kreativitas tanpa batas menanti</span>
+            <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-coral animate-pulse" />
           </motion.div>
         </div>
       </motion.div>
 
-      {/* Enhanced Bento Grid with Liquid Glass */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         className="relative z-10"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 auto-rows-fr max-w-6xl mx-auto">
+        {/* Smaller Bento Grid - reduced from 6xl to 4xl and smaller min heights */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 auto-rows-fr max-w-4xl mx-auto">
           {bentoTiles.map((tile, index) => (
             <motion.div
               key={tile.id}
@@ -311,79 +285,48 @@ const Index = () => {
               }}
             >
               <BentoCard
-                className={`relative group h-full min-h-[160px] md:min-h-[180px] lg:min-h-[200px] ${tile.color} ${tile.id === 'ayo-gabung' ? 'ring-2 ring-emerald-400/50' : ''} transition-all duration-500`}
+                className={`relative group cursor-pointer h-full min-h-[140px] md:min-h-[150px] lg:min-h-[160px] ${tile.color} ${tile.id === 'ayo-gabung' ? 'border-emerald-400 shadow-lg shadow-emerald-400/20' : 'border-border/50'} hover:border-border/70 transition-all duration-300 backdrop-blur-sm`}
                 onClick={() => handleTileClick(tile)}
                 interactive={true}
-                hoverScale={1.02}
-                glowColor={
-                  tile.id === 'ayo-gabung' ? 'rgba(34, 197, 94, 0.4)' :
-                  tile.id === 'pengumuman' ? 'rgba(255, 127, 80, 0.4)' :
-                  tile.id === 'tim-kami' ? 'rgba(64, 224, 208, 0.4)' :
-                  tile.id === 'karya-kami' ? 'rgba(155, 109, 255, 0.4)' :
-                  'rgba(152, 245, 225, 0.3)'
-                }
+                hoverScale={1.015}
+                motionProps={{
+                  whileHover: { y: -4 },
+                  whileTap: { scale: 0.98 }
+                }}
               >
-                {/* Enhanced pattern backgrounds */}
-                <div className="absolute inset-0 pointer-events-none opacity-20">
+                <div className="absolute inset-0 pointer-events-none">
                   {getPatternSvg(tile.pattern, tile.id, tile.textColor || "text-foreground")}
                 </div>
                 
-                {/* Liquid gradient overlay */}
-                <motion.div 
-                  className={`absolute inset-0 bg-gradient-to-br ${tile.gradientFrom} ${tile.gradientTo} opacity-60`}
-                  animate={{
-                    opacity: [0.6, 0.8, 0.6],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: index * 0.5
-                  }}
-                />
+                <div className={`absolute inset-0 bg-gradient-to-br ${tile.gradientFrom} ${tile.gradientTo} opacity-80 group-hover:opacity-70 transition-opacity duration-300`} />
 
-                <div className="relative z-10 p-4 md:p-6 lg:p-7 h-full flex flex-col justify-center text-center">
-                  <div className="space-y-4 md:space-y-5">
+                <div className="relative z-10 p-3 md:p-4 lg:p-5 h-full flex flex-col justify-center text-center">
+                  <div className="space-y-3 md:space-y-4">
                     <motion.div className="flex items-center justify-center">
-                      <GlassCard 
-                        className={`w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 flex items-center justify-center`}
-                        size="sm"
-                        glowColor={tile.id === 'ayo-gabung' ? 'rgba(34, 197, 94, 0.6)' : 'rgba(255, 255, 255, 0.3)'}
-                      >
-                        <tile.icon className={`w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 ${tile.textColor === "text-white" ? "text-white" : "text-primary-light"} drop-shadow-lg`} />
-                      </GlassCard>
+                      <div className={`w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-xl md:rounded-2xl ${tile.textColor === "text-white" ? 'bg-white/15 group-hover:bg-white/20' : 'bg-primary-light/15 group-hover:bg-primary-light/20'} backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-lg border ${tile.textColor === "text-white" ? 'border-white/25' : 'border-primary-light/25'}`}>
+                        <tile.icon className={`w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 ${tile.textColor === "text-white" ? "text-white" : "text-primary-light"} drop-shadow-lg`} />
+                      </div>
                       
                       {index < 2 && (
-                        <motion.div 
-                          className={`absolute top-3 right-3 px-2 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold text-white border border-white/30 shadow-lg`}
-                          animate={{
-                            scale: [1, 1.05, 1],
-                            opacity: [0.8, 1, 0.8]
-                          }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                          }}
-                        >
-                          <Trophy className="w-3 h-3 inline mr-1" />
+                        <div className={`absolute top-2 right-2 px-1.5 py-0.5 ${tile.textColor === "text-white" ? 'bg-white/20' : 'bg-primary-light/30'} backdrop-blur-md rounded-full text-xs font-semibold ${tile.textColor === "text-white" ? 'text-white/95' : 'text-primary-foreground'} border ${tile.textColor === "text-white" ? 'border-white/30' : 'border-primary-light/40'} font-sans shadow-md`}>
+                          <Trophy className="w-2 h-2 inline mr-1" />
                           Populer
-                        </motion.div>
+                        </div>
                       )}
                     </motion.div>
 
-                    <div className="space-y-2 md:space-y-3">
-                      <h3 className={`text-lg md:text-xl lg:text-2xl font-serif font-bold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-lg`}>
+                    <div className="space-y-1.5 md:space-y-2">
+                      <h3 className={`text-base md:text-lg lg:text-xl font-serif font-bold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-lg`}>
                         {tile.title}
                       </h3>
-                      <p className={`${tile.textColor === "text-white" ? "text-white/85" : (tile.textColor || "text-foreground") + "/85"} leading-relaxed drop-shadow-sm text-sm md:text-base lg:text-lg font-sans font-medium max-w-md mx-auto transition-colors duration-300`}>
+                      <p className={`${tile.textColor === "text-white" ? "text-white/80" : (tile.textColor || "text-foreground") + "/80"} group-hover:${tile.textColor === "text-white" ? "text-white/95" : (tile.textColor || "text-foreground") + "/95"} leading-relaxed drop-shadow-sm text-xs md:text-sm lg:text-base font-sans font-medium max-w-md mx-auto transition-colors duration-300`}>
                         {tile.description}
                       </p>
                     </div>
                   </div>
 
                   <motion.div 
-                    className="flex items-center justify-between mt-6 md:mt-8 pt-3 md:pt-4 border-t border-white/25"
+                    className="flex items-center justify-between mt-4 md:mt-6 pt-2 md:pt-3 border-t border-white/20"
                     initial={{ opacity: 0.8 }}
                     whileHover={{ opacity: 1 }}
                   >
@@ -391,18 +334,16 @@ const Index = () => {
                       <Calendar className="w-3 h-3" />
                       <span>Update</span>
                     </div>
-                    <motion.div 
-                      className={`flex items-center gap-1 ${tile.textColor || "text-foreground"} font-semibold font-sans`}
-                      whileHover={{ x: 4 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <span className="text-sm md:text-base">
+                    <div className={`flex items-center gap-1 ${tile.textColor || "text-foreground"} font-semibold transition-all duration-300 font-sans`}>
+                      <span className="text-xs md:text-sm">
                         {tile.id === 'ayo-gabung' ? 'Gabung' : 'Jelajahi'}
                       </span>
-                      <ArrowRight className="w-4 h-4 md:w-5 md:h-5 drop-shadow-sm" />
-                    </motion.div>
+                      <ArrowRight className="w-3 h-3 md:w-4 md:h-4 drop-shadow-sm transition-transform duration-300 group-hover:translate-x-1" />
+                    </div>
                   </motion.div>
                 </div>
+
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-radial from-white/5 via-transparent to-transparent" />
               </BentoCard>
             </motion.div>
           ))}
