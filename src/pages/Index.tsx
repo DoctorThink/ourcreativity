@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Users, Megaphone, BookOpen, Info, FileText, Palette, Trophy, Sparkles, UserPlus } from "lucide-react";
@@ -7,6 +8,8 @@ import BentoCard from "../components/ui/BentoCard";
 import LiquidBackground from "../components/ui/LiquidBackground";
 import FloatingParticles from "../components/ui/FloatingParticles";
 import GlassCard from "../components/ui/GlassCard";
+import FlowingTypography from "../components/ui/FlowingTypography";
+import LiquidButton from "../components/ui/LiquidButton";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface BentoTile {
@@ -222,7 +225,7 @@ const Index = () => {
       <LiquidBackground />
       <FloatingParticles />
       
-      {/* Hero Section with Glass Morphism */}
+      {/* Hero Section with Enhanced Glass Morphism */}
       <motion.div
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
@@ -237,29 +240,19 @@ const Index = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <GlassCard className="mb-4 p-4" size="sm" glowColor="rgba(155, 109, 255, 0.4)">
-              <span className="text-base md:text-lg lg:text-xl font-sans font-medium text-white/90 block">
+              <FlowingTypography variant="subtitle" animated={false}>
                 Selamat Datang di
-              </span>
+              </FlowingTypography>
             </GlassCard>
             
             <div className="relative">
-              <motion.h1 
-                className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold animated-gradient-text glow-text"
-                animate={{
-                  textShadow: [
-                    "0 0 20px rgba(155, 109, 255, 0.5), 0 0 40px rgba(64, 224, 208, 0.3)",
-                    "0 0 30px rgba(255, 127, 80, 0.5), 0 0 50px rgba(152, 245, 225, 0.3)",
-                    "0 0 20px rgba(155, 109, 255, 0.5), 0 0 40px rgba(64, 224, 208, 0.3)"
-                  ]
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
+              <FlowingTypography 
+                variant="hero" 
+                glowEffect={true}
+                className="mb-4"
               >
                 OUR CREATIVITY
-              </motion.h1>
+              </FlowingTypography>
               
               {/* Enhanced glow effect */}
               <div className="absolute inset-0 text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold animated-gradient-text blur-xl opacity-40 -z-10">
@@ -277,10 +270,38 @@ const Index = () => {
             <GlassCard className="px-6 py-3" size="sm">
               <div className="flex items-center gap-2 text-sm md:text-base text-white/80">
                 <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-amethyst animate-pulse" />
-                <span className="font-sans font-medium">Dunia kreativitas tanpa batas menanti</span>
+                <FlowingTypography variant="body" animated={false}>
+                  Dunia kreativitas tanpa batas menanti
+                </FlowingTypography>
                 <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-coral animate-pulse" />
               </div>
             </GlassCard>
+          </motion.div>
+
+          {/* Enhanced Action Buttons */}
+          <motion.div
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1 }}
+          >
+            <LiquidButton
+              variant="primary"
+              size="lg"
+              onClick={() => window.open('https://linktr.ee/ourcreativity', '_blank')}
+            >
+              <Users className="w-5 h-5 mr-2" />
+              Bergabung Sekarang
+            </LiquidButton>
+            
+            <LiquidButton
+              variant="secondary"
+              size="lg"
+              onClick={() => navigate('/karya-kami')}
+            >
+              <Palette className="w-5 h-5 mr-2" />
+              Lihat Karya
+            </LiquidButton>
           </motion.div>
         </div>
       </motion.div>
@@ -373,12 +394,21 @@ const Index = () => {
                     </motion.div>
 
                     <div className="space-y-2 md:space-y-3">
-                      <h3 className={`text-lg md:text-xl lg:text-2xl font-serif font-bold ${tile.textColor || "text-foreground"} leading-tight drop-shadow-lg`}>
+                      <FlowingTypography 
+                        variant="title" 
+                        className={`text-lg md:text-xl lg:text-2xl ${tile.textColor || "text-foreground"} leading-tight drop-shadow-lg`}
+                        animated={false}
+                      >
                         {tile.title}
-                      </h3>
-                      <p className={`${tile.textColor === "text-white" ? "text-white/85" : (tile.textColor || "text-foreground") + "/85"} leading-relaxed drop-shadow-sm text-sm md:text-base lg:text-lg font-sans font-medium max-w-md mx-auto transition-colors duration-300`}>
+                      </FlowingTypography>
+                      
+                      <FlowingTypography 
+                        variant="body" 
+                        className={`${tile.textColor === "text-white" ? "text-white/85" : (tile.textColor || "text-foreground") + "/85"} leading-relaxed drop-shadow-sm text-sm md:text-base lg:text-lg max-w-md mx-auto transition-colors duration-300`}
+                        animated={false}
+                      >
                         {tile.description}
-                      </p>
+                      </FlowingTypography>
                     </div>
                   </div>
 
