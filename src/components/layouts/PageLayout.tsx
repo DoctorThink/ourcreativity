@@ -84,13 +84,11 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   
   return (
     <div className={cn("relative min-h-screen flex flex-col", className)}>
-      {/* Floating Modern Header */}
+      {/* Fixed Header with Glassmorphism */}
       <motion.header 
         className={cn(
           "fixed top-4 left-4 right-4 z-50 transition-all duration-500 rounded-2xl",
-          scrollY > 20 
-            ? "bg-background/70 backdrop-blur-xl border border-border/30 shadow-2xl shadow-black/10" 
-            : "bg-background/50 backdrop-blur-lg border border-border/20 shadow-lg shadow-black/5",
+          "bg-background/20 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/20",
           headerClassName
         )}
         initial={{ y: -100, opacity: 0 }}
@@ -98,23 +96,14 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >
         <div className={cn("container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center", fullWidth ? "max-w-full" : "max-w-7xl")}>
-          {/* Enhanced Logo Area */}
-          <Link to="/" className="flex items-center gap-3 group">
+          {/* Logo Only */}
+          <Link to="/" className="flex items-center group">
             <motion.img 
               src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
               alt="Logo" 
               className="h-8 sm:h-9 w-auto transition-transform duration-300 group-hover:scale-110" 
               whileHover={{ rotate: 5 }}
             />
-            <div className="relative overflow-hidden">
-              <div className="animated-gradient-text text-lg sm:text-xl font-bold tracking-wide glow-text">
-                OUR CREATIVITY
-              </div>
-              {/* Glow effect for header text */}
-              <div className="absolute inset-0 animated-gradient-text text-lg sm:text-xl font-bold tracking-wide blur-sm opacity-50 -z-10">
-                OUR CREATIVITY
-              </div>
-            </div>
           </Link>
           
           {/* Modern Desktop Navigation */}
