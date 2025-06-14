@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
 import BentoCard from "@/components/ui/BentoCard";
+import { IconTitleRow } from "@/components/ui/IconTitleRow";
 import { 
   ScrollText, 
   Bell, 
@@ -218,7 +219,7 @@ interface TermsSectionProps {
 
 const TermsSection = ({
   title,
-  icon: Icon,
+  icon,
   iconColor,
   glowColor,
   children,
@@ -235,14 +236,19 @@ const TermsSection = ({
       <BentoCard
         className="overflow-hidden h-full"
         glowColor={glowColor}
-        icon={Icon}
+        icon={icon}
         iconColor={iconColor}
         interactive={true}
         onClick={onToggle}
       >
         <div className="p-4 md:p-6 pt-12">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg md:text-xl font-serif font-medium">{title}</h3>
+            <IconTitleRow 
+              icon={icon} 
+              iconColor={iconColor}
+              title={title}
+              gap="sm"
+            />
             <motion.div
               animate={{ rotate: isExpanded ? 180 : 0 }}
               transition={{ duration: 0.3 }}

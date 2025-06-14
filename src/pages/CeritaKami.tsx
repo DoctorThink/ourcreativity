@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
 import BentoCard from "../components/ui/BentoCard";
+import { IconTitleRow } from "@/components/ui/IconTitleRow";
 import { AnimateInView } from "@/hooks/useElementInView";
 import { BookOpen, Quote, History, BarChart, Target, Users, Award, Calendar } from "lucide-react";
 
@@ -34,7 +35,12 @@ const CeritaKami = () => {
           >
             <div className="h-full flex flex-col justify-between pt-12">
               <div>
-                <h2 className="text-lg sm:text-xl md:text-2xl font-serif font-semibold mb-4 sm:mb-6">Bagaimana Semua Dimulai</h2>
+                <IconTitleRow 
+                  icon={BookOpen}
+                  iconColor="bg-amethyst text-background"
+                  title="Bagaimana Semua Dimulai"
+                  className="mb-4 sm:mb-6"
+                />
                 <p className="text-foreground/80 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6 font-sans">
                   OUR CREATIVITY berawal dari sekelompok mahasiswa yang berbagi hasrat yang sama untuk menciptakan ruang kolaboratif bagi para kreator muda. Kami melihat betapa banyaknya bakat yang tersebar namun tidak memiliki wadah untuk dieksplorasi dan dikembangkan bersama.
                 </p>
@@ -78,7 +84,14 @@ const CeritaKami = () => {
             iconColor="bg-coral text-background"
           >
             <div className="pt-12">
-              <h3 className="text-base sm:text-lg font-serif font-semibold mb-3 sm:mb-4">Timeline Perjalanan</h3>
+              <IconTitleRow 
+                icon={History}
+                iconColor="bg-coral text-background"
+                title="Timeline Perjalanan"
+                titleClassName="text-base sm:text-lg"
+                className="mb-3 sm:mb-4"
+                gap="sm"
+              />
               <ul className="space-y-3 sm:space-y-4">
                 <TimelineItem date="Jan 2022" event="Pertemuan pertama tim inti" />
                 <TimelineItem date="Apr 2022" event="Peluncuran media sosial resmi" />
@@ -97,7 +110,14 @@ const CeritaKami = () => {
             iconColor="bg-mint text-background"
           >
             <div className="pt-12">
-              <h3 className="text-base sm:text-lg font-serif font-semibold mb-3 sm:mb-4">Pertumbuhan Komunitas</h3>
+              <IconTitleRow 
+                icon={BarChart}
+                iconColor="bg-mint text-background"
+                title="Pertumbuhan Komunitas"
+                titleClassName="text-base sm:text-lg"
+                className="mb-3 sm:mb-4"
+                gap="sm"
+              />
               <p className="text-foreground/80 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 font-sans">
                 Dari 5 anggota awal, kini OUR CREATIVITY telah berkembang menjadi komunitas dengan lebih dari:
               </p>
@@ -120,7 +140,14 @@ const CeritaKami = () => {
             iconColor="bg-amethyst text-background"
           >
             <div className="pt-12">
-              <h3 className="text-base sm:text-lg font-serif font-semibold mb-3 sm:mb-4">Visi Ke Depan</h3>
+              <IconTitleRow 
+                icon={Target}
+                iconColor="bg-amethyst text-background"
+                title="Visi Ke Depan"
+                titleClassName="text-base sm:text-lg"
+                className="mb-3 sm:mb-4"
+                gap="sm"
+              />
               <p className="text-foreground/80 text-sm sm:text-base leading-relaxed font-sans mb-4">
                 OUR CREATIVITY memiliki visi untuk terus mengembangkan ekosistem kreator muda Indonesia. Kami berencana memperluas jangkauan ke lebih banyak kota, menyelenggarakan festival tahunan, dan membangun platform digital yang lebih komprehensif untuk karya-karya anggota.
               </p>
@@ -144,7 +171,14 @@ const CeritaKami = () => {
               iconColor="bg-coral text-background"
             >
               <div className="pt-12">
-                <h3 className="text-sm sm:text-base font-medium mb-2">Komunitas</h3>
+                <IconTitleRow 
+                  icon={Users}
+                  iconColor="bg-coral text-background"
+                  title="Komunitas"
+                  titleClassName="text-sm sm:text-base"
+                  className="mb-2 justify-center"
+                  gap="sm"
+                />
                 <p className="text-xs sm:text-sm text-foreground/70 font-sans">Membangun hubungan yang kuat dan saling mendukung antar kreator</p>
               </div>
             </BentoCard>
@@ -158,7 +192,14 @@ const CeritaKami = () => {
               iconColor="bg-turquoise text-background"
             >
               <div className="pt-12">
-                <h3 className="text-sm sm:text-base font-medium mb-2">Kualitas</h3>
+                <IconTitleRow 
+                  icon={Award}
+                  iconColor="bg-turquoise text-background"
+                  title="Kualitas"
+                  titleClassName="text-sm sm:text-base"
+                  className="mb-2 justify-center"
+                  gap="sm"
+                />
                 <p className="text-xs sm:text-sm text-foreground/70 font-sans">Mendorong standar tertinggi dalam setiap karya yang dihasilkan</p>
               </div>
             </BentoCard>
@@ -172,7 +213,14 @@ const CeritaKami = () => {
               iconColor="bg-amethyst text-background"
             >
               <div className="pt-12">
-                <h3 className="text-sm sm:text-base font-medium mb-2">Konsistensi</h3>
+                <IconTitleRow 
+                  icon={Calendar}
+                  iconColor="bg-amethyst text-background"
+                  title="Konsistensi"
+                  titleClassName="text-sm sm:text-base"
+                  className="mb-2 justify-center"
+                  gap="sm"
+                />
                 <p className="text-xs sm:text-sm text-foreground/70 font-sans">Berkomitmen untuk terus berkarya dan berkontribusi secara berkelanjutan</p>
               </div>
             </BentoCard>

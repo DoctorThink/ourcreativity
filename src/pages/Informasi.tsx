@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import PageLayout from "../components/layouts/PageLayout";
 import { motion, useScroll, useTransform } from "framer-motion";
 import BentoCard from "@/components/ui/BentoCard";
+import { IconTitleRow } from "@/components/ui/IconTitleRow";
 import { 
   Info, 
   Target, 
@@ -69,7 +70,12 @@ const Informasi = () => {
               glowColor="rgba(229, 222, 255, 0.3)"
             >
               <div className="pt-12">
-                <h2 className="text-xl md:text-2xl font-semibold mb-4 font-serif">Tentang Komunitas Kami</h2>
+                <IconTitleRow 
+                  icon={Info}
+                  iconColor="bg-amethyst text-background"
+                  title="Tentang Komunitas Kami"
+                  className="mb-4"
+                />
                 <p className="text-foreground/80 text-base leading-relaxed mb-4">
                   OUR CREATIVITY adalah komunitas yang didedikasikan untuk mendukung dan mempromosikan kreativitas di kalangan generasi muda. Kami menyediakan platform bagi para kreator untuk berbagi karya, berkolaborasi, dan belajar bersama.
                 </p>
@@ -102,7 +108,12 @@ const Informasi = () => {
               glowColor="rgba(152, 245, 225, 0.3)"
             >
               <div className="pt-12">
-                <h2 className="text-xl md:text-2xl font-semibold mb-4 font-serif">Visi Kami</h2>
+                <IconTitleRow 
+                  icon={Target}
+                  iconColor="bg-turquoise text-background"
+                  title="Visi Kami"
+                  className="mb-4"
+                />
                 <p className="text-foreground/80 text-base leading-relaxed">
                   Menjadi wadah utama bagi kreator muda Indonesia untuk mengembangkan potensi dan mewujudkan ide-ide kreatif mereka dalam lingkungan yang kolaboratif dan mendukung.
                 </p>
@@ -127,7 +138,13 @@ const Informasi = () => {
               glowColor="rgba(255, 209, 220, 0.3)"
             >
               <div className="pt-12">
-                <h2 className="text-xl font-semibold mb-4 font-serif">Nilai-nilai Kami</h2>
+                <IconTitleRow 
+                  icon={Heart}
+                  iconColor="bg-softPink text-background"
+                  title="Nilai-nilai Kami"
+                  titleClassName="text-xl"
+                  className="mb-4"
+                />
                 <ul className="space-y-3">
                   <ValueItem>Kolaborasi dan Sinergi</ValueItem>
                   <ValueItem>Kreativitas Tanpa Batas</ValueItem>
@@ -147,7 +164,12 @@ const Informasi = () => {
               glowColor="rgba(254, 198, 161, 0.3)"
             >
               <div className="pt-12">
-                <h2 className="text-xl md:text-2xl font-semibold mb-4 font-serif">Misi Kami</h2>
+                <IconTitleRow 
+                  icon={CheckSquare}
+                  iconColor="bg-coral text-background"
+                  title="Misi Kami"
+                  className="mb-4"
+                />
                 <ul className="space-y-3 text-foreground/80 text-base">
                   {[
                     "Menyediakan platform yang inklusif dan mendukung bagi semua kreator.",
@@ -181,7 +203,13 @@ const Informasi = () => {
               glowColor="rgba(152, 245, 225, 0.3)"
             >
               <div className="pt-12">
-                <h2 className="text-xl font-semibold mb-4 font-serif">Program Unggulan</h2>
+                <IconTitleRow 
+                  icon={Star}
+                  iconColor="bg-mint text-white"
+                  title="Program Unggulan"
+                  titleClassName="text-xl"
+                  className="mb-4"
+                />
                 <ul className="space-y-4">
                   <ProgramItem title="Workshop Bulanan">
                     Pelatihan keterampilan kreatif oleh praktisi berpengalaman
@@ -206,7 +234,12 @@ const Informasi = () => {
               glowColor="rgba(229, 222, 255, 0.3)"
             >
               <div className="pt-12">
-                <h2 className="text-xl md:text-2xl font-semibold mb-6 font-serif text-center">Apa Kata Mereka</h2>
+                <IconTitleRow 
+                  icon={MessageCircle}
+                  iconColor="bg-amethyst text-background"
+                  title="Apa Kata Mereka"
+                  className="mb-6 justify-center"
+                />
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <Testimonial 
@@ -238,7 +271,12 @@ const Informasi = () => {
               glowColor="rgba(152, 245, 225, 0.3)"
             >
               <div className="pt-12">
-                <h2 className="text-xl md:text-2xl font-semibold mb-4 font-serif">Bergabunglah Dengan Kami</h2>
+                <IconTitleRow 
+                  icon={Users}
+                  iconColor="bg-turquoise text-background"
+                  title="Bergabunglah Dengan Kami"
+                  className="mb-4 justify-center"
+                />
                 <p className="text-foreground/80 text-base max-w-2xl mx-auto mb-6">
                   Menjadi bagian dari komunitas kreatif yang terus berkembang dan menginspirasi.
                 </p>
