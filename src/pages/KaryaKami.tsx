@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { KaryaGallery } from "../components/karya/KaryaGallery";
@@ -107,7 +108,7 @@ const KaryaKami: React.FC = () => {
           </p>
         </motion.div>
         
-        {/* --- NEW MULTI-STEP UPLOAD WIZARD AT THE TOP --- */}
+        {/* Enhanced Multi-Step Upload Wizard */}
         <UploadWizard />
 
         {/* Simplified Loading animation with standardized design */}
