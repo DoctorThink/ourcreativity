@@ -621,7 +621,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
                     </div>
 
                     <p className="text-xs text-gray-400">
-                      💡 Tips: Gunakan **bold**, *italic*, # heading, > quote, dan - list untuk formatting
+                      💡 Tips: Gunakan **bold**, *italic*, # heading, {'>'}quote, dan - list untuk formatting
                     </p>
                     {errors.content && (
                       <p className="text-red-400 text-sm">{errors.content}</p>
