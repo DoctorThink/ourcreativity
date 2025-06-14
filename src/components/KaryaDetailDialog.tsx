@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Dialog, 
@@ -17,6 +16,7 @@ import {
 } from "@/components/ui/carousel";
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import ReactMarkdown from 'react-markdown';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -47,7 +47,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
   };
 
   const isVideo = (url: string) => url?.match(/\.(mp4|webm|ogg)$/i);
-  const isText = karya.category === 'writing' && karya.description;
+  const isText = karya.category === 'writing' && karya.content_url;
   
   // Use the media_urls array if it exists and has items, otherwise fallback to image_url
   const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
@@ -94,20 +94,17 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                 
                 {/* Scrollable Text Content */}
                 <div className="flex-1 min-h-0 p-6 md:p-8">
-                  <ScrollArea className="h-full w-full max-h-[60vh]">
+                  <ScrollArea className="h-full w-full max-h-[calc(100vh-220px)]">
                     <div className="max-w-4xl mx-auto">
-                      <div 
+                      {/* FIX: Render main content from `content_url` using ReactMarkdown */}
+                      <ReactMarkdown
                         className="prose prose-lg prose-invert max-w-none text-foreground/90 font-sans leading-relaxed"
-                        style={{ 
-                          fontSize: '1.125rem',
-                          lineHeight: '1.75',
-                          letterSpacing: '0.025em'
+                        components={{
+                          a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-mint hover:text-sage" />
                         }}
                       >
-                        <p className="whitespace-pre-wrap break-words">
-                          {karya.description}
-                        </p>
-                      </div>
+                        {karya.content_url || ''}
+                      </ReactMarkdown>
                     </div>
                   </ScrollArea>
                 </div>
