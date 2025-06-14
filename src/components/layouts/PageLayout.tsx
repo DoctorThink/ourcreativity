@@ -84,80 +84,65 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   
   return (
     <div className={cn("relative min-h-screen flex flex-col", className)}>
-      {/* True Sticky Header - Edge to Edge */}
+      {/* Modern Sticky Header with Enhanced Glassmorphism */}
       <motion.header 
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-out",
-          "backdrop-blur-2xl border-b border-white/5",
-          scrollY > 20 
-            ? "bg-background/95 shadow-2xl shadow-black/40 border-white/10" 
-            : "bg-background/85 shadow-xl shadow-black/20",
+          "fixed top-3 left-3 right-3 z-50 transition-all duration-500",
+          "bg-background/80 backdrop-blur-xl border border-white/10",
+          "rounded-[20px] shadow-2xl shadow-black/20",
+          "hover:shadow-2xl hover:shadow-black/30",
           headerClassName
         )}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 120, damping: 25 }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
+        style={{
+          background: scrollY > 20 
+            ? "rgba(28, 28, 30, 0.9)" 
+            : "rgba(28, 28, 30, 0.8)"
+        }}
       >
-        <div className={cn(
-          "container mx-auto px-6 py-4 flex justify-between items-center transition-all duration-500",
-          fullWidth ? "max-w-full" : "max-w-7xl",
-          scrollY > 20 ? "py-3" : "py-4"
-        )}>
-          {/* Enhanced Logo with Hover Effects */}
-          <Link to="/" className="flex items-center group relative z-10">
-            <motion.div
-              className="relative"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <img 
-                src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
-                alt="Logo" 
-                className={cn(
-                  "w-auto transition-all duration-300 filter drop-shadow-lg",
-                  scrollY > 20 ? "h-8" : "h-10"
-                )} 
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-amethyst/20 to-coral/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
-            </motion.div>
+        <div className={cn("container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center", fullWidth ? "max-w-full" : "max-w-7xl")}>
+          {/* Logo Only */}
+          <Link to="/" className="flex items-center group">
+            <motion.img 
+              src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
+              alt="Logo" 
+              className="h-8 sm:h-9 w-auto transition-transform duration-300 group-hover:scale-110" 
+              whileHover={{ rotate: 5 }}
+            />
           </Link>
           
-          {/* Modern Desktop Navigation with Enhanced Glass Effect */}
-          <nav className="hidden lg:flex items-center bg-white/5 backdrop-blur-md rounded-full px-3 py-2 border border-white/10 shadow-lg">
+          {/* Modern Desktop Navigation */}
+          <nav className="hidden lg:flex items-center bg-white/5 backdrop-blur-sm rounded-full px-2 py-1 border border-white/10">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "relative px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300",
-                  "hover:bg-white/10 hover:scale-105",
+                  "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 relative",
                   isActive(item.path)
-                    ? "bg-white/15 text-white shadow-lg font-semibold" 
-                    : "text-white/80 hover:text-white"
+                    ? "bg-white/15 text-white shadow-lg"
+                    : "text-white/70 hover:text-white hover:bg-white/10"
                 )}
               >
-                <span className="relative z-10">{item.name}</span>
+                {item.name}
                 {isActive(item.path) && (
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-amethyst/30 via-coral/20 to-turquoise/30 rounded-full"
-                    layoutId="activeNavTab"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    className="absolute inset-0 bg-gradient-to-r from-amethyst/30 to-coral/30 rounded-full -z-10"
+                    layoutId="activeTab"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
                   />
                 )}
               </Link>
             ))}
           </nav>
           
-          {/* Enhanced Mobile Menu Button */}
+          {/* Modern Mobile Menu Button */}
           <motion.button
-            className={cn(
-              "lg:hidden relative z-10 rounded-2xl backdrop-blur-md border transition-all duration-300",
-              "bg-white/10 border-white/20 hover:bg-white/20 hover:border-white/30",
-              "shadow-lg hover:shadow-xl",
-              scrollY > 20 ? "p-2.5" : "p-3"
-            )}
+            className="lg:hidden p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300"
             onClick={toggleMenu}
             aria-label="Toggle menu"
             whileHover={{ scale: 1.05 }}
@@ -172,7 +157,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <X className="h-5 w-5 text-white drop-shadow-sm" />
+                  <X className="h-5 w-5 text-white" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -182,7 +167,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Menu className="h-5 w-5 text-white drop-shadow-sm" />
+                  <Menu className="h-5 w-5 text-white" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -194,9 +179,9 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       <AnimatePresence>
         {isMenuOpen && (
           <>
-            {/* Enhanced Backdrop */}
+            {/* Backdrop */}
             <motion.div
-              className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md lg:hidden"
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -204,21 +189,17 @@ const PageLayout: React.FC<PageLayoutProps> = ({
               onClick={() => setIsMenuOpen(false)}
             />
             
-            {/* Repositioned Menu Content */}
+            {/* Menu Content */}
             <motion.div
-              className={cn(
-                "fixed inset-x-4 z-50 bg-secondary/95 backdrop-blur-2xl border border-border/30",
-                "rounded-3xl shadow-2xl shadow-black/30 lg:hidden overflow-hidden",
-                scrollY > 20 ? "top-20" : "top-24"
-              )}
-              initial={{ opacity: 0, y: -30, scale: 0.95 }}
+              className="fixed inset-x-4 top-24 z-40 bg-secondary/95 backdrop-blur-xl border border-border/30 rounded-3xl shadow-2xl shadow-black/20 lg:hidden overflow-hidden"
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -30, scale: 0.95 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             >
               <nav className="p-6">
                 <motion.div 
-                  className="space-y-3"
+                  className="space-y-2"
                   initial="hidden"
                   animate="visible"
                   exit="hidden"
@@ -228,7 +209,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                       opacity: 1,
                       transition: {
                         staggerChildren: 0.1,
-                        delayChildren: 0.15
+                        delayChildren: 0.1
                       }
                     }
                   }}
@@ -237,7 +218,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                     <motion.div
                       key={item.path}
                       variants={{
-                        hidden: { opacity: 0, x: -30 },
+                        hidden: { opacity: 0, x: -20 },
                         visible: { opacity: 1, x: 0 }
                       }}
                     >
@@ -245,26 +226,25 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                         to={item.path}
                         onClick={() => setIsMenuOpen(false)}
                         className={cn(
-                          "flex items-center justify-between px-5 py-4 rounded-2xl font-medium",
-                          "transition-all duration-300 text-base group border",
+                          "flex items-center px-4 py-4 rounded-2xl font-medium transition-all duration-300 text-base group",
                           isActive(item.path)
-                            ? "bg-amethyst/20 text-white font-semibold border-amethyst/30 shadow-lg"
-                            : "text-foreground/80 hover:text-foreground hover:bg-white/10 border-transparent hover:border-white/20"
+                            ? "bg-amethyst/20 text-white font-semibold border border-amethyst/30"
+                            : "text-foreground/80 hover:text-foreground hover:bg-white/10"
                         )}
                       >
                         <motion.span
-                          className="flex-1 text-left"
-                          whileHover={{ x: 6 }}
+                          className="flex-1"
+                          whileHover={{ x: 4 }}
                           transition={{ duration: 0.2 }}
                         >
                           {item.name}
                         </motion.span>
                         {isActive(item.path) && (
                           <motion.div
-                            className="w-2.5 h-2.5 rounded-full bg-amethyst shadow-glow"
-                            initial={{ scale: 0, rotate: -180 }}
-                            animate={{ scale: 1, rotate: 0 }}
-                            transition={{ duration: 0.3, delay: 0.1 }}
+                            className="w-2 h-2 rounded-full bg-amethyst"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ duration: 0.2 }}
                           />
                         )}
                       </Link>
@@ -277,26 +257,21 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         )}
       </AnimatePresence>
       
-      {/* Main Content with Proper Spacing */}
-      <main className={cn("flex-grow pt-20 md:pt-24", contentClassName)}>
+      {/* Main Content with proper spacing for fixed header */}
+      <main className={cn("flex-grow pt-24 md:pt-28", contentClassName)}>
         {/* Page Title Section */}
         {title && (
-          <div className={cn(
-            "container mx-auto px-4 sm:px-6 mb-8 md:mb-10",
-            scrollY > 50 ? "pt-4" : "pt-8"
-          )}>
+          <div className="container mx-auto px-4 sm:px-6 mb-8 md:mb-10">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="text-center md:text-left w-full">
                 {showBackButton && (
-                  <motion.button
+                  <button
                     onClick={handleBackClick}
-                    className="mb-4 inline-flex items-center text-sm text-foreground/70 hover:text-foreground transition-all duration-300 font-medium hover:translate-x-1"
-                    whileHover={{ x: -4 }}
-                    whileTap={{ scale: 0.95 }}
+                    className="mb-4 inline-flex items-center text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 font-medium"
                   >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    <ArrowLeft className="mr-1 h-4 w-4" />
                     <span>Kembali</span>
-                  </motion.button>
+                  </button>
                 )}
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-serif mb-2 md:mb-3 text-center md:text-left">{title}</h1>
                 {subtitle && <p className="text-foreground/80 text-lg md:text-xl font-sans text-center md:text-left">{subtitle}</p>}
