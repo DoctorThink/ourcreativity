@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Dialog, 
@@ -47,10 +48,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
   };
 
   const isVideo = (url: string) => url?.match(/\.(mp4|webm|ogg)$/i);
-  
   const isText = karya.category === 'writing' && karya.content_url;
-  const isDocumentLink = isText && karya.content_url.startsWith('https://nmjakogetnzrfluicvdh.supabase.co');
-  const isMarkdownContent = isText && !isDocumentLink;
   
   // Use the media_urls array if it exists and has items, otherwise fallback to image_url
   const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
@@ -83,7 +81,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
           {/* Content preview with enhanced media display */}
           <div className="relative w-full bg-black/50 flex-grow" 
                style={{ height: isText ? 'auto' : '100vh' }}>
-            {isMarkdownContent ? (
+            {isText ? (
               <div className="w-full h-full flex flex-col bg-secondary backdrop-blur-md">
                 <div className="flex-shrink-0 p-8 text-center border-b border-border/20">
                   <img 
@@ -112,23 +110,6 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                     </div>
                   </ScrollArea>
                 </div>
-              </div>
-            ) : isDocumentLink ? (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-secondary backdrop-blur-md p-8 text-center">
-                <img 
-                  src="/lovable-uploads/karyatulis.png" 
-                  alt="Karya Tulis" 
-                  className="w-24 h-24 mx-auto mb-6 opacity-80" 
-                />
-                <h2 className="text-3xl font-bold mb-2 text-foreground font-sans">{karya.title}</h2>
-                <p className="text-md text-foreground/70 mb-8">Oleh {karya.creator_name}</p>
-                <p className="text-lg text-foreground/80 mb-8 max-w-lg">
-                  Karya ini dalam format dokumen. Klik tombol di bawah untuk melihat atau mengunduh.
-                </p>
-                <Button onClick={() => window.open(karya.content_url, '_blank')} className="gap-2 rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium">
-                  <ExternalLink className="h-4 w-4" />
-                  Buka Dokumen
-                </Button>
               </div>
             ) : mediaUrls.length > 1 ? (
               <Carousel className="w-full h-full">
