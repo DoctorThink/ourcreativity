@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Dialog, 
@@ -96,15 +97,16 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                 <div className="flex-1 min-h-0 p-6 md:p-8">
                   <ScrollArea className="h-full w-full max-h-[calc(100vh-220px)]">
                     <div className="max-w-4xl mx-auto">
-                      {/* FIX: Render main content from `content_url` using ReactMarkdown */}
-                      <ReactMarkdown
-                        className="prose prose-lg prose-invert max-w-none text-foreground/90 font-sans leading-relaxed"
-                        components={{
-                          a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-mint hover:text-sage" />
-                        }}
-                      >
-                        {karya.content_url || ''}
-                      </ReactMarkdown>
+                      {/* FIX: Wrap ReactMarkdown in a div to apply prose styles */}
+                      <div className="prose prose-lg prose-invert max-w-none text-foreground/90 font-sans leading-relaxed">
+                        <ReactMarkdown
+                          components={{
+                            a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-mint hover:text-sage" />
+                          }}
+                        >
+                          {karya.content_url || ''}
+                        </ReactMarkdown>
+                      </div>
                     </div>
                   </ScrollArea>
                 </div>
