@@ -196,12 +196,16 @@ const Index = () => {
     <PageLayout 
       title=""
       showBackButton={false}
+      className="relative min-h-screen backdrop-blur-sm"
     >
+      {/* Blurred Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/60 to-secondary/40 backdrop-blur-md -z-10" />
+      
       <motion.div
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="mb-6 md:mb-8"
+        className="mb-6 md:mb-8 relative z-10"
       >
         <div className="text-center space-y-2 md:space-y-4">
           <motion.div 
@@ -213,9 +217,15 @@ const Index = () => {
             <span className="text-base md:text-lg lg:text-xl font-sans font-medium text-foreground/80 dark:text-foreground-dark/80 mb-1">
               Selamat Datang di
             </span>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold bg-gradient-to-r from-amethyst via-turquoise to-coral bg-clip-text text-transparent">
-              OUR CREATIVITY
-            </h1>
+            <div className="relative">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold animated-gradient-text glow-text">
+                OUR CREATIVITY
+              </h1>
+              {/* Glow effect */}
+              <div className="absolute inset-0 text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold animated-gradient-text blur-lg opacity-30 -z-10">
+                OUR CREATIVITY
+              </div>
+            </div>
           </motion.div>
 
           <motion.div
@@ -224,9 +234,9 @@ const Index = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-amethyst" />
+            <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-amethyst animate-pulse" />
             <span className="font-sans">Dunia kreativitas tanpa batas menanti</span>
-            <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-coral" />
+            <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-coral animate-pulse" />
           </motion.div>
         </div>
       </motion.div>
@@ -235,6 +245,7 @@ const Index = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
+        className="relative z-10"
       >
         {/* Optimized Bento Grid with smaller cards on desktop */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 auto-rows-fr max-w-6xl mx-auto">
@@ -255,7 +266,7 @@ const Index = () => {
               }}
             >
               <BentoCard
-                className={`relative group cursor-pointer h-full min-h-[160px] md:min-h-[180px] lg:min-h-[200px] ${tile.color} border-border/50 hover:border-border/70 transition-all duration-300`}
+                className={`relative group cursor-pointer h-full min-h-[160px] md:min-h-[180px] lg:min-h-[200px] ${tile.color} border-border/50 hover:border-border/70 transition-all duration-300 backdrop-blur-sm`}
                 onClick={() => handleTileClick(tile)}
                 interactive={true}
                 hoverScale={1.015}

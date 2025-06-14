@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, X, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { Announcement } from "@/models/Announcement";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -80,7 +80,7 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
       if (paragraph.includes('- ') || paragraph.includes('* ') || paragraph.includes('• ')) {
         const items = paragraph.split('\n').filter(line => line.trim());
         return (
-          <div key={idx} className="space-y-3 my-4">
+          <div key={idx} className="space-y-3 my-6">
             {items.map((item, itemIdx) => {
               if (item.includes('- ') || item.includes('* ') || item.includes('• ')) {
                 return (
@@ -93,7 +93,7 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                 );
               }
               return (
-                <p key={itemIdx} className="text-lg leading-relaxed font-medium text-foreground mb-2">
+                <p key={itemIdx} className="text-lg leading-relaxed font-medium text-foreground mb-3">
                   {item}
                 </p>
               );
@@ -106,7 +106,7 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
       if (/^\d+\./.test(paragraph)) {
         const items = paragraph.split('\n').filter(line => line.trim());
         return (
-          <ol key={idx} className="space-y-3 my-4 counter-reset-list">
+          <ol key={idx} className="space-y-3 my-6 counter-reset-list">
             {items.map((item, itemIdx) => {
               if (/^\d+\./.test(item)) {
                 const number = item.match(/^\d+/)?.[0];
@@ -162,6 +162,11 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-5xl max-h-[95vh] p-0 border-0 bg-secondary/95 backdrop-blur-xl overflow-hidden">
+        <DialogTitle className="sr-only">{announcement.title}</DialogTitle>
+        <DialogDescription className="sr-only">
+          {getCategoryLabel()} - {getDisplayDate()}
+        </DialogDescription>
+        
         <AnimatePresence mode="wait">
           {announcement && (
             <motion.div
@@ -172,47 +177,50 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
               transition={{ duration: 0.3, ease: "easeOut" }}
               className="overflow-y-auto max-h-[95vh] scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent"
             >
-              {/* Enhanced Header */}
-              <div className="sticky top-0 z-20 bg-secondary/90 backdrop-blur-xl border-b border-white/10 p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-4">
-                      <Badge className={getCategoryColor()}>
-                        {getCategoryLabel()}
-                      </Badge>
-                      {announcement.important && (
-                        <Badge className="bg-red-500/20 text-red-400 border-red-500/30 animate-pulse-subtle">
-                          ⚠️ Penting
+              {/* Enhanced Header with better readability */}
+              <div className="sticky top-0 z-20 bg-secondary/95 backdrop-blur-xl border-b border-white/10">
+                <div className="p-6 pb-4">
+                  <div className="flex items-start justify-between gap-4 mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-4">
+                        <Badge className={getCategoryColor()}>
+                          {getCategoryLabel()}
                         </Badge>
-                      )}
-                      <div className="flex items-center gap-2 text-sm text-foreground/60">
+                        {announcement.important && (
+                          <Badge className="bg-red-500/20 text-red-400 border-red-500/30 animate-pulse-subtle">
+                            ⚠️ Penting
+                          </Badge>
+                        )}
+                      </div>
+                      
+                      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-foreground leading-tight">
+                        {announcement.title}
+                      </h1>
+                      
+                      <div className="flex items-center gap-2 text-sm text-foreground/60 mt-3">
                         <Calendar className="w-4 h-4" />
                         <span>{getDisplayDate()}</span>
                       </div>
                     </div>
                     
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-foreground leading-tight mb-2">
-                      {announcement.title}
-                    </h1>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={onClose}
+                      className="p-2 hover:bg-white/10 rounded-full transition-all duration-200 hover:scale-110 flex-shrink-0"
+                    >
+                      <X className="w-5 h-5" />
+                    </Button>
                   </div>
-                  
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={onClose}
-                    className="p-2 hover:bg-white/10 rounded-full transition-all duration-200 hover:scale-110"
-                  >
-                    <X className="w-5 h-5" />
-                  </Button>
                 </div>
               </div>
 
-              {/* Enhanced Content */}
-              <div className="p-6 space-y-6">
+              {/* Enhanced Content with better spacing and readability */}
+              <div className="px-6 pb-6">
                 {/* Image */}
                 {announcement.image_url && (
                   <motion.div 
-                    className="relative overflow-hidden rounded-2xl border border-white/10 group"
+                    className="relative overflow-hidden rounded-2xl border border-white/10 group mb-8"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
@@ -231,7 +239,7 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                 
                 {/* Enhanced Content with Markdown Support */}
                 <motion.div 
-                  className="prose prose-lg max-w-none space-y-4"
+                  className="max-w-none space-y-6 text-readable"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
@@ -242,7 +250,7 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                 {/* Enhanced Link */}
                 {announcement.link_url && (
                   <motion.div 
-                    className="pt-6 border-t border-white/10"
+                    className="pt-8 border-t border-white/10 mt-8"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}

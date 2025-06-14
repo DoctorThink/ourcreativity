@@ -84,21 +84,21 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   
   return (
     <div className={cn("relative min-h-screen flex flex-col", className)}>
-      {/* Modern Sticky Header */}
+      {/* Floating Modern Header */}
       <motion.header 
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 py-3 md:py-4 transition-all duration-500",
+          "fixed top-4 left-4 right-4 z-50 transition-all duration-500 rounded-2xl",
           scrollY > 20 
-            ? "bg-background/80 backdrop-blur-xl border-b border-border/20 shadow-lg shadow-black/5" 
-            : "bg-transparent",
+            ? "bg-background/70 backdrop-blur-xl border border-border/30 shadow-2xl shadow-black/10" 
+            : "bg-background/50 backdrop-blur-lg border border-border/20 shadow-lg shadow-black/5",
           headerClassName
         )}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >
-        <div className={cn("container mx-auto px-4 sm:px-6 flex justify-between items-center", fullWidth ? "max-w-full" : "max-w-7xl")}>
-          {/* Enhanced Logo Area with Gradient Animation */}
+        <div className={cn("container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center", fullWidth ? "max-w-full" : "max-w-7xl")}>
+          {/* Enhanced Logo Area */}
           <Link to="/" className="flex items-center gap-3 group">
             <motion.img 
               src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
@@ -107,7 +107,11 @@ const PageLayout: React.FC<PageLayoutProps> = ({
               whileHover={{ rotate: 5 }}
             />
             <div className="relative overflow-hidden">
-              <div className="animated-gradient-text text-lg sm:text-xl font-bold tracking-wide">
+              <div className="animated-gradient-text text-lg sm:text-xl font-bold tracking-wide glow-text">
+                OUR CREATIVITY
+              </div>
+              {/* Glow effect for header text */}
+              <div className="absolute inset-0 animated-gradient-text text-lg sm:text-xl font-bold tracking-wide blur-sm opacity-50 -z-10">
                 OUR CREATIVITY
               </div>
             </div>
@@ -191,7 +195,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
             
             {/* Menu Content */}
             <motion.div
-              className="fixed inset-x-4 top-20 z-40 bg-secondary/95 backdrop-blur-xl border border-border/30 rounded-3xl shadow-2xl shadow-black/20 lg:hidden overflow-hidden"
+              className="fixed inset-x-4 top-24 z-40 bg-secondary/95 backdrop-blur-xl border border-border/30 rounded-3xl shadow-2xl shadow-black/20 lg:hidden overflow-hidden"
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
@@ -258,7 +262,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       </AnimatePresence>
       
       {/* Main Content */}
-      <main className={cn("flex-grow pt-20 md:pt-24", contentClassName)}>
+      <main className={cn("flex-grow pt-24 md:pt-28", contentClassName)}>
         {/* Page Title Section */}
         {title && (
           <div className="container mx-auto px-4 sm:px-6 mb-8 md:mb-10">
