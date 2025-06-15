@@ -1,4 +1,3 @@
-
 import teamData from '@/data/team.json';
 import { Video, Palette, Smile, FileText, Code } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -47,7 +46,7 @@ export interface ProcessedCategory extends Omit<TeamCategory, 'icon'> {
  * @returns An object containing processed categories, all members, and featured members.
  */
 export function getTeamPageData() {
-  const { categories, members }: { categories: TeamCategory[], members: TeamMember[] } = teamData;
+  const { categories, members } = teamData as { categories: TeamCategory[], members: TeamMember[] };
 
   const allMembers: TeamMember[] = members;
   const featuredMembers: TeamMember[] = members.filter(member => member.isFeatured);

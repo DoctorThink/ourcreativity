@@ -6,11 +6,11 @@ import { cn } from "@/lib/utils";
 
 interface FeaturedMemberCardProps {
   name: string;
-  role: string;
+  role:string;
   category: string;
   bio: string;
   avatar: string;
-  accentColor?: "coral" | "emerald" | "amethyst" | "turquoise" | "amber" | "softPink";
+  accentColor?: "coral" | "emerald" | "amethyst" | "turquoise" | "amber" | "softPink" | "grayMid" | "orangeLight" | "mint";
   onClick?: () => void;
 }
 
@@ -20,7 +20,10 @@ const colorClasses = {
   amethyst: "border-amethyst/30 shadow-amethyst/20",
   turquoise: "border-turquoise/30 shadow-turquoise/20",
   amber: "border-amber/30 shadow-amber/20",
-  softPink: "border-softPink/30 shadow-softPink/20"
+  softPink: "border-softPink/30 shadow-softPink/20",
+  grayMid: "border-grayMid/30 shadow-grayMid/20",
+  orangeLight: "border-orangeLight/30 shadow-orangeLight/20",
+  mint: "border-mint/30 shadow-mint/20"
 };
 
 export const FeaturedMemberCard: React.FC<FeaturedMemberCardProps> = ({
