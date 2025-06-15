@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -38,6 +37,7 @@ const KaryaGallery = () => {
   const [selectedKarya, setSelectedKarya] = useState<KaryaType | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [initialIndex, setInitialIndex] = useState(0);
   const isMobile = useIsMobile();
   const [spotlightItems, setSpotlightItems] = useState<KaryaType[]>([]);
 
@@ -77,8 +77,9 @@ const KaryaGallery = () => {
     setSpotlightItems(filteredItems);
   }, [karya, activeCategory]);
 
-  const handleKaryaClick = (item: KaryaType) => {
+  const handleKaryaClick = (item: KaryaType, index: number) => {
     setSelectedKarya(item);
+    setInitialIndex(index);
     setIsDialogOpen(true);
   };
 
@@ -142,7 +143,7 @@ const KaryaGallery = () => {
               >
                 <KaryaCard 
                   karya={item} 
-                  onClick={() => handleKaryaClick(item)}
+                  onClick={() => handleKaryaClick(item, index)}
                 />
               </motion.div>
             ))}
@@ -265,11 +266,11 @@ const KaryaGallery = () => {
             {isLoading ? (
               <SkeletonCards />
             ) : filteredKarya && filteredKarya.length > 0 ? (
-              filteredKarya.map((item) => (
+              filteredKarya.map((item, index) => (
                 <KaryaCard
                   key={item.id}
                   karya={item}
-                  onClick={() => handleKaryaClick(item)}
+                  onClick={() => handleKaryaClick(item, index)}
                 />
               ))
             ) : (
@@ -284,7 +285,8 @@ const KaryaGallery = () => {
       {/* Detail Dialog */}
       {selectedKarya && (
         <KaryaDetailDialog
-          karya={selectedKarya}
+          karyaList={filteredKarya || []}
+          initialIndex={initialIndex}
           isOpen={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
         />

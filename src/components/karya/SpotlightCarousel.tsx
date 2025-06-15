@@ -21,9 +21,11 @@ interface SpotlightCarouselProps {
 export const SpotlightCarousel: React.FC<SpotlightCarouselProps> = ({ spotlightItems }) => {
   const [selectedKarya, setSelectedKarya] = useState<KaryaType | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [initialIndex, setInitialIndex] = useState(0);
 
-  const handleKaryaClick = (karya: KaryaType) => {
+  const handleKaryaClick = (karya: KaryaType, index: number) => {
     setSelectedKarya(karya);
+    setInitialIndex(index);
     setIsDialogOpen(true);
   };
 
@@ -87,7 +89,7 @@ export const SpotlightCarousel: React.FC<SpotlightCarouselProps> = ({ spotlightI
                 >
                   <KaryaCard 
                     karya={item} 
-                    onClick={() => handleKaryaClick(item)}
+                    onClick={() => handleKaryaClick(item, index)}
                   />
                 </motion.div>
               </CarouselItem>
@@ -102,7 +104,8 @@ export const SpotlightCarousel: React.FC<SpotlightCarouselProps> = ({ spotlightI
       {/* Detail Dialog */}
       {selectedKarya && (
         <KaryaDetailDialog
-          karya={selectedKarya}
+          karyaList={spotlightItems}
+          initialIndex={initialIndex}
           isOpen={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
         />
