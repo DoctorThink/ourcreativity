@@ -10,6 +10,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { getTransformedUrl } from '@/lib/karyaUtils';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -118,13 +119,11 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
     >
       <Card
         onClick={onClick}
-        className={`group relative w-full overflow-hidden bg-secondary/80 backdrop-blur-md border border-white/10 rounded-3xl transition-all duration-300 cursor-pointer hover:border-white/20 hover:shadow-xl ${
-          karya.is_spotlight ? 'ring-2 ring-lavender/50 shadow-lg shadow-lavender/20' : ''
-        }`}
+        className={`group relative w-full overflow-hidden bg-secondary/80 backdrop-blur-md border border-white/10 rounded-3xl transition-all duration-300 cursor-pointer hover:border-amethyst/50 hover:shadow-2xl hover:shadow-amethyst/20`}
       >
         {/* Content Preview Container with aspect-ratio */}
         <div 
-          className="relative w-full overflow-hidden rounded-t-2xl"
+          className="relative w-full overflow-hidden rounded-t-2xl transition-transform duration-300 group-hover:scale-105"
           style={{ aspectRatio }}
         >
           {isText ? (
@@ -160,9 +159,10 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                           preload="metadata"
                           playsInline
                           muted
+                          loop
                           poster="#1C1C1E"
                         />
-                        <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
                           <div className="bg-black/30 backdrop-blur-sm p-3 rounded-full border border-white/10">
                             <Play className="w-6 h-6 text-white" />
                           </div>
@@ -173,15 +173,12 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                         <source srcSet={getTransformedUrl(url, { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
                         <source srcSet={getTransformedUrl(url, { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
                         <img
-                          ref={imageRef}
                           src={getTransformedUrl(url, { format: 'jpeg', width: 300, quality: 50 })}
                           alt={`${karya.title} - slide ${index + 1}`}
                           className="w-full h-full object-cover"
-                          onLoad={handleImageLoad}
                           loading="lazy"
                           width={karya.media_width || 400}
                           height={karya.media_height || 300}
-                          style={{ backgroundImage: 'url(/placeholder.svg)', backgroundSize: 'cover' }}
                         />
                       </picture>
                     )}
@@ -208,9 +205,10 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                     preload="metadata"
                     playsInline
                     muted
+                    loop
                     poster="#1C1C1E"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="bg-black/30 backdrop-blur-sm p-3 rounded-full border border-white/10">
                       <Play className="w-6 h-6 text-white" />
                     </div>
@@ -221,22 +219,14 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                   <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
                   <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
                   <img
-                    ref={imageRef}
                     src={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 300, quality: 50 })}
                     alt={karya.title}
-                    className={`w-full h-full object-cover transition-opacity duration-500 ${
-                      imageLoaded ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    onLoad={handleImageLoad}
+                    className="w-full h-full object-cover"
                     loading="lazy"
                     width={karya.media_width || 400}
                     height={karya.media_height || 300}
-                    style={{ backgroundImage: 'url(/placeholder.svg)', backgroundSize: 'cover' }}
                   />
                 </picture>
-              )}
-              {!imageLoaded && !hasVideo && (
-                <div className="absolute inset-0 bg-secondary animate-pulse"></div>
               )}
             </>
           )}
@@ -244,56 +234,55 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
 
         {/* Content overlay with better typography */}
         <div 
-          className={`absolute bottom-0 left-0 right-0 p-5 text-foreground opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t ${
+          className={`absolute bottom-0 left-0 right-0 p-4 text-foreground opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t ${
             hasVideo ? 'from-black/95 to-transparent' : 'from-background/95 to-transparent'
           }`}
         >
-          <div className="flex justify-between items-end gap-3">
-            <div className="flex-1 min-w-0">
-              <h3 className="text-base sm:text-lg font-bold truncate tracking-tight font-sans text-white">{karya.title}</h3>
-              <div className="flex items-center justify-between">
-                <p className="text-white/80 text-xs sm:text-sm truncate mt-1 font-medium">{karya.creator_name}</p>
-                {karya.likes_count != null && karya.likes_count > 0 && (
-                  <div className="flex items-center gap-1.5 text-white/80">
-                    <Heart className="w-3.5 h-3.5" fill="currentColor" />
-                    <span className="text-xs font-medium">{karya.likes_count}</span>
-                  </div>
-                )}
-              </div>
-              
-              {/* Tags display on hover */}
-              {tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-2 max-w-full overflow-hidden">
-                  {tags.slice(0, 3).map((tag, index) => (
-                    <span 
-                      key={index}
-                      className="text-[10px] bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/90 font-medium"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                  {tags.length > 3 && (
-                    <span className="text-[10px] bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/90 font-medium">
-                      +{tags.length - 3}
-                    </span>
-                  )}
+          <div className="flex justify-between items-start">
+            <div className="bg-black/40 backdrop-blur-sm p-2 rounded-full">
+              <img
+                src={categoryIcons[karya.category] || '/lovable-uploads/design.png'}
+                alt={karya.category}
+                className="w-5 h-5 object-contain"
+              />
+            </div>
+            <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-full text-white/90">
+              {karya.likes_count != null && karya.likes_count > 0 && (
+                <div className="flex items-center gap-1">
+                  <Heart className="w-3.5 h-3.5 text-rose-400" fill="currentColor" />
+                  <span className="text-xs font-medium">{karya.likes_count}</span>
                 </div>
               )}
+              {karya.link_url && (
+                <a 
+                  href={karya.link_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={stopPropagation}
+                  className="flex items-center"
+                  aria-label="Visit related link"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              )}
             </div>
-            {karya.link_url && (
-              <motion.a 
-                href={karya.link_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={stopPropagation}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="flex items-center gap-1.5 text-white/80 bg-black/30 backdrop-blur-sm rounded-full px-2.5 py-1 hover:bg-black/50 transition-colors border border-white/10"
-                aria-label="Visit related link"
-              >
-                <ExternalLink className="h-3.5 w-3.5" />
-              </motion.a>
-            )}
+          </div>
+          
+          <div className="p-4 rounded-b-2xl bg-gradient-to-t from-black/80 to-transparent">
+            <motion.h3 
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.1, duration: 0.3 }}
+              className="text-lg font-bold truncate tracking-tight font-sans text-white">
+              {karya.title}
+            </motion.h3>
+            <motion.p 
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.15, duration: 0.3 }}
+              className="text-white/80 text-sm truncate mt-1 font-medium">
+              {karya.creator_name}
+            </motion.p>
           </div>
         </div>
 
