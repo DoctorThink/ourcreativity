@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Star, Users, Award, MessageSquare, GalleryHorizontal } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import GlassBentoCard from "@/components/ui/GlassBentoCard";
 
 export const ProgramsSection: React.FC = () => {
   const benefits = [
@@ -37,11 +37,23 @@ export const ProgramsSection: React.FC = () => {
     }
   ];
 
+  const colorMap: { [key: string]: string } = {
+    'bg-mint': 'rgba(152, 245, 225, 0.2)',
+    'bg-turquoise': 'rgba(64, 224, 208, 0.2)',
+    'bg-coral': 'rgba(255, 127, 80, 0.2)',
+    'bg-amethyst': 'rgba(155, 109, 255, 0.2)',
+    'bg-yellow-500': 'rgba(234, 179, 8, 0.2)',
+  };
+
+  const getAccentColor = (iconColor: string) => {
+    return colorMap[iconColor.split(' ')[0]] || 'rgba(155, 109, 255, 0.2)';
+  };
+
   return (
     <section className="py-20 px-4 sm:px-6 md:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">
+          <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4 animated-gradient-text">
             Program & Fasilitas
           </h2>
           <p className="text-lg text-foreground/70 font-sans">
@@ -51,22 +63,20 @@ export const ProgramsSection: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {benefits.map((benefit, index) => (
-            <Card 
+            <GlassBentoCard 
               key={index} 
-              className="bg-card/50 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/20"
+              accentColor={getAccentColor(benefit.iconColor)}
             >
-              <CardHeader>
-                <div className="flex items-center gap-4">
+              <div className="p-6 h-full flex flex-col">
+                <div className="flex items-center gap-4 mb-4">
                   <div className={`p-3 rounded-full ${benefit.iconColor}`}>
                     <benefit.icon className="w-6 h-6" />
                   </div>
-                  <CardTitle className="font-serif text-xl">{benefit.title}</CardTitle>
+                  <h3 className="font-serif text-xl text-white font-semibold">{benefit.title}</h3>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-foreground/80 font-sans leading-relaxed">{benefit.description}</p>
-              </CardContent>
-            </Card>
+                <p className="text-foreground/80 font-sans leading-relaxed flex-grow">{benefit.description}</p>
+              </div>
+            </GlassBentoCard>
           ))}
         </div>
       </div>

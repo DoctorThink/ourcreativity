@@ -21,7 +21,7 @@ interface GlassBentoCardProps {
   disabled?: boolean;
   motionProps?: MotionProps;
   style?: React.CSSProperties;
-  onClick?: () => void; // Add onClick prop to interface
+  onClick?: () => void;
 }
 
 const GlassBentoCard: React.FC<GlassBentoCardProps> = ({
@@ -33,14 +33,14 @@ const GlassBentoCard: React.FC<GlassBentoCardProps> = ({
   hoverScale = 1.02,
   colSpan = "col-span-1",
   rowSpan = "row-span-1",
-  accentColor = "from-amethyst/20 to-transparent",
+  accentColor = 'rgba(155, 109, 255, 0.2)', // Glowar: Default to amethyst glow
   hasShimmer = true,
   className = "",
   shineDuration = 5,
   disabled = false,
   motionProps,
   style,
-  onClick, // Add onClick to props
+  onClick,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -150,16 +150,16 @@ const GlassBentoCard: React.FC<GlassBentoCardProps> = ({
         className
       )}
       style={cardStyles}
-      onClick={handleClick} // Add the click handler
+      onClick={handleClick}
       {...combinedMotionProps}
       {...interactiveEventHandlers}
     >
       {/* Moving gradient background effect */}
       <div
-        className="absolute inset-0 opacity-20 bg-gradient-to-br"
+        className="absolute inset-0"
         style={{
           '--gradient-position': `${position.x * 100}% ${position.y * 100}%`,
-          background: `radial-gradient(circle at var(--gradient-position), ${accentColor.split(' ')[0]} 0%, ${accentColor.split(' ')[1] || 'transparent'} 70%)`,
+          background: `radial-gradient(circle at var(--gradient-position), ${accentColor} 0%, transparent 70%)`,
           opacity: hovered ? 0.4 : 0.2,
           transition: 'opacity 0.3s ease'
         } as React.CSSProperties}
