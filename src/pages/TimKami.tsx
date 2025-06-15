@@ -1,4 +1,3 @@
-
 import React, { useState, useLayoutEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -8,7 +7,7 @@ import { MemberCard } from "@/components/ui/MemberCard";
 import { StandardCard } from "@/components/ui/StandardCard";
 import { IconDisplay } from "@/components/ui/IconDisplay";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Video, Palette, Smile, FileText, Users, Star, Droplet } from "lucide-react";
+import { Video, Palette, Smile, FileText, Users, Star, Droplet, Code, Bot as BotIcon, TowerControl } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TeamMemberBio from "@/components/TeamMemberBio";
@@ -21,8 +20,8 @@ const categories = [
     icon: Video,
     color: "coral" as const,
     description: "Tempat bagi para editor video untuk berkolaborasi, mempelajari software baru, dan menghasilkan konten sinematik berkualitas tinggi.",
-    memberCount: 8,
-    memberAvatars: ["K", "A", "S", "D"]
+    memberCount: 3,
+    memberAvatars: ["AB", "KZ", "AL"]
   },
   {
     id: "design", 
@@ -30,8 +29,8 @@ const categories = [
     icon: Palette,
     color: "turquoise" as const,
     description: "Wadah bagi para seniman visual untuk berbagi teknik, inspirasi, dan menciptakan karya desain yang memukau dan bermakna.",
-    memberCount: 12,
-    memberAvatars: ["A", "N", "X", "R", "M"]
+    memberCount: 4,
+    memberAvatars: ["XO", "AS", "NX", "RP"]
   },
   {
     id: "meme",
@@ -39,8 +38,8 @@ const categories = [
     icon: Smile,
     color: "softPink" as const,
     description: "Ruang santai namun kreatif bagi para pembuat meme untuk berbagi humor dan mengasah kemampuan bercerita visual secara singkat.",
-    memberCount: 6,
-    memberAvatars: ["D", "K", "P"]
+    memberCount: 1,
+    memberAvatars: ["DF"]
   },
   {
     id: "writing",
@@ -48,8 +47,35 @@ const categories = [
     icon: FileText,
     color: "mint" as const,
     description: "Komunitas bagi para penulis, penyair, dan pencerita untuk berbagi tulisan, memberikan kritik membangun, dan mengasah keterampilan literasi.",
-    memberCount: 6,
-    memberAvatars: ["K", "Se", "Sa"]
+    memberCount: 3,
+    memberAvatars: ["KV", "SE", "SV"]
+  },
+  {
+    id: "coding",
+    name: "Coding",
+    icon: Code,
+    color: "turquoise" as const,
+    description: "Divisi untuk para programmer berdiskusi, belajar, dan berkolaborasi dalam proyek pengembangan web dan teknologi lainnya.",
+    memberCount: 1,
+    memberAvatars: ["AR"]
+  },
+  {
+    id: "bot",
+    name: "Bot Development",
+    icon: BotIcon,
+    color: "orangeLight" as const,
+    description: "Tempat bagi para pengembang untuk merancang dan membangun bot Discord yang fungsional dan inovatif untuk komunitas.",
+    memberCount: 2,
+    memberAvatars: ["RF", "FL"]
+  },
+  {
+    id: "discord",
+    name: "Discord Admin",
+    icon: TowerControl,
+    color: "amethyst" as const,
+    description: "Tim yang bertanggung jawab menjaga server Discord tetap menjadi lingkungan yang aman, teratur, dan ramah bagi semua anggota.",
+    memberCount: 1,
+    memberAvatars: ["AJ"]
   }
 ];
 
@@ -90,37 +116,51 @@ const featuredMembers = [
     bio: "Seorang pencerita visual yang handal, Abhyrahma memimpin divisi video editing. Ia memiliki keahlian dalam mengubah rekaman mentah menjadi karya sinematik yang menarik dan penuh emosi.",
     avatar: "AB",
     accentColor: "coral" as const
+  },
+  {
+    id: "5",
+    name: "Daffa/deploid",
+    role: "Meme Division Leader",
+    category: "Meme",
+    bio: "Pionir humor di OurCreativity, Daffa memimpin divisi meme dengan kreativitas tak terbatas. Ia ahli dalam mengubah tren menjadi konten viral yang menghibur.",
+    avatar: "DF",
+    accentColor: "softPink" as const
   }
 ];
 
 // All members for the directory
 const allMembers = [
+  // Leadership
+  { name: "Muhammad Syahid Al Haqi", role: "Founder & Community Leader", category: "Leadership", avatar: "MS", accentColor: "amber" as const, bio: "Visiuner di balik OurCreativity, Hakky membangun komunitas ini dari nol dengan semangat untuk menyatukan para kreator Indonesia. Ia percaya bahwa kolaborasi adalah kunci pertumbuhan." },
+  
   // Video Editing Team
-  { name: "Abhyrahma", role: "Video Division Leader", category: "Video", avatar: "AB", accentColor: "coral" as const },
-  { name: "Kevin/Zyu", role: "Video Editor", category: "Video", avatar: "KZ", accentColor: "coral" as const },
-  { name: "Aljaan", role: "Video Editor", category: "Video", avatar: "AL", accentColor: "coral" as const },
+  { name: "Abhyrahma", role: "Video Division Leader", category: "Video", avatar: "AB", accentColor: "coral" as const, bio: "Seorang pencerita visual yang handal, Abhyrahma memimpin divisi video editing. Ia memiliki keahlian dalam mengubah rekaman mentah menjadi karya sinematik yang menarik dan penuh emosi." },
+  { name: "Kevin/Zyu", role: "Video Editor", category: "Video", avatar: "KZ", accentColor: "coral" as const, bio: "Editor video dengan spesialisasi pada motion graphics dan efek visual. Zyu selalu mencari cara baru untuk membuat video lebih dinamis dan menarik." },
+  { name: "Aljaan", role: "Video Editor", category: "Video", avatar: "AL", accentColor: "coral" as const, bio: "Dengan kejelian terhadap detail, Aljaan menyusun klip video menjadi narasi yang koheren dan berdampak. Keahliannya ada pada penceritaan visual." },
   
   // Design Team  
-  { name: "瑶Xoraa", role: "Graphics Division Leader", category: "Design", avatar: "XO", accentColor: "turquoise" as const },
-  { name: "Ashtrozz", role: "Designer", category: "Design", avatar: "AS", accentColor: "turquoise" as const },
-  { name: "nexx4sure", role: "Designer", category: "Design", avatar: "NX", accentColor: "turquoise" as const },
-  { name: "Rappal", role: "Designer", category: "Design", avatar: "RP", accentColor: "turquoise" as const },
+  { name: "瑶Xoraa", role: "Graphics Division Leader", category: "Design", avatar: "XO", accentColor: "turquoise" as const, bio: "Dengan mata yang tajam untuk estetika, Xoraa memimpin divisi desain grafis. Karyanya mendefinisikan identitas visual OurCreativity." },
+  { name: "Ashtrozz", role: "Designer", category: "Design", avatar: "AS", accentColor: "turquoise" as const, bio: "Spesialis dalam ilustrasi dan branding. Ashtrozz menciptakan aset visual yang unik dan memperkuat identitas setiap proyek yang ditanganinya." },
+  { name: "nexx4sure", role: "Designer", category: "Design", avatar: "NX", accentColor: "turquoise" as const, bio: "Fokus pada UI/UX, nexx4sure merancang antarmuka yang tidak hanya indah secara visual tetapi juga intuitif dan mudah digunakan." },
+  { name: "Rappal", role: "Designer", category: "Design", avatar: "RP", accentColor: "turquoise" as const, bio: "Desainer serbaguna yang mampu beradaptasi dengan berbagai gaya. Rappal senang bereksperimen dengan tipografi dan layout untuk hasil yang segar." },
   
   // Meme Creators
-  { name: "Daffa/deploid", role: "Meme Division Leader", category: "Meme", avatar: "DF", accentColor: "softPink" as const },
+  { name: "Daffa/deploid", role: "Meme Division Leader", category: "Meme", avatar: "DF", accentColor: "softPink" as const, bio: "Pionir humor di OurCreativity, Daffa memimpin divisi meme dengan kreativitas tak terbatas. Ia ahli dalam mengubah tren menjadi konten viral yang menghibur." },
   
   // Writers
-  { name: "Kevin", role: "Writer", category: "Writing", avatar: "KV", accentColor: "mint" as const },
-  { name: "Senku", role: "Writer", category: "Writing", avatar: "SE", accentColor: "mint" as const },
-  { name: "Saviora", role: "Writer", category: "Writing", avatar: "SV", accentColor: "mint" as const },
+  { name: "Kevin", role: "Writer", category: "Writing", avatar: "KV", accentColor: "mint" as const, bio: "Penulis dengan spesialisasi fiksi dan non-fiksi kreatif. Kevin mampu merangkai kata-kata menjadi cerita yang menggugah imajinasi." },
+  { name: "Senku", role: "Writer", category: "Writing", avatar: "SE", accentColor: "mint" as const, bio: "Ahli dalam penulisan teknis dan artikel informatif. Senku dapat menyederhanakan topik kompleks menjadi tulisan yang mudah dipahami." },
+  { name: "Saviora", role: "Writer", category: "Writing", avatar: "SV", accentColor: "mint" as const, bio: "Penyair dan penulis lirik, Saviora mengekspresikan ide-ide mendalam melalui bahasa puitis yang indah dan penuh makna." },
   
-  // Development Team (Coding & Bot)
-  { name: "Ardelyo", role: "Tech Lead & Coding Division Leader", category: "Development", avatar: "AR", accentColor: "orangeLight" as const },
-  { name: "Rappal", role: "Bot Developer", category: "Development", avatar: "RF", accentColor: "orangeLight" as const },
-  { name: "Flores", role: "Bot Developer", category: "Development", avatar: "FL", accentColor: "orangeLight" as const },
+  // Coding Team
+  { name: "Ardelyo", role: "Tech Lead & Coding Division Leader", category: "Coding", avatar: "AR", accentColor: "turquoise" as const, bio: "Programmer muda berbakat dengan spesialisasi dalam pengembangan web dan bot Discord. Ardelyo memimpin divisi koding." },
   
-  // Admin Team (Discord)
-  { name: "Aljaan", role: "Discord Admin", category: "Admin", avatar: "AJ", accentColor: "amethyst" as const }
+  // Bot Team
+  { name: "Rappal", role: "Bot Developer", category: "Bot", avatar: "RF", accentColor: "orangeLight" as const, bio: "Pengembang bot Discord yang handal, Rappal menciptakan alat otomatisasi yang membantu menjaga server tetap efisien dan interaktif." },
+  { name: "Flores", role: "Bot Developer", category: "Bot", avatar: "FL", accentColor: "orangeLight" as const, bio: "Berfokus pada fungsionalitas dan pengalaman pengguna bot, Flores merancang command yang intuitif dan bermanfaat bagi komunitas." },
+  
+  // Discord Admin Team
+  { name: "Aljaan", role: "Discord Admin", category: "Discord", avatar: "AJ", accentColor: "amethyst" as const, bio: "Sebagai pilar komunitas di Discord, Aljaan memastikan server berjalan lancar, aman, dan menjadi tempat yang ramah bagi semua kreator." }
 ];
 
 const TimKami = () => {
