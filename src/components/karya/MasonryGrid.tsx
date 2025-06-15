@@ -29,8 +29,8 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   return (
     <Masonry
       breakpointCols={breakpointColumnsObj}
-      className="flex w-auto -ml-4 my-masonry-grid"
-      columnClassName="pl-4 bg-transparent my-masonry-grid_column"
+      className="karya-container my-masonry-grid"
+      columnClassName="my-masonry-grid_column"
     >
       <AnimatePresence>
         {items.map((item, index) => (

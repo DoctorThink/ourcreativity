@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { MasonryGrid } from "./MasonryGrid";
 import { Database } from "@/integrations/supabase/types";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -28,7 +28,7 @@ export const KaryaGallery: React.FC<KaryaGalleryProps> = ({
   return (
     <div className="mt-12">
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="karya-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {Array.from({ length: 8 }).map((_, index) => (
             <StandardCard key={index}>
               <Skeleton className="w-full h-64 mb-4" />
@@ -38,10 +38,13 @@ export const KaryaGallery: React.FC<KaryaGalleryProps> = ({
           ))}
         </div>
       ) : karyaData && karyaData.length > 0 ? (
-        <MasonryGrid 
-          items={karyaData} 
-          onKaryaClick={handleKaryaClick}
-        />
+        // MasonryGrid already provides responsive columns, add a stable karya-container class for layout fixes
+        <div className="karya-container">
+          <MasonryGrid 
+            items={karyaData} 
+            onKaryaClick={handleKaryaClick}
+          />
+        </div>
       ) : (
         <StandardCard className="text-center py-12">
           <p className="text-foreground/70 font-sans text-lg">Tidak ada karya yang ditemukan.</p>
