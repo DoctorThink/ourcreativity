@@ -175,8 +175,6 @@
   100% { background-position: 0% 50%; }
 }
 
-/* ... keep existing code (all the rest of the CSS remains the same) */
-
 .bg-grid-pattern {
   background-image: 
     linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
@@ -584,15 +582,14 @@
   }
 }
 
-/* Improved Masonry Grid Styling */
+/* FIXED Masonry Grid Styling - This ensures proper vertical column layout */
 .my-masonry-grid {
-  display: flex;
+  display: block;
   width: 100%;
-  margin-left: -1rem;
-  margin-right: -1rem;
 }
 
 .my-masonry-grid_column {
+  float: left;
   padding-left: 1rem;
   padding-right: 1rem;
   background-clip: padding-box;
@@ -603,6 +600,15 @@
   margin-bottom: 2.5rem;
   break-inside: avoid;
   width: 100%;
+}
+
+/* CSS Grid fallback for karya container */
+.karya-container {
+  width: 100%;
+}
+
+.karya-container .my-masonry-grid {
+  display: block !important;
 }
 
 /* Fix for video elements to prevent GPU acceleration issues */
@@ -621,11 +627,6 @@ video {
 
 /* Responsive improvements */
 @media screen and (max-width: 640px) {
-  .my-masonry-grid {
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
-  }
-  
   .my-masonry-grid_column {
     padding-left: 0.5rem;
     padding-right: 0.5rem;

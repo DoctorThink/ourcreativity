@@ -17,7 +17,12 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   onKaryaClick,
 }) => {
   const breakpointColumnsObj = {
-    default: 4, 1536: 3, 1280: 3, 1024: 2, 768: 2, 640: 1
+    default: 4,
+    1536: 4,
+    1280: 3,
+    1024: 2,
+    768: 2,
+    640: 1
   };
 
   const handleItemClick = (item: KaryaType) => {
@@ -29,7 +34,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   return (
     <Masonry
       breakpointCols={breakpointColumnsObj}
-      className="karya-container my-masonry-grid"
+      className="my-masonry-grid"
       columnClassName="my-masonry-grid_column"
     >
       <AnimatePresence>
