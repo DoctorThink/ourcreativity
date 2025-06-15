@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Menu, X, Home, Megaphone, Users, Palette, BookOpen, Info, FileText, UserPlus, ChevronDown } from "lucide-react";
@@ -148,20 +149,34 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
         style={{
           background: scrollY > 20 
-            ? "rgba(28, 28, 30, 0.9)" 
-            : "rgba(28, 28, 30, 0.8)"
+            ? "rgba(28, 28, 30, 0.95)" 
+            : "rgba(28, 28, 30, 0.85)"
         }}
       >
         <div className={cn("container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center", fullWidth ? "max-w-full" : "max-w-7xl")}>
-          {/* Logo Only */}
-          <Link to="/" className="flex items-center group">
-            <motion.img 
-              src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
-              alt="Logo" 
-              className="h-8 sm:h-9 w-auto transition-transform duration-300 group-hover:scale-110" 
-              whileHover={{ rotate: 5 }}
-            />
-          </Link>
+          {/* Logo and Smart Back Button */}
+          <div className="flex items-center gap-3">
+            {location.pathname !== '/' && (
+              <motion.button
+                onClick={handleBackClick}
+                className="p-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 lg:hidden"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Kembali"
+              >
+                <ArrowLeft className="h-4 w-4 text-white" />
+              </motion.button>
+            )}
+            
+            <Link to="/" className="flex items-center group">
+              <motion.img 
+                src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
+                alt="Logo" 
+                className="h-8 sm:h-9 w-auto transition-transform duration-300 group-hover:scale-110" 
+                whileHover={{ rotate: 5 }}
+              />
+            </Link>
+          </div>
           
           {/* Modern Desktop Navigation */}
           <nav className="hidden lg:flex items-center bg-white/5 backdrop-blur-sm rounded-full px-2 py-1 border border-white/10">
@@ -213,9 +228,9 @@ const PageLayout: React.FC<PageLayoutProps> = ({
             </NavigationMenu>
           </nav>
           
-          {/* Modern Mobile Menu Button */}
+          {/* Improved Mobile Menu Button */}
           <motion.button
-            className="lg:hidden p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300"
+            className="lg:hidden p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg"
             onClick={toggleMenu}
             aria-label="Toggle menu"
             whileHover={{ scale: 1.05 }}
@@ -248,13 +263,13 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         </div>
       </motion.header>
       
-      {/* Enhanced Mobile Menu */}
+      {/* Enhanced Mobile Menu with Better Design */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
-            {/* Backdrop */}
+            {/* Backdrop with blur */}
             <motion.div
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md lg:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -262,119 +277,159 @@ const PageLayout: React.FC<PageLayoutProps> = ({
               onClick={toggleMenu}
             />
             
-            {/* Menu Content */}
+            {/* Improved Menu Content */}
             <motion.div
-              className="fixed inset-x-4 top-20 bottom-4 z-40 bg-secondary/95 backdrop-blur-xl border border-border/30 rounded-3xl shadow-2xl shadow-black/20 lg:hidden overflow-y-auto"
+              className="fixed inset-x-3 top-20 bottom-6 z-50 bg-background/95 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl shadow-black/30 lg:hidden overflow-hidden"
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <nav className="p-6 flex flex-col h-full">
-                <motion.div 
-                  className="space-y-1 flex-grow"
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                  variants={{
-                    hidden: { opacity: 0 },
-                    visible: {
-                      opacity: 1,
-                      transition: {
-                        staggerChildren: 0.1,
-                        delayChildren: 0.1
-                      }
-                    }
-                  }}
-                >
-                  {mainNav.map((item) => (
-                    <motion.div
-                      key={item.path}
-                      variants={{
-                        hidden: { opacity: 0, x: -20 },
-                        visible: { opacity: 1, x: 0 }
-                      }}
-                    >
-                      <button
-                        onClick={() => {
-                          handleNavClick(item);
-                          toggleMenu();
-                        }}
-                        className={cn(
-                          "flex items-center px-4 py-3.5 rounded-2xl font-medium transition-all duration-300 text-base group w-full text-left",
-                          isActive(item.path)
-                            ? "bg-amethyst/20 text-white font-semibold border border-amethyst/30"
-                            : "text-foreground/80 hover:text-foreground hover:bg-white/10"
-                        )}
-                      >
-                        <item.icon className="w-5 h-5 mr-4 text-foreground/70"/>
-                        <span className="flex-1">{item.name}</span>
-                        {isActive(item.path) && (
-                          <motion.div
-                            className="w-2 h-2 rounded-full bg-amethyst"
-                            layoutId="mobile-active-dot"
-                          />
-                        )}
-                      </button>
-                    </motion.div>
-                  ))}
-
-                  <div className="py-3">
-                    <div className="h-px bg-white/10"></div>
+              <div className="h-full flex flex-col">
+                {/* Header with logo */}
+                <div className="p-6 border-b border-white/10">
+                  <div className="flex items-center gap-3">
+                    <img 
+                      src="/lovable-uploads/c861a7c0-5ec9-4bac-83ea-319c40fcb001.png" 
+                      alt="Logo" 
+                      className="h-8 w-auto" 
+                    />
+                    <span className="text-lg font-semibold text-white">OUR CREATIVITY</span>
                   </div>
+                </div>
 
-                  {infoNav.map((item) => (
-                     <motion.div
-                      key={item.path}
-                      variants={{
-                        hidden: { opacity: 0, x: -20 },
-                        visible: { opacity: 1, x: 0 }
-                      }}
-                    >
-                      <button
-                        onClick={() => {
-                          handleNavClick(item);
-                          toggleMenu();
-                        }}
-                        className={cn(
-                          "flex items-center px-4 py-3.5 rounded-2xl font-medium transition-all duration-300 text-base group w-full text-left",
-                          isActive(item.path)
-                            ? "bg-amethyst/20 text-white font-semibold border border-amethyst/30"
-                            : "text-foreground/80 hover:text-foreground hover:bg-white/10"
-                        )}
-                      >
-                        <item.icon className="w-5 h-5 mr-4 text-foreground/70"/>
-                        <span className="flex-1">{item.name}</span>
-                         {isActive(item.path) && (
-                          <motion.div
-                            className="w-2 h-2 rounded-full bg-amethyst"
-                            layoutId="mobile-active-dot"
-                          />
-                        )}
-                      </button>
-                    </motion.div>
-                  ))}
-                </motion.div>
-                {ctaNav && (
+                {/* Navigation Content */}
+                <nav className="flex-1 overflow-y-auto p-6">
                   <motion.div 
-                    className="mt-6"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
+                    className="space-y-2"
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                    variants={{
+                      hidden: { opacity: 0 },
+                      visible: {
+                        opacity: 1,
+                        transition: {
+                          staggerChildren: 0.1,
+                          delayChildren: 0.1
+                        }
+                      }
+                    }}
                   >
-                    <button
+                    {/* Main Navigation */}
+                    <div className="mb-6">
+                      <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3 px-4">Menu Utama</h3>
+                      {mainNav.map((item) => (
+                        <motion.div
+                          key={item.path}
+                          variants={{
+                            hidden: { opacity: 0, x: -20 },
+                            visible: { opacity: 1, x: 0 }
+                          }}
+                        >
+                          <button
+                            onClick={() => {
+                              handleNavClick(item);
+                              toggleMenu();
+                            }}
+                            className={cn(
+                              "flex items-center w-full px-4 py-4 rounded-2xl font-medium transition-all duration-300 text-base group",
+                              isActive(item.path)
+                                ? "bg-gradient-to-r from-amethyst/20 to-turquoise/10 text-white font-semibold border border-amethyst/30 shadow-lg"
+                                : "text-foreground/80 hover:text-foreground hover:bg-white/10 hover:shadow-md"
+                            )}
+                          >
+                            <div className={cn(
+                              "p-2.5 rounded-xl mr-4 transition-all duration-300",
+                              isActive(item.path) 
+                                ? "bg-amethyst/30 text-white shadow-lg" 
+                                : "bg-white/10 text-foreground/70 group-hover:bg-white/20 group-hover:text-white"
+                            )}>
+                              <item.icon className="w-5 h-5" />
+                            </div>
+                            <span className="flex-1 text-left">{item.name}</span>
+                            {isActive(item.path) && (
+                              <motion.div
+                                className="w-2 h-2 rounded-full bg-amethyst"
+                                layoutId="mobile-active-dot"
+                              />
+                            )}
+                          </button>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* Info Navigation */}
+                    <div className="mb-6">
+                      <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3 px-4">Informasi</h3>
+                      {infoNav.map((item) => (
+                        <motion.div
+                          key={item.path}
+                          variants={{
+                            hidden: { opacity: 0, x: -20 },
+                            visible: { opacity: 1, x: 0 }
+                          }}
+                        >
+                          <button
+                            onClick={() => {
+                              handleNavClick(item);
+                              toggleMenu();
+                            }}
+                            className={cn(
+                              "flex items-center w-full px-4 py-3.5 rounded-2xl font-medium transition-all duration-300 text-sm group",
+                              isActive(item.path)
+                                ? "bg-gradient-to-r from-amethyst/20 to-turquoise/10 text-white font-semibold border border-amethyst/30"
+                                : "text-foreground/70 hover:text-foreground hover:bg-white/10"
+                            )}
+                          >
+                            <div className={cn(
+                              "p-2 rounded-lg mr-3 transition-all duration-300",
+                              isActive(item.path) 
+                                ? "bg-amethyst/30 text-white" 
+                                : "bg-white/10 text-foreground/60 group-hover:bg-white/20 group-hover:text-white"
+                            )}>
+                              <item.icon className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 text-left">
+                              <div className="font-medium">{item.name}</div>
+                              {item.description && (
+                                <div className="text-xs text-foreground/50 mt-0.5">{item.description}</div>
+                              )}
+                            </div>
+                            {isActive(item.path) && (
+                              <motion.div
+                                className="w-2 h-2 rounded-full bg-amethyst"
+                                layoutId="mobile-active-dot-info"
+                              />
+                            )}
+                          </button>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                </nav>
+
+                {/* CTA Section */}
+                {ctaNav && (
+                  <div className="p-6 border-t border-white/10">
+                    <motion.button
                       onClick={() => {
                         handleNavClick(ctaNav);
                         toggleMenu();
                       }}
-                      className="flex items-center justify-center w-full px-4 py-4 rounded-2xl font-semibold transition-all duration-300 text-base group bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/30"
+                      className="flex items-center justify-center w-full px-6 py-4 rounded-2xl font-semibold transition-all duration-300 text-base bg-gradient-to-r from-emerald-500 to-turquoise text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
                     >
                       <ctaNav.icon className="w-5 h-5 mr-3" />
                       <span>{ctaNav.name}</span>
-                    </button>
-                  </motion.div>
+                    </motion.button>
+                  </div>
                 )}
-              </nav>
+              </div>
             </motion.div>
           </>
         )}
@@ -390,7 +445,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                 {location.pathname !== '/' && (
                   <motion.button
                     onClick={handleBackClick}
-                    className="mb-4 inline-flex items-center text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 font-medium group"
+                    className="mb-4 hidden lg:inline-flex items-center text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 font-medium group"
                     whileHover={{ x: -2 }}
                   >
                     <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />

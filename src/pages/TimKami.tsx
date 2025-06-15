@@ -12,7 +12,7 @@ import { LucideIcon } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Animation Variants
+// Animation Variants for Framer Motion (fallback)
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -247,12 +247,15 @@ const StatCard = ({ icon, label, value, color }: {
 }) => (
   <motion.div 
     className="flex flex-col items-center justify-center p-4 gap-3"
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, ease: "easeOut" }}
+    viewport={{ once: true, margin: "-100px" }}
     whileHover={{ y: -5 }}
-    transition={{ type: "spring", stiffness: 400, damping: 10 }}
   >
     <IconDisplay icon={icon} color={color} size="lg" />
     <div className="text-center">
-      <span className="text-3xl font-bold font-serif text-foreground block stat-value">{value}</span>
+      <span className="text-3xl font-bold font-serif text-foreground block">{value}</span>
       <span className="text-sm text-foreground/60 font-medium">{label}</span>
     </div>
   </motion.div>
@@ -265,84 +268,60 @@ const TimKami = () => {
   const mainContentRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
+    // Modern GSAP context pattern for proper cleanup
     const ctx = gsap.context(() => {
-      // Animate cards and sections
-      gsap.utils.toArray<HTMLElement>('.fade-up-card').forEach(card => {
-        gsap.from(card, {
-          y: 30,
-          opacity: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: card,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
-          },
-        });
-      });
+      // Only run if ScrollTrigger is available
+      if (typeof window !== 'undefined' && ScrollTrigger) {
+        // Simple fade-up animation for cards
+        gsap.fromTo(".animate-card", 
+          { 
+            opacity: 0, 
+            y: 30 
+          }, 
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            stagger: 0.1,
+            scrollTrigger: {
+              trigger: ".animate-container",
+              start: "top 85%",
+              end: "bottom 15%",
+              toggleActions: "play none none reverse",
+            }
+          }
+        );
 
-      // Stagger category buttons
-      gsap.from('.category-btn', {
-        y: 20,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.5,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: '.category-grid',
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        },
-      });
+        // Refresh ScrollTrigger after a brief delay to ensure layout is stable
+        const refreshTimer = setTimeout(() => {
+          ScrollTrigger.refresh();
+        }, 100);
 
-      // Stagger team members
-      gsap.from('.team-member-item', {
-        y: 20,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.5,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: '.team-grid',
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        },
-      });
-
-      // Counter animation
-      gsap.utils.toArray<HTMLElement>('.stat-value').forEach(counter => {
-        const target = parseInt(counter.textContent || '0', 10);
-        let stat = { value: 0 };
-        gsap.to(stat, {
-          value: target,
-          duration: 2,
-          ease: 'power1.inOut',
-          onUpdate: () => {
-            counter.textContent = Math.round(stat.value).toString();
-          },
-          scrollTrigger: {
-            trigger: counter,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
-          },
-        });
-      });
-
+        return () => clearTimeout(refreshTimer);
+      }
     }, mainContentRef);
 
-    return () => ctx.revert();
-  }, [activeCategory]); // Re-run animations if filter changes
+    return () => {
+      ctx.revert(); // This properly cleans up all GSAP animations and ScrollTriggers
+    };
+  }, [activeCategory]); // Re-run when category filter changes
 
   return (
     <PageLayout
       title="Tim Kami"
       subtitle="OurCreativity digerakkan oleh para kreator dari berbagai bidang yang memiliki satu tujuan yang sama: membangun komunitas yang suportif dan inspiratif. Kami adalah tim yang berdedikasi untuk membantu generasi muda menemukan dan mengasah bakat mereka."
     >
-      <div ref={mainContentRef}>
+      <div ref={mainContentRef} className="space-y-8">
         {/* Category selector with standardized design */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 category-grid">
+        <motion.div 
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
           {categories.map((category) => (
-            <div key={category.id} className="category-btn">
+            <motion.div key={category.id} variants={memberVariants}>
               <CategoryButton
                 icon={category.icon}
                 text={category.name}
@@ -350,90 +329,125 @@ const TimKami = () => {
                 isActive={activeCategory === category.id}
                 onClick={() => setActiveCategory(activeCategory === category.id ? null : category.id)}
               />
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Team Overview Stats Card with standardized design */}
-        <StandardCard className="mb-10 fade-up-card" glowColor="rgba(229, 222, 255, 0.3)">
-          <div className="flex items-center gap-4 mb-6">
-            <IconDisplay icon={Users} color="amethyst" size="lg" />
-            <div>
-              <h3 className="text-xl font-serif font-bold text-foreground">Tim Overview</h3>
-              <p className="text-sm text-foreground/60">Statistik anggota komunitas</p>
+        {/* Team Overview Stats Card with Framer Motion instead of GSAP */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <StandardCard className="mb-10" glowColor="rgba(229, 222, 255, 0.3)">
+            <div className="flex items-center gap-4 mb-6">
+              <IconDisplay icon={Users} color="amethyst" size="lg" />
+              <div>
+                <h3 className="text-xl font-serif font-bold text-foreground">Tim Overview</h3>
+                <p className="text-sm text-foreground/60">Statistik anggota komunitas</p>
+              </div>
             </div>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatCard icon={Video} label="Video Editing" value="8" color="coral" />
-            <StatCard icon={Palette} label="Graphic Design" value="12" color="turquoise" />
-            <StatCard icon={Smile} label="Meme" value="6" color="softPink" />
-            <StatCard icon={FileText} label="Karya Tulis" value="6" color="mint" />
-          </div>
-        </StandardCard>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <StatCard icon={Video} label="Video Editing" value="8" color="coral" />
+              <StatCard icon={Palette} label="Graphic Design" value="12" color="turquoise" />
+              <StatCard icon={Smile} label="Meme" value="6" color="softPink" />
+              <StatCard icon={FileText} label="Karya Tulis" value="6" color="mint" />
+            </div>
+          </StandardCard>
+        </motion.div>
 
         {/* Creative Categories Description */}
-        <StandardCard className="mb-10 fade-up-card" glowColor="rgba(152, 245, 225, 0.3)">
-          <div className="flex items-center gap-4 mb-6">
-            <IconDisplay icon={Palette} color="turquoise" size="lg" />
-            <div>
-              <h3 className="text-xl font-serif font-bold text-foreground">Kategori Kreatif Kami</h3>
-              <p className="text-sm text-foreground/60">Setiap kategori memiliki identitas visualnya sendiri yang mencerminkan semangat kreativitas.</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {categories.map(cat => (
-              <div key={cat.id} className="flex items-start gap-4">
-                <IconDisplay icon={cat.icon} color={cat.color} size="md" className="mt-1 flex-shrink-0" />
-                <div>
-                  <h4 className="font-bold text-foreground">{cat.name}</h4>
-                  <p className="text-sm text-foreground/70">{cat.description}</p>
-                </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <StandardCard className="mb-10" glowColor="rgba(152, 245, 225, 0.3)">
+            <div className="flex items-center gap-4 mb-6">
+              <IconDisplay icon={Palette} color="turquoise" size="lg" />
+              <div>
+                <h3 className="text-xl font-serif font-bold text-foreground">Kategori Kreatif Kami</h3>
+                <p className="text-sm text-foreground/60">Setiap kategori memiliki identitas visualnya sendiri yang mencerminkan semangat kreativitas.</p>
               </div>
-            ))}
-          </div>
-        </StandardCard>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {categories.map(cat => (
+                <motion.div 
+                  key={cat.id} 
+                  className="flex items-start gap-4"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  viewport={{ once: true }}
+                >
+                  <IconDisplay icon={cat.icon} color={cat.color} size="md" className="mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-bold text-foreground">{cat.name}</h4>
+                    <p className="text-sm text-foreground/70">{cat.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </StandardCard>
+        </motion.div>
 
         {/* Logo Philosophy Card */}
-        <StandardCard className="mb-10 fade-up-card" glowColor="rgba(254, 198, 161, 0.3)">
-          <div className="flex items-center gap-4 mb-6">
-            <IconDisplay icon={Droplet} color="coral" size="lg" />
-            <div>
-              <h3 className="text-xl font-serif font-bold text-foreground">Filosofi Logo O.C</h3>
-              <p className="text-sm text-foreground/60">Simbol di balik identitas visual kami.</p>
-            </div>
-          </div>
-          <p className="text-foreground/80 leading-relaxed mb-4">
-            Logo kami, yang sering disebut O.C (singkatan dari OurCreativity), adalah representasi visual dari nilai-nilai inti kami. Secara keseluruhan, logo ini mengambil bentuk simbol "infinity" atau tak terbatas, melambangkan keyakinan kami bahwa kreativitas manusia tidak seharusnya dibatasi. Ia harus terus berkembang, menjadi lebih baik, dan memiliki ciri khasnya sendiri.
-          </p>
-          <p className="text-foreground/80 leading-relaxed">
-            Warna merah yang kami pilih melambangkan <strong className="text-coral">keberanian</strong>. Kami yakin, tanpa keberanian untuk memulai dan menunjukkan karya, seorang kreator tidak akan pernah bisa berkembang. Itulah semangat yang kami tanamkan di dalam komunitas OurCreativity.
-          </p>
-        </StandardCard>
-
-        {/* Team members grid */}
-        <div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 team-grid"
-          key={activeCategory || 'all'} // Re-trigger animation on filter change
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+          viewport={{ once: true, margin: "-100px" }}
         >
-          {teamMembers
-            .filter(member => !activeCategory || member.category === activeCategory)
-            .map((member) => (
-              <div 
-                key={member.id} 
-                className="team-member-item"
-              >
-                <TeamMemberCard
-                  name={member.name}
-                  role={member.role}
-                  instagram={member.instagram}
-                  accentColor={member.accent}
-                  bio={member.bio}
-                  achievements={member.achievements}
-                  onClick={() => setSelectedMember(member)}
-                />
+          <StandardCard className="mb-10" glowColor="rgba(254, 198, 161, 0.3)">
+            <div className="flex items-center gap-4 mb-6">
+              <IconDisplay icon={Droplet} color="coral" size="lg" />
+              <div>
+                <h3 className="text-xl font-serif font-bold text-foreground">Filosofi Logo O.C</h3>
+                <p className="text-sm text-foreground/60">Simbol di balik identitas visual kami.</p>
               </div>
-            ))}
+            </div>
+            <p className="text-foreground/80 leading-relaxed mb-4">
+              Logo kami, yang sering disebut O.C (singkatan dari OurCreativity), adalah representasi visual dari nilai-nilai inti kami. Secara keseluruhan, logo ini mengambil bentuk simbol "infinity" atau tak terbatas, melambangkan keyakinan kami bahwa kreativitas manusia tidak seharusnya dibatasi. Ia harus terus berkembang, menjadi lebih baik, dan memiliki ciri khasnya sendiri.
+            </p>
+            <p className="text-foreground/80 leading-relaxed">
+              Warna merah yang kami pilih melambangkan <strong className="text-coral">keberanian</strong>. Kami yakin, tanpa keberanian untuk memulai dan menunjukkan karya, seorang kreator tidak akan pernah bisa berkembang. Itulah semangat yang kami tanamkan di dalam komunitas OurCreativity.
+            </p>
+          </StandardCard>
+        </motion.div>
+
+        {/* Team members grid with improved animations */}
+        <div className="animate-container">
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+            key={activeCategory || 'all'} // Re-trigger animation on filter change
+          >
+            {teamMembers
+              .filter(member => !activeCategory || member.category === activeCategory)
+              .map((member, index) => (
+                <motion.div 
+                  key={member.id} 
+                  className="animate-card"
+                  variants={memberVariants}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <TeamMemberCard
+                    name={member.name}
+                    role={member.role}
+                    instagram={member.instagram}
+                    accentColor={member.accent}
+                    bio={member.bio}
+                    achievements={member.achievements}
+                    onClick={() => setSelectedMember(member)}
+                  />
+                </motion.div>
+              ))}
+          </motion.div>
         </div>
 
         {/* Empty state when no members match filter */}
