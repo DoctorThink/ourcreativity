@@ -15,6 +15,20 @@ This document provides a high-level overview of the OurCreativity project's tech
     - **Storage:** Used for hosting user-uploaded files and media.
     - **Edge Functions:** For server-side logic.
 
+## Observability
+
+To ensure platform health and stability, the project uses a proactive observability model based on the following principles.
+
+-   **Error & Performance Monitoring:** **Sentry** is the primary tool for real-time error tracking, performance monitoring, and release health analysis. It is configured for a Vite + React environment to automatically capture:
+    -   Client-side JavaScript errors.
+    -   Performance metrics (Core Web Vitals, transaction traces).
+    -   Session replays for debugging.
+    -   Source maps are uploaded during production builds to provide full stack traces.
+
+-   **Uptime Monitoring:** External services (e.g., Better Uptime) should be configured to monitor the availability of the main application URL (`ourcreativity.lovable.app`) and key API endpoints.
+
+-   **Alerting & Triage:** Alerting rules are configured directly within the Sentry dashboard to notify the team of new errors or significant events. This is paired with an internal team workflow for triaging and resolving issues.
+
 ## Folder Structure
 
 The repository is organized to separate concerns and improve maintainability.
