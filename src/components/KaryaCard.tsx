@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Database } from '@/integrations/supabase/types';
 import { motion } from 'framer-motion';
@@ -217,7 +218,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
         <div 
           className={`absolute bottom-0 left-0 right-0 p-4 text-foreground opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t ${
             hasVideo ? 'from-black/95 to-transparent' : 'from-background/95 to-transparent'
-          }`}
+          } z-10`}
         >
           <div className="flex justify-between items-start">
             <div className="bg-black/40 backdrop-blur-sm p-2 rounded-full">
