@@ -33,7 +33,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   };
 
   return (
-    <div className="masonry-container">
+    <div className="masonry-container w-full">
       <Masonry
         breakpointCols={breakpointColumnsObj}
         className="masonry-grid"
@@ -58,62 +58,6 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
           ))}
         </AnimatePresence>
       </Masonry>
-      
-      {/* CSS Grid Fallback */}
-      <style jsx>{`
-        .masonry-container {
-          width: 100%;
-        }
-        
-        .masonry-grid {
-          display: flex;
-          margin-left: -24px;
-          width: auto;
-        }
-        
-        .masonry-grid-column {
-          padding-left: 24px;
-          background-clip: padding-box;
-        }
-        
-        .masonry-item {
-          margin-bottom: 24px;
-          break-inside: avoid;
-          width: 100%;
-        }
-        
-        /* Fallback CSS Grid for better reliability */
-        @supports not (display: flex) {
-          .masonry-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-            margin-left: 0;
-          }
-          
-          .masonry-grid-column {
-            padding-left: 0;
-          }
-          
-          @media (max-width: 1535px) {
-            .masonry-grid {
-              grid-template-columns: repeat(3, 1fr);
-            }
-          }
-          
-          @media (max-width: 1023px) {
-            .masonry-grid {
-              grid-template-columns: repeat(2, 1fr);
-            }
-          }
-          
-          @media (max-width: 639px) {
-            .masonry-grid {
-              grid-template-columns: 1fr;
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };
