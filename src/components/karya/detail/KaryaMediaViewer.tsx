@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import {
@@ -10,6 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Database } from '@/integrations/supabase/types';
 import { X, ChevronDown, ExternalLink } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -133,7 +133,7 @@ export const KaryaMediaViewer = ({ karya, onClose, showInfoPanel, toggleInfoPane
   };
 
   return (
-    <div className="relative w-full md:w-2/3 bg-black/50 flex-grow" style={{ height: isText ? 'auto' : '100vh' }}>
+    <div className={cn("relative bg-black/50 flex-grow h-full w-full", isText && "md:h-auto")}>
       {isText ? renderTextContent() : renderMediaContent()}
       
       {/* Floating control buttons */}
@@ -143,7 +143,7 @@ export const KaryaMediaViewer = ({ karya, onClose, showInfoPanel, toggleInfoPane
             onClick={toggleInfoPanel}
             className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
           >
-            {showInfoPanel ? <ChevronDown className="h-5 w-5" /> : <ChevronDown className="h-5 w-5 rotate-180" />}
+            <ChevronDown className={cn("h-5 w-5 transition-transform", !showInfoPanel && "rotate-180")} />
             <span className="sr-only">{showInfoPanel ? 'Hide info' : 'Show info'}</span>
           </button>
         )}

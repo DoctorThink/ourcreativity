@@ -19,25 +19,6 @@ interface KaryaCardProps {
   onClick?: () => void;
 }
 
-// Helper function to generate transformed image URLs with lower resolution for cards
-const getTransformedUrl = (baseUrl: string | null | undefined, options: { format?: 'webp' | 'avif' | 'jpeg', width?: number, quality?: number } = {}): string => {
-  if (!baseUrl) return '/placeholder.svg';
-  try {
-    const url = new URL(baseUrl);
-    const cardPreviewWidth = options.width || 400;
-    const cardPreviewQuality = options.quality || 60;
-    
-    if (options.format) url.searchParams.set('format', options.format);
-    url.searchParams.set('resize', `width:${cardPreviewWidth}`);
-    url.searchParams.set('quality', cardPreviewQuality.toString());
-    
-    return url.toString();
-  } catch (e) {
-    console.error("Error creating URL:", e);
-    return baseUrl;
-  }
-};
-
 const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);

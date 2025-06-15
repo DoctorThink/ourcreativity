@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Database } from '@/integrations/supabase/types';
@@ -23,6 +24,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [direction, setDirection] = useState(0);
   const [hasLiked, setHasLiked] = useState(false);
+  const [showInfoPanel, setShowInfoPanel] = useState(true);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -37,6 +39,10 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
       setHasLiked(likedInStorage === 'true');
     }
   }, [karya]);
+
+  const toggleInfoPanel = useCallback(() => {
+    setShowInfoPanel(prev => !prev);
+  }, []);
 
   const changeKarya = (newDirection: number) => {
     setDirection(newDirection);
@@ -124,24 +130,31 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
               opacity: { duration: 0.2 }
             }}
           >
-            <KaryaMediaViewer karya={karya} onClose={onClose} />
+            <KaryaMediaViewer 
+              karya={karya} 
+              onClose={onClose} 
+              showInfoPanel={showInfoPanel}
+              toggleInfoPanel={toggleInfoPanel}
+            />
           </motion.div>
           
           <AnimatePresence initial={false}>
-            <motion.div 
-              key={currentIndex}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              className="flex-shrink-0 w-full md:w-1/3 h-1/2 md:h-full overflow-y-auto"
-            >
-              <KaryaInfoPanel 
-                karya={karya}
-                hasLiked={hasLiked}
-                likeMutation={likeMutation}
-              />
-            </motion.div>
+            {showInfoPanel && (
+              <motion.div 
+                key={currentIndex}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className="flex-shrink-0 w-full md:w-1/3 h-1/2 md:h-full overflow-y-auto"
+              >
+                <KaryaInfoPanel 
+                  karya={karya}
+                  hasLiked={hasLiked}
+                  likeMutation={likeMutation}
+                />
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
         
