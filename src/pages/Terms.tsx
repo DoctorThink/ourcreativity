@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
 import { TermsNavigation } from "@/components/terms/TermsNavigation";
-import { MobileNavigation } from "@/components/terms/MobileNavigation";
 import { TermsSection } from "@/components/terms/TermsSection";
 import { TermsList } from "@/components/terms/TermsList";
 import { 
@@ -125,13 +124,6 @@ const Terms = () => {
           </p>
         </motion.div>
 
-        {/* Mobile Navigation */}
-        <MobileNavigation
-          items={navigationItems}
-          activeSection={activeSection}
-          onSectionClick={handleSectionClick}
-        />
-
         {/* Main Content Layout */}
         <div className="flex gap-12">
           {/* Desktop Sidebar Navigation */}
@@ -232,3 +224,4 @@ const Terms = () => {
 };
 
 export default Terms;
+
