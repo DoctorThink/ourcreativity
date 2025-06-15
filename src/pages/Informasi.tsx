@@ -1,7 +1,6 @@
-
 import React, { useRef, useLayoutEffect } from "react";
 import PageLayout from "../components/layouts/PageLayout";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import BentoCard from "@/components/ui/BentoCard";
 import { IconTitleRow } from "@/components/ui/IconTitleRow";
 import { 
@@ -23,17 +22,10 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const Informasi = () => {
-  // Setup for scroll effects
   const mainRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: mainRef,
-    offset: ["start start", "end start"]
-  });
-  
-  // Parallax scrolling effects
-  const titleParallax = useTransform(scrollYProgress, [0, 1], [0, -50]);
   
   useLayoutEffect(() => {
+    // GSAP animations are registered in App.tsx, so no need to register here.
     const ctx = gsap.context(() => {
       // Animate grid items with stagger
       gsap.from(".grid-item", {
@@ -83,9 +75,8 @@ const Informasi = () => {
 
   return (
     <PageLayout title="Informasi Komunitas" subtitle="Ketentuan dan informasi penting untuk komunitas">
-      <motion.div
+      <div
         ref={mainRef}
-        style={{ y: titleParallax }}
         className="space-y-8"
       >
         <div
@@ -305,7 +296,7 @@ const Informasi = () => {
             </BentoCard>
           </div>
         </div>
-      </motion.div>
+      </div>
     </PageLayout>
   );
 };
