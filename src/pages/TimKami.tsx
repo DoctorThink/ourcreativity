@@ -1,3 +1,4 @@
+
 import React, { useState, useLayoutEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -7,136 +8,13 @@ import { MemberCard } from "@/components/ui/MemberCard";
 import { StandardCard } from "@/components/ui/StandardCard";
 import { IconDisplay } from "@/components/ui/IconDisplay";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Video, Palette, Smile, FileText, Users, Star, Droplet, Code } from "lucide-react";
+import { Users, Star, Droplet } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TeamMemberBio from "@/components/TeamMemberBio";
+import { getTeamPageData } from "@/services/teamService";
 
-// Enhanced team data for the new layout
-const categories = [
-  {
-    id: "video",
-    name: "Video Editing",
-    icon: Video,
-    color: "coral" as const,
-    description: "Tempat bagi para editor video untuk berkolaborasi, mempelajari software baru, dan menghasilkan konten sinematik berkualitas tinggi.",
-    memberCount: 3,
-    memberAvatars: ["AB", "KZ", "AL"]
-  },
-  {
-    id: "design", 
-    name: "Graphic Design",
-    icon: Palette,
-    color: "turquoise" as const,
-    description: "Wadah bagi para seniman visual untuk berbagi teknik, inspirasi, dan menciptakan karya desain yang memukau dan bermakna.",
-    memberCount: 4,
-    memberAvatars: ["XO", "AS", "NX", "RP"]
-  },
-  {
-    id: "meme",
-    name: "Meme Creator", 
-    icon: Smile,
-    color: "softPink" as const,
-    description: "Ruang santai namun kreatif bagi para pembuat meme untuk berbagi humor dan mengasah kemampuan bercerita visual secara singkat.",
-    memberCount: 1,
-    memberAvatars: ["DF"]
-  },
-  {
-    id: "writing",
-    name: "Karya Tulis",
-    icon: FileText,
-    color: "mint" as const,
-    description: "Komunitas bagi para penulis, penyair, dan pencerita untuk berbagi tulisan, memberikan kritik membangun, dan mengasah keterampilan literasi.",
-    memberCount: 3,
-    memberAvatars: ["KV", "SE", "SV"]
-  },
-  {
-    id: "coding",
-    name: "Coding",
-    icon: Code,
-    color: "turquoise" as const,
-    description: "Divisi untuk para programmer berdiskusi, belajar, dan berkolaborasi dalam proyek pengembangan web dan teknologi lainnya.",
-    memberCount: 1,
-    memberAvatars: ["AR"]
-  }
-];
-
-// Featured members for the spotlight section
-const featuredMembers = [
-  {
-    id: "1",
-    name: "Muhammad Syahid Al Haqi",
-    role: "Founder & Community Leader",
-    category: "Leadership",
-    bio: "Visiuner di balik OurCreativity, Hakky membangun komunitas ini dari nol dengan semangat untuk menyatukan para kreator Indonesia. Ia percaya bahwa kolaborasi adalah kunci pertumbuhan.",
-    avatar: "MS",
-    accentColor: "amber" as const
-  },
-  {
-    id: "2", 
-    name: "Ardelyo",
-    role: "Tech Lead & Coding Division Leader",
-    category: "Coding",
-    bio: "Programmer muda berbakat dengan spesialisasi dalam pengembangan web dan bot Discord. Ardelyo memimpin divisi koding, membimbing anggota dalam menciptakan solusi teknologi inovatif.",
-    avatar: "AR",
-    accentColor: "turquoise" as const
-  },
-  {
-    id: "3",
-    name: "瑶Xoraa",
-    role: "Lead Designer & Graphics Division Leader", 
-    category: "Design",
-    bio: "Dengan mata yang tajam untuk estetika, Xoraa memimpin divisi desain grafis. Karyanya mendefinisikan identitas visual OurCreativity, menginspirasi anggota lain untuk mencapai standar visual yang tinggi.",
-    avatar: "XO",
-    accentColor: "amethyst" as const
-  },
-  {
-    id: "4",
-    name: "Abhyrahma",
-    role: "Video Division Leader",
-    category: "Video",
-    bio: "Seorang pencerita visual yang handal, Abhyrahma memimpin divisi video editing. Ia memiliki keahlian dalam mengubah rekaman mentah menjadi karya sinematik yang menarik dan penuh emosi.",
-    avatar: "AB",
-    accentColor: "coral" as const
-  },
-  {
-    id: "5",
-    name: "Daffa/deploid",
-    role: "Meme Division Leader",
-    category: "Meme",
-    bio: "Pionir humor di OurCreativity, Daffa memimpin divisi meme dengan kreativitas tak terbatas. Ia ahli dalam mengubah tren menjadi konten viral yang menghibur.",
-    avatar: "DF",
-    accentColor: "softPink" as const
-  }
-];
-
-// All members for the directory
-const allMembers = [
-  // Leadership
-  { name: "Muhammad Syahid Al Haqi", role: "Founder & Community Leader", category: "Leadership", avatar: "MS", accentColor: "amber" as const, bio: "Visiuner di balik OurCreativity, Hakky membangun komunitas ini dari nol dengan semangat untuk menyatukan para kreator Indonesia. Ia percaya bahwa kolaborasi adalah kunci pertumbuhan." },
-  
-  // Video Editing Team
-  { name: "Abhyrahma", role: "Video Division Leader", category: "Video", avatar: "AB", accentColor: "coral" as const, bio: "Seorang pencerita visual yang handal, Abhyrahma memimpin divisi video editing. Ia memiliki keahlian dalam mengubah rekaman mentah menjadi karya sinematik yang menarik dan penuh emosi." },
-  { name: "Kevin/Zyu", role: "Video Editor", category: "Video", avatar: "KZ", accentColor: "coral" as const, bio: "Editor video dengan spesialisasi pada motion graphics dan efek visual. Zyu selalu mencari cara baru untuk membuat video lebih dinamis dan menarik." },
-  { name: "Aljaan", role: "Video Editor", category: "Video", avatar: "AL", accentColor: "coral" as const, bio: "Dengan kejelian terhadap detail, Aljaan menyusun klip video menjadi narasi yang koheren dan berdampak. Keahliannya ada pada penceritaan visual." },
-  
-  // Design Team  
-  { name: "瑶Xoraa", role: "Graphics Division Leader", category: "Design", avatar: "XO", accentColor: "turquoise" as const, bio: "Dengan mata yang tajam untuk estetika, Xoraa memimpin divisi desain grafis. Karyanya mendefinisikan identitas visual OurCreativity." },
-  { name: "Ashtrozz", role: "Designer", category: "Design", avatar: "AS", accentColor: "turquoise" as const, bio: "Spesialis dalam ilustrasi dan branding. Ashtrozz menciptakan aset visual yang unik dan memperkuat identitas setiap proyek yang ditanganinya." },
-  { name: "nexx4sure", role: "Designer", category: "Design", avatar: "NX", accentColor: "turquoise" as const, bio: "Fokus pada UI/UX, nexx4sure merancang antarmuka yang tidak hanya indah secara visual tetapi juga intuitif dan mudah digunakan." },
-  { name: "Rappal", role: "Designer", category: "Design", avatar: "RP", accentColor: "turquoise" as const, bio: "Desainer serbaguna yang mampu beradaptasi dengan berbagai gaya. Rappal senang bereksperimen dengan tipografi dan layout untuk hasil yang segar." },
-  
-  // Meme Creators
-  { name: "Daffa/deploid", role: "Meme Division Leader", category: "Meme", avatar: "DF", accentColor: "softPink" as const, bio: "Pionir humor di OurCreativity, Daffa memimpin divisi meme dengan kreativitas tak terbatas. Ia ahli dalam mengubah tren menjadi konten viral yang menghibur." },
-  
-  // Writers
-  { name: "Kevin", role: "Writer", category: "Writing", avatar: "KV", accentColor: "mint" as const, bio: "Penulis dengan spesialisasi fiksi dan non-fiksi kreatif. Kevin mampu merangkai kata-kata menjadi cerita yang menggugah imajinasi." },
-  { name: "Senku", role: "Writer", category: "Writing", avatar: "SE", accentColor: "mint" as const, bio: "Ahli dalam penulisan teknis dan artikel informatif. Senku dapat menyederhanakan topik kompleks menjadi tulisan yang mudah dipahami." },
-  { name: "Saviora", role: "Writer", category: "Writing", avatar: "SV", accentColor: "mint" as const, bio: "Penyair dan penulis lirik, Saviora mengekspresikan ide-ide mendalam melalui bahasa puitis yang indah dan penuh makna." },
-  
-  // Coding Team
-  { name: "Ardelyo", role: "Tech Lead & Coding Division Leader", category: "Coding", avatar: "AR", accentColor: "turquoise" as const, bio: "Programmer muda berbakat dengan spesialisasi dalam pengembangan web dan bot Discord. Ardelyo memimpin divisi koding." }
-];
+const { categories, allMembers, featuredMembers } = getTeamPageData();
 
 const TimKami = () => {
   const [selectedMember, setSelectedMember] = useState<any>(null);
@@ -220,7 +98,7 @@ const TimKami = () => {
             </div>
             
             <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
-              {featuredMembers.map((member, index) => (
+              {featuredMembers.map((member) => (
                 <div key={member.id} className="featured-member">
                   <FeaturedMemberCard
                     name={member.name}
@@ -253,8 +131,8 @@ const TimKami = () => {
           </div>
           
           <div className="member-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {allMembers.map((member, index) => (
-              <div key={index} className="member-card">
+            {allMembers.map((member) => (
+              <div key={member.id} className="member-card">
                 <MemberCard
                   name={member.name}
                   role={member.role}

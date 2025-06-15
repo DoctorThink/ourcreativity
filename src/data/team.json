@@ -1,0 +1,185 @@
+
+{
+  "categories": [
+    {
+      "id": "video",
+      "name": "Video Editing",
+      "icon": "Video",
+      "color": "coral",
+      "description": "Tempat bagi para editor video untuk berkolaborasi, mempelajari software baru, dan menghasilkan konten sinematik berkualitas tinggi."
+    },
+    {
+      "id": "design",
+      "name": "Graphic Design",
+      "icon": "Palette",
+      "color": "turquoise",
+      "description": "Wadah bagi para seniman visual untuk berbagi teknik, inspirasi, dan menciptakan karya desain yang memukau dan bermakna."
+    },
+    {
+      "id": "meme",
+      "name": "Meme Creator",
+      "icon": "Smile",
+      "color": "softPink",
+      "description": "Ruang santai namun kreatif bagi para pembuat meme untuk berbagi humor dan mengasah kemampuan bercerita visual secara singkat."
+    },
+    {
+      "id": "writing",
+      "name": "Karya Tulis",
+      "icon": "FileText",
+      "color": "mint",
+      "description": "Komunitas bagi para penulis, penyair, dan pencerita untuk berbagi tulisan, memberikan kritik membangun, dan mengasah keterampilan literasi."
+    },
+    {
+      "id": "coding",
+      "name": "Coding",
+      "icon": "Code",
+      "color": "turquoise",
+      "description": "Divisi untuk para programmer berdiskusi, belajar, dan berkolaborasi dalam proyek pengembangan web dan teknologi lainnya."
+    }
+  ],
+  "members": [
+    {
+      "id": "ms-haqi",
+      "name": "Muhammad Syahid Al Haqi",
+      "role": "Founder & Community Leader",
+      "category": "Leadership",
+      "categoryId": "leadership",
+      "avatar": "MS",
+      "accentColor": "amber",
+      "bio": "Visiuner di balik OurCreativity, Hakky membangun komunitas ini dari nol dengan semangat untuk menyatukan para kreator Indonesia. Ia percaya bahwa kolaborasi adalah kunci pertumbuhan.",
+      "isFeatured": true
+    },
+    {
+      "id": "ardelyo",
+      "name": "Ardelyo",
+      "role": "Tech Lead & Coding Division Leader",
+      "category": "Coding",
+      "categoryId": "coding",
+      "avatar": "AR",
+      "accentColor": "turquoise",
+      "bio": "Programmer muda berbakat dengan spesialisasi dalam pengembangan web dan bot Discord. Ardelyo memimpin divisi koding, membimbing anggota dalam menciptakan solusi teknologi inovatif.",
+      "isFeatured": true
+    },
+    {
+      "id": "xoraa",
+      "name": "瑶Xoraa",
+      "role": "Lead Designer & Graphics Division Leader",
+      "category": "Design",
+      "categoryId": "design",
+      "avatar": "XO",
+      "accentColor": "amethyst",
+      "bio": "Dengan mata yang tajam untuk estetika, Xoraa memimpin divisi desain grafis. Karyanya mendefinisikan identitas visual OurCreativity, menginspirasi anggota lain untuk mencapai standar visual yang tinggi.",
+      "isFeatured": true
+    },
+    {
+      "id": "abhyrahma",
+      "name": "Abhyrahma",
+      "role": "Video Division Leader",
+      "category": "Video",
+      "categoryId": "video",
+      "avatar": "AB",
+      "accentColor": "coral",
+      "bio": "Seorang pencerita visual yang handal, Abhyrahma memimpin divisi video editing. Ia memiliki keahlian dalam mengubah rekaman mentah menjadi karya sinematik yang menarik dan penuh emosi.",
+      "isFeatured": true
+    },
+    {
+      "id": "daffa",
+      "name": "Daffa/deploid",
+      "role": "Meme Division Leader",
+      "category": "Meme",
+      "categoryId": "meme",
+      "avatar": "DF",
+      "accentColor": "softPink",
+      "bio": "Pionir humor di OurCreativity, Daffa memimpin divisi meme dengan kreativitas tak terbatas. Ia ahli dalam mengubah tren menjadi konten viral yang menghibur.",
+      "isFeatured": true
+    },
+    {
+      "id": "kevin-zyu",
+      "name": "Kevin/Zyu",
+      "role": "Video Editor",
+      "category": "Video",
+      "categoryId": "video",
+      "avatar": "KZ",
+      "accentColor": "coral",
+      "bio": "Editor video dengan spesialisasi pada motion graphics dan efek visual. Zyu selalu mencari cara baru untuk membuat video lebih dinamis dan menarik.",
+      "isFeatured": false
+    },
+    {
+      "id": "aljaan",
+      "name": "Aljaan",
+      "role": "Video Editor",
+      "category": "Video",
+      "categoryId": "video",
+      "avatar": "AL",
+      "accentColor": "coral",
+      "bio": "Dengan kejelian terhadap detail, Aljaan menyusun klip video menjadi narasi yang koheren dan berdampak. Keahliannya ada pada penceritaan visual.",
+      "isFeatured": false
+    },
+    {
+      "id": "ashtrozz",
+      "name": "Ashtrozz",
+      "role": "Designer",
+      "category": "Design",
+      "categoryId": "design",
+      "avatar": "AS",
+      "accentColor": "turquoise",
+      "bio": "Spesialis dalam ilustrasi dan branding. Ashtrozz menciptakan aset visual yang unik dan memperkuat identitas setiap proyek yang ditanganinya.",
+      "isFeatured": false
+    },
+    {
+      "id": "nexx4sure",
+      "name": "nexx4sure",
+      "role": "Designer",
+      "category": "Design",
+      "categoryId": "design",
+      "avatar": "NX",
+      "accentColor": "turquoise",
+      "bio": "Fokus pada UI/UX, nexx4sure merancang antarmuka yang tidak hanya indah secara visual tetapi juga intuitif dan mudah digunakan.",
+      "isFeatured": false
+    },
+    {
+      "id": "rappal",
+      "name": "Rappal",
+      "role": "Designer",
+      "category": "Design",
+      "categoryId": "design",
+      "avatar": "RP",
+      "accentColor": "turquoise",
+      "bio": "Desainer serbaguna yang mampu beradaptasi dengan berbagai gaya. Rappal senang bereksperimen dengan tipografi dan layout untuk hasil yang segar.",
+      "isFeatured": false
+    },
+    {
+      "id": "kevin-writer",
+      "name": "Kevin",
+      "role": "Writer",
+      "category": "Writing",
+      "categoryId": "writing",
+      "avatar": "KV",
+      "accentColor": "mint",
+      "bio": "Penulis dengan spesialisasi fiksi dan non-fiksi kreatif. Kevin mampu merangkai kata-kata menjadi cerita yang menggugah imajinasi.",
+      "isFeatured": false
+    },
+    {
+      "id": "senku",
+      "name": "Senku",
+      "role": "Writer",
+      "category": "Writing",
+      "categoryId": "writing",
+      "avatar": "SE",
+      "accentColor": "mint",
+      "bio": "Ahli dalam penulisan teknis dan artikel informatif. Senku dapat menyederhanakan topik kompleks menjadi tulisan yang mudah dipahami.",
+      "isFeatured": false
+    },
+    {
+      "id": "saviora",
+      "name": "Saviora",
+      "role": "Writer",
+      "category": "Writing",
+      "categoryId": "writing",
+      "avatar": "SV",
+      "accentColor": "mint",
+      "bio": "Penyair dan penulis lirik, Saviora mengekspresikan ide-ide mendalam melalui bahasa puitis yang indah dan penuh makna.",
+      "isFeatured": false
+    }
+  ]
+}
