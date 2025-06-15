@@ -91,10 +91,10 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 overflow-hidden border-border/30 bg-background/50 backdrop-blur-xl shadow-xl transition-all duration-300 w-full h-full max-w-full max-h-full md:max-w-6xl md:max-h-[90vh] md:rounded-2xl flex">
+      <DialogContent className="p-0 overflow-hidden border-border/30 bg-background/50 backdrop-blur-xl shadow-xl transition-all duration-300 w-full h-full max-w-full max-h-full md:max-w-7xl md:max-h-[90vh] md:rounded-2xl flex">
         <div className="relative flex flex-col md:flex-row h-full w-full overflow-hidden">
           <motion.div 
-            className="relative flex-grow h-1/2 md:h-full md:w-2/3 bg-black"
+            className={`relative flex-grow h-1/2 md:h-full bg-black transition-all duration-300 ${showInfoPanel ? 'md:w-3/4' : 'md:w-full'}`}
             key={currentIndex}
             custom={direction}
             variants={variants}
@@ -118,11 +118,11 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
             {showInfoPanel && (
               <motion.div 
                 key={currentIndex}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 100 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
-                className="flex-shrink-0 w-full md:w-1/3 h-1/2 md:h-full overflow-y-auto"
+                className="flex-shrink-0 w-full md:w-1/4 h-1/2 md:h-full overflow-y-auto bg-secondary/95 backdrop-blur-md border-l border-border/20"
               >
                 <KaryaInfoPanel karya={karya} />
               </motion.div>

@@ -44,51 +44,49 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
   const toggleDescription = () => setIsDescriptionExpanded(!isDescriptionExpanded);
 
   return (
-    <motion.div
-      initial={{ y: '100%' }}
-      animate={{ y: 0 }}
-      exit={{ y: '100%' }}
-      transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-      className="bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md absolute bottom-0 left-0 right-0 z-10 max-h-[60vh] sm:max-h-[50vh] overflow-y-auto rounded-t-3xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.2)] md:static md:w-1/3 md:max-h-full md:rounded-none md:border-t-0 md:border-l"
-    >
+    <div className="h-full flex flex-col bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md">
       {/* Header with title and category info */}
-      <div className="flex justify-between items-start p-4 sm:p-6 border-b border-border/20">
-        <div className="flex-1">
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground font-sans">{karya.title}</h2>
-          <p className="text-foreground/70 mt-1 font-medium text-sm sm:text-base">
-            by {karya.creator_name}
-          </p>
-        </div>
-        <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm py-1.5 px-3 rounded-full border border-white/10 shadow-md">
-          <div className="bg-white/90 p-1.5 rounded-full">
-            <img
-              src={categoryIcons[karya.category] || '/lovable-uploads/design.png'}
-              alt={karya.category}
-              className="w-5 h-5 object-contain"
-            />
+      <div className="flex-shrink-0 p-6 border-b border-border/20">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1 pr-4">
+            <h2 className="text-xl font-bold tracking-tight text-foreground font-sans leading-tight mb-2">
+              {karya.title}
+            </h2>
+            <p className="text-foreground/70 font-medium text-sm">
+              by {karya.creator_name}
+            </p>
           </div>
-          <span className="text-sm text-foreground/80 font-medium">
-            {categoryNames[karya.category] || 'Karya'}
-          </span>
+          <div className="flex-shrink-0">
+            <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm py-1.5 px-3 rounded-full border border-white/10 shadow-md">
+              <div className="bg-white/90 p-1 rounded-full">
+                <img
+                  src={categoryIcons[karya.category] || '/lovable-uploads/design.png'}
+                  alt={karya.category}
+                  className="w-4 h-4 object-contain"
+                />
+              </div>
+              <span className="text-xs text-foreground/80 font-medium">
+                {categoryNames[karya.category] || 'Karya'}
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
-      
-      {/* View count section */}
-      {karya.view_count != null && karya.view_count > 0 && (
-        <div className="px-4 sm:px-6 pt-4 pb-2 border-b border-border/20">
+        
+        {/* View count section */}
+        {karya.view_count != null && karya.view_count > 0 && (
           <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm px-3 py-2 rounded-full border border-white/10 shadow-md w-fit">
             <Eye className="w-4 h-4 text-foreground/80" />
             <span className="text-sm font-medium text-foreground/90">
               {karya.view_count} views
             </span>
           </div>
-        </div>
-      )}
+        )}
+      </div>
       
       {/* Tags section */}
       {tags.length > 0 && (
-        <div className="px-4 sm:px-6 pt-4 pb-2 border-b border-border/20">
-          <div className="flex items-center gap-2 mb-2">
+        <div className="flex-shrink-0 px-6 py-4 border-b border-border/20">
+          <div className="flex items-center gap-2 mb-3">
             <Tag className="w-4 h-4 text-foreground/60" />
             <span className="text-sm font-medium text-foreground/80">Tags</span>
           </div>
@@ -96,7 +94,7 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
             {tags.map((tag, index) => (
               <Badge
                 key={index}
-                className="bg-foreground/10 hover:bg-foreground/15 text-foreground/90 border-none font-medium"
+                className="bg-foreground/10 hover:bg-foreground/15 text-foreground/90 border-none font-medium text-xs"
               >
                 #{tag}
               </Badge>
@@ -107,30 +105,32 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
 
       {/* Expandable description section */}
       {karya.description && (
-        <div className="p-4 sm:p-6">
+        <div className="flex-1 min-h-0 flex flex-col px-6 py-4">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-sm font-medium text-foreground/80">Description</span>
           </div>
-          <div className={`transition-all duration-300 ${
-            isDescriptionExpanded ? 'max-h-none' : 'max-h-[120px]'
-          } overflow-hidden relative`}>
+          <div className="flex-1 min-h-0">
             <ScrollArea className={`${
-              isDescriptionExpanded ? 'h-auto max-h-[40vh]' : 'h-[120px]'
+              isDescriptionExpanded ? 'h-full' : 'h-32'
             }`}>
-              <p className="text-foreground/90 leading-relaxed font-sans text-sm sm:text-base whitespace-pre-wrap break-words pr-4">
-                {karya.description}
-              </p>
+              <div className={`transition-all duration-300 ${
+                isDescriptionExpanded ? 'max-h-none' : 'max-h-32'
+              } overflow-hidden relative`}>
+                <p className="text-foreground/90 leading-relaxed font-sans text-sm whitespace-pre-wrap break-words pr-4">
+                  {karya.description}
+                </p>
+                {!isDescriptionExpanded && karya.description.length > 200 && (
+                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-secondary/95 to-transparent pointer-events-none"></div>
+                )}
+              </div>
             </ScrollArea>
-            {!isDescriptionExpanded && (
-              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-secondary/95 to-transparent pointer-events-none"></div>
-            )}
           </div>
           {karya.description.length > 200 && (
             <Button
               variant="ghost"
               size="sm"
               onClick={toggleDescription}
-              className="mt-3 text-foreground/60 hover:text-foreground hover:bg-foreground/5 gap-1 rounded-full font-medium"
+              className="mt-3 text-foreground/60 hover:text-foreground hover:bg-foreground/5 gap-1 rounded-full font-medium self-start"
             >
               {isDescriptionExpanded ? 'Show Less' : 'Read More'}
               <ChevronDown
@@ -142,8 +142,8 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
       )}
 
       {/* Action Buttons */}
-      <div className="p-4 sm:p-6 pt-4 flex flex-col sm:flex-row justify-between items-center">
-        <p className="text-xs text-foreground/60 mb-4 sm:mb-0 font-medium">
+      <div className="flex-shrink-0 p-6 pt-4 border-t border-border/20">
+        <p className="text-xs text-foreground/60 mb-4 font-medium">
           Dibuat pada {new Date(karya.created_at).toLocaleDateString('id-ID', {
             year: 'numeric',
             month: 'long',
@@ -151,9 +151,9 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
           })}
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+        <div className="flex flex-col gap-2">
           {karya.content_url && !karya.link_url && (
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Button 
                 onClick={() => window.open(karya.content_url, '_blank')}
                 className="gap-2 w-full rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium" 
@@ -165,7 +165,7 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
             </motion.div>
           )}
           {karya.link_url && (
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Button 
                 onClick={() => window.open(karya.link_url, '_blank')}
                 className="gap-2 w-full rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-lavender to-purpleLight text-white border border-white/10 font-medium" 
@@ -178,6 +178,6 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
