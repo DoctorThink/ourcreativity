@@ -32,10 +32,12 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
 
   const karya = karyaList[currentIndex];
 
-  // Increment view count when dialog opens
+  // Increment view count when dialog opens by calling the new Edge Function
   const viewCountMutation = useMutation({
     mutationFn: async (karyaId: string) => {
-      const { error } = await supabase.rpc('increment_view_count', { karya_id: karyaId });
+      const { error } = await supabase.functions.invoke('increment-view-count', {
+        body: { karya_id: karyaId },
+      });
       if (error) throw new Error(error.message);
       return karyaId;
     },
