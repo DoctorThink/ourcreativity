@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -8,7 +7,7 @@ import { StandardCard } from "@/components/ui/StandardCard";
 import { CategoryButton } from "@/components/ui/CategoryButton";
 import { IconDisplay } from "@/components/ui/IconDisplay";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Users, User, Video, Palette, Smile, FileText } from "lucide-react";
+import { Users, User, Video, Palette, Smile, FileText, Bot, Shield, Droplet } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
 // Animation Variants
@@ -211,25 +210,29 @@ const categories = [
     id: "video",
     name: "Video Editing",
     icon: Video,
-    color: "coral" as const
+    color: "coral" as const,
+    description: "Tempat bagi para editor video untuk berkolaborasi, mempelajari software baru, dan menghasilkan konten sinematik."
   },
   {
     id: "design",
     name: "Graphic Design",
     icon: Palette,
-    color: "turquoise" as const
+    color: "turquoise" as const,
+    description: "Wadah bagi para seniman visual untuk berbagi teknik, inspirasi, dan menciptakan karya desain yang memukau."
   },
   {
     id: "meme",
     name: "Meme",
     icon: Smile,
-    color: "softPink" as const
+    color: "softPink" as const,
+    description: "Ruang santai namun kreatif bagi para pembuat meme untuk berbagi humor dan mengasah kemampuan bercerita visual secara singkat."
   },
   {
     id: "karyatulis",
     name: "Karya Tulis",
     icon: FileText,
-    color: "mint" as const
+    color: "mint" as const,
+    description: "Komunitas bagi para penulis, penyair, dan pencerita untuk berbagi tulisan, memberikan kritik membangun, dan mengasah keterampilan literasi."
   },
 ];
 
@@ -261,7 +264,7 @@ const TimKami = () => {
   return (
     <PageLayout
       title="Tim Kami"
-      subtitle="Kenali para kreator berbakat di balik OUR CREATIVITY"
+      subtitle="OurCreativity digerakkan oleh para kreator dari berbagai bidang yang memiliki satu tujuan yang sama: membangun komunitas yang suportif dan inspiratif. Kami adalah tim yang berdedikasi untuk membantu generasi muda menemukan dan mengasah bakat mereka."
     >
       {/* Category selector with standardized design */}
       <motion.div 
@@ -298,6 +301,45 @@ const TimKami = () => {
           <StatCard icon={Smile} label="Meme" value="6" color="softPink" />
           <StatCard icon={FileText} label="Karya Tulis" value="6" color="mint" />
         </div>
+      </StandardCard>
+
+      {/* Creative Categories Description */}
+      <StandardCard className="mb-10" glowColor="rgba(152, 245, 225, 0.3)">
+        <div className="flex items-center gap-4 mb-6">
+          <IconDisplay icon={Palette} color="turquoise" size="lg" />
+          <div>
+            <h3 className="text-xl font-serif font-bold text-foreground">Kategori Kreatif Kami</h3>
+            <p className="text-sm text-foreground/60">Setiap kategori memiliki identitas visualnya sendiri yang mencerminkan semangat kreativitas.</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {categories.map(cat => (
+            <div key={cat.id} className="flex items-start gap-4">
+              <IconDisplay icon={cat.icon} color={cat.color} size="md" className="mt-1 flex-shrink-0" />
+              <div>
+                <h4 className="font-bold text-foreground">{cat.name}</h4>
+                <p className="text-sm text-foreground/70">{cat.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </StandardCard>
+
+      {/* Logo Philosophy Card */}
+      <StandardCard className="mb-10" glowColor="rgba(254, 198, 161, 0.3)">
+        <div className="flex items-center gap-4 mb-6">
+          <IconDisplay icon={Droplet} color="coral" size="lg" />
+          <div>
+            <h3 className="text-xl font-serif font-bold text-foreground">Filosofi Logo O.C</h3>
+            <p className="text-sm text-foreground/60">Simbol di balik identitas visual kami.</p>
+          </div>
+        </div>
+        <p className="text-foreground/80 leading-relaxed mb-4">
+          Logo kami, yang sering disebut O.C (singkatan dari OurCreativity), adalah representasi visual dari nilai-nilai inti kami. Secara keseluruhan, logo ini mengambil bentuk simbol "infinity" atau tak terbatas, melambangkan keyakinan kami bahwa kreativitas manusia tidak seharusnya dibatasi. Ia harus terus berkembang, menjadi lebih baik, dan memiliki ciri khasnya sendiri.
+        </p>
+        <p className="text-foreground/80 leading-relaxed">
+          Warna merah yang kami pilih melambangkan <strong className="text-coral">keberanian</strong>. Kami yakin, tanpa keberanian untuk memulai dan menunjukkan karya, seorang kreator tidak akan pernah bisa berkembang. Itulah semangat yang kami tanamkan di dalam komunitas OurCreativity.
+        </p>
       </StandardCard>
 
       {/* Team members grid */}

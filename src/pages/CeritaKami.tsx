@@ -4,7 +4,7 @@ import PageLayout from "../components/layouts/PageLayout";
 import BentoCard from "../components/ui/BentoCard";
 import { IconTitleRow } from "@/components/ui/IconTitleRow";
 import { AnimateInView } from "@/hooks/useElementInView";
-import { BookOpen, Quote, History, BarChart, Target, Users, Award, Calendar } from "lucide-react";
+import { BookOpen, Quote, History, BarChart, Target, Users, Award, Calendar, TrendingUp, Heart } from "lucide-react";
 
 const CeritaKami = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,10 +39,10 @@ const CeritaKami = () => {
                   className="mb-4 sm:mb-6"
                 />
                 <p className="text-foreground/80 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6 font-sans">
-                  OUR CREATIVITY berawal dari sekelompok mahasiswa yang berbagi hasrat yang sama untuk menciptakan ruang kolaboratif bagi para kreator muda. Kami melihat betapa banyaknya bakat yang tersebar namun tidak memiliki wadah untuk dieksplorasi dan dikembangkan bersama.
+                  Perjalanan OurCreativity berawal dari sebuah pengamatan sederhana: internet dipenuhi oleh percakapan dan komentar dari ribuan anak muda yang memiliki hasrat besar untuk mempelajari suatu hal, mulai dari desain grafis, video editing, hingga penulisan kreatif. Namun, semangat itu seringkali terhenti karena satu hal—mereka tidak memiliki tempat yang aman dan terarah untuk bertanya dan bertumbuh.
                 </p>
                 <p className="text-foreground/80 text-sm sm:text-base leading-relaxed font-sans">
-                  Pada awal 2022, dimulai dengan kelompok kecil beranggotakan 5 orang, kami mulai membangun komunitas yang berfokus pada pengembangan ide kreatif dan kolaborasi antar disiplin ilmu. Dari sini, komunitas kami mulai berkembang secara organik menjadi jaringan kreator yang lebih luas.
+                  Melihat kekosongan ini, kami tergerak untuk membangun sebuah jembatan. OurCreativity lahir dari sebuah harapan sederhana: untuk menciptakan sebuah komunitas di mana pertanyaan tidak hanya dijawab, tetapi juga dirayakan sebagai awal dari sebuah karya.
                 </p>
               </div>
               
@@ -71,53 +71,49 @@ const CeritaKami = () => {
             </div>
           </BentoCard>
 
-          {/* Timeline */}
+          {/* How We Attract Interest */}
           <BentoCard 
             className="p-4 sm:p-6 md:p-8"
             glowColor="rgba(254, 198, 161, 0.3)"
           >
             <div>
               <IconTitleRow 
-                icon={History}
+                icon={TrendingUp}
                 iconColor="bg-coral text-background"
-                title="Timeline Perjalanan"
+                title="Bagaimana Kami Menarik Minat?"
                 titleClassName="text-base sm:text-lg"
                 className="mb-3 sm:mb-4"
                 gap="sm"
               />
-              <ul className="space-y-3 sm:space-y-4">
-                <TimelineItem date="Jan 2022" event="Pertemuan pertama tim inti" />
-                <TimelineItem date="Apr 2022" event="Peluncuran media sosial resmi" />
-                <TimelineItem date="Jul 2022" event="Workshop kolaborasi pertama" />
-                <TimelineItem date="Jan 2023" event="Mencapai 500+ anggota" />
-                <TimelineItem date="Jul 2023" event="Showcase karya pertama" />
-              </ul>
+              <p className="text-foreground/80 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 font-sans">
+                Di zaman modern ini, kekuatan media sosial tidak dapat dipungkiri. Kami memanfaatkannya sebagai pemicu utama. Dengan menyajikan konten-konten inspiratif yang dapat "menarik perhatian" secara konsisten setiap hari, kami membangun pengaruh dan menjangkau calon-calon kreator di seluruh penjuru digital.
+              </p>
+              <p className="text-foreground/80 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 font-sans">
+                Setelah minat mereka didapatkan, tugas kami selanjutnya adalah mengarahkan mereka ke dalam komunitas—sebuah ruang untuk mulai berkarya, berdiskusi, dan berkolaborasi. Kami percaya, konsistensi dalam berkarya adalah kunci.
+              </p>
             </div>
           </BentoCard>
 
-          {/* Growth */}
+          {/* Dedication */}
           <BentoCard 
             className="p-4 sm:p-6 md:p-8 lg:col-span-2"
             glowColor="rgba(152, 245, 225, 0.3)"
           >
             <div>
               <IconTitleRow 
-                icon={BarChart}
+                icon={Heart}
                 iconColor="bg-mint text-background"
-                title="Pertumbuhan Komunitas"
+                title="Dedikasi Kami Untuk Komunitas"
                 titleClassName="text-base sm:text-lg"
                 className="mb-3 sm:mb-4"
                 gap="sm"
               />
               <p className="text-foreground/80 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 font-sans">
-                Dari 5 anggota awal, kini OUR CREATIVITY telah berkembang menjadi komunitas dengan lebih dari:
+                Belum genap setahun sejak komunitas ini didirikan, kami dengan bangga telah berhasil mengumpulkan lebih dari <strong>3000+ anggota</strong> dari seluruh Indonesia. Mereka adalah bukti nyata bahwa semangat belajar dan berkarya di kalangan anak muda sangatlah besar. Setiap hari, karya-karya baru lahir dari komunitas kami, dapat dilihat secara gratis melalui akun Instagram kami di @ourcreativity.ofc.
               </p>
-              <div className="grid grid-cols-2 gap-4">
-                <StatItem value="1,000+" label="Anggota Aktif" />
-                <StatItem value="50+" label="Kolaborasi Project" />
-                <StatItem value="12+" label="Kota di Indonesia" />
-                <StatItem value="4" label="Kategori Kreatif" />
-              </div>
+              <p className="text-foreground/80 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 font-sans">
+                Pencapaian ini menyadarkan kami bahwa "kemauan yang tinggi" itu benar-benar ada. Jika hasrat itu diarahkan pada hal yang positif, kami yakin Indonesia akan semakin dipenuhi oleh jiwa-jiwa kreatif yang siap mengubah masa depan.
+              </p>
             </div>
           </BentoCard>
         </div>

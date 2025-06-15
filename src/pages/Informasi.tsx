@@ -12,7 +12,11 @@ import {
   Star, 
   Heart, 
   MessageCircle,
-  ChevronRight
+  ChevronRight,
+  BookCopy,
+  PenSquare,
+  Sparkles,
+  Link2
 } from "lucide-react";
 
 const Informasi = () => {
@@ -48,7 +52,7 @@ const Informasi = () => {
   };
 
   return (
-    <PageLayout title="Informasi" subtitle="Ketentuan dan informasi penting untuk komunitas">
+    <PageLayout title="Informasi Komunitas" subtitle="Ketentuan dan informasi penting untuk komunitas">
       <motion.div
         ref={mainRef}
         style={{ y: titleParallax }}
@@ -70,14 +74,14 @@ const Informasi = () => {
                 <IconTitleRow 
                   icon={Info}
                   iconColor="bg-amethyst text-background"
-                  title="Tentang Komunitas Kami"
+                  title="Apa Itu OurCreativity?"
                   className="mb-4"
                 />
                 <p className="text-foreground/80 text-base leading-relaxed mb-4">
-                  OUR CREATIVITY adalah komunitas yang didedikasikan untuk mendukung dan mempromosikan kreativitas di kalangan generasi muda. Kami menyediakan platform bagi para kreator untuk berbagi karya, berkolaborasi, dan belajar bersama.
+                  OurCreativityIDN adalah komunitas kreatif yang didirikan pada tahun 2024 atas dasar kemauan tulus untuk memberikan manfaat bagi banyak orang dan menciptakan lebih banyak anak muda kreatif di Indonesia.
                 </p>
                 <p className="text-foreground/80 text-base leading-relaxed mb-6">
-                  Dibentuk pada tahun 2022, komunitas ini telah berkembang menjadi rumah bagi ratusan kreator muda berbakat dari berbagai latar belakang dan disiplin kreatif.
+                  Kami hadir karena melihat banyaknya calon kreator berbakat di internet yang ingin belajar dan bertanya, namun tidak memiliki wadah yang tepat. OurCreativity diciptakan sebagai rumah bagi mereka—sebuah tempat untuk bertanya, berdiskusi, berkolaborasi, dan yang terpenting, menghasilkan karya.
                 </p>
                 
                 <motion.div 
@@ -87,7 +91,7 @@ const Informasi = () => {
                   transition={{ delay: 0.5, duration: 0.5 }}
                   viewport={{ once: true }}
                 >
-                  <StatBadge value="1000+" label="Anggota" />
+                  <StatBadge value="3000+" label="Anggota" />
                   <StatBadge value="4" label="Kategori" />
                   <StatBadge value="50+" label="Proyek" />
                   <StatBadge value="12+" label="Kota" />
@@ -110,7 +114,7 @@ const Informasi = () => {
                   className="mb-4"
                 />
                 <p className="text-foreground/80 text-base leading-relaxed">
-                  Menjadi wadah utama bagi kreator muda Indonesia untuk mengembangkan potensi dan mewujudkan ide-ide kreatif mereka dalam lingkungan yang kolaboratif dan mendukung.
+                  Visi kami adalah untuk mengembangkan dan menyalakan jiwa kreatif anak muda Indonesia dengan menciptakan wadah yang suportif untuk berdiskusi, berkolaborasi, dan menghasilkan karya yang orisinal dan berdampak.
                 </p>
                 
                 <motion.div 
@@ -163,10 +167,11 @@ const Informasi = () => {
                 />
                 <ul className="space-y-3 text-foreground/80 text-base">
                   {[
-                    "Menyediakan platform yang inklusif dan mendukung bagi semua kreator.",
-                    "Memfasilitasi kolaborasi dan pertukaran ide antar anggota.",
-                    "Mengadakan acara dan workshop untuk meningkatkan keterampilan kreatif.",
-                    "Mempromosikan karya anggota kepada khalayak yang lebih luas."
+                    { text: "Menyaring dan Menghubungkan: Mencari dan menghubungkan anak muda berbakat melalui media sosial untuk bergabung dalam ekosistem kreatif kami.", icon: Link2 },
+                    { text: "Menyediakan Platform: Membangun platform diskusi dan kolaborasi yang inklusif agar anggota dapat berbagi ilmu serta mengembangkan kreativitasnya tanpa batas.", icon: Users },
+                    { text: "Mempublikasikan Karya: Menjadi panggung bagi setiap karya anggota melalui media sosial agar mendapatkan apresiasi dan pengakuan yang lebih luas.", icon: BookCopy },
+                    { text: "Menyelenggarakan Program: Mengadakan berbagai program gratis seperti diskusi, event eksklusif, dan proyek kolaboratif untuk mendukung pengembangan keterampilan anggota.", icon: Star },
+                    { text: "Mendorong Inovasi: Mendorong anggota untuk memahami dan menguasai berbagai bidang kreatif agar dapat menciptakan karya yang lebih inovatif dan bernilai bagi masyarakat.", icon: Sparkles }
                   ].map((item, index) => (
                     <motion.li 
                       key={index}
@@ -174,10 +179,10 @@ const Informasi = () => {
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3 + index * 0.1, duration: 0.6 }}
                       viewport={{ once: true }}
-                      className="flex items-start gap-2"
+                      className="flex items-start gap-3"
                     >
-                      <ChevronRight className="w-4 h-4 text-foreground/50 flex-shrink-0 mt-1" />
-                      <span>{item}</span>
+                      <item.icon className="w-4 h-4 text-foreground/50 flex-shrink-0 mt-1" />
+                      <span>{item.text}</span>
                     </motion.li>
                   ))}
                 </ul>
