@@ -1,13 +1,14 @@
-
 import React, { useRef, useLayoutEffect } from "react";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Users, Heart, Lightbulb, Target } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const VisionSection: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const flowchartRef = useRef<SVGSVGElement>(null);
+  const navigate = useNavigate();
 
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -51,6 +52,10 @@ export const VisionSection: React.FC = () => {
 
     return () => ctx.revert();
   }, []);
+
+  const handleJoinClick = () => {
+    navigate('/');
+  };
 
   return (
     <section ref={sectionRef} className="min-h-screen py-20 px-4 sm:px-6 md:px-8">
@@ -194,6 +199,7 @@ export const VisionSection: React.FC = () => {
           </p>
           
           <motion.button
+            onClick={handleJoinClick}
             className="group relative px-8 py-4 bg-gradient-to-r from-amethyst via-turquoise to-coral rounded-full text-background font-semibold font-sans text-lg transition-all duration-300"
             whileHover={{ 
               scale: 1.05,
