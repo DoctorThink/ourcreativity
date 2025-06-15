@@ -17,9 +17,10 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   onKaryaClick,
 }) => {
   const breakpointColumnsObj = {
-    default: 4,    // 4 columns on large desktop (1920px+)
+    default: 5,    // 5 columns on ultra-wide screens (1920px+)
+    1920: 5,       // 5 columns on 4K screens
     1536: 4,       // 4 columns on 2xl screens
-    1280: 3,       // 3 columns on xl screens (1280px-1535px)
+    1280: 4,       // 4 columns on xl screens (1280px-1535px)
     1024: 3,       // 3 columns on lg screens (1024px-1279px)
     768: 2,        // 2 columns on md screens (768px-1023px)
     640: 2,        // 2 columns on sm screens (640px-767px)
@@ -33,7 +34,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   };
 
   return (
-    <div className="masonry-container w-full">
+    <div className="masonry-container">
       <Masonry
         breakpointCols={breakpointColumnsObj}
         className="masonry-grid"
@@ -61,3 +62,4 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
     </div>
   );
 };
+
