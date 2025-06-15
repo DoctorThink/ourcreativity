@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Database } from '@/integrations/supabase/types';
@@ -22,7 +23,6 @@ interface KaryaDetailDialogProps {
 const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDetailDialogProps) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [direction, setDirection] = useState(0);
-  const [hasLiked, setHasLiked] = useState(false);
   const [showInfoPanel, setShowInfoPanel] = useState(true);
   const queryClient = useQueryClient();
 
@@ -32,12 +32,27 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
 
   const karya = karyaList[currentIndex];
 
+  // Increment view count when dialog opens
+  const viewCountMutation = useMutation({
+    mutationFn: async (karyaId: string) => {
+      const { error } = await supabase.rpc('increment_view_count', { karya_id: karyaId });
+      if (error) throw new Error(error.message);
+      return karyaId;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['karya'] });
+    },
+    onError: (error) => {
+      console.error('View count increment error:', error);
+    },
+  });
+
   useEffect(() => {
-    if (karya) {
-      const likedInStorage = localStorage.getItem(`liked_${karya.id}`);
-      setHasLiked(likedInStorage === 'true');
+    if (karya && isOpen) {
+      // Fire-and-forget view count increment
+      viewCountMutation.mutate(karya.id);
     }
-  }, [karya]);
+  }, [karya?.id, isOpen]);
 
   const toggleInfoPanel = useCallback(() => {
     setShowInfoPanel(prev => !prev);
@@ -52,40 +67,6 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
       return nextIndex;
     });
   };
-
-  const likeMutation = useMutation({
-    mutationFn: async (karyaId: string) => {
-      // Optimistically update UI
-      queryClient.setQueryData(['karya'], (oldData: KaryaType[] | undefined) => {
-        if (!oldData) return oldData;
-        return oldData.map(item =>
-          item.id === karyaId
-            ? { ...item, likes_count: (item.likes_count || 0) + 1 }
-            : item
-        );
-      });
-      localStorage.setItem(`liked_${karyaId}`, 'true');
-      setHasLiked(true);
-
-      const { error } = await supabase.rpc('increment_likes', { karya_id: karyaId });
-
-      if (error) {
-        localStorage.removeItem(`liked_${karyaId}`);
-        setHasLiked(false);
-        throw new Error(error.message);
-      }
-      return karyaId;
-    },
-    onSuccess: () => {
-      toast.success('Terima kasih sudah suka!');
-      queryClient.invalidateQueries({ queryKey: ['karya'] });
-    },
-    onError: (error) => {
-      toast.error('Gagal menyukai karya. Coba lagi nanti.');
-      console.error('Like error:', error);
-      queryClient.invalidateQueries({ queryKey: ['karya'] });
-    },
-  });
 
   if (!karya) return null;
 
@@ -141,11 +122,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                 transition={{ duration: 0.4, delay: 0.1 }}
                 className="flex-shrink-0 w-full md:w-1/3 h-1/2 md:h-full overflow-y-auto"
               >
-                <KaryaInfoPanel 
-                  karya={karya}
-                  hasLiked={hasLiked}
-                  likeMutation={likeMutation}
-                />
+                <KaryaInfoPanel karya={karya} />
               </motion.div>
             )}
           </AnimatePresence>

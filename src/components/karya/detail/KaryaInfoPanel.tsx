@@ -4,17 +4,13 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ChevronDown, Tag } from 'lucide-react';
+import { ChevronDown, Tag, Eye, ExternalLink } from 'lucide-react';
 import { Database } from '@/integrations/supabase/types';
-import { UseMutationResult } from '@tanstack/react-query';
-import { KaryaActionButtons } from './KaryaActionButtons';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
 interface KaryaInfoPanelProps {
   karya: KaryaType;
-  hasLiked: boolean;
-  likeMutation: UseMutationResult<string, Error, string, unknown>;
 }
 
 const categoryIcons: Record<string, string> = {
@@ -41,7 +37,7 @@ const extractTags = (description: string | null): string[] => {
   return [];
 };
 
-export const KaryaInfoPanel = ({ karya, hasLiked, likeMutation }: KaryaInfoPanelProps) => {
+export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const tags = extractTags(karya.description);
 
@@ -76,6 +72,18 @@ export const KaryaInfoPanel = ({ karya, hasLiked, likeMutation }: KaryaInfoPanel
           </span>
         </div>
       </div>
+      
+      {/* View count section */}
+      {karya.view_count != null && karya.view_count > 0 && (
+        <div className="px-4 sm:px-6 pt-4 pb-2 border-b border-border/20">
+          <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm px-3 py-2 rounded-full border border-white/10 shadow-md w-fit">
+            <Eye className="w-4 h-4 text-foreground/80" />
+            <span className="text-sm font-medium text-foreground/90">
+              {karya.view_count} views
+            </span>
+          </div>
+        </div>
+      )}
       
       {/* Tags section */}
       {tags.length > 0 && (
@@ -134,7 +142,42 @@ export const KaryaInfoPanel = ({ karya, hasLiked, likeMutation }: KaryaInfoPanel
       )}
 
       {/* Action Buttons */}
-      <KaryaActionButtons karya={karya} hasLiked={hasLiked} likeMutation={likeMutation} />
+      <div className="p-4 sm:p-6 pt-4 flex flex-col sm:flex-row justify-between items-center">
+        <p className="text-xs text-foreground/60 mb-4 sm:mb-0 font-medium">
+          Dibuat pada {new Date(karya.created_at).toLocaleDateString('id-ID', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          {karya.content_url && !karya.link_url && (
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
+              <Button 
+                onClick={() => window.open(karya.content_url, '_blank')}
+                className="gap-2 w-full rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium" 
+                size="sm"
+              >
+                <ExternalLink className="h-4 w-4" />
+                <span>Link Konten</span>
+              </Button>
+            </motion.div>
+          )}
+          {karya.link_url && (
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
+              <Button 
+                onClick={() => window.open(karya.link_url, '_blank')}
+                className="gap-2 w-full rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-lavender to-purpleLight text-white border border-white/10 font-medium" 
+                size="sm"
+              >
+                <ExternalLink className="h-4 w-4" />
+                <span>Lihat Karya Lengkap</span>
+              </Button>
+            </motion.div>
+          )}
+        </div>
+      </div>
     </motion.div>
   );
 };

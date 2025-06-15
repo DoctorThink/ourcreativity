@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Database } from '@/integrations/supabase/types';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
-import { ExternalLink, Play, Tag, Heart } from 'lucide-react';
+import { ExternalLink, Play, Eye } from 'lucide-react';
 import {
   Carousel,
   CarouselContent,
@@ -228,10 +229,10 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
               />
             </div>
             <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-full text-white/90">
-              {karya.likes_count != null && karya.likes_count > 0 && (
+              {karya.view_count != null && karya.view_count > 0 && (
                 <div className="flex items-center gap-1">
-                  <Heart className="w-3.5 h-3.5 text-rose-400" fill="currentColor" />
-                  <span className="text-xs font-medium">{karya.likes_count}</span>
+                  <Eye className="w-3.5 h-3.5 text-blue-400" />
+                  <span className="text-xs font-medium">{karya.view_count}</span>
                 </div>
               )}
               {karya.link_url && (

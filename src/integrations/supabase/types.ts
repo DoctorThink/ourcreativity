@@ -43,7 +43,6 @@ export type Database = {
           id: string
           image_url: string
           is_spotlight: boolean | null
-          likes_count: number | null
           link_url: string | null
           media_height: number | null
           media_urls: string[] | null
@@ -52,6 +51,7 @@ export type Database = {
           submission_type: string | null
           title: string
           updated_at: string
+          view_count: number
         }
         Insert: {
           category: string
@@ -62,7 +62,6 @@ export type Database = {
           id?: string
           image_url: string
           is_spotlight?: boolean | null
-          likes_count?: number | null
           link_url?: string | null
           media_height?: number | null
           media_urls?: string[] | null
@@ -71,6 +70,7 @@ export type Database = {
           submission_type?: string | null
           title: string
           updated_at?: string
+          view_count?: number
         }
         Update: {
           category?: string
@@ -81,7 +81,6 @@ export type Database = {
           id?: string
           image_url?: string
           is_spotlight?: boolean | null
-          likes_count?: number | null
           link_url?: string | null
           media_height?: number | null
           media_urls?: string[] | null
@@ -90,6 +89,7 @@ export type Database = {
           submission_type?: string | null
           title?: string
           updated_at?: string
+          view_count?: number
         }
         Relationships: []
       }
@@ -98,7 +98,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      increment_likes: {
+      increment_view_count: {
         Args: { karya_id: string }
         Returns: undefined
       }

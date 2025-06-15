@@ -1,3 +1,4 @@
+
 export const extractTagsFromDescription = (description: string): string[] => {
   if (!description) return [];
   
@@ -58,8 +59,8 @@ export const sortKaryaByRecency = (karya: any[], ascending: boolean = false): an
 
 export const sortKaryaByPopularity = (karya: any[], ascending: boolean = false): any[] => {
   return [...karya].sort((a, b) => {
-    const likesA = a.likes_count || 0;
-    const likesB = b.likes_count || 0;
-    return ascending ? likesA - likesB : likesB - likesA;
+    const viewsA = a.view_count || 0;
+    const viewsB = b.view_count || 0;
+    return ascending ? viewsA - viewsB : viewsB - viewsA;
   });
 };
