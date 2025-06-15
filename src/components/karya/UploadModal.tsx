@@ -24,47 +24,14 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { categories } from '@/lib/karyaCategories';
 
 interface UploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  initialCategory: string | null;
 }
-
-const categories = [
-  { 
-    value: 'design', 
-    label: 'Graphic Design', 
-    icon: Image, 
-    acceptedTypes: 'image/*', 
-    maxSize: 5 * 1024 * 1024,
-    description: 'Unggah karya desain grafis Anda'
-  },
-  { 
-    value: 'video', 
-    label: 'Video Editing', 
-    icon: Video, 
-    acceptedTypes: 'video/*', 
-    maxSize: 5 * 1024 * 1024,
-    description: 'Bagikan proyek video editing Anda'
-  },
-  { 
-    value: 'meme', 
-    label: 'Meme', 
-    icon: Smile, 
-    acceptedTypes: 'image/*', 
-    maxSize: 5 * 1024 * 1024,
-    description: 'Buat dan bagikan meme'
-  },
-  { 
-    value: 'writing', 
-    label: 'Karya Tulis', 
-    icon: FileText, 
-    acceptedTypes: '.pdf,.doc,.docx,.txt',
-    maxSize: 10 * 1024 * 1024, // 10MB
-    description: 'Tulis atau unggah dokumen Anda'
-  },
-];
 
 const writingTemplates = [
   { id: 'blank', name: 'Mulai dari Kosong', content: '' },
@@ -126,7 +93,7 @@ Rekomendasi saya:`
   }
 ];
 
-const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess }) => {
+const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess, initialCategory }) => {
   const [formData, setFormData] = useState({
     title: '',
     creator_name: '',
@@ -188,6 +155,27 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
     }, 5000);
     return () => clearInterval(interval);
   }, [formData]);
+
+  useEffect(() => {
+    // When modal opens with a category, set up the form
+    if (isOpen && initialCategory) {
+      // Pre-fill category
+      const categoryInfo = categories.find(c => c.value === initialCategory);
+      setFormData(prev => ({ ...prev, category: initialCategory }));
+
+      // Set recommended input type for writing
+      if (categoryInfo?.value === 'writing') {
+        if (categoryInfo.recommended === 'editor') {
+          setWritingOption('editor');
+        } else {
+          setWritingOption('upload');
+        }
+      }
+    } else if (!isOpen) {
+      // Reset form state on close, except for draft logic
+      setWritingOption('editor'); // Reset to default
+    }
+  }, [isOpen, initialCategory]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -454,7 +442,19 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
           </DialogClose>
         </DialogHeader>
 
-        <div className="space-y-4 mt-6">
+        {selectedCategory && (
+          <div className="flex items-center gap-3 p-3 mt-4 bg-white/10 border border-white/20 rounded-xl">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] flex items-center justify-center flex-shrink-0">
+                  <selectedCategory.icon className="w-4 h-4 text-black" />
+              </div>
+              <div>
+                  <p className="text-gray-400 text-xs">Kategori</p>
+                  <p className="text-white font-medium text-base">{selectedCategory.label}</p>
+              </div>
+          </div>
+        )}
+
+        <div className="space-y-4 mt-2">
           {/* Title Input */}
           <div className="space-y-2">
             <Label htmlFor="title" className="text-white font-medium text-sm">
@@ -496,47 +496,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
             )}
           </div>
 
-          {/* Category Select */}
-          <div className="space-y-2">
-            <Label htmlFor="category" className="text-white font-medium text-sm">
-              Kategori
-            </Label>
-            <Select
-              value={formData.category}
-              onValueChange={(value) => {
-                setFormData({ ...formData, category: value });
-                setFile(null);
-                setPreviewUrl(null);
-                setErrors({ ...errors, category: '', file: '' });
-              }}
-            >
-              <SelectTrigger className="bg-white/10 border-white/30 backdrop-blur-lg text-white rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50">
-                <SelectValue placeholder="Pilih kategori karya" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-900/95 border-white/30 text-white rounded-xl backdrop-blur-xl">
-                {categories.map((category) => (
-                  <SelectItem
-                    key={category.value}
-                    value={category.value}
-                    className="text-white hover:bg-white/20 focus:bg-white/20 rounded-lg m-1"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] flex items-center justify-center">
-                        <category.icon className="w-3 h-3 text-black" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-sm">{category.label}</div>
-                        <div className="text-xs text-gray-400">{category.description}</div>
-                      </div>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.category && (
-              <p className="text-red-400 text-sm">{errors.category}</p>
-            )}
-          </div>
+          {/* Category Select is removed */}
 
           {/* Conditional Input Section */}
           {formData.category && (
