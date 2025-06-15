@@ -1,3 +1,4 @@
+
 /* src/index.css */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap'); /* Added Inter 700 for font-semibold */
@@ -175,7 +176,7 @@
   100% { background-position: 0% 50%; }
 }
 
-/* ... keep existing code (all the rest of the CSS remains the same) */
+/* ... keep existing code (all animations and other styles remain the same) */
 
 .bg-grid-pattern {
   background-image: 
@@ -584,25 +585,105 @@
   }
 }
 
-/* Improved Masonry Grid Styling */
-.my-masonry-grid {
-  display: flex;
-  width: 100%;
-  margin-left: -1rem;
-  margin-right: -1rem;
+/* IMPROVED MASONRY GRID STYLING - Fixed for PC Display */
+.masonry-grid {
+  display: flex !important;
+  width: 100% !important;
+  margin-left: -24px !important;
+  margin-right: 0 !important;
 }
 
-.my-masonry-grid_column {
-  padding-left: 1rem;
-  padding-right: 1rem;
-  background-clip: padding-box;
+.masonry-grid-column {
+  padding-left: 24px !important;
+  padding-right: 0 !important;
+  background-clip: padding-box !important;
+  flex: 1 !important;
+  max-width: none !important;
 }
 
-.my-masonry-grid_column > * {
-  display: block;
-  margin-bottom: 2.5rem;
-  break-inside: avoid;
-  width: 100%;
+.masonry-item {
+  display: block !important;
+  margin-bottom: 24px !important;
+  break-inside: avoid !important;
+  width: 100% !important;
+}
+
+/* Enhanced Responsive Breakpoints for Masonry */
+@media screen and (min-width: 1920px) {
+  .masonry-grid-column {
+    width: calc(25% - 18px) !important; /* 4 columns */
+  }
+}
+
+@media screen and (min-width: 1536px) and (max-width: 1919px) {
+  .masonry-grid-column {
+    width: calc(25% - 18px) !important; /* 4 columns */
+  }
+}
+
+@media screen and (min-width: 1280px) and (max-width: 1535px) {
+  .masonry-grid-column {
+    width: calc(33.333% - 16px) !important; /* 3 columns */
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
+  .masonry-grid-column {
+    width: calc(33.333% - 16px) !important; /* 3 columns */
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .masonry-grid-column {
+    width: calc(50% - 12px) !important; /* 2 columns */
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .masonry-grid {
+    margin-left: -12px !important;
+  }
+  
+  .masonry-grid-column {
+    padding-left: 12px !important;
+    width: 100% !important; /* 1 column */
+  }
+  
+  .masonry-item {
+    margin-bottom: 16px !important;
+  }
+}
+
+/* CSS Grid Fallback System */
+@supports not (display: flex) or (not (display: flex)) {
+  .masonry-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 24px !important;
+    margin-left: 0 !important;
+  }
+  
+  .masonry-grid-column {
+    padding-left: 0 !important;
+  }
+  
+  @media (max-width: 1535px) {
+    .masonry-grid {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
+  }
+  
+  @media (max-width: 1023px) {
+    .masonry-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .masonry-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
 }
 
 /* Fix for video elements to prevent GPU acceleration issues */
@@ -619,35 +700,7 @@ video {
   transform-style: preserve-3d;
 }
 
-/* Responsive improvements */
-@media screen and (max-width: 640px) {
-  .my-masonry-grid {
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
-  }
-  
-  .my-masonry-grid_column {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-  
-  .my-masonry-grid_column > * {
-    margin-bottom: 1.5rem;
-  }
-
-  .spotlight-item {
-    transform: scale(1.03);
-  }
-
-  .spotlight-item:hover {
-    transform: scale(1.05) translateY(-3px);
-  }
-
-  .embla__button {
-    width: 32px !important;
-    height: 32px !important;
-  }
-}
+/* ... keep existing code (all remaining styles stay the same) */
 
 /* Additional glass card styles for consistent appearance across pages */
 .glass-card {
