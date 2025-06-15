@@ -47,6 +47,30 @@ const Pengumuman = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  if (isLoading) {
+    return (
+      <PageLayout 
+        title="Pengumuman" 
+        subtitle="Informasi terbaru dan penting dari komunitas OUR CREATIVITY"
+        className="bg-gradient-to-br from-background via-background to-secondary/20 min-h-screen"
+      >
+        <AnnouncementLoadingState />
+      </PageLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <PageLayout 
+        title="Pengumuman" 
+        subtitle="Informasi terbaru dan penting dari komunitas OUR CREATIVITY"
+        className="bg-gradient-to-br from-background via-background to-secondary/20 min-h-screen"
+      >
+        <AnnouncementErrorState error={error} onRetry={handleRetry} />
+      </PageLayout>
+    );
+  }
+
   return (
     <PageLayout 
       title="Pengumuman" 
@@ -57,11 +81,12 @@ const Pengumuman = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-12"
+        className="space-y-12 pb-20"
       >
-        {/* Sticky Filter Bar */}
+        {/* Filter Bar */}
         <motion.div 
           variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } }}
+          className="w-full"
         >
           <GlowarFilterBar 
             currentFilter={filter} 
@@ -70,50 +95,31 @@ const Pengumuman = () => {
           />
         </motion.div>
 
-        {/* Error State */}
-        {error && (
-          <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
-            <AnnouncementErrorState error={error} onRetry={handleRetry} />
+        {/* Featured Announcement */}
+        {featuredAnnouncement && (
+          <motion.div 
+            variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
+            className="relative w-full max-w-6xl mx-auto"
+          >
+            <GlowarFeaturedCard 
+              announcement={featuredAnnouncement}
+              onClick={() => setSelectedAnnouncement(featuredAnnouncement)}
+            />
           </motion.div>
         )}
 
-        {/* Loading State */}
-        {isLoading && (
-          <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
-            <AnnouncementLoadingState />
-          </motion.div>
-        )}
+        {/* Announcements Grid */}
+        <motion.div 
+          variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
+          className="w-full max-w-6xl mx-auto"
+        >
+          <GlowarGrid 
+            announcements={announcements}
+            onAnnouncementClick={setSelectedAnnouncement}
+          />
+        </motion.div>
 
-        {/* Content */}
-        {!isLoading && !error && (
-          <>
-            {/* Featured Announcement with Dynamic Aurora Background */}
-            {featuredAnnouncement && (
-              <motion.div 
-                variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
-                className="relative"
-              >
-                <GlowarFeaturedCard 
-                  announcement={featuredAnnouncement}
-                  onClick={() => setSelectedAnnouncement(featuredAnnouncement)}
-                />
-              </motion.div>
-            )}
-
-            {/* GSAP Flip-enabled Grid */}
-            <motion.div 
-              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
-              className="pb-16"
-            >
-              <GlowarGrid 
-                announcements={announcements}
-                onAnnouncementClick={setSelectedAnnouncement}
-              />
-            </motion.div>
-          </>
-        )}
-
-        {/* Enhanced Detail Modal */}
+        {/* Detail Modal */}
         <AnnouncementDetailModal
           announcement={selectedAnnouncement}
           isOpen={!!selectedAnnouncement}

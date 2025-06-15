@@ -25,15 +25,15 @@ export const GlowarFilterBar: React.FC<GlowarFilterBarProps> = ({
     <motion.div 
       className={`
         ${isSticky ? 'sticky top-4 z-50' : ''}
-        transition-all duration-300
+        w-full max-w-4xl mx-auto transition-all duration-300
       `}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
       {/* Glassmorphic Container */}
-      <div className="backdrop-blur-xl bg-secondary/80 border border-white/20 rounded-full p-2 shadow-lg">
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+      <div className="backdrop-blur-xl bg-secondary/80 border border-white/20 rounded-full p-3 shadow-lg">
+        <div className="flex gap-3 justify-center flex-wrap">
           {filters.map((filter) => {
             const Icon = filter.icon;
             const isActive = currentFilter === filter.id;
@@ -43,7 +43,7 @@ export const GlowarFilterBar: React.FC<GlowarFilterBarProps> = ({
                 key={filter.id}
                 onClick={() => onFilterChange(filter.id)}
                 className={`
-                  flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300 whitespace-nowrap
+                  relative flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300 whitespace-nowrap min-w-[100px] justify-center
                   ${isActive 
                     ? 'bg-gradient-to-r from-amethyst to-turquoise text-white shadow-lg shadow-amethyst/30' 
                     : 'text-foreground/70 hover:text-foreground hover:bg-white/10'
