@@ -7,7 +7,7 @@ import { MemberCard } from "@/components/ui/MemberCard";
 import { StandardCard } from "@/components/ui/StandardCard";
 import { IconDisplay } from "@/components/ui/IconDisplay";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Video, Palette, Smile, FileText, Users, Star, Droplet, Code, Bot as BotIcon, TowerControl } from "lucide-react";
+import { Video, Palette, Smile, FileText, Users, Star, Droplet, Code } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TeamMemberBio from "@/components/TeamMemberBio";
@@ -58,24 +58,6 @@ const categories = [
     description: "Divisi untuk para programmer berdiskusi, belajar, dan berkolaborasi dalam proyek pengembangan web dan teknologi lainnya.",
     memberCount: 1,
     memberAvatars: ["AR"]
-  },
-  {
-    id: "bot",
-    name: "Bot Development",
-    icon: BotIcon,
-    color: "orangeLight" as const,
-    description: "Tempat bagi para pengembang untuk merancang dan membangun bot Discord yang fungsional dan inovatif untuk komunitas.",
-    memberCount: 2,
-    memberAvatars: ["RF", "FL"]
-  },
-  {
-    id: "discord",
-    name: "Discord Admin",
-    icon: TowerControl,
-    color: "amethyst" as const,
-    description: "Tim yang bertanggung jawab menjaga server Discord tetap menjadi lingkungan yang aman, teratur, dan ramah bagi semua anggota.",
-    memberCount: 1,
-    memberAvatars: ["AJ"]
   }
 ];
 
@@ -153,14 +135,7 @@ const allMembers = [
   { name: "Saviora", role: "Writer", category: "Writing", avatar: "SV", accentColor: "mint" as const, bio: "Penyair dan penulis lirik, Saviora mengekspresikan ide-ide mendalam melalui bahasa puitis yang indah dan penuh makna." },
   
   // Coding Team
-  { name: "Ardelyo", role: "Tech Lead & Coding Division Leader", category: "Coding", avatar: "AR", accentColor: "turquoise" as const, bio: "Programmer muda berbakat dengan spesialisasi dalam pengembangan web dan bot Discord. Ardelyo memimpin divisi koding." },
-  
-  // Bot Team
-  { name: "Rappal", role: "Bot Developer", category: "Bot", avatar: "RF", accentColor: "orangeLight" as const, bio: "Pengembang bot Discord yang handal, Rappal menciptakan alat otomatisasi yang membantu menjaga server tetap efisien dan interaktif." },
-  { name: "Flores", role: "Bot Developer", category: "Bot", avatar: "FL", accentColor: "orangeLight" as const, bio: "Berfokus pada fungsionalitas dan pengalaman pengguna bot, Flores merancang command yang intuitif dan bermanfaat bagi komunitas." },
-  
-  // Discord Admin Team
-  { name: "Aljaan", role: "Discord Admin", category: "Discord", avatar: "AJ", accentColor: "amethyst" as const, bio: "Sebagai pilar komunitas di Discord, Aljaan memastikan server berjalan lancar, aman, dan menjadi tempat yang ramah bagi semua kreator." }
+  { name: "Ardelyo", role: "Tech Lead & Coding Division Leader", category: "Coding", avatar: "AR", accentColor: "turquoise" as const, bio: "Programmer muda berbakat dengan spesialisasi dalam pengembangan web dan bot Discord. Ardelyo memimpin divisi koding." }
 ];
 
 const TimKami = () => {
