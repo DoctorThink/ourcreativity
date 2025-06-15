@@ -582,33 +582,23 @@
   }
 }
 
-/* FIXED Masonry Grid Styling - This ensures proper vertical column layout */
+/* Correct Masonry Grid Styling for react-masonry-css */
 .my-masonry-grid {
-  display: block;
-  width: 100%;
+  display: flex;
+  margin-left: -1.5rem; /* gutter size offset */
+  width: auto;
 }
 
 .my-masonry-grid_column {
-  float: left;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 1.5rem; /* gutter size */
   background-clip: padding-box;
 }
 
+/* Style your items */
 .my-masonry-grid_column > * {
-  display: block;
-  margin-bottom: 2.5rem;
+  width: 100%;
+  margin-bottom: 1.5rem;
   break-inside: avoid;
-  width: 100%;
-}
-
-/* CSS Grid fallback for karya container */
-.karya-container {
-  width: 100%;
-}
-
-.karya-container .my-masonry-grid {
-  display: block !important;
 }
 
 /* Fix for video elements to prevent GPU acceleration issues */

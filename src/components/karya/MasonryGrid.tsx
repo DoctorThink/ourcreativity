@@ -17,12 +17,10 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   onKaryaClick,
 }) => {
   const breakpointColumnsObj = {
-    default: 4,
+    default: 1,
+    640: 2,
+    1024: 3,
     1536: 4,
-    1280: 3,
-    1024: 2,
-    768: 2,
-    640: 1
   };
 
   const handleItemClick = (item: KaryaType) => {
@@ -46,7 +44,6 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="mb-6"
           >
             <KaryaCard 
               karya={item} 

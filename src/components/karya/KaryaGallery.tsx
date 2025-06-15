@@ -1,4 +1,3 @@
-
 import React from "react";
 import { MasonryGrid } from "./MasonryGrid";
 import { Database } from "@/integrations/supabase/types";
@@ -28,7 +27,7 @@ export const KaryaGallery: React.FC<KaryaGalleryProps> = ({
   return (
     <div className="mt-12">
       {isLoading ? (
-        <div className="karya-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {Array.from({ length: 8 }).map((_, index) => (
             <StandardCard key={index}>
               <Skeleton className="w-full h-64 mb-4" />
@@ -38,8 +37,7 @@ export const KaryaGallery: React.FC<KaryaGalleryProps> = ({
           ))}
         </div>
       ) : karyaData && karyaData.length > 0 ? (
-        // MasonryGrid already provides responsive columns, add a stable karya-container class for layout fixes
-        <div className="karya-container">
+        <div>
           <MasonryGrid 
             items={karyaData} 
             onKaryaClick={handleKaryaClick}
