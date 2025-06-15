@@ -58,37 +58,37 @@ const featuredMembers = [
   {
     id: "1",
     name: "Muhammad Syahid Al Haqi",
-    role: "Founder & Poet",
+    role: "Founder & Community Leader",
     category: "Leadership",
-    bio: "Pemenang berbagai kompetisi puisi nasional dan pemimpin visi OurCreativity. Mendapat penghargaan langsung dari Walikota Bandar Lampung.",
+    bio: "Visiuner di balik OurCreativity, Hakky membangun komunitas ini dari nol dengan semangat untuk menyatukan para kreator Indonesia. Ia percaya bahwa kolaborasi adalah kunci pertumbuhan.",
     avatar: "MS",
     accentColor: "amber" as const
   },
   {
     id: "2", 
-    name: "Ardellio",
-    role: "Tech Lead",
-    category: "Development",
-    bio: "Siswa berbakat yang telah menerbitkan buku dan meraih medali emas dalam kompetisi bahasa Inggris tingkat nasional.",
+    name: "Ardelyo",
+    role: "Tech Lead & Coding Division Leader",
+    category: "Coding",
+    bio: "Programmer muda berbakat dengan spesialisasi dalam pengembangan web dan bot Discord. Ardelyo memimpin divisi koding, membimbing anggota dalam menciptakan solusi teknologi inovatif.",
     avatar: "AR",
     accentColor: "turquoise" as const
   },
   {
     id: "3",
-    name: "Ashtrozz",
-    role: "Lead Designer", 
+    name: "瑶Xoraa",
+    role: "Lead Designer & Graphics Division Leader", 
     category: "Design",
-    bio: "Desainer kreatif yang memimpin tim visual dan menciptakan identitas brand yang kuat untuk komunitas.",
-    avatar: "AS",
+    bio: "Dengan mata yang tajam untuk estetika, Xoraa memimpin divisi desain grafis. Karyanya mendefinisikan identitas visual OurCreativity, menginspirasi anggota lain untuk mencapai standar visual yang tinggi.",
+    avatar: "XO",
     accentColor: "amethyst" as const
   },
   {
     id: "4",
-    name: "Kevin/Zyu",
-    role: "Multi-Creator",
-    category: "Video & Meme",
-    bio: "Kreator serbaguna yang aktif di bidang video editing dan pembuatan meme, memberikan sentuhan humor pada konten komunitas.",
-    avatar: "KZ",
+    name: "Abhyrahma",
+    role: "Video Division Leader",
+    category: "Video",
+    bio: "Seorang pencerita visual yang handal, Abhyrahma memimpin divisi video editing. Ia memiliki keahlian dalam mengubah rekaman mentah menjadi karya sinematik yang menarik dan penuh emosi.",
+    avatar: "AB",
     accentColor: "coral" as const
   }
 ];
@@ -96,27 +96,30 @@ const featuredMembers = [
 // All members for the directory
 const allMembers = [
   // Video Editing Team
+  { name: "Abhyrahma", role: "Video Division Leader", category: "Video", avatar: "AB", accentColor: "coral" as const },
   { name: "Kevin/Zyu", role: "Video Editor", category: "Video", avatar: "KZ", accentColor: "coral" as const },
   { name: "Aljaan", role: "Video Editor", category: "Video", avatar: "AL", accentColor: "coral" as const },
   
   // Design Team  
+  { name: "瑶Xoraa", role: "Graphics Division Leader", category: "Design", avatar: "XO", accentColor: "turquoise" as const },
   { name: "Ashtrozz", role: "Designer", category: "Design", avatar: "AS", accentColor: "turquoise" as const },
   { name: "nexx4sure", role: "Designer", category: "Design", avatar: "NX", accentColor: "turquoise" as const },
-  { name: "瑶Xoraa", role: "Designer", category: "Design", avatar: "XO", accentColor: "turquoise" as const },
   { name: "Rappal", role: "Designer", category: "Design", avatar: "RP", accentColor: "turquoise" as const },
   
   // Meme Creators
-  { name: "Daffa/deploid", role: "Meme Creator", category: "Meme", avatar: "DF", accentColor: "softPink" as const },
+  { name: "Daffa/deploid", role: "Meme Division Leader", category: "Meme", avatar: "DF", accentColor: "softPink" as const },
   
   // Writers
   { name: "Kevin", role: "Writer", category: "Writing", avatar: "KV", accentColor: "mint" as const },
   { name: "Senku", role: "Writer", category: "Writing", avatar: "SE", accentColor: "mint" as const },
   { name: "Saviora", role: "Writer", category: "Writing", avatar: "SV", accentColor: "mint" as const },
   
-  // Bot Developers & Admins
-  { name: "Ardellio", role: "Tech Lead", category: "Development", avatar: "AR", accentColor: "orangeLight" as const },
+  // Development Team (Coding & Bot)
+  { name: "Ardelyo", role: "Tech Lead & Coding Division Leader", category: "Development", avatar: "AR", accentColor: "orangeLight" as const },
   { name: "Rappal", role: "Bot Developer", category: "Development", avatar: "RF", accentColor: "orangeLight" as const },
   { name: "Flores", role: "Bot Developer", category: "Development", avatar: "FL", accentColor: "orangeLight" as const },
+  
+  // Admin Team (Discord)
   { name: "Aljaan", role: "Discord Admin", category: "Admin", avatar: "AJ", accentColor: "amethyst" as const }
 ];
 
