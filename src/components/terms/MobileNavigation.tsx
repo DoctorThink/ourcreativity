@@ -1,13 +1,6 @@
 
-import React from "react";
-import { ChevronDown } from "lucide-react";
+import React, { useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 interface NavigationItem {
   id: string;
@@ -26,58 +19,51 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   activeSection,
   onSectionClick,
 }) => {
-  const activeItem = items.find((item) => item.id === activeSection);
+  const activeItemRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+    }
+  }, [activeSection]);
 
   return (
     <div className="lg:hidden mb-8 sticky top-4 z-20">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button className="w-full px-4 py-3 flex items-center justify-between text-left bg-card/90 backdrop-blur-md border border-white/10 rounded-2xl data-[state=open]:rounded-b-none transition-all">
-            <div className="flex items-center gap-3">
-              <span className="w-6 h-6 rounded-full bg-amethyst text-background flex items-center justify-center text-xs font-medium">
-                {activeItem?.number || 1}
-              </span>
-              <span className="font-sans text-sm text-foreground">
-                {activeItem?.title || "Navigasi Bagian"}
-              </span>
-            </div>
-            <ChevronDown className="w-4 h-4 text-foreground/60 transition-transform data-[state=open]:rotate-180" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          className="w-[--radix-dropdown-menu-trigger-width] bg-card/90 backdrop-blur-md border border-white/10 rounded-2xl rounded-t-none border-t-0 p-2"
-          sideOffset={-1}
-        >
-          <div className="space-y-1">
+      <div className="bg-card/80 backdrop-blur-md border border-white/10 rounded-full p-1.5">
+        <div className="overflow-x-auto scrollbar-hide">
+          <div className="flex items-center gap-2 whitespace-nowrap">
             {items.map((item) => (
-              <DropdownMenuItem
+              <button
                 key={item.id}
-                onSelect={() => onSectionClick(item.id)}
+                ref={activeSection === item.id ? activeItemRef : null}
+                onClick={() => onSectionClick(item.id)}
                 className={cn(
-                  "cursor-pointer rounded-lg transition-colors px-3 py-2 outline-none",
+                  "px-3 py-1.5 rounded-full text-sm font-sans font-medium transition-all duration-300 flex-shrink-0 flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-amethyst/80",
                   activeSection === item.id
-                    ? "bg-amethyst/20 text-amethyst focus:bg-amethyst/25"
-                    : "text-foreground/70 focus:bg-white/10 focus:text-foreground"
+                    ? "bg-amethyst text-background shadow-md shadow-amethyst/30"
+                    : "bg-transparent text-foreground/70 hover:bg-white/10 hover:text-foreground"
                 )}
               >
-                <div className="flex items-center gap-3">
-                  <span
-                    className={cn(
-                      "w-5 h-5 rounded-full flex items-center justify-center text-xs",
-                      activeSection === item.id
-                        ? "bg-amethyst text-background"
-                        : "bg-foreground/20 text-foreground/60"
-                    )}
-                  >
-                    {item.number}
-                  </span>
-                  <span className="text-sm">{item.title}</span>
-                </div>
-              </DropdownMenuItem>
+                <span
+                  className={cn(
+                    "w-5 h-5 rounded-full flex items-center justify-center text-xs font-semibold",
+                    activeSection === item.id
+                      ? "bg-white/25 text-background"
+                      : "bg-foreground/20 text-foreground/70"
+                  )}
+                >
+                  {item.number}
+                </span>
+                {item.title}
+              </button>
             ))}
           </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        </div>
+      </div>
     </div>
   );
 };
