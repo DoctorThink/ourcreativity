@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
 import BentoCard from "@/components/ui/BentoCard";
-import { IconTitleRow } from "@/components/ui/IconTitleRow";
 import { 
   ScrollText, 
   Bell, 
@@ -188,7 +187,14 @@ const Terms = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
         >
-          <CheckCircle2 className="w-8 h-8 text-amethyst mx-auto mb-4" />
+          <motion.div 
+            className="inline-block p-3 rounded-full bg-amethyst/20 mb-4"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10, delay: 0.6 }}
+          >
+            <CheckCircle2 className="w-8 h-8 text-amethyst" />
+          </motion.div>
           <h3 className="text-lg md:text-xl font-serif mb-3">Penerimaan Syarat & Ketentuan</h3>
           <p className="text-foreground/80 text-sm md:text-base">
             Dengan bergabung atau berpartisipasi dalam kegiatan OUR CREATIVITY, 

@@ -1,4 +1,3 @@
-
 import React, { useRef, useLayoutEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
@@ -55,7 +54,7 @@ const CeritaKami = () => {
 
     }, mainContentRef);
     return () => ctx.revert();
-  }, []);
+  }, [mainContentRef]);
 
   return (
     <PageLayout 
@@ -65,10 +64,10 @@ const CeritaKami = () => {
       <div ref={containerRef} className="relative z-10 px-4 sm:px-6 md:px-8">
         <div ref={mainContentRef}>
           {/* Main Content with Bento Grid - Mobile Responsive */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12 grid-container">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 sm:gap-6 mb-8 sm:mb-12 grid-container">
             {/* Main Story Card */}
             <BentoCard 
-              className="lg:col-span-2 p-4 sm:p-6 md:p-8"
+              className="md:col-span-3 p-4 sm:p-6 md:p-8"
               glowColor="rgba(229, 222, 255, 0.3)"
             >
               <div className="h-full flex flex-col justify-between">
@@ -82,24 +81,25 @@ const CeritaKami = () => {
                   <p className="text-foreground/80 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6 font-sans">
                     Perjalanan OurCreativity berawal dari sebuah pengamatan sederhana: internet dipenuhi oleh percakapan dan komentar dari ribuan anak muda yang memiliki hasrat besar untuk mempelajari suatu hal, mulai dari desain grafis, video editing, hingga penulisan kreatif. Namun, semangat itu seringkali terhenti karena satu hal—mereka tidak memiliki tempat yang aman dan terarah untuk bertanya dan bertumbuh.
                   </p>
+                  
+                  <motion.div 
+                    className="my-6 w-full h-px bg-gradient-to-r from-transparent via-amethyst/30 to-transparent"
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "100%" }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                    viewport={{ once: true }}
+                  />
+
                   <p className="text-foreground/80 text-sm sm:text-base leading-relaxed font-sans">
                     Melihat kekosongan ini, kami tergerak untuk membangun sebuah jembatan. OurCreativity lahir dari sebuah harapan sederhana: untuk menciptakan sebuah komunitas di mana pertanyaan tidak hanya dijawab, tetapi juga dirayakan sebagai awal dari sebuah karya.
                   </p>
                 </div>
-                
-                <motion.div 
-                  className="mt-6 sm:mt-8 w-full h-1 bg-gradient-to-r from-transparent via-amethyst/30 to-transparent"
-                  initial={{ width: 0 }}
-                  whileInView={{ width: "100%" }}
-                  transition={{ duration: 2, ease: "easeOut" }}
-                  viewport={{ once: true }}
-                />
               </div>
             </BentoCard>
 
             {/* Quote */}
             <BentoCard 
-              className="p-4 sm:p-6 md:p-8 flex items-center justify-center"
+              className="md:col-span-2 p-4 sm:p-6 md:p-8 flex items-center justify-center"
               glowColor="rgba(152, 245, 225, 0.3)"
             >
               <div className="text-center">
@@ -114,7 +114,7 @@ const CeritaKami = () => {
 
             {/* How We Attract Interest */}
             <BentoCard 
-              className="p-4 sm:p-6 md:p-8"
+              className="md:col-span-3 p-4 sm:p-6 md:p-8"
               glowColor="rgba(254, 198, 161, 0.3)"
             >
               <div>
@@ -137,23 +137,23 @@ const CeritaKami = () => {
 
             {/* Dedication */}
             <BentoCard 
-              className="p-4 sm:p-6 md:p-8 lg:col-span-2"
+              className="md:col-span-2 p-4 sm:p-6 md:p-8"
               glowColor="rgba(152, 245, 225, 0.3)"
             >
               <div>
                 <IconTitleRow 
                   icon={Heart}
                   iconColor="bg-mint text-background"
-                  title="Dedikasi Kami Untuk Komunitas"
+                  title="Dedikasi Kami"
                   titleClassName="text-base sm:text-lg"
                   className="mb-3 sm:mb-4"
                   gap="sm"
                 />
                 <p className="text-foreground/80 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 font-sans">
-                  Belum genap setahun sejak komunitas ini didirikan, kami dengan bangga telah berhasil mengumpulkan lebih dari <strong>3000+ anggota</strong> dari seluruh Indonesia. Mereka adalah bukti nyata bahwa semangat belajar dan berkarya di kalangan anak muda sangatlah besar. Setiap hari, karya-karya baru lahir dari komunitas kami, dapat dilihat secara gratis melalui akun Instagram kami di @ourcreativity.ofc.
+                  Belum genap setahun, kami telah mengumpulkan lebih dari <strong>3000+ anggota</strong> dari seluruh Indonesia. Ini adalah bukti nyata semangat belajar dan berkarya di kalangan anak muda.
                 </p>
                 <p className="text-foreground/80 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 font-sans">
-                  Pencapaian ini menyadarkan kami bahwa "kemauan yang tinggi" itu benar-benar ada. Jika hasrat itu diarahkan pada hal yang positif, kami yakin Indonesia akan semakin dipenuhi oleh jiwa-jiwa kreatif yang siap mengubah masa depan.
+                  Kami percaya jika hasrat itu diarahkan pada hal positif, Indonesia akan semakin dipenuhi oleh jiwa-jiwa kreatif.
                 </p>
               </div>
             </BentoCard>
