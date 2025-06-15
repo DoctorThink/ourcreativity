@@ -1,7 +1,9 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Type, FileUp } from 'lucide-react';
+import { 
+  X, Upload, FileText, Image, Video, Smile, Bold, Italic, 
+  Quote, Link, List, Eye, Edit3, Camera, Play, Type, FileUp
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,83 +15,211 @@ import {
   DialogTitle,
   DialogClose,
 } from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Category, SubmissionType, getInputTypeDetails } from '@/lib/karyaCategories';
-import FileUpload from './upload/FileUpload';
-import MarkdownEditor from './upload/MarkdownEditor';
-import SubmissionTypeSelector from './upload/SubmissionTypeSelector';
 
 interface UploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
-  category: Category;
 }
 
-const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess, category }) => {
+const categories = [
+  { 
+    value: 'design', 
+    label: 'Graphic Design', 
+    icon: Image, 
+    acceptedTypes: 'image/*', 
+    maxSize: 5 * 1024 * 1024,
+    description: 'Unggah karya desain grafis Anda'
+  },
+  { 
+    value: 'video', 
+    label: 'Video Editing', 
+    icon: Video, 
+    acceptedTypes: 'video/*', 
+    maxSize: 5 * 1024 * 1024,
+    description: 'Bagikan proyek video editing Anda'
+  },
+  { 
+    value: 'meme', 
+    label: 'Meme', 
+    icon: Smile, 
+    acceptedTypes: 'image/*', 
+    maxSize: 5 * 1024 * 1024,
+    description: 'Buat dan bagikan meme'
+  },
+  { 
+    value: 'writing', 
+    label: 'Karya Tulis', 
+    icon: FileText, 
+    acceptedTypes: '.pdf,.doc,.docx,.txt',
+    maxSize: 10 * 1024 * 1024, // 10MB
+    description: 'Tulis atau unggah dokumen Anda'
+  },
+];
+
+const writingTemplates = [
+  { id: 'blank', name: 'Mulai dari Kosong', content: '' },
+  { 
+    id: 'story', 
+    name: 'Template Cerita Pendek', 
+    content: `# Judul Cerita
+
+## Bab 1
+
+Tulis cerita kamu di sini...
+
+---
+
+**Karakter Utama:**
+- 
+
+**Setting:**
+- 
+
+**Plot:**
+- ` 
+  },
+  { 
+    id: 'poem', 
+    name: 'Template Puisi', 
+    content: `# Judul Puisi
+
+Bait pertama...
+
+Bait kedua...
+
+Bait ketiga...
+
+---
+~ Penulis` 
+  },
+  { 
+    id: 'review', 
+    name: 'Template Review', 
+    content: `# Review: [Nama Produk/Film/Buku]
+
+## Yang Saya Review
+Jelaskan apa yang kamu review...
+
+## Yang Bagus
+- 
+- 
+- 
+
+## Yang Kurang
+- 
+- 
+
+## Kesimpulan
+Rating: ⭐⭐⭐⭐⭐
+
+Rekomendasi saya:` 
+  }
+];
+
+const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess }) => {
   const [formData, setFormData] = useState({
     title: '',
     creator_name: '',
+    category: '',
     description: '',
-    content: '',
+    content: '', // This will store the main content for written works
   });
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [dragActive, setDragActive] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState('blank');
   const [writingOption, setWritingOption] = useState<'editor' | 'upload'>('editor');
-  const [submissionType, setSubmissionType] = useState<SubmissionType>(category.recommendedInput);
   
   const { toast } = useToast();
-  
-  const inputTypeDetails = getInputTypeDetails(submissionType);
-  
-  const resetState = () => {
-    setFile(null);
-    setPreviewUrl(null);
-    setErrors({});
-    setFormData(prev => ({ ...prev, content: '' }));
-    setWritingOption('editor');
-    setUploadProgress(0);
-    setUploading(false);
-  };
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => {
-    if (category) {
-      setSubmissionType(category.recommendedInput);
-      resetState();
-    }
-  }, [category]);
-  
+  const selectedCategory = categories.find(cat => cat.value === formData.category);
+  const isWrittenWork = formData.category === 'writing';
+
+  // Auto-save draft functionality
   useEffect(() => {
     if (isOpen) {
-      // Draft saving logic can be re-introduced here if needed
+      const savedDraft = localStorage.getItem('karya-draft');
+      if (savedDraft) {
+        const draft = JSON.parse(savedDraft);
+        if (draft.title || draft.description || draft.content) {
+          toast({
+            title: "Draft tersimpan ditemukan",
+            description: "Apakah kamu ingin melanjutkan draft yang tersimpan?",
+            action: (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  setFormData(draft);
+                  toast({ title: "Draft dipulihkan!" });
+                }}
+              >
+                Pulihkan
+              </Button>
+            ),
+          });
+        }
+      }
     }
   }, [isOpen, toast]);
 
+  // Save draft every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (formData.title || formData.description || formData.content) {
+        localStorage.setItem('karya-draft', JSON.stringify(formData));
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [formData]);
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.title.trim()) newErrors.title = 'Judul tidak boleh kosong';
-    if (formData.title.length > 100) newErrors.title = 'Judul terlalu panjang (maksimal 100 karakter)';
-    if (!formData.creator_name.trim()) newErrors.creator_name = 'Nama kreator tidak boleh kosong';
-    
-    if (submissionType === 'text') {
-      if (writingOption === 'editor' && !formData.content.trim()) {
-        newErrors.content = 'Konten karya tulis tidak boleh kosong';
-      }
-      if (writingOption === 'upload' && !file) {
-        newErrors.file = 'Dokumen harus diunggah';
-      }
-    } else if (!file) {
-      newErrors.file = `File ${submissionType} harus dipilih`;
+
+    if (!formData.title.trim()) {
+      newErrors.title = 'Judul tidak boleh kosong';
+    } else if (formData.title.length > 100) {
+      newErrors.title = 'Judul terlalu panjang (maksimal 100 karakter)';
     }
 
-    if (file) {
-      const details = getInputTypeDetails(writingOption === 'upload' ? 'text' : submissionType);
-      if (file.size > details.maxSize) {
-        newErrors.file = `Ukuran file melebihi batas (Max: ${details.maxSizeLabel})`;
+    if (!formData.creator_name.trim()) {
+      newErrors.creator_name = 'Nama kreator tidak boleh kosong';
+    }
+
+    if (!formData.category) {
+      newErrors.category = 'Kategori harus dipilih';
+    }
+
+    if (isWrittenWork) {
+        if (writingOption === 'editor' && !formData.content.trim()) {
+            newErrors.content = 'Konten karya tulis tidak boleh kosong';
+        }
+        if (writingOption === 'upload' && !file) {
+            newErrors.file = 'Dokumen harus diunggah';
+        }
+    } else if (!file) {
+        newErrors.file = 'File harus dipilih';
+    }
+
+    if (file && selectedCategory) {
+      if (file.size > selectedCategory.maxSize) {
+        newErrors.file = `Ukuran file melebihi batas (Max: ${selectedCategory.maxSize / 1024 / 1024}MB)`;
       }
     }
 
@@ -97,91 +227,163 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess, c
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleFileChange = (selectedFile: File | null) => {
-    if (selectedFile === null) {
-        setFile(null);
-        setPreviewUrl(null);
-        if (errors.file) setErrors(prev => ({...prev, file: ''}));
-        return;
-    }
-
-    const details = getInputTypeDetails(writingOption === 'upload' ? 'text' : submissionType);
-    if (selectedFile.size > details.maxSize) {
-      setErrors({ ...errors, file: `Ukuran file melebihi ${details.maxSizeLabel}` });
+  const handleFileSelect = (selectedFile: File) => {
+    if (selectedCategory && selectedFile.size > selectedCategory.maxSize) {
+      setErrors({ ...errors, file: 'Ukuran file melebihi 5MB' });
       return;
     }
     
     setFile(selectedFile);
-    if (errors.file) setErrors({ ...errors, file: '' });
+    setErrors({ ...errors, file: '' });
     
-    if (selectedFile.type.startsWith('image/') || selectedFile.type.startsWith('video/')) {
+    // Generate preview
+    if (selectedFile.type.startsWith('image/')) {
       const url = URL.createObjectURL(selectedFile);
       setPreviewUrl(url);
-    } else {
-      setPreviewUrl(null);
+    } else if (selectedFile.type.startsWith('video/')) {
+      const url = URL.createObjectURL(selectedFile);
+      setPreviewUrl(url);
     }
   };
 
-  const uploadFileToStorage = async () => {
-    if (!file) return null;
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setDragActive(true);
+    } else if (e.type === 'dragleave') {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileSelect(e.dataTransfer.files[0]);
+    }
+  };
+
+  const insertMarkdown = (syntax: string) => {
+    if (!textareaRef.current) return;
+    
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = formData.content.substring(start, end);
+    
+    let newText = '';
+    switch (syntax) {
+      case 'bold':
+        newText = `**${selectedText || 'teks tebal'}**`;
+        break;
+      case 'italic':
+        newText = `*${selectedText || 'teks miring'}*`;
+        break;
+      case 'quote':
+        newText = `> ${selectedText || 'kutipan'}`;
+        break;
+      case 'link':
+        newText = `[${selectedText || 'teks link'}](url)`;
+        break;
+      case 'list':
+        newText = `- ${selectedText || 'item list'}`;
+        break;
+    }
+    
+    const newContent = formData.content.substring(0, start) + newText + formData.content.substring(end);
+    setFormData({ ...formData, content: newContent });
+    
+    // Restore cursor position
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + newText.length, start + newText.length);
+    }, 0);
+  };
+
+  const uploadFile = async () => {
+    if (!file || !selectedCategory) return null;
 
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
     
     let bucketName = 'karya-images';
-    if (submissionType === 'video') bucketName = 'karya-videos';
-    else if (submissionType === 'text' && writingOption === 'upload') bucketName = 'karya-documents';
+    if (formData.category === 'video') {
+      bucketName = 'karya-videos';
+    }
 
-    const progressInterval = setInterval(() => setUploadProgress(prev => Math.min(prev + Math.random() * 10, 90)), 200);
-    const { data, error } = await supabase.storage.from(bucketName).upload(fileName, file);
+    // Simulate progress for better UX
+    const progressInterval = setInterval(() => {
+      setUploadProgress(prev => {
+        if (prev >= 90) {
+          clearInterval(progressInterval);
+          return prev;
+        }
+        return prev + Math.random() * 10;
+      });
+    }, 200);
+
+    const { data, error } = await supabase.storage
+      .from(bucketName)
+      .upload(fileName, file);
+
     clearInterval(progressInterval);
     setUploadProgress(100);
 
     if (error) throw error;
+
+    // Return the full public URL
     const { data: { publicUrl } } = supabase.storage.from(bucketName).getPublicUrl(fileName);
     return publicUrl;
   };
 
-  const saveToDatabase = async (fileUrl?: string | null) => {
+  const saveToDatabase = async (fileUrl?: string) => {
     const karyaData: any = {
       title: formData.title,
-      category: category.value,
+      category: formData.category,
       creator_name: formData.creator_name,
-      description: formData.description || null,
-      status: 'pending',
-      submission_type: submissionType,
+      status: 'pending'
     };
 
-    switch (submissionType) {
-      case 'image':
-      case 'video':
-        karyaData.image_url = fileUrl || '';
-        break;
-      case 'text':
-        karyaData.image_url = '/lovable-uploads/karyatulis.png';
-        if (writingOption === 'editor') {
-          karyaData.content_url = formData.content;
-        } else {
-          karyaData.content_url = fileUrl || '';
-        }
-        break;
+    if (isWrittenWork) {
+      karyaData.description = formData.description || null;
+      karyaData.image_url = '/lovable-uploads/karyatulis.png';
+      if (writingOption === 'editor') {
+        karyaData.content_url = formData.content;
+      } else {
+        karyaData.content_url = fileUrl || ''; // URL to uploaded document
+      }
+    } else {
+      karyaData.image_url = fileUrl || '';
+      karyaData.description = formData.description || null;
+      karyaData.content_url = null;
     }
-    
-    const { error } = await supabase.from('karya').insert([karyaData]);
+
+    console.log('Saving karya data:', karyaData);
+
+    const { data, error } = await supabase
+      .from('karya')
+      .insert(karyaData);
+
     if (error) throw error;
+    return data;
   };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
+
     setUploading(true);
     setUploadProgress(0);
     
     try {
-      let fileUrl = null;
-      const needsFileUpload = (submissionType !== 'text') || (writingOption === 'upload');
-      if (needsFileUpload && file) {
-        fileUrl = await uploadFileToStorage();
+      let fileUrl = undefined;
+      
+      if ((!isWrittenWork && file) || (isWrittenWork && writingOption === 'upload' && file)) {
+        fileUrl = await uploadFile();
       }
+
       await saveToDatabase(fileUrl);
 
       toast({
@@ -189,15 +391,21 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess, c
         description: "Karya kamu sedang dalam review dan akan segera dipublikasikan.",
       });
 
-      setFormData({ title: '', creator_name: '', description: '', content: '' });
-      resetState();
+      // Clear draft and reset form
+      localStorage.removeItem('karya-draft');
+      setFormData({ title: '', creator_name: '', category: '', description: '', content: '' });
+      setFile(null);
+      setPreviewUrl(null);
+      setErrors({});
+      setUploadProgress(0);
+      
       onSuccess?.();
       onClose();
     } catch (error) {
       console.error('Upload error:', error);
       toast({
         title: "Upload gagal",
-        description: "Terjadi kesalahan. Silakan coba lagi.",
+        description: "Terjadi kesalahan saat mengunggah karya. Silakan coba lagi.",
         variant: "destructive",
       });
     } finally {
@@ -205,81 +413,583 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess, c
     }
   };
 
-  const handleSubmissionTypeChange = (type: SubmissionType) => {
-    setSubmissionType(type);
-    resetState();
-  };
-  
-  const renderContent = () => {
-    if (submissionType === 'text') {
-      return (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label className="text-white font-medium text-sm">Metode Penulisan</Label>
-            <div className="grid grid-cols-2 gap-2">
-               <Button type="button" variant={writingOption === 'editor' ? "default" : "outline"} onClick={() => setWritingOption('editor')} className={`rounded-xl p-2 h-auto text-sm flex items-center justify-center gap-2 ${writingOption === 'editor' ? 'bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] text-black' : 'border-white/30 bg-white/10 hover:bg-white/20 text-white'}`}> <Type className="w-4 h-4" /> Tulis Langsung </Button>
-               <Button type="button" variant={writingOption === 'upload' ? "default" : "outline"} onClick={() => setWritingOption('upload')} className={`rounded-xl p-2 h-auto text-sm flex items-center justify-center gap-2 ${writingOption === 'upload' ? 'bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] text-black' : 'border-white/30 bg-white/10 hover:bg-white/20 text-white'}`}><FileUp className="w-4 h-4" /> Unggah Dokumen</Button>
-            </div>
-          </div>
-          <AnimatePresence mode="wait">
-            {writingOption === 'editor' ? (
-              <MarkdownEditor content={formData.content} onContentChange={(c) => setFormData(p => ({ ...p, content: c }))} error={errors.content}/>
-            ) : (
-              <FileUpload submissionType="document" onFileChange={handleFileChange} file={file} previewUrl={previewUrl} uploading={uploading} uploadProgress={uploadProgress} error={errors.file} />
-            )}
-          </AnimatePresence>
-        </div>
-      );
+  const handleClose = () => {
+    if (!uploading) {
+      onClose();
     }
-    return <FileUpload submissionType={submissionType} onFileChange={handleFileChange} file={file} previewUrl={previewUrl} uploading={uploading} uploadProgress={uploadProgress} error={errors.file} />
+  };
+
+  const renderMarkdownPreview = () => {
+    // Simple markdown to HTML conversion
+    return formData.content
+      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+      .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+      .replace(/\*(.*)\*/gim, '<em>$1</em>')
+      .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
+      .replace(/^- (.*$)/gim, '<li>$1</li>')
+      .replace(/\n/g, '<br/>');
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && !uploading && onClose()}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto backdrop-blur-xl bg-black/90 border border-white/30 text-white rounded-3xl shadow-2xl p-4 md:p-6">
         <DialogHeader className="space-y-2">
           <DialogTitle className="text-xl md:text-2xl font-serif text-white text-center">
-            Unggah Karya: {category.label}
+            Unggah Karya Baru
           </DialogTitle>
+          <p className="text-gray-300 text-sm text-center">
+            Bagikan kreativitas kamu dengan komunitas Our Creativity
+          </p>
           <DialogClose asChild>
-            <Button variant="ghost" size="icon" className="absolute right-4 top-4 text-white hover:bg-white/20 rounded-full" disabled={uploading}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-4 top-4 text-white hover:bg-white/20 rounded-full"
+              disabled={uploading}
+            >
               <X className="h-5 w-5" />
             </Button>
           </DialogClose>
         </DialogHeader>
 
         <div className="space-y-4 mt-6">
+          {/* Title Input */}
           <div className="space-y-2">
-            <Label htmlFor="title" className="text-white font-medium text-sm">Judul Karya</Label>
-            <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-white/10 border-white/30 text-white placeholder-gray-400 rounded-xl" placeholder="Berikan judul yang menarik"/>
-            {errors.title && <p className="text-red-400 text-sm">{errors.title}</p>}
+            <Label htmlFor="title" className="text-white font-medium text-sm">
+              Judul Karya
+            </Label>
+            <Input
+              id="title"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              className="bg-white/10 border-white/30 backdrop-blur-lg text-white placeholder-gray-400 rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50"
+              placeholder="Berikan judul yang menarik untuk karya kamu"
+            />
+            {formData.title && (
+              <p className="text-xs text-green-400">
+                {formData.title.length <= 50 ? 'Judul yang bagus!' : 
+                 formData.title.length <= 100 ? 'Pertimbangkan judul yang lebih pendek' : 
+                 'Terlalu panjang'}
+              </p>
+            )}
+            {errors.title && (
+              <p className="text-red-400 text-sm">{errors.title}</p>
+            )}
           </div>
 
+          {/* Creator Name Input */}
           <div className="space-y-2">
-            <Label htmlFor="creator_name" className="text-white font-medium text-sm">Nama Kreator</Label>
-            <Input id="creator_name" value={formData.creator_name} onChange={(e) => setFormData({ ...formData, creator_name: e.target.value })} className="bg-white/10 border-white/30 text-white placeholder-gray-400 rounded-xl" placeholder="Masukkan nama kamu atau nama pena"/>
-            {errors.creator_name && <p className="text-red-400 text-sm">{errors.creator_name}</p>}
-          </div>
-          
-          <div className="p-4 border border-white/20 rounded-2xl bg-white/5 space-y-4">
-            <div className="flex items-center gap-2">
-               <div className="px-3 py-1 text-xs font-semibold text-black bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] rounded-full">Disarankan</div>
-               <p className="text-sm text-white">Untuk kategori {category.label}, disarankan mengunggah <strong>{inputTypeDetails.label}</strong>.</p>
-            </div>
-            <AnimatePresence mode="wait">{renderContent()}</AnimatePresence>
-          </div>
-          
-          <SubmissionTypeSelector currentType={submissionType} onTypeChange={handleSubmissionTypeChange} />
-
-          <div className="space-y-2">
-            <Label htmlFor="description" className="text-white font-medium text-sm">Deskripsi Singkat (Opsional)</Label>
-            <Textarea id="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="h-16 bg-white/10 border-white/30 text-white placeholder-gray-400 rounded-xl resize-none text-sm" placeholder="Ceritakan sedikit tentang karya kamu"/>
+            <Label htmlFor="creator_name" className="text-white font-medium text-sm">
+              Nama Kreator
+            </Label>
+            <Input
+              id="creator_name"
+              value={formData.creator_name}
+              onChange={(e) => setFormData({ ...formData, creator_name: e.target.value })}
+              className="bg-white/10 border-white/30 backdrop-blur-lg text-white placeholder-gray-400 rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50"
+              placeholder="Masukkan nama kamu atau nama pena"
+            />
+            {errors.creator_name && (
+              <p className="text-red-400 text-sm">{errors.creator_name}</p>
+            )}
           </div>
 
+          {/* Category Select */}
+          <div className="space-y-2">
+            <Label htmlFor="category" className="text-white font-medium text-sm">
+              Kategori
+            </Label>
+            <Select
+              value={formData.category}
+              onValueChange={(value) => {
+                setFormData({ ...formData, category: value });
+                setFile(null);
+                setPreviewUrl(null);
+                setErrors({ ...errors, category: '', file: '' });
+              }}
+            >
+              <SelectTrigger className="bg-white/10 border-white/30 backdrop-blur-lg text-white rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50">
+                <SelectValue placeholder="Pilih kategori karya" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-900/95 border-white/30 text-white rounded-xl backdrop-blur-xl">
+                {categories.map((category) => (
+                  <SelectItem
+                    key={category.value}
+                    value={category.value}
+                    className="text-white hover:bg-white/20 focus:bg-white/20 rounded-lg m-1"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] flex items-center justify-center">
+                        <category.icon className="w-3 h-3 text-black" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-sm">{category.label}</div>
+                        <div className="text-xs text-gray-400">{category.description}</div>
+                      </div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.category && (
+              <p className="text-red-400 text-sm">{errors.category}</p>
+            )}
+          </div>
+
+          {/* Conditional Input Section */}
+          {formData.category && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
+              {isWrittenWork ? (
+                <div className="space-y-4">
+                  {/* Writing Options */}
+                  <div className="space-y-2">
+                    <Label className="text-white font-medium text-sm">Metode Penulisan</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                       <Button
+                          type="button"
+                          variant={writingOption === 'editor' ? "default" : "outline"}
+                          onClick={() => setWritingOption('editor')}
+                          className={`rounded-xl p-2 h-auto text-sm flex items-center justify-center gap-2 ${
+                            writingOption === 'editor' 
+                              ? 'bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] text-black' 
+                              : 'border-white/30 bg-white/10 hover:bg-white/20 text-white'
+                          }`}
+                        >
+                          <Type className="w-4 h-4" /> Tulis Langsung
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={writingOption === 'upload' ? "default" : "outline"}
+                          onClick={() => setWritingOption('upload')}
+                          className={`rounded-xl p-2 h-auto text-sm flex items-center justify-center gap-2 ${
+                            writingOption === 'upload' 
+                              ? 'bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] text-black' 
+                              : 'border-white/30 bg-white/10 hover:bg-white/20 text-white'
+                          }`}
+                        >
+                          <FileUp className="w-4 h-4" /> Unggah Dokumen
+                        </Button>
+                    </div>
+                  </div>
+
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={writingOption}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {writingOption === 'editor' ? (
+                        <div className="space-y-4">
+                          {/* Template Selection */}
+                          <div className="space-y-2">
+                            <Label className="text-white font-medium text-sm">Template</Label>
+                            <div className="grid grid-cols-2 gap-2">
+                              {writingTemplates.map((template) => (
+                                <Button
+                                  key={template.id}
+                                  type="button"
+                                  variant={selectedTemplate === template.id ? "default" : "outline"}
+                                  onClick={() => {
+                                    setSelectedTemplate(template.id);
+                                    setFormData({ ...formData, content: template.content });
+                                  }}
+                                  className={`rounded-xl p-2 text-xs ${
+                                    selectedTemplate === template.id 
+                                      ? 'bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] text-black' 
+                                      : 'border-white/30 bg-white/10 hover:bg-white/20 text-white'
+                                  }`}
+                                >
+                                  {template.name}
+                                </Button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Markdown Editor with Toolbar */}
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <Label htmlFor="content" className="text-white font-medium text-sm">
+                                Konten Karya Tulis
+                              </Label>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setShowPreview(!showPreview)}
+                                className="border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs"
+                              >
+                                {showPreview ? <Edit3 className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                                {showPreview ? 'Edit' : 'Preview'}
+                              </Button>
+                            </div>
+
+                            {/* Formatting Toolbar */}
+                            <div className="flex flex-wrap gap-1 p-2 bg-white/5 border border-white/20 rounded-xl">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => insertMarkdown('bold')}
+                                className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
+                              >
+                                <Bold className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => insertMarkdown('italic')}
+                                className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
+                              >
+                                <Italic className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => insertMarkdown('quote')}
+                                className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
+                              >
+                                <Quote className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => insertMarkdown('link')}
+                                className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
+                              >
+                                <Link className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => insertMarkdown('list')}
+                                className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
+                              >
+                                <List className="w-3 h-3" />
+                              </Button>
+                            </div>
+
+                            {/* Editor/Preview */}
+                            <div className={`grid ${showPreview ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'} gap-4`}>
+                              {!showPreview || window.innerWidth < 1024 ? (
+                                <Textarea
+                                  ref={textareaRef}
+                                  id="content"
+                                  value={formData.content}
+                                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                                  className="min-h-[200px] bg-white/10 border-white/30 backdrop-blur-lg text-white placeholder-gray-400 rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50 resize-none text-sm"
+                                  placeholder="Tulis karya kamu di sini... Gunakan Markdown untuk formatting!"
+                                />
+                              ) : null}
+                              
+                              {showPreview && (
+                                <div className="min-h-[200px] p-3 bg-white/5 border border-white/20 rounded-xl overflow-y-auto">
+                                  <div 
+                                    className="text-white prose prose-invert max-w-none text-sm"
+                                    dangerouslySetInnerHTML={{ __html: renderMarkdownPreview() }}
+                                  />
+                                </div>
+                              )}
+                            </div>
+
+                            <p className="text-xs text-gray-400">
+                              Tips: Gunakan **bold**, *italic*, # heading, {'>'}quote, dan - list untuk formatting
+                            </p>
+                            {errors.content && (
+                              <p className="text-red-400 text-sm">{errors.content}</p>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        // Document Upload Section
+                        <div className="space-y-4">
+                          <Label className="text-white font-medium text-sm">
+                            Upload Dokumen
+                          </Label>
+                          
+                          {file ? (
+                            <div className="space-y-4">
+                              {/* File Preview */}
+                              <div className="flex items-center gap-4 p-3 bg-white/10 border border-white/30 rounded-xl">
+                                {previewUrl && (
+                                  <div className="flex-shrink-0">
+                                    {file.type.startsWith('image/') ? (
+                                      <img 
+                                        src={previewUrl} 
+                                        alt="Preview" 
+                                        className="w-12 h-12 object-cover rounded-lg border-2 border-white/30"
+                                      />
+                                    ) : (
+                                      <video 
+                                        src={previewUrl} 
+                                        className="w-12 h-12 object-cover rounded-lg border-2 border-white/30"
+                                        muted
+                                      />
+                                    )}
+                                  </div>
+                                )}
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2">
+                                    {selectedCategory && <selectedCategory.icon className="w-4 h-4 text-cyan-400 flex-shrink-0" />}
+                                    <div className="min-w-0">
+                                      <p className="text-white font-medium truncate text-sm">{file.name}</p>
+                                      <p className="text-gray-400 text-xs">
+                                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                                      </p>
+                                    </div>
+                                  </div>
+                                  
+                                  {uploading && uploadProgress > 0 && (
+                                    <div className="mt-2">
+                                      <div className="flex justify-between text-xs text-gray-400 mb-1">
+                                        <span>Mengupload...</span>
+                                        <span>{Math.round(uploadProgress)}%</span>
+                                      </div>
+                                      <div className="w-full bg-white/20 rounded-full h-1">
+                                        <div 
+                                          className="bg-gradient-to-r from-cyan-400 to-blue-500 h-1 rounded-full transition-all duration-300"
+                                          style={{ width: `${uploadProgress}%` }}
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setFile(null);
+                                    setPreviewUrl(null);
+                                    setUploadProgress(0);
+                                  }}
+                                  className="border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg flex-shrink-0 text-xs"
+                                  disabled={uploading}
+                                >
+                                  Ganti
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept={selectedCategory?.acceptedTypes}
+                                className="hidden"
+                                onChange={(e) => e.target.files && handleFileSelect(e.target.files[0])}
+                              />
+                              <div
+                                onClick={() => fileInputRef.current?.click()}
+                                onDrag={handleDrag}
+                                onDragEnter={handleDrag}
+                                onDragLeave={handleDrag}
+                                onDragOver={handleDrag}
+                                onDrop={handleDrop}
+                                className={`cursor-pointer transition-all duration-300 ${
+                                  dragActive 
+                                    ? 'border-cyan-400/70 bg-cyan-400/10 scale-105' 
+                                    : 'border-white/30 hover:border-cyan-400/50 hover:bg-white/10'
+                                }`}
+                              >
+                                <div className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl bg-white/5">
+                                  <div className="p-2 rounded-full bg-white/10 mb-2">
+                                    <Upload className="w-6 h-6 text-cyan-400" />
+                                  </div>
+                                  <p className="text-white font-medium mb-1 text-sm">Drag & Drop file di sini</p>
+                                  <p className="text-gray-400 text-xs mb-2">atau klik untuk pilih file</p>
+                                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                                    <FileText className="w-3 h-3" />
+                                    <span>PDF, DOCX, DOC, TXT • Max 10MB</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {errors.file && (
+                            <p className="text-red-400 text-sm">{errors.file}</p>
+                          )}
+                        </div>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              ) : (
+                // File Upload Section for Image/Video
+                <div className="space-y-4">
+                  <Label className="text-white font-medium text-sm">
+                    Upload File
+                  </Label>
+                  
+                  {file ? (
+                    <div className="space-y-4">
+                      {/* File Preview */}
+                      <div className="flex items-center gap-4 p-3 bg-white/10 border border-white/30 rounded-xl">
+                        {previewUrl && (
+                          <div className="flex-shrink-0">
+                            {file.type.startsWith('image/') ? (
+                              <img 
+                                src={previewUrl} 
+                                alt="Preview" 
+                                className="w-12 h-12 object-cover rounded-lg border-2 border-white/30"
+                              />
+                            ) : (
+                              <video 
+                                src={previewUrl} 
+                                className="w-12 h-12 object-cover rounded-lg border-2 border-white/30"
+                                muted
+                              />
+                            )}
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            {selectedCategory && <selectedCategory.icon className="w-4 h-4 text-cyan-400 flex-shrink-0" />}
+                            <div className="min-w-0">
+                              <p className="text-white font-medium truncate text-sm">{file.name}</p>
+                              <p className="text-gray-400 text-xs">
+                                {(file.size / 1024 / 1024).toFixed(2)} MB
+                              </p>
+                            </div>
+                          </div>
+                          
+                          {uploading && uploadProgress > 0 && (
+                            <div className="mt-2">
+                              <div className="flex justify-between text-xs text-gray-400 mb-1">
+                                <span>Mengupload...</span>
+                                <span>{Math.round(uploadProgress)}%</span>
+                              </div>
+                              <div className="w-full bg-white/20 rounded-full h-1">
+                                <div 
+                                  className="bg-gradient-to-r from-cyan-400 to-blue-500 h-1 rounded-full transition-all duration-300"
+                                  style={{ width: `${uploadProgress}%` }}
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setFile(null);
+                            setPreviewUrl(null);
+                            setUploadProgress(0);
+                          }}
+                          className="border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg flex-shrink-0 text-xs"
+                          disabled={uploading}
+                        >
+                          Ganti
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept={selectedCategory?.acceptedTypes}
+                        className="hidden"
+                        onChange={(e) => e.target.files && handleFileSelect(e.target.files[0])}
+                      />
+                      <div
+                        onClick={() => fileInputRef.current?.click()}
+                        onDrag={handleDrag}
+                        onDragEnter={handleDrag}
+                        onDragLeave={handleDrag}
+                        onDragOver={handleDrag}
+                        onDrop={handleDrop}
+                        className={`cursor-pointer transition-all duration-300 ${
+                          dragActive 
+                            ? 'border-cyan-400/70 bg-cyan-400/10 scale-105' 
+                            : 'border-white/30 hover:border-cyan-400/50 hover:bg-white/10'
+                        }`}
+                      >
+                        <div className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl bg-white/5">
+                          <div className="p-2 rounded-full bg-white/10 mb-2">
+                            <Upload className="w-6 h-6 text-cyan-400" />
+                          </div>
+                          <p className="text-white font-medium mb-1 text-sm">Drag & Drop file di sini</p>
+                          <p className="text-gray-400 text-xs mb-2">atau klik untuk pilih file</p>
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            {selectedCategory?.value === 'video' ? (
+                              <>
+                                <Play className="w-3 h-3" />
+                                <span>MP4, MOV, WEBM • Max 5MB</span>
+                              </>
+                            ) : (
+                              <>
+                                <Camera className="w-3 h-3" />
+                                <span>JPG, PNG, GIF, WEBP • Max 5MB</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {errors.file && (
+                    <p className="text-red-400 text-sm">{errors.file}</p>
+                  )}
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {/* Description Input */}
+          <div className="space-y-2">
+            <Label htmlFor="description" className="text-white font-medium text-sm">
+              Deskripsi Singkat {isWrittenWork ? '(Opsional)' : ''}
+            </Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="h-16 bg-white/10 border-white/30 backdrop-blur-lg text-white placeholder-gray-400 rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50 resize-none text-sm"
+              placeholder={isWrittenWork ? "Ringkasan singkat karya tulis kamu" : "Ceritakan sedikit tentang karya kamu"}
+            />
+          </div>
+
+          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={onClose} disabled={uploading} className="flex-1 border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-xl h-10 text-sm">Batal</Button>
-            <Button type="button" onClick={handleSubmit} disabled={uploading} className="flex-1 bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] hover:from-[#9B6DFF] hover:via-[#40E0D0] hover:to-[#FF7F50] text-black hover:text-white rounded-xl h-10 font-semibold shadow-lg text-sm">
-              {uploading ? <><div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />Mengunggah...</> : 'Kirim Karya'}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              disabled={uploading}
+              className="flex-1 border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-xl h-10 text-sm"
+            >
+              Batal
+            </Button>
+            <Button
+              type="button"
+              onClick={handleSubmit}
+              disabled={uploading}
+              className="flex-1 bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] hover:from-[#9B6DFF] hover:via-[#40E0D0] hover:to-[#FF7F50] text-black hover:text-white rounded-xl h-10 font-semibold shadow-lg text-sm"
+            >
+              {uploading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                  Mengunggah...
+                </>
+              ) : (
+                'Kirim Karya'
+              )}
             </Button>
           </div>
         </div>

@@ -49,7 +49,6 @@ export type Database = {
           media_urls: string[] | null
           media_width: number | null
           status: string
-          submission_type: string | null
           title: string
           updated_at: string
         }
@@ -68,7 +67,6 @@ export type Database = {
           media_urls?: string[] | null
           media_width?: number | null
           status?: string
-          submission_type?: string | null
           title: string
           updated_at?: string
         }
@@ -87,7 +85,6 @@ export type Database = {
           media_urls?: string[] | null
           media_width?: number | null
           status?: string
-          submission_type?: string | null
           title?: string
           updated_at?: string
         }
