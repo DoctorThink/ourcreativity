@@ -1,19 +1,24 @@
+
 # Project Documentation
 
-This directory contains documentation related to the OurCreativity project.
-
-## Purpose
-
-The `docs` directory serves as a central place for project-related documents that help developers and contributors understand different aspects of the project, its components, and its evolution.
+This directory contains documentation related to the OurCreativity project. It serves as a central knowledge base for developers and contributors.
 
 ## Contents
 
-- **`updates.md`**: This file contains a log of significant updates, announcements, and changes made to the project. It's a good place to look for information about new features, recruitment drives, events, or major version changes.
+-   **`01-Glowar-Design-System.md`**: The complete specification for our **Glowar** design language, including its core philosophy, pillars, and component guidelines. This is the source of truth for all UI/UX decisions.
 
-- **`components.md`**: This file provides detailed documentation for the React components used in the frontend of this project, primarily located under `src/components/`. Each component entry includes its file path, a brief description of its purpose, and a list of its props (properties) with their expected types, optionality, and default values if any. This is an essential resource for developers working with the UI components.
+-   **`02-Project-Architecture.md`**: A high-level overview of the project's technical stack (React, Vite, Supabase) and the repository's folder structure.
 
-- **`README.md`**: This file (you are reading it now!) explains the purpose of the `docs` directory and provides an overview of its contents.
+-   **`03-Setup-and-Installation.md`**: A step-by-step guide for new developers to get the project running on their local machine.
+
+-   **`04-Supabase-Schema.md`**: Detailed documentation of our Supabase database schema, including tables, columns, and their purposes.
+
+-   **`components.md`**: Auto-generated or manually maintained documentation for the reusable React components found in `src/components/`. *(This file is a carryover and may be partially superseded by the Glowar Design System document).*
 
 ## Maintaining Documentation
 
-As the project evolves, it's important to keep the documentation in this directory up-to-date. When new components are added or existing ones are modified, `components.md` should be updated accordingly. Similarly, major project updates or announcements should be added to `updates.md`.
+As the project evolves, it's crucial to keep the documentation in this directory up-to-date.
+- When the design language is updated, modify `01-Glowar-Design-System.md`.
+- When significant architectural changes are made, update `02-Project-Architecture.md`.
+- When the database schema is altered, reflect those changes in `04-Supabase-Schema.md`.
+
