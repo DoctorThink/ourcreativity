@@ -8,7 +8,7 @@ interface MemberCardProps {
   role: string;
   category: string;
   avatar: string;
-  accentColor?: "coral" | "emerald" | "amethyst" | "turquoise" | "amber" | "softPink" | "grayMid" | "orangeLight";
+  accentColor?: "coral" | "emerald" | "amethyst" | "turquoise" | "amber" | "softPink" | "grayMid" | "orangeLight" | "mint";
   onClick?: () => void;
 }
 
@@ -20,7 +20,8 @@ const colorClasses = {
   amber: "bg-amber/10 text-amber border-amber/30",
   softPink: "bg-softPink/10 text-softPink border-softPink/30",
   grayMid: "bg-grayMid/10 text-grayMid border-grayMid/30",
-  orangeLight: "bg-orangeLight/10 text-orangeLight border-orangeLight/30"
+  orangeLight: "bg-orangeLight/10 text-orangeLight border-orangeLight/30",
+  mint: "bg-mint/10 text-mint border-mint/30"
 };
 
 export const MemberCard: React.FC<MemberCardProps> = ({
