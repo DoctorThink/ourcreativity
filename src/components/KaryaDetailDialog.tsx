@@ -1,11 +1,10 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Dialog, 
   DialogContent
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ExternalLink, X, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, ExternalLink, X, Tag, ChevronLeft, ChevronRight, Heart, Share2 } from 'lucide-react';
 import { Database } from '@/integrations/supabase/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -22,14 +21,36 @@ import ReactMarkdown from 'react-markdown';
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
 interface KaryaDetailDialogProps {
-  karya: KaryaType;
+  karyaList: KaryaType[];
+  initialIndex: number;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) => {
+const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDetailDialogProps) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [showInfoPanel, setShowInfoPanel] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+
+  useEffect(() => {
+    setCurrentIndex(initialIndex);
+  }, [initialIndex, isOpen]);
+
+  if (!karyaList || karyaList.length === 0) {
+    return null;
+  }
+
+  const karya = karyaList[currentIndex];
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex(prev => (prev + 1) % karyaList.length);
+  };
+
+  const handlePrevious = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex(prev => (prev - 1 + karyaList.length) % karyaList.length);
+  };
 
   const categoryIcons: Record<string, string> = {
     'design': '/lovable-uploads/design.png',
@@ -183,6 +204,24 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
               </>
             )}
             
+            {/* Navigation Buttons */}
+            {!isText && karyaList.length > 1 && (
+              <>
+                <Button
+                  onClick={handlePrevious}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-white/10 rounded-full w-12 h-12 p-0"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </Button>
+                <Button
+                  onClick={handleNext}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-white/10 rounded-full w-12 h-12 p-0"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </Button>
+              </>
+            )}
+            
             {/* Floating control buttons */}
             <div className="absolute top-4 right-4 z-10 flex gap-2">
               {!isText && (
@@ -303,12 +342,31 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-2">
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button
+                        size="sm"
+                        className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-secondary text-foreground hover:bg-secondary/80 border border-white/10 font-medium"
+                      >
+                        <Heart className="w-4 h-4" />
+                        <span>Suka ({karya.likes_count || 0})</span>
+                      </Button>
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button
+                        size="sm"
+                        className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-secondary text-foreground hover:bg-secondary/80 border border-white/10 font-medium"
+                        onClick={() => navigator.clipboard.writeText(window.location.href)}
+                      >
+                        <Share2 className="w-4 h-4" />
+                        <span>Bagikan</span>
+                      </Button>
+                    </motion.div>
                     {karya.content_url && (
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                         <Button 
-                          className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium" 
-                          size="sm"
                           onClick={() => window.open(karya.content_url, '_blank')}
+                          className="gap-2 rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium" 
+                          size="sm"
                         >
                           <ExternalLink className="h-4 w-4" />
                           <span>Link Konten</span>
@@ -318,9 +376,9 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
                     {karya.link_url && (
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                         <Button 
-                          className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-lavender to-purpleLight text-white border border-white/10 font-medium" 
-                          size="sm"
                           onClick={() => window.open(karya.link_url, '_blank')}
+                          className="gap-2 rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-lavender to-purpleLight text-white border border-white/10 font-medium" 
+                          size="sm"
                         >
                           <ExternalLink className="h-4 w-4" />
                           <span>Lihat Karya Lengkap</span>

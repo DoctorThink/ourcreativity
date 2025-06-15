@@ -25,9 +25,11 @@ export const KaryaGallery: React.FC<KaryaGalleryProps> = ({
 }) => {
   const [selectedKarya, setSelectedKarya] = useState<KaryaType | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [initialIndex, setInitialIndex] = useState(0);
 
-  const handleKaryaClick = (karya: KaryaType) => {
+  const handleKaryaClick = (karya: KaryaType, index: number) => {
     setSelectedKarya(karya);
+    setInitialIndex(index);
     setIsDialogOpen(true);
   };
 
@@ -67,7 +69,8 @@ export const KaryaGallery: React.FC<KaryaGalleryProps> = ({
 
       {selectedKarya && (
         <KaryaDetailDialog
-          karya={selectedKarya}
+          karyaList={karyaData}
+          initialIndex={initialIndex}
           isOpen={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
         />

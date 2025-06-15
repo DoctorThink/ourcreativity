@@ -10,7 +10,7 @@ type KaryaType = Database['public']['Tables']['karya']['Row'];
 
 type MasonryGridProps = {
   items: KaryaType[];
-  onKaryaClick?: (karya: KaryaType) => void;
+  onKaryaClick?: (karya: KaryaType, index: number) => void;
   loading?: boolean;
 };
 
@@ -29,9 +29,9 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
     640: 1
   };
 
-  const handleItemClick = (item: KaryaType) => {
+  const handleItemClick = (item: KaryaType, index: number) => {
     if (onKaryaClick) {
-      onKaryaClick(item);
+      onKaryaClick(item, index);
     }
   };
 
@@ -41,7 +41,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
       className="flex w-auto -ml-4 my-masonry-grid"
       columnClassName="pl-4 bg-transparent my-masonry-grid_column"
     >
-      {items.map((item) => (
+      {items.map((item, index) => (
         <motion.div
           key={item.id}
           initial={{ opacity: 0, y: 10 }}
@@ -51,7 +51,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
         >
           <KaryaCard 
             karya={item} 
-            onClick={() => handleItemClick(item)} 
+            onClick={() => handleItemClick(item, index)} 
           />
         </motion.div>
       ))}
