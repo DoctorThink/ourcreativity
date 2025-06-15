@@ -43,11 +43,11 @@ export const GlowarFeaturedCard: React.FC<GlowarFeaturedCardProps> = ({
     <motion.div
       whileHover={{ scale: 1.01, y: -4 }}
       whileTap={{ scale: 0.99 }}
-      className="cursor-pointer group w-full"
+      className="cursor-pointer group"
       onClick={onClick}
     >
       {/* Dynamic Aurora Background Container */}
-      <div className="relative overflow-hidden rounded-3xl w-full">
+      <div className="relative overflow-hidden rounded-3xl">
         {/* Moving Aurora Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-amethyst/30 via-turquoise/20 to-coral/25 animate-gradient-cycle" 
              style={{ backgroundSize: '300% 300%' }} />
@@ -56,32 +56,32 @@ export const GlowarFeaturedCard: React.FC<GlowarFeaturedCardProps> = ({
         <div className="absolute -inset-0.5 bg-gradient-to-r from-amethyst/40 via-turquoise/30 to-coral/40 rounded-3xl opacity-60 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
         
         {/* Main Content Container */}
-        <div className="relative bg-secondary/60 backdrop-blur-xl border border-white/20 rounded-3xl p-6 md:p-8 w-full">
+        <div className="relative bg-secondary/60 backdrop-blur-xl border border-white/20 rounded-3xl p-8">
           
           {/* Featured Badge */}
-          <div className="flex justify-start mb-4">
+          <div className="absolute top-6 left-6 z-10">
             <div className="flex items-center gap-1.5 px-4 py-2 bg-amethyst/90 text-white rounded-full text-sm font-bold shadow-lg backdrop-blur-sm">
               <Star className="w-4 h-4 fill-current" />
               Unggulan
             </div>
           </div>
 
-          {/* Content Layout */}
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
+          {/* Two Column Layout */}
+          <div className="flex flex-col lg:flex-row gap-8 items-start mt-16 lg:mt-8">
             
             {/* Left Column: Main Content */}
-            <div className="flex-1 space-y-4 lg:space-y-6 min-w-0">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-serif font-bold text-foreground leading-tight">
+            <div className="flex-1 space-y-6">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-foreground leading-tight">
                 {announcement.title}
               </h1>
               
-              <p className="text-base lg:text-lg text-foreground/80 leading-relaxed line-clamp-3">
+              <p className="text-lg text-foreground/80 leading-relaxed line-clamp-3">
                 {announcement.content.substring(0, 250)}...
               </p>
             </div>
 
             {/* Right Column: Metadata & Action */}
-            <div className="w-full lg:w-80 lg:flex-shrink-0 space-y-4 lg:space-y-6">
+            <div className="lg:w-80 space-y-6">
               
               {/* Grouped Tags */}
               <div className="flex flex-wrap gap-3">
@@ -101,23 +101,23 @@ export const GlowarFeaturedCard: React.FC<GlowarFeaturedCardProps> = ({
               {/* Date */}
               <div className="flex items-center gap-3 text-foreground/70">
                 <Calendar className="w-5 h-5" />
-                <span className="text-base lg:text-lg font-medium">{getDisplayDate()}</span>
+                <span className="text-lg font-medium">{getDisplayDate()}</span>
               </div>
 
               {/* Call to Action */}
               <motion.div 
-                className="flex items-center gap-3 text-amethyst font-bold text-base lg:text-lg group-hover:gap-4 transition-all duration-300"
+                className="flex items-center gap-3 text-amethyst font-bold text-lg group-hover:gap-4 transition-all duration-300"
                 whileHover={{ x: 5 }}
               >
                 <span>Baca Selengkapnya</span>
-                <ArrowRight className="w-5 h-5 lg:w-6 lg:h-6 group-hover:translate-x-2 transition-transform duration-300" />
+                <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" />
               </motion.div>
             </div>
           </div>
 
           {/* Image Section (if exists) */}
           {announcement.image_url && (
-            <div className="mt-6 lg:mt-8">
+            <div className="mt-8">
               <div className="aspect-[16/9] rounded-2xl overflow-hidden border border-white/10">
                 <img 
                   src={announcement.image_url} 

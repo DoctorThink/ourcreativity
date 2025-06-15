@@ -51,7 +51,6 @@ export const GlowarGrid: React.FC<GlowarGridProps> = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full"
       >
         <EmptyAnnouncementState onShowAll={() => {}} />
       </motion.div>
@@ -63,27 +62,24 @@ export const GlowarGrid: React.FC<GlowarGridProps> = ({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="w-full"
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        <AnimatePresence mode="popLayout">
-          {announcements.map((announcement) => (
-            <motion.div 
-              key={announcement.id}
-              variants={cardVariants}
-              layout
-              layoutId={`card-${announcement.id}`}
-              exit="exit"
-              className="w-full"
-            >
-              <GlowarCard 
-                announcement={announcement}
-                onClick={() => onAnnouncementClick(announcement)}
-              />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+      <AnimatePresence mode="popLayout">
+        {announcements.map((announcement) => (
+          <motion.div 
+            key={announcement.id}
+            variants={cardVariants}
+            layout
+            layoutId={`card-${announcement.id}`}
+            exit="exit"
+          >
+            <GlowarCard 
+              announcement={announcement}
+              onClick={() => onAnnouncementClick(announcement)}
+            />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </motion.div>
   );
 };
