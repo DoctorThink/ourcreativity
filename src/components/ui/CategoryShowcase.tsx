@@ -9,7 +9,7 @@ interface Category {
   id: string;
   name: string;
   icon: LucideIcon;
-  color: "coral" | "turquoise" | "softPink" | "mint";
+  color: "coral" | "turquoise" | "softPink" | "mint" | "orangeLight" | "amethyst";
   description: string;
   memberCount: number;
   memberAvatars: string[];
@@ -24,7 +24,9 @@ const colorClasses = {
   coral: "from-coral/20 to-coral/5 border-coral/50 text-coral",
   turquoise: "from-turquoise/20 to-turquoise/5 border-turquoise/50 text-turquoise",
   softPink: "from-softPink/20 to-softPink/5 border-softPink/50 text-softPink",
-  mint: "from-mint/20 to-mint/5 border-mint/50 text-mint"
+  mint: "from-mint/20 to-mint/5 border-mint/50 text-mint",
+  orangeLight: "from-orangeLight/20 to-orangeLight/5 border-orangeLight/50 text-orangeLight",
+  amethyst: "from-amethyst/20 to-amethyst/5 border-amethyst/50 text-amethyst",
 };
 
 export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ 
