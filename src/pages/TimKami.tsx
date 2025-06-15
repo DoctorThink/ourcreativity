@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
 import TeamMemberCard from "@/components/TeamMemberCard";
@@ -9,6 +9,8 @@ import { IconDisplay } from "@/components/ui/IconDisplay";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Users, User, Video, Palette, Smile, FileText, Bot, Shield, Droplet } from "lucide-react";
 import { LucideIcon } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 // Animation Variants
 const containerVariants = {
@@ -250,7 +252,7 @@ const StatCard = ({ icon, label, value, color }: {
   >
     <IconDisplay icon={icon} color={color} size="lg" />
     <div className="text-center">
-      <span className="text-3xl font-bold font-serif text-foreground block">{value}</span>
+      <span className="text-3xl font-bold font-serif text-foreground block stat-value">{value}</span>
       <span className="text-sm text-foreground/60 font-medium">{label}</span>
     </div>
   </motion.div>
@@ -260,137 +262,203 @@ const StatCard = ({ icon, label, value, color }: {
 const TimKami = () => {
   const [selectedMember, setSelectedMember] = useState<any>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Animate cards and sections
+      gsap.utils.toArray<HTMLElement>('.fade-up-card').forEach(card => {
+        gsap.from(card, {
+          y: 30,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+        });
+      });
+
+      // Stagger category buttons
+      gsap.from('.category-btn', {
+        y: 20,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.5,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '.category-grid',
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      });
+
+      // Stagger team members
+      gsap.from('.team-member-item', {
+        y: 20,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.5,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '.team-grid',
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      });
+
+      // Counter animation
+      gsap.utils.toArray<HTMLElement>('.stat-value').forEach(counter => {
+        const target = parseInt(counter.textContent || '0', 10);
+        let stat = { value: 0 };
+        gsap.to(stat, {
+          value: target,
+          duration: 2,
+          ease: 'power1.inOut',
+          onUpdate: () => {
+            counter.textContent = Math.round(stat.value).toString();
+          },
+          scrollTrigger: {
+            trigger: counter,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+        });
+      });
+
+    }, mainContentRef);
+
+    return () => ctx.revert();
+  }, [activeCategory]); // Re-run animations if filter changes
 
   return (
     <PageLayout
       title="Tim Kami"
       subtitle="OurCreativity digerakkan oleh para kreator dari berbagai bidang yang memiliki satu tujuan yang sama: membangun komunitas yang suportif dan inspiratif. Kami adalah tim yang berdedikasi untuk membantu generasi muda menemukan dan mengasah bakat mereka."
     >
-      {/* Category selector with standardized design */}
-      <motion.div 
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {categories.map((category) => (
-          <CategoryButton
-            key={category.id}
-            icon={category.icon}
-            text={category.name}
-            color={category.color}
-            isActive={activeCategory === category.id}
-            onClick={() => setActiveCategory(activeCategory === category.id ? null : category.id)}
-          />
-        ))}
-      </motion.div>
-
-      {/* Team Overview Stats Card with standardized design */}
-      <StandardCard className="mb-10" glowColor="rgba(229, 222, 255, 0.3)">
-        <div className="flex items-center gap-4 mb-6">
-          <IconDisplay icon={Users} color="amethyst" size="lg" />
-          <div>
-            <h3 className="text-xl font-serif font-bold text-foreground">Tim Overview</h3>
-            <p className="text-sm text-foreground/60">Statistik anggota komunitas</p>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard icon={Video} label="Video Editing" value="8" color="coral" />
-          <StatCard icon={Palette} label="Graphic Design" value="12" color="turquoise" />
-          <StatCard icon={Smile} label="Meme" value="6" color="softPink" />
-          <StatCard icon={FileText} label="Karya Tulis" value="6" color="mint" />
-        </div>
-      </StandardCard>
-
-      {/* Creative Categories Description */}
-      <StandardCard className="mb-10" glowColor="rgba(152, 245, 225, 0.3)">
-        <div className="flex items-center gap-4 mb-6">
-          <IconDisplay icon={Palette} color="turquoise" size="lg" />
-          <div>
-            <h3 className="text-xl font-serif font-bold text-foreground">Kategori Kreatif Kami</h3>
-            <p className="text-sm text-foreground/60">Setiap kategori memiliki identitas visualnya sendiri yang mencerminkan semangat kreativitas.</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {categories.map(cat => (
-            <div key={cat.id} className="flex items-start gap-4">
-              <IconDisplay icon={cat.icon} color={cat.color} size="md" className="mt-1 flex-shrink-0" />
-              <div>
-                <h4 className="font-bold text-foreground">{cat.name}</h4>
-                <p className="text-sm text-foreground/70">{cat.description}</p>
-              </div>
+      <div ref={mainContentRef}>
+        {/* Category selector with standardized design */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 category-grid">
+          {categories.map((category) => (
+            <div key={category.id} className="category-btn">
+              <CategoryButton
+                icon={category.icon}
+                text={category.name}
+                color={category.color}
+                isActive={activeCategory === category.id}
+                onClick={() => setActiveCategory(activeCategory === category.id ? null : category.id)}
+              />
             </div>
           ))}
         </div>
-      </StandardCard>
 
-      {/* Logo Philosophy Card */}
-      <StandardCard className="mb-10" glowColor="rgba(254, 198, 161, 0.3)">
-        <div className="flex items-center gap-4 mb-6">
-          <IconDisplay icon={Droplet} color="coral" size="lg" />
-          <div>
-            <h3 className="text-xl font-serif font-bold text-foreground">Filosofi Logo O.C</h3>
-            <p className="text-sm text-foreground/60">Simbol di balik identitas visual kami.</p>
+        {/* Team Overview Stats Card with standardized design */}
+        <StandardCard className="mb-10 fade-up-card" glowColor="rgba(229, 222, 255, 0.3)">
+          <div className="flex items-center gap-4 mb-6">
+            <IconDisplay icon={Users} color="amethyst" size="lg" />
+            <div>
+              <h3 className="text-xl font-serif font-bold text-foreground">Tim Overview</h3>
+              <p className="text-sm text-foreground/60">Statistik anggota komunitas</p>
+            </div>
           </div>
-        </div>
-        <p className="text-foreground/80 leading-relaxed mb-4">
-          Logo kami, yang sering disebut O.C (singkatan dari OurCreativity), adalah representasi visual dari nilai-nilai inti kami. Secara keseluruhan, logo ini mengambil bentuk simbol "infinity" atau tak terbatas, melambangkan keyakinan kami bahwa kreativitas manusia tidak seharusnya dibatasi. Ia harus terus berkembang, menjadi lebih baik, dan memiliki ciri khasnya sendiri.
-        </p>
-        <p className="text-foreground/80 leading-relaxed">
-          Warna merah yang kami pilih melambangkan <strong className="text-coral">keberanian</strong>. Kami yakin, tanpa keberanian untuk memulai dan menunjukkan karya, seorang kreator tidak akan pernah bisa berkembang. Itulah semangat yang kami tanamkan di dalam komunitas OurCreativity.
-        </p>
-      </StandardCard>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <StatCard icon={Video} label="Video Editing" value="8" color="coral" />
+            <StatCard icon={Palette} label="Graphic Design" value="12" color="turquoise" />
+            <StatCard icon={Smile} label="Meme" value="6" color="softPink" />
+            <StatCard icon={FileText} label="Karya Tulis" value="6" color="mint" />
+          </div>
+        </StandardCard>
 
-      {/* Team members grid */}
-      <motion.div 
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {teamMembers
-          .filter(member => !activeCategory || member.category === activeCategory)
-          .map((member) => (
-            <motion.div 
-              key={member.id} 
-              variants={memberVariants}
-            >
-              <TeamMemberCard
-                name={member.name}
-                role={member.role}
-                instagram={member.instagram}
-                accentColor={member.accent}
-                bio={member.bio}
-                achievements={member.achievements}
-                onClick={() => setSelectedMember(member)}
-              />
-            </motion.div>
-          ))}
-      </motion.div>
+        {/* Creative Categories Description */}
+        <StandardCard className="mb-10 fade-up-card" glowColor="rgba(152, 245, 225, 0.3)">
+          <div className="flex items-center gap-4 mb-6">
+            <IconDisplay icon={Palette} color="turquoise" size="lg" />
+            <div>
+              <h3 className="text-xl font-serif font-bold text-foreground">Kategori Kreatif Kami</h3>
+              <p className="text-sm text-foreground/60">Setiap kategori memiliki identitas visualnya sendiri yang mencerminkan semangat kreativitas.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {categories.map(cat => (
+              <div key={cat.id} className="flex items-start gap-4">
+                <IconDisplay icon={cat.icon} color={cat.color} size="md" className="mt-1 flex-shrink-0" />
+                <div>
+                  <h4 className="font-bold text-foreground">{cat.name}</h4>
+                  <p className="text-sm text-foreground/70">{cat.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </StandardCard>
 
-      {/* Empty state when no members match filter */}
-      {teamMembers.filter(member => !activeCategory || member.category === activeCategory).length === 0 && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center py-16"
+        {/* Logo Philosophy Card */}
+        <StandardCard className="mb-10 fade-up-card" glowColor="rgba(254, 198, 161, 0.3)">
+          <div className="flex items-center gap-4 mb-6">
+            <IconDisplay icon={Droplet} color="coral" size="lg" />
+            <div>
+              <h3 className="text-xl font-serif font-bold text-foreground">Filosofi Logo O.C</h3>
+              <p className="text-sm text-foreground/60">Simbol di balik identitas visual kami.</p>
+            </div>
+          </div>
+          <p className="text-foreground/80 leading-relaxed mb-4">
+            Logo kami, yang sering disebut O.C (singkatan dari OurCreativity), adalah representasi visual dari nilai-nilai inti kami. Secara keseluruhan, logo ini mengambil bentuk simbol "infinity" atau tak terbatas, melambangkan keyakinan kami bahwa kreativitas manusia tidak seharusnya dibatasi. Ia harus terus berkembang, menjadi lebih baik, dan memiliki ciri khasnya sendiri.
+          </p>
+          <p className="text-foreground/80 leading-relaxed">
+            Warna merah yang kami pilih melambangkan <strong className="text-coral">keberanian</strong>. Kami yakin, tanpa keberanian untuk memulai dan menunjukkan karya, seorang kreator tidak akan pernah bisa berkembang. Itulah semangat yang kami tanamkan di dalam komunitas OurCreativity.
+          </p>
+        </StandardCard>
+
+        {/* Team members grid */}
+        <div 
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 team-grid"
+          key={activeCategory || 'all'} // Re-trigger animation on filter change
         >
-          <p className="text-foreground/60 text-lg">Tim untuk kategori ini akan segera diperkenalkan.</p>
-        </motion.div>
-      )}
+          {teamMembers
+            .filter(member => !activeCategory || member.category === activeCategory)
+            .map((member) => (
+              <div 
+                key={member.id} 
+                className="team-member-item"
+              >
+                <TeamMemberCard
+                  name={member.name}
+                  role={member.role}
+                  instagram={member.instagram}
+                  accentColor={member.accent}
+                  bio={member.bio}
+                  achievements={member.achievements}
+                  onClick={() => setSelectedMember(member)}
+                />
+              </div>
+            ))}
+        </div>
 
-      {/* Member bio dialog */}
-      <Dialog open={!!selectedMember} onOpenChange={(open) => !open && setSelectedMember(null)}>
-        <DialogContent className="bg-secondary/90 backdrop-blur-xl max-w-3xl p-0 border-white/10">
-          {selectedMember && <TeamMemberBio 
-            bio={selectedMember.bio}
-            achievements={selectedMember.achievements}
-            accentColor={selectedMember.accent}
-            member={selectedMember}
-          />}
-        </DialogContent>
-      </Dialog>
+        {/* Empty state when no members match filter */}
+        {teamMembers.filter(member => !activeCategory || member.category === activeCategory).length === 0 && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-16"
+          >
+            <p className="text-foreground/60 text-lg">Tim untuk kategori ini akan segera diperkenalkan.</p>
+          </motion.div>
+        )}
+
+        {/* Member bio dialog */}
+        <Dialog open={!!selectedMember} onOpenChange={(open) => !open && setSelectedMember(null)}>
+          <DialogContent className="bg-secondary/90 backdrop-blur-xl max-w-3xl p-0 border-white/10">
+            {selectedMember && <TeamMemberBio 
+              bio={selectedMember.bio}
+              achievements={selectedMember.achievements}
+              accentColor={selectedMember.accent}
+              member={selectedMember}
+            />}
+          </DialogContent>
+        </Dialog>
+      </div>
     </PageLayout>
   );
 };

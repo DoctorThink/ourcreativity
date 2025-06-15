@@ -19,6 +19,8 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 import { Toaster } from "./components/ui/toaster";
 import "./App.css";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 // Create React Query client with retry configuration for better reliability
 const queryClient = new QueryClient({
@@ -42,6 +44,10 @@ import RequireAuth from "./components/admin/RequireAuth";
 // Create AppContent component that uses router hooks
 function AppContent() {
   const location = useLocation();
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+  }, []);
 
   return (
     <>

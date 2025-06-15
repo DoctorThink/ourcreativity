@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+
+import React, { useRef, useLayoutEffect } from "react";
 import PageLayout from "../components/layouts/PageLayout";
 import { motion, useScroll, useTransform } from "framer-motion";
 import BentoCard from "@/components/ui/BentoCard";
@@ -18,6 +19,8 @@ import {
   Sparkles,
   Link2
 } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const Informasi = () => {
   // Setup for scroll effects
@@ -30,26 +33,53 @@ const Informasi = () => {
   // Parallax scrolling effects
   const titleParallax = useTransform(scrollYProgress, [0, 1], [0, -50]);
   
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.3,
-      },
-    },
-  };
-  
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" }
-    }
-  };
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Animate grid items with stagger
+      gsap.from(".grid-item", {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+        stagger: 0.15,
+        scrollTrigger: {
+          trigger: ".grid-container",
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      });
+
+      // Animate mission list
+      gsap.from(".mission-item", {
+        x: -20,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: ".mission-list",
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      });
+
+      // Animate testimonials
+      gsap.from(".testimonial-item", {
+        y: 20,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: ".testimonials-container",
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      });
+
+    }, mainRef);
+    return () => ctx.revert();
+  }, []);
 
   return (
     <PageLayout title="Informasi Komunitas" subtitle="Ketentuan dan informasi penting untuk komunitas">
@@ -58,14 +88,11 @@ const Informasi = () => {
         style={{ y: titleParallax }}
         className="space-y-8"
       >
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        <div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 grid-container"
         >
           {/* About Community */}
-          <motion.div variants={itemVariants} className="lg:col-span-2">
+          <div className="lg:col-span-2 grid-item">
             <BentoCard 
               className="p-6 md:p-8 h-full"
               glowColor="rgba(229, 222, 255, 0.3)"
@@ -98,10 +125,10 @@ const Informasi = () => {
                 </motion.div>
               </div>
             </BentoCard>
-          </motion.div>
+          </div>
           
           {/* Vision section */}
-          <motion.div variants={itemVariants}>
+          <div className="grid-item">
             <BentoCard 
               className="p-6 md:p-8 h-full"
               glowColor="rgba(152, 245, 225, 0.3)"
@@ -126,10 +153,10 @@ const Informasi = () => {
                 />
               </div>
             </BentoCard>
-          </motion.div>
+          </div>
           
           {/* Values */}
-          <motion.div variants={itemVariants}>
+          <div className="grid-item">
             <BentoCard 
               className="p-6 md:p-8 h-full"
               glowColor="rgba(255, 209, 220, 0.3)"
@@ -150,10 +177,10 @@ const Informasi = () => {
                 </ul>
               </div>
             </BentoCard>
-          </motion.div>
+          </div>
           
           {/* Mission section */}
-          <motion.div variants={itemVariants} className="lg:col-span-2">
+          <div className="lg:col-span-2 grid-item">
             <BentoCard 
               className="p-6 md:p-8 h-full"
               glowColor="rgba(254, 198, 161, 0.3)"
@@ -165,7 +192,7 @@ const Informasi = () => {
                   title="Misi Kami"
                   className="mb-4"
                 />
-                <ul className="space-y-3 text-foreground/80 text-base">
+                <ul className="space-y-3 text-foreground/80 text-base mission-list">
                   {[
                     { text: "Menyaring dan Menghubungkan: Mencari dan menghubungkan anak muda berbakat melalui media sosial untuk bergabung dalam ekosistem kreatif kami.", icon: Link2 },
                     { text: "Menyediakan Platform: Membangun platform diskusi dan kolaborasi yang inklusif agar anggota dapat berbagi ilmu serta mengembangkan kreativitasnya tanpa batas.", icon: Users },
@@ -173,25 +200,21 @@ const Informasi = () => {
                     { text: "Menyelenggarakan Program: Mengadakan berbagai program gratis seperti diskusi, event eksklusif, dan proyek kolaboratif untuk mendukung pengembangan keterampilan anggota.", icon: Star },
                     { text: "Mendorong Inovasi: Mendorong anggota untuk memahami dan menguasai berbagai bidang kreatif agar dapat menciptakan karya yang lebih inovatif dan bernilai bagi masyarakat.", icon: Sparkles }
                   ].map((item, index) => (
-                    <motion.li 
+                    <li 
                       key={index}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 + index * 0.1, duration: 0.6 }}
-                      viewport={{ once: true }}
-                      className="flex items-start gap-3"
+                      className="flex items-start gap-3 mission-item"
                     >
                       <item.icon className="w-4 h-4 text-foreground/50 flex-shrink-0 mt-1" />
                       <span>{item.text}</span>
-                    </motion.li>
+                    </li>
                   ))}
                 </ul>
               </div>
             </BentoCard>
-          </motion.div>
+          </div>
           
           {/* Programs */}
-          <motion.div variants={itemVariants}>
+          <div className="grid-item">
             <BentoCard 
               className="p-6 md:p-8 h-full"
               glowColor="rgba(152, 245, 225, 0.3)"
@@ -217,10 +240,10 @@ const Informasi = () => {
                 </ul>
               </div>
             </BentoCard>
-          </motion.div>
+          </div>
           
           {/* Testimonials */}
-          <motion.div variants={itemVariants} className="lg:col-span-3">
+          <div className="lg:col-span-3 grid-item">
             <BentoCard 
               className="p-6 md:p-8"
               glowColor="rgba(229, 222, 255, 0.3)"
@@ -233,7 +256,7 @@ const Informasi = () => {
                   className="mb-6 justify-center"
                 />
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 testimonials-container">
                   <Testimonial 
                     quote="OUR CREATIVITY membuka banyak peluang untuk saya berkolaborasi dengan kreator berbakat lainnya."
                     author="Rina S."
@@ -252,10 +275,10 @@ const Informasi = () => {
                 </div>
               </div>
             </BentoCard>
-          </motion.div>
+          </div>
           
           {/* Call to Action */}
-          <motion.div variants={itemVariants} className="lg:col-span-3">
+          <div className="lg:col-span-3 grid-item">
             <BentoCard 
               className="p-6 md:p-8 text-center"
               glowColor="rgba(152, 245, 225, 0.3)"
@@ -280,8 +303,8 @@ const Informasi = () => {
                 </motion.button>
               </div>
             </BentoCard>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </motion.div>
     </PageLayout>
   );
@@ -316,13 +339,7 @@ const ProgramItem = ({ title, children }: { title: string, children: React.React
 );
 
 const Testimonial = ({ quote, author, role }: { quote: string, author: string, role: string }) => (
-  <motion.div 
-    className="relative bg-white/5 rounded-2xl p-4"
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.7 }}
-    viewport={{ once: true }}
-  >
+  <div className="relative bg-white/5 rounded-2xl p-4 testimonial-item">
     <div className="text-2xl text-amethyst/30 absolute top-2 left-2">"</div>
     <div className="relative px-2">
       <p className="text-foreground/90 italic mb-3 text-sm">{quote}</p>
@@ -332,7 +349,7 @@ const Testimonial = ({ quote, author, role }: { quote: string, author: string, r
       </div>
     </div>
     <div className="text-2xl text-amethyst/30 absolute bottom-2 right-2">"</div>
-  </motion.div>
+  </div>
 );
 
 export default Informasi;
