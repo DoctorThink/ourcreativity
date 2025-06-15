@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { 
@@ -65,7 +64,6 @@ const OurAdmin = () => {
     <PageLayout 
       title="Admin Dashboard"
       subtitle="Kelola konten dan komunitas OUR CREATIVITY"
-      showBackButton={true}
     >
       <motion.div
         variants={containerVariants}

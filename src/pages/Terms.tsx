@@ -13,6 +13,7 @@ import {
   BookOpenCheck,
   LucideIcon
 } from "lucide-react";
+import { IconTitleRow } from "@/components/ui/IconTitleRow";
 
 const Terms = () => {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -193,7 +194,9 @@ const Terms = () => {
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 400, damping: 10, delay: 0.6 }}
           >
-            <CheckCircle2 className="w-8 h-8 text-amethyst" />
+            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-amethyst text-background">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
           </motion.div>
           <h3 className="text-lg md:text-xl font-serif mb-3">Penerimaan Syarat & Ketentuan</h3>
           <p className="text-foreground/80 text-sm md:text-base">

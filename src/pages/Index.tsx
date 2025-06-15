@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, Megaphone, Users, BookOpen, Info, FileText, Palette, UserPlus } from "lucide-react";
+import { ArrowRight, Calendar, Megaphone, Users, BookOpen, Info, FileText, Palette, UserPlus, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../components/layouts/PageLayout";
 import BentoCard from "../components/ui/BentoCard";
@@ -179,7 +179,7 @@ const Index = () => {
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="mb-6 md:mb-8 relative z-10"
+        className="mb-12 md:mb-16 relative z-10"
       >
         <div className="text-center space-y-2 md:space-y-4">
           <motion.div 
