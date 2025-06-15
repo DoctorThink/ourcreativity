@@ -40,7 +40,7 @@ const Pengumuman = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      setIsFilterSticky(scrollY > 200);
+      setIsFilterSticky(scrollY > 300); // Increased threshold to avoid header overlap
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -57,11 +57,12 @@ const Pengumuman = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-12"
+        className="space-y-12 pt-8" // Added top padding to prevent header overlap
       >
-        {/* Sticky Filter Bar */}
+        {/* Filter Bar with proper spacing */}
         <motion.div 
           variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } }}
+          className="relative z-40" // Lower z-index than header
         >
           <GlowarFilterBar 
             currentFilter={filter} 
