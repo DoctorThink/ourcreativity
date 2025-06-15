@@ -251,13 +251,13 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                className="bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md absolute bottom-0 left-0 right-0 z-10 max-h-[50vh] overflow-y-auto rounded-t-3xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.2)]"
+                className="bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md absolute bottom-0 left-0 right-0 z-10 max-h-[60vh] sm:max-h-[50vh] overflow-y-auto rounded-t-3xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.2)]"
               >
                 {/* Header with title and category info */}
-                <div className="flex justify-between items-start p-6 border-b border-border/20">
+                <div className="flex justify-between items-start p-4 sm:p-6 border-b border-border/20">
                   <div className="flex-1">
-                    <h2 className="text-2xl font-bold tracking-tight text-foreground font-sans">{karya.title}</h2>
-                    <p className="text-foreground/70 mt-1 font-medium">
+                    <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground font-sans">{karya.title}</h2>
+                    <p className="text-foreground/70 mt-1 font-medium text-sm sm:text-base">
                       by {karya.creator_name}
                     </p>
                   </div>
@@ -277,7 +277,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                 
                 {/* Tags section */}
                 {tags.length > 0 && (
-                  <div className="px-6 pt-4 pb-2 border-b border-border/20">
+                  <div className="px-4 sm:px-6 pt-4 pb-2 border-b border-border/20">
                     <div className="flex items-center gap-2 mb-2">
                       <Tag className="w-4 h-4 text-foreground/60" />
                       <span className="text-sm font-medium text-foreground/80">Tags</span>
@@ -297,7 +297,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                 
                 {/* Expandable description section with proper scrolling */}
                 {karya.description && (
-                  <div className="p-6">
+                  <div className="p-4 sm:p-6">
                     <div className="flex items-center gap-2 mb-3">
                       <span className="text-sm font-medium text-foreground/80">Description</span>
                     </div>
@@ -307,7 +307,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                       <ScrollArea className={`${
                         isDescriptionExpanded ? 'h-auto max-h-[40vh]' : 'h-[120px]'
                       }`}>
-                        <p className="text-foreground/90 leading-relaxed font-sans text-base whitespace-pre-wrap break-words pr-4">
+                        <p className="text-foreground/90 leading-relaxed font-sans text-sm sm:text-base whitespace-pre-wrap break-words pr-4">
                           {karya.description}
                         </p>
                       </ScrollArea>
@@ -332,7 +332,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                 )}
                 
                 {/* Date and action buttons */}
-                <div className="p-6 pt-0 flex flex-col sm:flex-row justify-between items-center">
+                <div className="p-4 sm:p-6 pt-4 flex flex-col sm:flex-row justify-between items-center">
                   <p className="text-xs text-foreground/60 mb-4 sm:mb-0 font-medium">
                     Dibuat pada {new Date(karya.created_at).toLocaleDateString('id-ID', {
                       year: 'numeric',
@@ -341,8 +341,8 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                     })}
                   </p>
                   
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
                       <Button
                         size="sm"
                         className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-secondary text-foreground hover:bg-secondary/80 border border-white/10 font-medium"
@@ -351,7 +351,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                         <span>Suka ({karya.likes_count || 0})</span>
                       </Button>
                     </motion.div>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
                       <Button
                         size="sm"
                         className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-secondary text-foreground hover:bg-secondary/80 border border-white/10 font-medium"
@@ -362,10 +362,10 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                       </Button>
                     </motion.div>
                     {karya.content_url && (
-                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
                         <Button 
                           onClick={() => window.open(karya.content_url, '_blank')}
-                          className="gap-2 rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium" 
+                          className="gap-2 w-full rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium" 
                           size="sm"
                         >
                           <ExternalLink className="h-4 w-4" />
@@ -374,10 +374,10 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                       </motion.div>
                     )}
                     {karya.link_url && (
-                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
                         <Button 
                           onClick={() => window.open(karya.link_url, '_blank')}
-                          className="gap-2 rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-lavender to-purpleLight text-white border border-white/10 font-medium" 
+                          className="gap-2 w-full rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-lavender to-purpleLight text-white border border-white/10 font-medium" 
                           size="sm"
                         >
                           <ExternalLink className="h-4 w-4" />

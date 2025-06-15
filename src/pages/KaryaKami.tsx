@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { KaryaGallery } from "../components/karya/KaryaGallery";
@@ -106,10 +105,10 @@ const KaryaKami: React.FC = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-center mb-12 pt-28"
+          className="text-center mb-12 pt-20 md:pt-28"
         >
-          <h1 className="text-5xl font-bold text-white font-serif">KARYA KAMI</h1>
-          <p className="text-xl text-gray-300 mt-4 font-sans">
+          <h1 className="text-4xl md:text-5xl font-bold text-white font-serif">KARYA KAMI</h1>
+          <p className="text-lg md:text-xl text-gray-300 mt-4 font-sans">
             Koleksi karya kreatif dari komunitas Our Creativity
           </p>
           
