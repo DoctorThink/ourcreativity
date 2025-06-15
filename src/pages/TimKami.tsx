@@ -1,473 +1,286 @@
+
 import React, { useState, useLayoutEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
-import TeamMemberCard from "@/components/TeamMemberCard";
-import TeamMemberBio from "@/components/TeamMemberBio";
+import { CategoryShowcase } from "@/components/ui/CategoryShowcase";
+import { FeaturedMemberCard } from "@/components/ui/FeaturedMemberCard";
+import { MemberCard } from "@/components/ui/MemberCard";
 import { StandardCard } from "@/components/ui/StandardCard";
-import { CategoryButton } from "@/components/ui/CategoryButton";
 import { IconDisplay } from "@/components/ui/IconDisplay";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Users, User, Video, Palette, Smile, FileText, Bot, Shield, Droplet } from "lucide-react";
-import { LucideIcon } from "lucide-react";
+import { Video, Palette, Smile, FileText, Users, Star, Droplet } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import TeamMemberBio from "@/components/TeamMemberBio";
 
-// Animation Variants for Framer Motion (fallback)
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 }
-  }
-};
-
-const memberVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-};
-
-// Team Data Structure with updated names and bios
-const teamMembers = [
-  {
-    id: "1",
-    name: "Muhammad Syahid Al Haqi",
-    role: "Founder",
-    imageSrc: null,
-    accent: "gold",
-    category: "video",
-    achievements: [
-      "Mendapatkan langsung Reward Umroh yang diserahkan langsung oleh Walikota Bandar Lampung, di acara DPD KNPI.",
-      "Juara 1 lomba baca Puisi nasional di Universitas Brawijaya Malang.",
-      "Juara 1 Lomba Cipta Baca Puisi Nasional di KGLL Lampung.",
-      "Juara 3 Lomba Baca Puisi BEM FKIP UNILA.",
-      "Juara 3 Lomba Baca Puisi UNUSA Surabaya.",
-      "Juara 2 Lomba Baca Puisi KMNU UNILA.",
-      "Juara 3 Lomba Baca Puisi Regional.",
-      "Juara 3 Lomba Baca Puisi SBS HMPJ Universitas Lampung 2023.",
-      "Dalam Acara AMUSE AL KAUTSAR 2023."
-    ]
-  },
-  {
-    id: "2",
-    name: "Kevin/Zyu",
-    role: "Video Editor",
-    instagram: "Zyu.",
-    imageSrc: "/lovable-uploads/video.png",
-    accent: "coral",
-    category: "video",
-    bio: "Nanti ditambah"
-  },
-  {
-    id: "3",
-    name: "Aljaan",
-    role: "Video Editor",
-    instagram: "@snhrrr",
-    imageSrc: "/lovable-uploads/video.png",
-    accent: "coral",
-    category: "video",
-    bio: "Nanti ditambah"
-  },
-  {
-    id: "4",
-    name: "Daffa/deploid",
-    role: "Meme Creator",
-    instagram: "",
-    imageSrc: "/lovable-uploads/meme.png",
-    accent: "emerald",
-    category: "meme",
-    bio: "Nanti ditambah"
-  },
-  {
-    id: "5",
-    name: "Kevin/Zyu",
-    role: "Meme Creator",
-    instagram: "Zyu.",
-    imageSrc: "/lovable-uploads/meme.png",
-    accent: "emerald",
-    category: "meme",
-    bio: "Nanti ditambah"
-  },
-  {
-    id: "6",
-    name: "Ashtrozz",
-    role: "Designer",
-    instagram: "damz.snyther",
-    imageSrc: "/lovable-uploads/design.png",
-    accent: "amethyst",
-    category: "design",
-    bio: "Nanti ditambah"
-  },
-  {
-    id: "7",
-    name: "nexx4sure",
-    role: "Designer",
-    instagram: "@mhmmdmhb_",
-    imageSrc: "/lovable-uploads/design.png",
-    accent: "amethyst",
-    category: "design",
-    bio: "Nanti ditambah"
-  },
-  {
-    id: "8",
-    name: "瑶Xoraa",
-    role: "Designer",
-    instagram: "xoraareall",
-    imageSrc: "/lovable-uploads/design.png",
-    accent: "amethyst",
-    category: "design",
-    bio: "Nanti ditambah"
-  },
-  {
-    id: "9",
-    name: "Rappal",
-    role: "Designer",
-    instagram: "raffal_arz",
-    imageSrc: "/lovable-uploads/design.png",
-    accent: "amethyst",
-    category: "design",
-    bio: "Nanti ditambah"
-  },
-  {
-    id: "10",
-    name: "Ardellio",
-    role: "Admin OC Edisi Coding",
-    instagram: "ardel.yo",
-    imageSrc: "/lovable-uploads/bot.png",
-    accent: "orangeLight",
-    category: "bot",
-    bio: "Ardellio adalah seorang siswa kelas 9 di SMPN 20 Bandung. Suka dengan coding dan programming, dan suka menulis. Meneliti dan Eksperimen dengan membuat juga menggunakan AI.",
-    achievements: [
-      "Juara 2 dalam kompetisi menulis RedGolden Media",
-      "Telah menerbitkan 1 buku.",
-      "Meraih medali emas di bidang bahasa Inggris, Di Yogyakarta (OSPI)",
-      "Meraih medali emas di bidang bahasa Inggris, Di Purwokerto (OSI-SP 2023)",
-      "Penghargaan Top 10 Artikel Schneider terbaik sekota Bandung."
-    ]
-  },
-  {
-    id: "11",
-    name: "Kevin",
-    role: "Writer",
-    instagram: "kv.ein_",
-    imageSrc: "/lovable-uploads/karyatulis.png",
-    accent: "grayMid",
-    category: "karyatulis",
-    bio: "Nanti ditambah"
-  },
-  {
-    id: "12",
-    name: "Senku",
-    role: "Writer",
-    instagram: "Senkuphotograph",
-    imageSrc: "/lovable-uploads/karyatulis.png",
-    accent: "grayMid",
-    category: "karyatulis",
-    bio: "Nanti ditambah"
-  },
-  {
-    id: "13",
-    name: "Saviora",
-    role: "Writer",
-    instagram: "saviorasa",
-    imageSrc: "/lovable-uploads/karyatulis.png",
-    accent: "grayMid",
-    category: "karyatulis",
-    bio: "Nanti ditambah"
-  },
-  {
-    id: "14",
-    name: "Rappal",
-    role: "Bot Developer",
-    instagram: "raffal_arz",
-    imageSrc: "/lovable-uploads/bot.png",
-    accent: "orangeLight",
-    category: "bot",
-    bio: "Nanti ditambah"
-  },
-  {
-    id: "15",
-    name: "Flores",
-    role: "Bot Developer",
-    instagram: "flores.gold",
-    imageSrc: "/lovable-uploads/bot.png",
-    accent: "orangeLight",
-    category: "bot",
-    bio: "Nanti ditambah"
-  },
-  {
-    id: "16",
-    name: "Aljaan",
-    role: "Discord Admin",
-    instagram: "@snhrrr",
-    imageSrc: null,
-    accent: "blueLight",
-    category: "admin",
-    bio: "Nanti ditambah"
-  }
-];
-
-// Team Categories with standardized design
+// Enhanced team data for the new layout
 const categories = [
   {
     id: "video",
     name: "Video Editing",
     icon: Video,
     color: "coral" as const,
-    description: "Tempat bagi para editor video untuk berkolaborasi, mempelajari software baru, dan menghasilkan konten sinematik."
+    description: "Tempat bagi para editor video untuk berkolaborasi, mempelajari software baru, dan menghasilkan konten sinematik berkualitas tinggi.",
+    memberCount: 8,
+    memberAvatars: ["K", "A", "S", "D"]
   },
   {
-    id: "design",
+    id: "design", 
     name: "Graphic Design",
     icon: Palette,
     color: "turquoise" as const,
-    description: "Wadah bagi para seniman visual untuk berbagi teknik, inspirasi, dan menciptakan karya desain yang memukau."
+    description: "Wadah bagi para seniman visual untuk berbagi teknik, inspirasi, dan menciptakan karya desain yang memukau dan bermakna.",
+    memberCount: 12,
+    memberAvatars: ["A", "N", "X", "R", "M"]
   },
   {
     id: "meme",
-    name: "Meme",
+    name: "Meme Creator", 
     icon: Smile,
     color: "softPink" as const,
-    description: "Ruang santai namun kreatif bagi para pembuat meme untuk berbagi humor dan mengasah kemampuan bercerita visual secara singkat."
+    description: "Ruang santai namun kreatif bagi para pembuat meme untuk berbagi humor dan mengasah kemampuan bercerita visual secara singkat.",
+    memberCount: 6,
+    memberAvatars: ["D", "K", "P"]
   },
   {
-    id: "karyatulis",
+    id: "writing",
     name: "Karya Tulis",
     icon: FileText,
     color: "mint" as const,
-    description: "Komunitas bagi para penulis, penyair, dan pencerita untuk berbagi tulisan, memberikan kritik membangun, dan mengasah keterampilan literasi."
-  },
+    description: "Komunitas bagi para penulis, penyair, dan pencerita untuk berbagi tulisan, memberikan kritik membangun, dan mengasah keterampilan literasi.",
+    memberCount: 6,
+    memberAvatars: ["K", "Se", "Sa"]
+  }
 ];
 
-// StatCard component with corrected icon type
-const StatCard = ({ icon, label, value, color }: { 
-  icon: LucideIcon; 
-  label: string; 
-  value: string;
-  color: "amethyst" | "turquoise" | "coral" | "mint" | "amber" | "emerald" | "softPink";
-}) => (
-  <motion.div 
-    className="flex flex-col items-center justify-center p-4 gap-3"
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, ease: "easeOut" }}
-    viewport={{ once: true, margin: "-100px" }}
-    whileHover={{ y: -5 }}
-  >
-    <IconDisplay icon={icon} color={color} size="lg" />
-    <div className="text-center">
-      <span className="text-3xl font-bold font-serif text-foreground block">{value}</span>
-      <span className="text-sm text-foreground/60 font-medium">{label}</span>
-    </div>
-  </motion.div>
-);
+// Featured members for the spotlight section
+const featuredMembers = [
+  {
+    id: "1",
+    name: "Muhammad Syahid Al Haqi",
+    role: "Founder & Poet",
+    category: "Leadership",
+    bio: "Pemenang berbagai kompetisi puisi nasional dan pemimpin visi OurCreativity. Mendapat penghargaan langsung dari Walikota Bandar Lampung.",
+    avatar: "MS",
+    accentColor: "amber" as const
+  },
+  {
+    id: "2", 
+    name: "Ardellio",
+    role: "Tech Lead",
+    category: "Development",
+    bio: "Siswa berbakat yang telah menerbitkan buku dan meraih medali emas dalam kompetisi bahasa Inggris tingkat nasional.",
+    avatar: "AR",
+    accentColor: "turquoise" as const
+  },
+  {
+    id: "3",
+    name: "Ashtrozz",
+    role: "Lead Designer", 
+    category: "Design",
+    bio: "Desainer kreatif yang memimpin tim visual dan menciptakan identitas brand yang kuat untuk komunitas.",
+    avatar: "AS",
+    accentColor: "amethyst" as const
+  },
+  {
+    id: "4",
+    name: "Kevin/Zyu",
+    role: "Multi-Creator",
+    category: "Video & Meme",
+    bio: "Kreator serbaguna yang aktif di bidang video editing dan pembuatan meme, memberikan sentuhan humor pada konten komunitas.",
+    avatar: "KZ",
+    accentColor: "coral" as const
+  }
+];
 
-// Main TimKami Component
+// All members for the directory
+const allMembers = [
+  // Video Editing Team
+  { name: "Kevin/Zyu", role: "Video Editor", category: "Video", avatar: "KZ", accentColor: "coral" as const },
+  { name: "Aljaan", role: "Video Editor", category: "Video", avatar: "AL", accentColor: "coral" as const },
+  
+  // Design Team  
+  { name: "Ashtrozz", role: "Designer", category: "Design", avatar: "AS", accentColor: "turquoise" as const },
+  { name: "nexx4sure", role: "Designer", category: "Design", avatar: "NX", accentColor: "turquoise" as const },
+  { name: "瑶Xoraa", role: "Designer", category: "Design", avatar: "XO", accentColor: "turquoise" as const },
+  { name: "Rappal", role: "Designer", category: "Design", avatar: "RP", accentColor: "turquoise" as const },
+  
+  // Meme Creators
+  { name: "Daffa/deploid", role: "Meme Creator", category: "Meme", avatar: "DF", accentColor: "softPink" as const },
+  
+  // Writers
+  { name: "Kevin", role: "Writer", category: "Writing", avatar: "KV", accentColor: "mint" as const },
+  { name: "Senku", role: "Writer", category: "Writing", avatar: "SE", accentColor: "mint" as const },
+  { name: "Saviora", role: "Writer", category: "Writing", avatar: "SV", accentColor: "mint" as const },
+  
+  // Bot Developers & Admins
+  { name: "Ardellio", role: "Tech Lead", category: "Development", avatar: "AR", accentColor: "orangeLight" as const },
+  { name: "Rappal", role: "Bot Developer", category: "Development", avatar: "RF", accentColor: "orangeLight" as const },
+  { name: "Flores", role: "Bot Developer", category: "Development", avatar: "FL", accentColor: "orangeLight" as const },
+  { name: "Aljaan", role: "Discord Admin", category: "Admin", avatar: "AJ", accentColor: "amethyst" as const }
+];
+
 const TimKami = () => {
   const [selectedMember, setSelectedMember] = useState<any>(null);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const mainContentRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    // Modern GSAP context pattern for proper cleanup
     const ctx = gsap.context(() => {
-      // Only run if ScrollTrigger is available
       if (typeof window !== 'undefined' && ScrollTrigger) {
-        // Simple fade-up animation for cards
-        gsap.fromTo(".animate-card", 
-          { 
-            opacity: 0, 
-            y: 30 
-          }, 
+        // Stagger animation for member cards
+        gsap.fromTo(".member-card", 
+          { opacity: 0, y: 30 }, 
           {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 0.6,
             ease: "power2.out",
             stagger: 0.1,
             scrollTrigger: {
-              trigger: ".animate-container",
+              trigger: ".member-grid",
               start: "top 85%",
-              end: "bottom 15%",
               toggleActions: "play none none reverse",
             }
           }
         );
 
-        // Refresh ScrollTrigger after a brief delay to ensure layout is stable
-        const refreshTimer = setTimeout(() => {
-          ScrollTrigger.refresh();
-        }, 100);
+        // Featured members scroll animation
+        gsap.fromTo(".featured-member", 
+          { opacity: 0, x: 50 }, 
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            stagger: 0.2,
+            scrollTrigger: {
+              trigger: ".featured-section",
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            }
+          }
+        );
 
-        return () => clearTimeout(refreshTimer);
+        setTimeout(() => ScrollTrigger.refresh(), 100);
       }
     }, mainContentRef);
 
-    return () => {
-      ctx.revert(); // This properly cleans up all GSAP animations and ScrollTriggers
-    };
-  }, [activeCategory]); // Re-run when category filter changes
+    return () => ctx.revert();
+  }, []);
 
   return (
     <PageLayout
       title="Tim Kami"
-      subtitle="OurCreativity digerakkan oleh para kreator dari berbagai bidang yang memiliki satu tujuan yang sama: membangun komunitas yang suportif dan inspiratif. Kami adalah tim yang berdedikasi untuk membantu generasi muda menemukan dan mengasah bakat mereka."
+      subtitle="OurCreativity digerakkan oleh para kreator dari berbagai bidang yang memiliki satu tujuan yang sama: membangun komunitas yang suportif dan inspiratif."
     >
-      <div ref={mainContentRef} className="space-y-8">
-        {/* Category selector with standardized design */}
-        <motion.div 
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
-          initial="hidden"
-          animate="visible"
-          variants={containerVariants}
+      <div ref={mainContentRef} className="space-y-16">
+        
+        {/* Section 1: Interactive Category Showcase */}
+        <motion.section
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
         >
-          {categories.map((category) => (
-            <motion.div key={category.id} variants={memberVariants}>
-              <CategoryButton
-                icon={category.icon}
-                text={category.name}
-                color={category.color}
-                isActive={activeCategory === category.id}
-                onClick={() => setActiveCategory(activeCategory === category.id ? null : category.id)}
-              />
-            </motion.div>
-          ))}
-        </motion.div>
+          <CategoryShowcase categories={categories} />
+        </motion.section>
 
-        {/* Team Overview Stats Card with Framer Motion instead of GSAP */}
-        <motion.div
+        {/* Section 2: Featured Members Spotlight */}
+        <motion.section 
+          className="featured-section"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true }}
         >
-          <StandardCard className="mb-10" glowColor="rgba(229, 222, 255, 0.3)">
-            <div className="flex items-center gap-4 mb-6">
-              <IconDisplay icon={Users} color="amethyst" size="lg" />
+          <StandardCard className="p-8" glowColor="rgba(229, 222, 255, 0.3)">
+            <div className="flex items-center gap-4 mb-8">
+              <IconDisplay icon={Star} color="amber" size="lg" />
               <div>
-                <h3 className="text-xl font-serif font-bold text-foreground">Tim Overview</h3>
-                <p className="text-sm text-foreground/60">Statistik anggota komunitas</p>
+                <h3 className="text-2xl font-serif font-bold text-foreground">Sorotan Anggota</h3>
+                <p className="text-foreground/60">Kenali para pemimpin dan kontributor utama komunitas kami</p>
               </div>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <StatCard icon={Video} label="Video Editing" value="8" color="coral" />
-              <StatCard icon={Palette} label="Graphic Design" value="12" color="turquoise" />
-              <StatCard icon={Smile} label="Meme" value="6" color="softPink" />
-              <StatCard icon={FileText} label="Karya Tulis" value="6" color="mint" />
-            </div>
-          </StandardCard>
-        </motion.div>
-
-        {/* Creative Categories Description */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          <StandardCard className="mb-10" glowColor="rgba(152, 245, 225, 0.3)">
-            <div className="flex items-center gap-4 mb-6">
-              <IconDisplay icon={Palette} color="turquoise" size="lg" />
-              <div>
-                <h3 className="text-xl font-serif font-bold text-foreground">Kategori Kreatif Kami</h3>
-                <p className="text-sm text-foreground/60">Setiap kategori memiliki identitas visualnya sendiri yang mencerminkan semangat kreativitas.</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {categories.map(cat => (
-                <motion.div 
-                  key={cat.id} 
-                  className="flex items-start gap-4"
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  viewport={{ once: true }}
-                >
-                  <IconDisplay icon={cat.icon} color={cat.color} size="md" className="mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-bold text-foreground">{cat.name}</h4>
-                    <p className="text-sm text-foreground/70">{cat.description}</p>
-                  </div>
-                </motion.div>
+            <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
+              {featuredMembers.map((member, index) => (
+                <div key={member.id} className="featured-member">
+                  <FeaturedMemberCard
+                    name={member.name}
+                    role={member.role}
+                    category={member.category}
+                    bio={member.bio}
+                    avatar={member.avatar}
+                    accentColor={member.accentColor}
+                    onClick={() => setSelectedMember(member)}
+                  />
+                </div>
               ))}
             </div>
           </StandardCard>
-        </motion.div>
+        </motion.section>
 
-        {/* Logo Philosophy Card */}
-        <motion.div
+        {/* Section 3: Member Directory Grid */}
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true }}
+        >
+          <div className="flex items-center gap-4 mb-8">
+            <IconDisplay icon={Users} color="turquoise" size="lg" />
+            <div>
+              <h3 className="text-2xl font-serif font-bold text-foreground">Direktori Anggota</h3>
+              <p className="text-foreground/60">Jelajahi semua talenta kreatif dalam komunitas</p>
+            </div>
+          </div>
+          
+          <div className="member-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {allMembers.map((member, index) => (
+              <div key={index} className="member-card">
+                <MemberCard
+                  name={member.name}
+                  role={member.role}
+                  category={member.category}
+                  avatar={member.avatar}
+                  accentColor={member.accentColor}
+                  onClick={() => setSelectedMember(member)}
+                />
+              </div>
+            ))}
+          </div>
+        </motion.section>
+
+        {/* Logo Philosophy Section */}
+        <motion.section
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true }}
         >
-          <StandardCard className="mb-10" glowColor="rgba(254, 198, 161, 0.3)">
+          <StandardCard className="p-8" glowColor="rgba(254, 198, 161, 0.3)">
             <div className="flex items-center gap-4 mb-6">
               <IconDisplay icon={Droplet} color="coral" size="lg" />
               <div>
-                <h3 className="text-xl font-serif font-bold text-foreground">Filosofi Logo O.C</h3>
-                <p className="text-sm text-foreground/60">Simbol di balik identitas visual kami.</p>
+                <h3 className="text-2xl font-serif font-bold text-foreground">Filosofi Logo O.C</h3>
+                <p className="text-foreground/60">Simbol di balik identitas visual kami</p>
               </div>
             </div>
             <p className="text-foreground/80 leading-relaxed mb-4">
-              Logo kami, yang sering disebut O.C (singkatan dari OurCreativity), adalah representasi visual dari nilai-nilai inti kami. Secara keseluruhan, logo ini mengambil bentuk simbol "infinity" atau tak terbatas, melambangkan keyakinan kami bahwa kreativitas manusia tidak seharusnya dibatasi. Ia harus terus berkembang, menjadi lebih baik, dan memiliki ciri khasnya sendiri.
+              Logo kami, yang sering disebut O.C (singkatan dari OurCreativity), adalah representasi visual dari nilai-nilai inti kami. Secara keseluruhan, logo ini mengambil bentuk simbol "infinity" atau tak terbatas, melambangkan keyakinan kami bahwa kreativitas manusia tidak seharusnya dibatasi.
             </p>
             <p className="text-foreground/80 leading-relaxed">
               Warna merah yang kami pilih melambangkan <strong className="text-coral">keberanian</strong>. Kami yakin, tanpa keberanian untuk memulai dan menunjukkan karya, seorang kreator tidak akan pernah bisa berkembang. Itulah semangat yang kami tanamkan di dalam komunitas OurCreativity.
             </p>
           </StandardCard>
-        </motion.div>
-
-        {/* Team members grid with improved animations */}
-        <div className="animate-container">
-          <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-            initial="hidden"
-            animate="visible"
-            variants={containerVariants}
-            key={activeCategory || 'all'} // Re-trigger animation on filter change
-          >
-            {teamMembers
-              .filter(member => !activeCategory || member.category === activeCategory)
-              .map((member, index) => (
-                <motion.div 
-                  key={member.id} 
-                  className="animate-card"
-                  variants={memberVariants}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <TeamMemberCard
-                    name={member.name}
-                    role={member.role}
-                    instagram={member.instagram}
-                    accentColor={member.accent}
-                    bio={member.bio}
-                    achievements={member.achievements}
-                    onClick={() => setSelectedMember(member)}
-                  />
-                </motion.div>
-              ))}
-          </motion.div>
-        </div>
-
-        {/* Empty state when no members match filter */}
-        {teamMembers.filter(member => !activeCategory || member.category === activeCategory).length === 0 && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-16"
-          >
-            <p className="text-foreground/60 text-lg">Tim untuk kategori ini akan segera diperkenalkan.</p>
-          </motion.div>
-        )}
+        </motion.section>
 
         {/* Member bio dialog */}
         <Dialog open={!!selectedMember} onOpenChange={(open) => !open && setSelectedMember(null)}>
           <DialogContent className="bg-secondary/90 backdrop-blur-xl max-w-3xl p-0 border-white/10">
             {selectedMember && <TeamMemberBio 
-              bio={selectedMember.bio}
-              achievements={selectedMember.achievements}
-              accentColor={selectedMember.accent}
+              bio={selectedMember.bio || "Informasi lebih lanjut akan segera tersedia."}
+              achievements={selectedMember.achievements || []}
+              accentColor={selectedMember.accentColor || "amethyst"}
               member={selectedMember}
             />}
           </DialogContent>
