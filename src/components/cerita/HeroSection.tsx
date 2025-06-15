@@ -22,7 +22,7 @@ export const HeroSection: React.FC = () => {
           </span>
         </blockquote>
         <p className="text-lg sm:text-xl text-foreground/70 font-sans">
-          - Pendiri OUR CREATIVITY
+          - Muhammad Syahid Al Haqi
         </p>
       </motion.div>
 
