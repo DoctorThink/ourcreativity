@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -47,7 +46,6 @@ const formSchema = z.object({
   }),
   description: z.string().optional(),
   content_url: z.string().url('URL konten tidak valid').optional().or(z.literal('')),
-  link_url: z.string().url('URL link tidak valid').optional().or(z.literal('')),
   media_file: z.instanceof(File, { message: 'File wajib diupload' }).optional(),
   media_type: z.enum(['image', 'video', 'text'], {
     required_error: 'Pilih tipe media',
@@ -73,7 +71,6 @@ export function KaryaUploadForm() {
       category: undefined,
       description: '',
       content_url: '',
-      link_url: '',
       media_type: 'image',
       image_url: '',
     },
@@ -204,7 +201,6 @@ export function KaryaUploadForm() {
         category: values.category,
         description: values.description || null,
         content_url: values.content_url || null,
-        link_url: values.link_url || null,
         status: 'pending', // Set the status to pending for admin review
       };
       
@@ -562,26 +558,6 @@ export function KaryaUploadForm() {
                     <FormControl>
                       <Input 
                         placeholder="https://..." 
-                        {...field} 
-                        value={field.value || ''}
-                        className="bg-secondary-dark/70 border-grayMid/30 focus:border-grayLight/80 text-foreground-dark placeholder:text-grayMid/70 rounded-xl"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Link URL */}
-              <FormField
-                control={form.control}
-                name="link_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-foreground-dark">Link Karya Lengkap (Opsional)</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="https://behance.net/karya-anda" 
                         {...field} 
                         value={field.value || ''}
                         className="bg-secondary-dark/70 border-grayMid/30 focus:border-grayLight/80 text-foreground-dark placeholder:text-grayMid/70 rounded-xl"

@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, ChevronRight, ChevronLeft, Image, Video, FileText, User2, Upload, CheckCircle, Link } from 'lucide-react';
+import { Plus, ChevronRight, ChevronLeft, Image, Video, FileText, User2, Upload, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -278,18 +279,6 @@ function StepMetadata({ category, details, setDetails, onNext, onBack }: any) {
             placeholder="Nama atau username kamu"
           />
         </div>
-        
-        <div className="space-y-2">
-          <Label className="text-white font-medium">Link Karya Lengkap (Opsional)</Label>
-          <Input
-            type="url"
-            value={details.linkUrl}
-            onChange={e => setDetails({ ...details, linkUrl: e.target.value })}
-            className="bg-white/5 border-white/20 backdrop-blur-lg text-white placeholder-gray-400 rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50"
-            placeholder="https://behance.net/karya-anda"
-          />
-           <p className="text-xs text-gray-400">Tautan ke karya lengkap di platform lain (Behance, Dribbble, dll.)</p>
-        </div>
       </div>
 
       <div className="flex justify-between gap-4">
@@ -397,15 +386,6 @@ function StepReview({ category, file, details, onBack, onSubmit, submitting }: a
                 <p className="text-gray-300">{details.creator}</p>
               </div>
             )}
-            
-            {details.linkUrl && (
-              <div>
-                <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wide">Link Karya Lengkap</h3>
-                <a href={details.linkUrl} target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:text-cyan-200 break-all">
-                  {details.linkUrl}
-                </a>
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -458,8 +438,7 @@ const UploadWizard = () => {
     title: '', 
     desc: '', 
     tags: '', 
-    creator: '',
-    linkUrl: ''
+    creator: '' 
   });
   const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
@@ -470,7 +449,7 @@ const UploadWizard = () => {
     setStep(0);
     setCategory('');
     setFile(null);
-    setDetails({ title: '', desc: '', tags: '', creator: '', linkUrl: '' });
+    setDetails({ title: '', desc: '', tags: '', creator: '' });
     setSubmitting(false);
   };
 
@@ -500,8 +479,7 @@ const UploadWizard = () => {
         creator_name: details.creator || 'Anonymous',
         image_url: filePath,
         content_url: filePath,
-        status: 'pending',
-        link_url: details.linkUrl || null
+        status: 'pending'
       });
 
     if (error) throw error;
