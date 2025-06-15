@@ -43,7 +43,7 @@ const Index = () => {
 
   const handleTileClick = (path: string, id: string) => {
     if (id === 'ayo-gabung') {
-      window.open('https://linktr.ee/ourcreativity', '_blank');
+      window.open('https://linktr.ee/ourcreativity.ofc', '_blank');
     } else {
       navigate(path);
     }

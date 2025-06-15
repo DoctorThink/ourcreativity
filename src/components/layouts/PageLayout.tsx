@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -80,7 +79,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
     { name: "Cerita Kami", path: "/cerita-kami", icon: BookOpen, type: "info", description: "Perjalanan, visi, dan misi komunitas." },
     { name: "Informasi", path: "/informasi", icon: Info, type: "info", description: "Detail lengkap tentang komunitas kami." },
     { name: "Syarat & Ketentuan", path: "/terms", icon: FileText, type: "info", description: "Panduan dan aturan main di komunitas." },
-    { name: "Ayo Gabung", path: "#", external: true, url: "https://linktr.ee/ourcreativity", icon: UserPlus, type: "cta" },
+    { name: "Ayo Gabung", path: "#", external: true, url: "https://linktr.ee/ourcreativity.ofc", icon: UserPlus, type: "cta" },
   ];
 
   const mainNav = navItems.filter(item => item.type === 'main');
