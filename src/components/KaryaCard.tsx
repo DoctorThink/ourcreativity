@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Database } from '@/integrations/supabase/types';
 import { motion } from 'framer-motion';
@@ -235,7 +234,7 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                   <span className="text-xs font-medium">{karya.view_count}</span>
                 </div>
               )}
-              {karya.link_url && (
+              {karya.link_url && karya.link_url.trim() && (
                 <a 
                   href={karya.link_url}
                   target="_blank"
