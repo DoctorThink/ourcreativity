@@ -4,19 +4,20 @@ import {
   DialogContent
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ExternalLink, X, Tag, ChevronLeft, ChevronRight, Heart, Share2 } from 'lucide-react';
+import { ChevronDown, ExternalLink, X, Tag, Heart, Share2 } from 'lucide-react';
 import { Database } from '@/integrations/supabase/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import ReactMarkdown from 'react-markdown';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -31,16 +32,63 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [showInfoPanel, setShowInfoPanel] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [hasLiked, setHasLiked] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     setCurrentIndex(initialIndex);
   }, [initialIndex, isOpen]);
 
+  const karya = karyaList[currentIndex];
+
+  useEffect(() => {
+    if (karya) {
+      const likedInStorage = localStorage.getItem(`liked_${karya.id}`);
+      setHasLiked(likedInStorage === 'true');
+    }
+  }, [karya]);
+
+  const likeMutation = useMutation({
+    mutationFn: async (karyaId: string) => {
+      const { error } = await supabase.rpc('increment_likes', { karya_id: karyaId });
+      if (error) throw new Error(error.message);
+      return karyaId;
+    },
+    onSuccess: (karyaId) => {
+      queryClient.invalidateQueries({ queryKey: ['karya'] });
+      localStorage.setItem(`liked_${karyaId}`, 'true');
+      setHasLiked(true);
+      toast.success('Terima kasih sudah suka!');
+    },
+    onError: (error) => {
+      toast.error('Gagal menyukai karya. Coba lagi nanti.');
+      console.error('Like error:', error);
+    },
+  });
+
+  const handleShare = async () => {
+    if (!karya) return;
+    const shareData = {
+      title: `Lihat karya "${karya.title}"`,
+      text: `Karya "${karya.title}" oleh ${karya.creator_name} di Our Creativity.`,
+      url: window.location.href,
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareData.url);
+        toast.success('Link karya berhasil disalin!');
+      }
+    } catch (err) {
+      console.error("Error sharing:", err);
+      toast.error("Tidak dapat membagikan karya saat ini.");
+    }
+  };
+
   if (!karyaList || karyaList.length === 0) {
     return null;
   }
-
-  const karya = karyaList[currentIndex];
 
   const handleNext = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -96,12 +144,13 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
   
   const tags = extractTags();
 
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 overflow-hidden border-border/30 backdrop-blur-xl shadow-xl transition-all duration-300 max-w-[100vw] max-h-[100vh] w-[100vw] h-[100vh] rounded-none">
-        <div className="flex flex-col h-full overflow-hidden">
+      <DialogContent className="p-0 overflow-hidden border-border/30 backdrop-blur-xl shadow-xl transition-all duration-300 max-w-[100vw] max-h-[100vh] w-[100vw] h-[100vh] md:max-w-4xl md:max-h-[90vh] md:w-full md:h-auto md:rounded-2xl">
+        <div className="flex flex-col md:flex-row h-full overflow-hidden">
           {/* Content preview with enhanced media display */}
-          <div className="relative w-full bg-black/50 flex-grow" 
+          <div className="relative w-full md:w-2/3 bg-black/50 flex-grow" 
                style={{ height: isText ? 'auto' : '100vh' }}>
             {isText ? (
               isDocument(karya.content_url) ? (
@@ -176,12 +225,12 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious className="absolute left-4 z-10 bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-white/10">
+                {/* <CarouselPrevious className="absolute left-4 z-10 bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-white/10">
                   <ChevronLeft className="h-4 w-4" />
                 </CarouselPrevious>
                 <CarouselNext className="absolute right-4 z-10 bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-white/10">
                   <ChevronRight className="h-4 w-4" />
-                </CarouselNext>
+                </CarouselNext> */}
               </Carousel>
             ) : (
               <>
@@ -201,24 +250,6 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                     className="w-full h-full object-contain max-h-full"
                   />
                 )}
-              </>
-            )}
-            
-            {/* Navigation Buttons */}
-            {!isText && karyaList.length > 1 && (
-              <>
-                <Button
-                  onClick={handlePrevious}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-white/10 rounded-full w-12 h-12 p-0"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </Button>
-                <Button
-                  onClick={handleNext}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-white/10 rounded-full w-12 h-12 p-0"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </Button>
               </>
             )}
             
@@ -251,7 +282,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                className="bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md absolute bottom-0 left-0 right-0 z-10 max-h-[60vh] sm:max-h-[50vh] overflow-y-auto rounded-t-3xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.2)]"
+                className="bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md absolute bottom-0 left-0 right-0 z-10 max-h-[60vh] sm:max-h-[50vh] overflow-y-auto rounded-t-3xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.2)] md:static md:w-1/3 md:max-h-full md:rounded-none md:border-t-0 md:border-l"
               >
                 {/* Header with title and category info */}
                 <div className="flex justify-between items-start p-4 sm:p-6 border-b border-border/20">
@@ -345,9 +376,15 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
                       <Button
                         size="sm"
-                        className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-secondary text-foreground hover:bg-secondary/80 border border-white/10 font-medium"
+                        className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-secondary text-foreground hover:bg-secondary/80 border border-white/10 font-medium disabled:opacity-50"
+                        onClick={() => {
+                          if (!hasLiked && karya) {
+                            likeMutation.mutate(karya.id);
+                          }
+                        }}
+                        disabled={hasLiked || likeMutation.isPending}
                       >
-                        <Heart className="w-4 h-4" />
+                        <Heart className={`w-4 h-4 transition-colors ${hasLiked ? 'text-red-500 fill-current' : ''}`} />
                         <span>Suka ({karya.likes_count || 0})</span>
                       </Button>
                     </motion.div>
@@ -355,7 +392,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                       <Button
                         size="sm"
                         className="gap-2 w-full sm:w-auto rounded-full shadow-lg hover:shadow-xl transition-shadow bg-secondary text-foreground hover:bg-secondary/80 border border-white/10 font-medium"
-                        onClick={() => navigator.clipboard.writeText(window.location.href)}
+                        onClick={handleShare}
                       >
                         <Share2 className="w-4 h-4" />
                         <span>Bagikan</span>
