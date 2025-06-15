@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, Upload, FileText, Image, Video, Smile, Bold, Italic, 
-  Quote, Link, List, Eye, Edit3, Camera, Play
+  Quote, Link, List, Eye, Edit3, Camera, Play, Type, FileUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -61,9 +60,9 @@ const categories = [
     value: 'writing', 
     label: 'Karya Tulis', 
     icon: FileText, 
-    acceptedTypes: '', 
-    maxSize: 0,
-    description: 'Tulis cerita, puisi, dan artikel'
+    acceptedTypes: '.pdf,.doc,.docx,.txt',
+    maxSize: 10 * 1024 * 1024, // 10MB
+    description: 'Tulis atau unggah dokumen Anda'
   },
 ];
 
@@ -130,6 +129,7 @@ Rekomendasi saya:`
 const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess }) => {
   const [formData, setFormData] = useState({
     title: '',
+    creator_name: '',
     category: '',
     description: '',
     content: '', // This will store the main content for written works
@@ -142,6 +142,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState('blank');
+  const [writingOption, setWritingOption] = useState<'editor' | 'upload'>('editor');
   
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -197,21 +198,28 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
       newErrors.title = 'Judul terlalu panjang (maksimal 100 karakter)';
     }
 
+    if (!formData.creator_name.trim()) {
+      newErrors.creator_name = 'Nama kreator tidak boleh kosong';
+    }
+
     if (!formData.category) {
       newErrors.category = 'Kategori harus dipilih';
     }
 
-    if (!isWrittenWork && !file) {
-      newErrors.file = 'File harus dipilih';
-    }
-
-    if (isWrittenWork && !formData.content.trim()) {
-      newErrors.content = 'Konten karya tulis tidak boleh kosong';
+    if (isWrittenWork) {
+        if (writingOption === 'editor' && !formData.content.trim()) {
+            newErrors.content = 'Konten karya tulis tidak boleh kosong';
+        }
+        if (writingOption === 'upload' && !file) {
+            newErrors.file = 'Dokumen harus diunggah';
+        }
+    } else if (!file) {
+        newErrors.file = 'File harus dipilih';
     }
 
     if (file && selectedCategory) {
       if (file.size > selectedCategory.maxSize) {
-        newErrors.file = 'Ukuran file melebihi 5MB';
+        newErrors.file = `Ukuran file melebihi batas (Max: ${selectedCategory.maxSize / 1024 / 1024}MB)`;
       }
     }
 
@@ -300,7 +308,11 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
 
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-    const bucketName = formData.category === 'video' ? 'karya-videos' : 'karya-images';
+    
+    let bucketName = 'karya-images';
+    if (formData.category === 'video') {
+      bucketName = 'karya-videos';
+    }
 
     // Simulate progress for better UX
     const progressInterval = setInterval(() => {
@@ -321,31 +333,35 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
     setUploadProgress(100);
 
     if (error) throw error;
-    return data.path;
+
+    // Return the full public URL
+    const { data: { publicUrl } } = supabase.storage.from(bucketName).getPublicUrl(fileName);
+    return publicUrl;
   };
 
-  const saveToDatabase = async (filePath?: string) => {
-    // CRITICAL FIX: Properly map the data based on content type
+  const saveToDatabase = async (fileUrl?: string) => {
     const karyaData: any = {
       title: formData.title,
       category: formData.category,
-      creator_name: 'Anonymous',
+      creator_name: formData.creator_name,
       status: 'pending'
     };
 
     if (isWrittenWork) {
-      // For written works: save main content to content_url and description separately
-      karyaData.content_url = formData.content; // Main written content
-      karyaData.description = formData.description || null; // Short description
-      karyaData.image_url = '/lovable-uploads/karyatulis.png'; // Default image for text entries
+      karyaData.description = formData.description || null;
+      karyaData.image_url = '/lovable-uploads/karyatulis.png';
+      if (writingOption === 'editor') {
+        karyaData.content_url = formData.content;
+      } else {
+        karyaData.content_url = fileUrl || ''; // URL to uploaded document
+      }
     } else {
-      // For media works: save file path and description
-      karyaData.image_url = filePath || '';
+      karyaData.image_url = fileUrl || '';
       karyaData.description = formData.description || null;
       karyaData.content_url = null;
     }
 
-    console.log('Saving karya data:', karyaData); // Debug log to verify data structure
+    console.log('Saving karya data:', karyaData);
 
     const { data, error } = await supabase
       .from('karya')
@@ -362,13 +378,13 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
     setUploadProgress(0);
     
     try {
-      let filePath = undefined;
+      let fileUrl = undefined;
       
-      if (!isWrittenWork && file) {
-        filePath = await uploadFile();
+      if ((!isWrittenWork && file) || (isWrittenWork && writingOption === 'upload' && file)) {
+        fileUrl = await uploadFile();
       }
 
-      await saveToDatabase(filePath);
+      await saveToDatabase(fileUrl);
 
       toast({
         title: "Karya berhasil diunggah!",
@@ -377,7 +393,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
 
       // Clear draft and reset form
       localStorage.removeItem('karya-draft');
-      setFormData({ title: '', category: '', description: '', content: '' });
+      setFormData({ title: '', creator_name: '', category: '', description: '', content: '' });
       setFile(null);
       setPreviewUrl(null);
       setErrors({});
@@ -463,6 +479,23 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
             )}
           </div>
 
+          {/* Creator Name Input */}
+          <div className="space-y-2">
+            <Label htmlFor="creator_name" className="text-white font-medium text-sm">
+              Nama Kreator
+            </Label>
+            <Input
+              id="creator_name"
+              value={formData.creator_name}
+              onChange={(e) => setFormData({ ...formData, creator_name: e.target.value })}
+              className="bg-white/10 border-white/30 backdrop-blur-lg text-white placeholder-gray-400 rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50"
+              placeholder="Masukkan nama kamu atau nama pena"
+            />
+            {errors.creator_name && (
+              <p className="text-red-400 text-sm">{errors.creator_name}</p>
+            )}
+          </div>
+
           {/* Category Select */}
           <div className="space-y-2">
             <Label htmlFor="category" className="text-white font-medium text-sm">
@@ -515,131 +548,287 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuccess })
             >
               {isWrittenWork ? (
                 <div className="space-y-4">
-                  {/* Template Selection */}
+                  {/* Writing Options */}
                   <div className="space-y-2">
-                    <Label className="text-white font-medium text-sm">Template</Label>
+                    <Label className="text-white font-medium text-sm">Metode Penulisan</Label>
                     <div className="grid grid-cols-2 gap-2">
-                      {writingTemplates.map((template) => (
-                        <Button
-                          key={template.id}
+                       <Button
                           type="button"
-                          variant={selectedTemplate === template.id ? "default" : "outline"}
-                          onClick={() => {
-                            setSelectedTemplate(template.id);
-                            setFormData({ ...formData, content: template.content });
-                          }}
-                          className={`rounded-xl p-2 text-xs ${
-                            selectedTemplate === template.id 
+                          variant={writingOption === 'editor' ? "default" : "outline"}
+                          onClick={() => setWritingOption('editor')}
+                          className={`rounded-xl p-2 h-auto text-sm flex items-center justify-center gap-2 ${
+                            writingOption === 'editor' 
                               ? 'bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] text-black' 
                               : 'border-white/30 bg-white/10 hover:bg-white/20 text-white'
                           }`}
                         >
-                          {template.name}
+                          <Type className="w-4 h-4" /> Tulis Langsung
                         </Button>
-                      ))}
+                        <Button
+                          type="button"
+                          variant={writingOption === 'upload' ? "default" : "outline"}
+                          onClick={() => setWritingOption('upload')}
+                          className={`rounded-xl p-2 h-auto text-sm flex items-center justify-center gap-2 ${
+                            writingOption === 'upload' 
+                              ? 'bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] text-black' 
+                              : 'border-white/30 bg-white/10 hover:bg-white/20 text-white'
+                          }`}
+                        >
+                          <FileUp className="w-4 h-4" /> Unggah Dokumen
+                        </Button>
                     </div>
                   </div>
 
-                  {/* Markdown Editor with Toolbar */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="content" className="text-white font-medium text-sm">
-                        Konten Karya Tulis
-                      </Label>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setShowPreview(!showPreview)}
-                        className="border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs"
-                      >
-                        {showPreview ? <Edit3 className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-                        {showPreview ? 'Edit' : 'Preview'}
-                      </Button>
-                    </div>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={writingOption}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {writingOption === 'editor' ? (
+                        <div className="space-y-4">
+                          {/* Template Selection */}
+                          <div className="space-y-2">
+                            <Label className="text-white font-medium text-sm">Template</Label>
+                            <div className="grid grid-cols-2 gap-2">
+                              {writingTemplates.map((template) => (
+                                <Button
+                                  key={template.id}
+                                  type="button"
+                                  variant={selectedTemplate === template.id ? "default" : "outline"}
+                                  onClick={() => {
+                                    setSelectedTemplate(template.id);
+                                    setFormData({ ...formData, content: template.content });
+                                  }}
+                                  className={`rounded-xl p-2 text-xs ${
+                                    selectedTemplate === template.id 
+                                      ? 'bg-gradient-to-r from-[#E5DEFF] via-[#98F5E1] to-[#FEC6A1] text-black' 
+                                      : 'border-white/30 bg-white/10 hover:bg-white/20 text-white'
+                                  }`}
+                                >
+                                  {template.name}
+                                </Button>
+                              ))}
+                            </div>
+                          </div>
 
-                    {/* Formatting Toolbar */}
-                    <div className="flex flex-wrap gap-1 p-2 bg-white/5 border border-white/20 rounded-xl">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => insertMarkdown('bold')}
-                        className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
-                      >
-                        <Bold className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => insertMarkdown('italic')}
-                        className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
-                      >
-                        <Italic className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => insertMarkdown('quote')}
-                        className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
-                      >
-                        <Quote className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => insertMarkdown('link')}
-                        className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
-                      >
-                        <Link className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => insertMarkdown('list')}
-                        className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
-                      >
-                        <List className="w-3 h-3" />
-                      </Button>
-                    </div>
+                          {/* Markdown Editor with Toolbar */}
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <Label htmlFor="content" className="text-white font-medium text-sm">
+                                Konten Karya Tulis
+                              </Label>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setShowPreview(!showPreview)}
+                                className="border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs"
+                              >
+                                {showPreview ? <Edit3 className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                                {showPreview ? 'Edit' : 'Preview'}
+                              </Button>
+                            </div>
 
-                    {/* Editor/Preview */}
-                    <div className={`grid ${showPreview ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'} gap-4`}>
-                      {!showPreview || window.innerWidth < 1024 ? (
-                        <Textarea
-                          ref={textareaRef}
-                          id="content"
-                          value={formData.content}
-                          onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                          className="min-h-[200px] bg-white/10 border-white/30 backdrop-blur-lg text-white placeholder-gray-400 rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50 resize-none text-sm"
-                          placeholder="Tulis karya kamu di sini... Gunakan Markdown untuk formatting!"
-                        />
-                      ) : null}
-                      
-                      {showPreview && (
-                        <div className="min-h-[200px] p-3 bg-white/5 border border-white/20 rounded-xl overflow-y-auto">
-                          <div 
-                            className="text-white prose prose-invert max-w-none text-sm"
-                            dangerouslySetInnerHTML={{ __html: renderMarkdownPreview() }}
-                          />
+                            {/* Formatting Toolbar */}
+                            <div className="flex flex-wrap gap-1 p-2 bg-white/5 border border-white/20 rounded-xl">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => insertMarkdown('bold')}
+                                className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
+                              >
+                                <Bold className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => insertMarkdown('italic')}
+                                className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
+                              >
+                                <Italic className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => insertMarkdown('quote')}
+                                className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
+                              >
+                                <Quote className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => insertMarkdown('link')}
+                                className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
+                              >
+                                <Link className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => insertMarkdown('list')}
+                                className="text-white hover:bg-white/20 rounded-lg p-1 h-8 w-8"
+                              >
+                                <List className="w-3 h-3" />
+                              </Button>
+                            </div>
+
+                            {/* Editor/Preview */}
+                            <div className={`grid ${showPreview ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'} gap-4`}>
+                              {!showPreview || window.innerWidth < 1024 ? (
+                                <Textarea
+                                  ref={textareaRef}
+                                  id="content"
+                                  value={formData.content}
+                                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                                  className="min-h-[200px] bg-white/10 border-white/30 backdrop-blur-lg text-white placeholder-gray-400 rounded-xl focus:ring-cyan-400/50 focus:border-cyan-400/50 resize-none text-sm"
+                                  placeholder="Tulis karya kamu di sini... Gunakan Markdown untuk formatting!"
+                                />
+                              ) : null}
+                              
+                              {showPreview && (
+                                <div className="min-h-[200px] p-3 bg-white/5 border border-white/20 rounded-xl overflow-y-auto">
+                                  <div 
+                                    className="text-white prose prose-invert max-w-none text-sm"
+                                    dangerouslySetInnerHTML={{ __html: renderMarkdownPreview() }}
+                                  />
+                                </div>
+                              )}
+                            </div>
+
+                            <p className="text-xs text-gray-400">
+                              Tips: Gunakan **bold**, *italic*, # heading, {'>'}quote, dan - list untuk formatting
+                            </p>
+                            {errors.content && (
+                              <p className="text-red-400 text-sm">{errors.content}</p>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        // Document Upload Section
+                        <div className="space-y-4">
+                          <Label className="text-white font-medium text-sm">
+                            Upload Dokumen
+                          </Label>
+                          
+                          {file ? (
+                            <div className="space-y-4">
+                              {/* File Preview */}
+                              <div className="flex items-center gap-4 p-3 bg-white/10 border border-white/30 rounded-xl">
+                                {previewUrl && (
+                                  <div className="flex-shrink-0">
+                                    {file.type.startsWith('image/') ? (
+                                      <img 
+                                        src={previewUrl} 
+                                        alt="Preview" 
+                                        className="w-12 h-12 object-cover rounded-lg border-2 border-white/30"
+                                      />
+                                    ) : (
+                                      <video 
+                                        src={previewUrl} 
+                                        className="w-12 h-12 object-cover rounded-lg border-2 border-white/30"
+                                        muted
+                                      />
+                                    )}
+                                  </div>
+                                )}
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2">
+                                    {selectedCategory && <selectedCategory.icon className="w-4 h-4 text-cyan-400 flex-shrink-0" />}
+                                    <div className="min-w-0">
+                                      <p className="text-white font-medium truncate text-sm">{file.name}</p>
+                                      <p className="text-gray-400 text-xs">
+                                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                                      </p>
+                                    </div>
+                                  </div>
+                                  
+                                  {uploading && uploadProgress > 0 && (
+                                    <div className="mt-2">
+                                      <div className="flex justify-between text-xs text-gray-400 mb-1">
+                                        <span>Mengupload...</span>
+                                        <span>{Math.round(uploadProgress)}%</span>
+                                      </div>
+                                      <div className="w-full bg-white/20 rounded-full h-1">
+                                        <div 
+                                          className="bg-gradient-to-r from-cyan-400 to-blue-500 h-1 rounded-full transition-all duration-300"
+                                          style={{ width: `${uploadProgress}%` }}
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setFile(null);
+                                    setPreviewUrl(null);
+                                    setUploadProgress(0);
+                                  }}
+                                  className="border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg flex-shrink-0 text-xs"
+                                  disabled={uploading}
+                                >
+                                  Ganti
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept={selectedCategory?.acceptedTypes}
+                                className="hidden"
+                                onChange={(e) => e.target.files && handleFileSelect(e.target.files[0])}
+                              />
+                              <div
+                                onClick={() => fileInputRef.current?.click()}
+                                onDrag={handleDrag}
+                                onDragEnter={handleDrag}
+                                onDragLeave={handleDrag}
+                                onDragOver={handleDrag}
+                                onDrop={handleDrop}
+                                className={`cursor-pointer transition-all duration-300 ${
+                                  dragActive 
+                                    ? 'border-cyan-400/70 bg-cyan-400/10 scale-105' 
+                                    : 'border-white/30 hover:border-cyan-400/50 hover:bg-white/10'
+                                }`}
+                              >
+                                <div className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl bg-white/5">
+                                  <div className="p-2 rounded-full bg-white/10 mb-2">
+                                    <Upload className="w-6 h-6 text-cyan-400" />
+                                  </div>
+                                  <p className="text-white font-medium mb-1 text-sm">Drag & Drop file di sini</p>
+                                  <p className="text-gray-400 text-xs mb-2">atau klik untuk pilih file</p>
+                                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                                    <FileText className="w-3 h-3" />
+                                    <span>PDF, DOCX, DOC, TXT • Max 10MB</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {errors.file && (
+                            <p className="text-red-400 text-sm">{errors.file}</p>
+                          )}
                         </div>
                       )}
-                    </div>
-
-                    <p className="text-xs text-gray-400">
-                      Tips: Gunakan **bold**, *italic*, # heading, {'>'}quote, dan - list untuk formatting
-                    </p>
-                    {errors.content && (
-                      <p className="text-red-400 text-sm">{errors.content}</p>
-                    )}
-                  </div>
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               ) : (
-                // File Upload Section
+                // File Upload Section for Image/Video
                 <div className="space-y-4">
                   <Label className="text-white font-medium text-sm">
                     Upload File

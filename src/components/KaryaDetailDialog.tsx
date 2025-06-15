@@ -48,6 +48,7 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
   };
 
   const isVideo = (url: string) => url?.match(/\.(mp4|webm|ogg)$/i);
+  const isDocument = (url: string | null | undefined): boolean => !!url && /\.(pdf|docx?|txt)$/i.test(url);
   const isText = karya.category === 'writing' && karya.content_url;
   
   // Use the media_urls array if it exists and has items, otherwise fallback to image_url
@@ -82,35 +83,54 @@ const KaryaDetailDialog = ({ karya, isOpen, onClose }: KaryaDetailDialogProps) =
           <div className="relative w-full bg-black/50 flex-grow" 
                style={{ height: isText ? 'auto' : '100vh' }}>
             {isText ? (
-              <div className="w-full h-full flex flex-col bg-secondary backdrop-blur-md">
-                <div className="flex-shrink-0 p-8 text-center border-b border-border/20">
-                  <img 
-                    src="/lovable-uploads/karyatulis.png" 
-                    alt="Karya Tulis" 
-                    className="w-16 h-16 mx-auto mb-4 opacity-80" 
-                  />
-                  <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground font-sans">{karya.title}</h2>
-                  <p className="text-sm text-foreground/70 font-medium">Oleh {karya.creator_name}</p>
+              isDocument(karya.content_url) ? (
+                <div className="w-full h-full flex flex-col items-center justify-center bg-secondary backdrop-blur-md p-8 text-center">
+                    <img 
+                      src="/lovable-uploads/karyatulis.png" 
+                      alt="Karya Tulis" 
+                      className="w-24 h-24 mx-auto mb-6 opacity-80" 
+                    />
+                    <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground font-sans">{karya.title}</h2>
+                    <p className="text-base text-foreground/70 font-medium mb-8">Oleh {karya.creator_name}</p>
+                    <Button 
+                      onClick={() => window.open(karya.content_url!, '_blank')}
+                      className="gap-2 rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      Lihat Dokumen
+                    </Button>
                 </div>
-                
-                {/* Scrollable Text Content */}
-                <div className="flex-1 min-h-0 p-6 md:p-8">
-                  <ScrollArea className="h-full w-full max-h-[calc(100vh-220px)]">
-                    <div className="max-w-4xl mx-auto">
-                      {/* FIX: Wrap ReactMarkdown in a div to apply prose styles */}
-                      <div className="prose prose-lg prose-invert max-w-none text-foreground/90 font-sans leading-relaxed">
-                        <ReactMarkdown
-                          components={{
-                            a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-mint hover:text-sage" />
-                          }}
-                        >
-                          {karya.content_url || ''}
-                        </ReactMarkdown>
+              ) : (
+                <div className="w-full h-full flex flex-col bg-secondary backdrop-blur-md">
+                  <div className="flex-shrink-0 p-8 text-center border-b border-border/20">
+                    <img 
+                      src="/lovable-uploads/karyatulis.png" 
+                      alt="Karya Tulis" 
+                      className="w-16 h-16 mx-auto mb-4 opacity-80" 
+                    />
+                    <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground font-sans">{karya.title}</h2>
+                    <p className="text-sm text-foreground/70 font-medium">Oleh {karya.creator_name}</p>
+                  </div>
+                  
+                  {/* Scrollable Text Content */}
+                  <div className="flex-1 min-h-0 p-6 md:p-8">
+                    <ScrollArea className="h-full w-full max-h-[calc(100vh-220px)]">
+                      <div className="max-w-4xl mx-auto">
+                        {/* FIX: Wrap ReactMarkdown in a div to apply prose styles */}
+                        <div className="prose prose-lg prose-invert max-w-none text-foreground/90 font-sans leading-relaxed">
+                          <ReactMarkdown
+                            components={{
+                              a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-mint hover:text-sage" />
+                            }}
+                          >
+                            {karya.content_url || ''}
+                          </ReactMarkdown>
+                        </div>
                       </div>
-                    </div>
-                  </ScrollArea>
+                    </ScrollArea>
+                  </div>
                 </div>
-              </div>
+              )
             ) : mediaUrls.length > 1 ? (
               <Carousel className="w-full h-full">
                 <CarouselContent className="h-full">
