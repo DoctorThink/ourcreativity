@@ -1,37 +1,39 @@
 
 import React from "react";
-import { Star, Users, BookCopy, PenSquare } from "lucide-react";
-import { GlowarAccordion } from "./GlowarAccordion";
+import { Star, Users, Award, MessageSquare, GalleryHorizontal } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const ProgramsSection: React.FC = () => {
-  const programs = [
+  const benefits = [
     {
-      id: "workshop",
-      icon: Star,
-      title: "Workshop Bulanan",
-      content: "Setiap bulan, kami menyelenggarakan workshop yang dipimpin oleh praktisi berpengalaman di berbagai bidang kreatif. Workshop ini mencakup desain grafis, penulisan kreatif, fotografi, video editing, dan banyak lagi. Peserta akan mendapatkan hands-on experience dan feedback langsung dari mentor.",
+      icon: GalleryHorizontal,
+      title: "Panggung Digital",
+      description: "Pamerkan karyamu di galeri digital \"Karya Kami\". Jadikan ini panggung untuk membangun portofolio profesional dan dapatkan apresiasi yang layak.",
       iconColor: "bg-mint text-white"
     },
     {
-      id: "showcase",
-      icon: BookCopy,
-      title: "Showcase Triwulan",
-      content: "Setiap tiga bulan, kami mengadakan pameran digital dan fisik untuk menampilkan karya-karya terbaik dari anggota komunitas. Ini adalah kesempatan bagi kreator untuk mendapatkan eksposur, feedback dari audiens yang lebih luas, dan networking dengan sesama kreator serta industri kreatif.",
+      icon: Award,
+      title: "Workshop Eksklusif",
+      description: "Akses workshop dan sesi belajar eksklusif dari para praktisi untuk mengasah dan meningkatkan keterampilan kreatifmu ke level berikutnya.",
       iconColor: "bg-turquoise text-background"
     },
     {
-      id: "mentoring",
       icon: Users,
-      title: "Program Mentoring",
-      content: "Sistem mentoring one-on-one yang menghubungkan anggota baru dengan kreator berpengalaman dalam komunitas. Mentor akan memberikan guidance personal, review portfolio, dan membantu mengembangkan jalur karir kreatif yang sesuai dengan minat dan bakat masing-masing.",
+      title: "Ruang Diskusi & Kolaborasi",
+      description: "Terhubung dalam ruang diskusi aktif untuk bertukar ide, menemukan partner untuk proyek kolaborasi, dan mendapatkan inspirasi dari sesama kreator.",
       iconColor: "bg-coral text-background"
     },
     {
-      id: "collaboration",
-      icon: PenSquare,
-      title: "Proyek Kolaboratif",
-      content: "Kami memfasilitasi pembentukan tim untuk mengerjakan proyek-proyek kreatif bersama. Mulai dari kampanye sosial, pembuatan konten untuk brand, hingga proyek seni eksperimental. Ini adalah cara terbaik untuk belajar bekerja dalam tim dan menghasilkan karya yang impactful.",
+      icon: MessageSquare,
+      title: "Feedback & Mentoring",
+      description: "Jangan berkarya sendirian. Dapatkan feedback konstruktif dan mentoring dari tim kurator kami untuk membantu menyempurnakan karyamu.",
       iconColor: "bg-amethyst text-background"
+    },
+    {
+      icon: Star,
+      title: "Sorotan Komunitas",
+      description: "Raih kesempatan untuk tampil di \"Sorotan Unggulan\". Karya terbaik akan kami promosikan di website dan media sosial untuk memberimu pengakuan dan eksposur yang lebih luas.",
+      iconColor: "bg-yellow-500 text-white"
     }
   ];
 
@@ -43,11 +45,30 @@ export const ProgramsSection: React.FC = () => {
             Program & Fasilitas
           </h2>
           <p className="text-lg text-foreground/70 font-sans">
-            Apa yang akan Anda dapatkan sebagai bagian dari komunitas kami
+            Keuntungan Bergabung dengan Komunitas Kami
           </p>
         </div>
 
-        <GlowarAccordion items={programs} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {benefits.map((benefit, index) => (
+            <Card 
+              key={index} 
+              className="bg-card/50 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/20"
+            >
+              <CardHeader>
+                <div className="flex items-center gap-4">
+                  <div className={`p-3 rounded-full ${benefit.iconColor}`}>
+                    <benefit.icon className="w-6 h-6" />
+                  </div>
+                  <CardTitle className="font-serif text-xl">{benefit.title}</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-foreground/80 font-sans leading-relaxed">{benefit.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </section>
   );
