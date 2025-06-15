@@ -17,7 +17,12 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   onKaryaClick,
 }) => {
   const breakpointColumnsObj = {
-    default: 4, 1536: 3, 1280: 3, 1024: 2, 768: 2, 640: 1
+    default: 4,
+    1280: 3,
+    1024: 3,
+    768: 2,
+    640: 1,
+    480: 1
   };
 
   const handleItemClick = (item: KaryaType) => {
@@ -27,29 +32,63 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   };
 
   return (
-    <Masonry
-      breakpointCols={breakpointColumnsObj}
-      className="flex w-auto -ml-4 my-masonry-grid"
-      columnClassName="pl-4 bg-transparent my-masonry-grid_column"
-    >
-      <AnimatePresence>
-        {items.map((item, index) => (
-          <motion.div
-            key={item.id}
-            layout
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="mb-6"
-          >
-            <KaryaCard 
-              karya={item} 
-              onClick={() => handleItemClick(item)} 
-            />
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    </Masonry>
+    <div className="w-full">
+      <Masonry
+        breakpointCols={breakpointColumnsObj}
+        className="masonry-grid"
+        columnClassName="masonry-grid-column"
+      >
+        <AnimatePresence>
+          {items.map((item, index) => (
+            <motion.div
+              key={item.id}
+              layout
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+              transition={{ duration: 0.3, ease: 'easeOut', delay: index * 0.05 }}
+              className="masonry-item"
+            >
+              <KaryaCard 
+                karya={item} 
+                onClick={() => handleItemClick(item)} 
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </Masonry>
+      
+      <style jsx>{`
+        .masonry-grid {
+          display: flex;
+          margin-left: -24px;
+          width: auto;
+        }
+        
+        .masonry-grid-column {
+          padding-left: 24px;
+          background-clip: padding-box;
+        }
+        
+        .masonry-item {
+          margin-bottom: 24px;
+          break-inside: avoid;
+        }
+        
+        @media (max-width: 640px) {
+          .masonry-grid {
+            margin-left: -16px;
+          }
+          
+          .masonry-grid-column {
+            padding-left: 16px;
+          }
+          
+          .masonry-item {
+            margin-bottom: 16px;
+          }
+        }
+      `}</style>
+    </div>
   );
 };
