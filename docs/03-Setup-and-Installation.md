@@ -28,11 +28,23 @@ This guide provides step-by-step instructions for setting up the OurCreativity p
 
 ## Environment Configuration
 
-This project connects to a Supabase backend for its database and other services. The required connection details (Supabase URL and Anon Key) are already included in the source code for ease of setup.
+This project connects to a Supabase backend and the Sentry observability platform. You will need to create a `.env` file in the root of the project to store the necessary credentials.
 
--   **File:** `src/integrations/supabase/client.ts`
+1.  Create a file named `.env` in the project root.
+2.  Add the following content, replacing the placeholder value with your actual Sentry project DSN:
 
-No `.env` or `.env.local` file is required to run the project locally.
+    ```env
+    # Sentry DSN for error and performance monitoring
+    VITE_SENTRY_DSN="YOUR_SENTRY_DSN_HERE"
+    ```
+
+For production builds and deployments, you will also need to configure the following environment variables to allow source map uploads to Sentry:
+
+-   `SENTRY_ORG`: Your Sentry organization slug.
+-   `SENTRY_PROJECT`: Your Sentry project slug.
+-   `SENTRY_AUTH_TOKEN`: An authentication token from Sentry.
+
+The Supabase connection details (URL and Anon Key) are still included directly in `src/integrations/supabase/client.ts` for simplicity.
 
 ## Running the Development Server
 
@@ -43,4 +55,3 @@ bun dev
 ```
 
 The application will now be running at `http://localhost:5173` (or the next available port).
-
