@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Database } from '@/integrations/supabase/types';
@@ -57,19 +56,13 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
   const likeMutation = useMutation({
     mutationFn: async (karyaId: string) => {
       // Optimistically update UI
-      queryClient.setQueryData(['karya'], (oldData: { pages: { data: KaryaType[] }[] } | undefined) => {
+      queryClient.setQueryData(['karya'], (oldData: KaryaType[] | undefined) => {
         if (!oldData) return oldData;
-        return {
-          ...oldData,
-          pages: oldData.pages.map(page => ({
-            ...page,
-            data: page.data.map(item => 
-              item.id === karyaId 
-                ? { ...item, likes_count: (item.likes_count || 0) + 1 } 
-                : item
-            ),
-          })),
-        };
+        return oldData.map(item =>
+          item.id === karyaId
+            ? { ...item, likes_count: (item.likes_count || 0) + 1 }
+            : item
+        );
       });
       localStorage.setItem(`liked_${karyaId}`, 'true');
       setHasLiked(true);
