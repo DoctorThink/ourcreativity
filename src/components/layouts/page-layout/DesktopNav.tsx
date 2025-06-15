@@ -67,7 +67,11 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ mainNav, infoNav, ctaNav
           ))}
 
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-transparent text-white/70 hover:text-white hover:bg-white/10 data-[state=open]:bg-white/10">
+            <NavigationMenuTrigger className={cn(
+              "bg-transparent text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300",
+              "data-[state=open]:bg-white/10 data-[state=open]:backdrop-blur-md data-[state=open]:border data-[state=open]:border-white/20",
+              "data-[state=open]:shadow-lg data-[state=open]:shadow-white/10"
+            )}>
               Tentang
             </NavigationMenuTrigger>
             <NavigationMenuContent>
