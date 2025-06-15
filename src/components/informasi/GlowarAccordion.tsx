@@ -1,7 +1,7 @@
 
 import React, { useRef, useLayoutEffect } from "react";
 import { gsap } from "gsap";
-import { Flip } from "gsap/Flip";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   Accordion,
   AccordionContent,
@@ -27,7 +27,7 @@ export const GlowarAccordion: React.FC<GlowarAccordionProps> = ({ items }) => {
   const accordionRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    gsap.registerPlugin(Flip);
+    gsap.registerPlugin(ScrollTrigger);
     
     const ctx = gsap.context(() => {
       // Animate accordion items on scroll
@@ -62,7 +62,7 @@ export const GlowarAccordion: React.FC<GlowarAccordionProps> = ({ items }) => {
                 icon={item.icon}
                 iconColor={item.iconColor || "bg-amethyst text-background"}
                 title={item.title}
-                className="flex-1"
+                className="flex-1 text-left"
               />
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6">

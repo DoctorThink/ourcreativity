@@ -1,6 +1,5 @@
 
 import React from "react";
-import { motion } from "framer-motion";
 import { Star, Users, BookCopy, PenSquare } from "lucide-react";
 import { GlowarAccordion } from "./GlowarAccordion";
 
@@ -39,20 +38,14 @@ export const ProgramsSection: React.FC = () => {
   return (
     <section className="py-20 px-4 sm:px-6 md:px-8">
       <div className="max-w-4xl mx-auto">
-        <motion.div
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
+        <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">
             Program & Fasilitas
           </h2>
           <p className="text-lg text-foreground/70 font-sans">
             Apa yang akan Anda dapatkan sebagai bagian dari komunitas kami
           </p>
-        </motion.div>
+        </div>
 
         <GlowarAccordion items={programs} />
       </div>
