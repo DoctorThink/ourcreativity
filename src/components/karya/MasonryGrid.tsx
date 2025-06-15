@@ -17,10 +17,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   onKaryaClick,
 }) => {
   const breakpointColumnsObj = {
-    default: 1,
-    640: 2,
-    1024: 3,
-    1536: 4,
+    default: 4, 1536: 3, 1280: 3, 1024: 2, 768: 2, 640: 1
   };
 
   const handleItemClick = (item: KaryaType) => {
@@ -32,8 +29,8 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   return (
     <Masonry
       breakpointCols={breakpointColumnsObj}
-      className="my-masonry-grid"
-      columnClassName="my-masonry-grid_column"
+      className="flex w-auto -ml-4 my-masonry-grid"
+      columnClassName="pl-4 bg-transparent my-masonry-grid_column"
     >
       <AnimatePresence>
         {items.map((item, index) => (
@@ -44,6 +41,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="mb-6"
           >
             <KaryaCard 
               karya={item} 

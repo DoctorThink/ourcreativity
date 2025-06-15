@@ -1,3 +1,4 @@
+
 export const extractTagsFromDescription = (description: string): string[] => {
   if (!description) return [];
   
@@ -31,38 +32,19 @@ export const filterKaryaByTags = (karya: any[], selectedTags: string[]): any[] =
 };
 
 export const getTransformedUrl = (baseUrl: string | null | undefined, options: { format?: 'webp' | 'avif' | 'jpeg', width?: number, quality?: number } = {}): string => {
-  if (!baseUrl) {
-    return '/placeholder.svg';
-  }
-
-  // If it's a local URL (starts with /) or a data URL, return it directly without trying to transform.
-  if (baseUrl.startsWith('/') || baseUrl.startsWith('data:')) {
-    return baseUrl;
-  }
-
+  if (!baseUrl) return '/placeholder.svg';
   try {
     const url = new URL(baseUrl);
-
-    // Only apply transformations to Supabase storage URLs.
-    if (!url.hostname.endsWith('supabase.co')) {
-      return baseUrl;
-    }
-
     const newWidth = options.width || 800;
     const quality = options.quality || 75;
     
-    // Apply Supabase image transformation query parameters
-    url.searchParams.set('width', newWidth.toString());
+    if (options.format) url.searchParams.set('format', options.format);
+    url.searchParams.set('resize', `width:${newWidth}`);
     url.searchParams.set('quality', quality.toString());
-    if (options.format) {
-      url.searchParams.set('format', options.format);
-    }
     
     return url.toString();
   } catch (e) {
-    console.error(`Error processing URL: '${baseUrl}'. Returning original.`, e);
-    // If URL construction fails, it's not a valid absolute URL.
-    // Return it as-is to prevent a crash and let the browser handle it.
+    console.error("Error creating transformed URL:", e);
     return baseUrl;
   }
 };

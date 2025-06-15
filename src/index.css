@@ -175,6 +175,8 @@
   100% { background-position: 0% 50%; }
 }
 
+/* ... keep existing code (all the rest of the CSS remains the same) */
+
 .bg-grid-pattern {
   background-image: 
     linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
@@ -582,23 +584,25 @@
   }
 }
 
-/* Correct Masonry Grid Styling for react-masonry-css */
+/* Improved Masonry Grid Styling */
 .my-masonry-grid {
   display: flex;
-  margin-left: -1.5rem; /* gutter size offset */
-  width: auto;
+  width: 100%;
+  margin-left: -1rem;
+  margin-right: -1rem;
 }
 
 .my-masonry-grid_column {
-  padding-left: 1.5rem; /* gutter size */
+  padding-left: 1rem;
+  padding-right: 1rem;
   background-clip: padding-box;
 }
 
-/* Style your items */
 .my-masonry-grid_column > * {
-  width: 100%;
-  margin-bottom: 1.5rem;
+  display: block;
+  margin-bottom: 2.5rem;
   break-inside: avoid;
+  width: 100%;
 }
 
 /* Fix for video elements to prevent GPU acceleration issues */
@@ -617,6 +621,11 @@ video {
 
 /* Responsive improvements */
 @media screen and (max-width: 640px) {
+  .my-masonry-grid {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+  
   .my-masonry-grid_column {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
