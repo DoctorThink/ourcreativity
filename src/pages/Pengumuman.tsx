@@ -1,11 +1,11 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
 import { useLocalAnnouncements } from "@/hooks/useLocalAnnouncements";
-import { AnnouncementGrid } from "@/components/announcement/AnnouncementGrid";
-import { AnnouncementFilters } from "@/components/announcement/AnnouncementFilters";
-import { FeaturedAnnouncementCard } from "@/components/announcement/FeaturedAnnouncementCard";
+import { GlowarGrid } from "@/components/announcement/GlowarGrid";
+import { GlowarFilterBar } from "@/components/announcement/GlowarFilterBar";
+import { GlowarFeaturedCard } from "@/components/announcement/GlowarFeaturedCard";
 import { AnnouncementDetailModal } from "@/components/announcement/AnnouncementDetailModal";
 import { AnnouncementLoadingState } from "@/components/announcement/AnnouncementLoadingState";
 import { AnnouncementErrorState } from "@/components/announcement/AnnouncementErrorState";
@@ -15,8 +15,8 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: { 
-      staggerChildren: 0.1,
-      delayChildren: 0.2
+      staggerChildren: 0.15,
+      delayChildren: 0.1
     }
   }
 };
@@ -34,26 +34,39 @@ const Pengumuman = () => {
     handleRetry
   } = useLocalAnnouncements();
 
+  const [isFilterSticky, setIsFilterSticky] = useState(false);
+
+  // Handle sticky filter bar
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsFilterSticky(scrollY > 200);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <PageLayout 
       title="Pengumuman" 
       subtitle="Informasi terbaru dan penting dari komunitas OUR CREATIVITY"
-      className="bg-gradient-to-br from-background via-background to-secondary/20"
+      className="bg-gradient-to-br from-background via-background to-secondary/20 min-h-screen"
     >
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-8"
+        className="space-y-12"
       >
-        {/* Enhanced Filters */}
+        {/* Sticky Filter Bar */}
         <motion.div 
           variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } }}
-          className="glass-card p-6 rounded-3xl"
         >
-          <AnnouncementFilters 
+          <GlowarFilterBar 
             currentFilter={filter} 
-            onFilterChange={setFilter} 
+            onFilterChange={setFilter}
+            isSticky={isFilterSticky}
           />
         </motion.div>
 
@@ -74,25 +87,25 @@ const Pengumuman = () => {
         {/* Content */}
         {!isLoading && !error && (
           <>
-            {/* Featured Announcement */}
+            {/* Featured Announcement with Dynamic Aurora Background */}
             {featuredAnnouncement && (
               <motion.div 
-                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
                 className="relative"
               >
-                <div className="absolute -inset-1 bg-gradient-to-r from-amethyst/20 via-coral/20 to-mint/20 rounded-3xl blur-lg opacity-60" />
-                <div className="relative">
-                  <FeaturedAnnouncementCard 
-                    announcement={featuredAnnouncement}
-                    onClick={() => setSelectedAnnouncement(featuredAnnouncement)}
-                  />
-                </div>
+                <GlowarFeaturedCard 
+                  announcement={featuredAnnouncement}
+                  onClick={() => setSelectedAnnouncement(featuredAnnouncement)}
+                />
               </motion.div>
             )}
 
-            {/* Announcements Grid */}
-            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
-              <AnnouncementGrid 
+            {/* GSAP Flip-enabled Grid */}
+            <motion.div 
+              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
+              className="pb-16"
+            >
+              <GlowarGrid 
                 announcements={announcements}
                 onAnnouncementClick={setSelectedAnnouncement}
               />
