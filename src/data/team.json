@@ -1,6 +1,12 @@
-
 {
   "categories": [
+    {
+      "id": "leadership",
+      "name": "Leadership",
+      "icon": "Crown",
+      "color": "amber",
+      "description": "Visi dan arahan utama tim, memastikan pertumbuhan dan kolaborasi yang berkelanjutan bagi seluruh anggota."
+    },
     {
       "id": "video",
       "name": "Video Editing",
@@ -31,44 +37,22 @@
     },
     {
       "id": "coding",
-      "name": "Coding",
+      "name": "Coding & Bot Dev",
       "icon": "Code",
-      "color": "turquoise",
-      "description": "Divisi untuk para programmer berdiskusi, belajar, dan berkolaborasi dalam proyek pengembangan web dan teknologi lainnya."
+      "color": "sky",
+      "description": "Divisi untuk para programmer berdiskusi, belajar, dan berkolaborasi dalam proyek pengembangan web, bot, dan teknologi lainnya."
     }
   ],
   "members": [
     {
       "id": "ms-haqi",
-      "name": "M.S. Al Haqi",
+      "name": "Muhammad Syahid Al Haqi",
       "role": "Founder & Community Leader",
       "category": "Leadership",
       "categoryId": "leadership",
       "avatar": "MS",
       "accentColor": "amber",
-      "bio": "Visiuner di balik OurCreativity, M.S. Al Haqi membangun komunitas ini dari nol dengan semangat untuk menyatukan para kreator Indonesia. Ia percaya bahwa kolaborasi adalah kunci pertumbuhan.",
-      "isFeatured": true
-    },
-    {
-      "id": "ardelyo",
-      "name": "Ardelyo",
-      "role": "Tech Lead & Coding Division Leader",
-      "category": "Coding",
-      "categoryId": "coding",
-      "avatar": "AR",
-      "accentColor": "turquoise",
-      "bio": "Programmer muda berbakat dengan spesialisasi dalam pengembangan web dan bot Discord. Ardelyo memimpin divisi koding, membimbing anggota dalam menciptakan solusi teknologi inovatif.",
-      "isFeatured": true
-    },
-    {
-      "id": "xoraa",
-      "name": "瑶Xoraa",
-      "role": "Lead Designer & Graphics Division Leader",
-      "category": "Design",
-      "categoryId": "design",
-      "avatar": "XO",
-      "accentColor": "amethyst",
-      "bio": "Dengan mata yang tajam untuk estetika, Xoraa memimpin divisi desain grafis. Karyanya mendefinisikan identitas visual OurCreativity, menginspirasi anggota lain untuk mencapai standar visual yang tinggi.",
+      "bio": "Visiuner di balik tim, M.S. Al Haqi membangun komunitas ini dari nol dengan semangat untuk menyatukan para kreator. Ia percaya bahwa kolaborasi adalah kunci pertumbuhan.",
       "isFeatured": true
     },
     {
@@ -79,7 +63,18 @@
       "categoryId": "video",
       "avatar": "AB",
       "accentColor": "coral",
-      "bio": "Seorang pencerita visual yang handal, Abhyrahma memimpin divisi video editing. Ia memiliki keahlian dalam mengubah rekaman mentah menjadi karya sinematik yang menarik dan penuh emosi.",
+      "bio": "Seorang pencerita visual yang handal, Abhyrahma memimpin divisi video editing. Ia memiliki keahlian dalam mengubah rekaman mentah menjadi karya sinematik yang menarik.",
+      "isFeatured": true
+    },
+    {
+      "id": "xoraa",
+      "name": "瑶Xoraa",
+      "role": "Lead Designer & Graphics Division Leader",
+      "category": "Design",
+      "categoryId": "design",
+      "avatar": "瑶",
+      "accentColor": "amethyst",
+      "bio": "Dengan mata yang tajam untuk estetika, Xoraa memimpin divisi desain grafis. Karyanya mendefinisikan identitas visual tim, menginspirasi anggota lain.",
       "isFeatured": true
     },
     {
@@ -88,13 +83,24 @@
       "role": "Meme Division Leader",
       "category": "Meme",
       "categoryId": "meme",
-      "avatar": "DF",
+      "avatar": "DD",
       "accentColor": "softPink",
-      "bio": "Pionir humor di OurCreativity, Daffa memimpin divisi meme dengan kreativitas tak terbatas. Ia ahli dalam mengubah tren menjadi konten viral yang menghibur.",
+      "bio": "Pionir humor di tim, Daffa memimpin divisi meme dengan kreativitas tak terbatas. Ia ahli dalam mengubah tren menjadi konten viral yang menghibur.",
       "isFeatured": true
     },
     {
-      "id": "kevin-zyu",
+      "id": "ardelyo",
+      "name": "Ardelyo",
+      "role": "Tech Lead & Coding Division Leader",
+      "category": "Coding & Bot Dev",
+      "categoryId": "coding",
+      "avatar": "A",
+      "accentColor": "sky",
+      "bio": "Programmer muda berbakat dengan spesialisasi dalam pengembangan web dan bot. Ardelyo memimpin divisi koding, membimbing anggota dalam menciptakan solusi teknologi inovatif.",
+      "isFeatured": true
+    },
+    {
+      "id": "kevin-zyu-video",
       "name": "Kevin/Zyu",
       "role": "Video Editor",
       "category": "Video",
@@ -105,14 +111,25 @@
       "isFeatured": false
     },
     {
-      "id": "aljaan",
+      "id": "aljaan-video",
       "name": "Aljaan",
       "role": "Video Editor",
       "category": "Video",
       "categoryId": "video",
-      "avatar": "AL",
+      "avatar": "A",
       "accentColor": "coral",
       "bio": "Dengan kejelian terhadap detail, Aljaan menyusun klip video menjadi narasi yang koheren dan berdampak. Keahliannya ada pada penceritaan visual.",
+      "isFeatured": false
+    },
+    {
+      "id": "kevin-zyu-meme",
+      "name": "Kevin/Zyu",
+      "role": "Meme Creator",
+      "category": "Meme",
+      "categoryId": "meme",
+      "avatar": "KZ",
+      "accentColor": "softPink",
+      "bio": "Menggabungkan keahlian editing dengan selera humor yang tajam, Zyu juga aktif menciptakan meme yang relevan dan menghibur bagi komunitas.",
       "isFeatured": false
     },
     {
@@ -121,7 +138,7 @@
       "role": "Designer",
       "category": "Design",
       "categoryId": "design",
-      "avatar": "AS",
+      "avatar": "A",
       "accentColor": "turquoise",
       "bio": "Spesialis dalam ilustrasi dan branding. Ashtrozz menciptakan aset visual yang unik dan memperkuat identitas setiap proyek yang ditanganinya.",
       "isFeatured": false
@@ -132,18 +149,18 @@
       "role": "Designer",
       "category": "Design",
       "categoryId": "design",
-      "avatar": "NX",
+      "avatar": "N",
       "accentColor": "turquoise",
       "bio": "Fokus pada UI/UX, nexx4sure merancang antarmuka yang tidak hanya indah secara visual tetapi juga intuitif dan mudah digunakan.",
       "isFeatured": false
     },
     {
-      "id": "rappal",
+      "id": "rappal-designer",
       "name": "Rappal",
       "role": "Designer",
       "category": "Design",
       "categoryId": "design",
-      "avatar": "RP",
+      "avatar": "R",
       "accentColor": "turquoise",
       "bio": "Desainer serbaguna yang mampu beradaptasi dengan berbagai gaya. Rappal senang bereksperimen dengan tipografi dan layout untuk hasil yang segar.",
       "isFeatured": false
@@ -154,7 +171,7 @@
       "role": "Writer",
       "category": "Writing",
       "categoryId": "writing",
-      "avatar": "KV",
+      "avatar": "K",
       "accentColor": "mint",
       "bio": "Penulis dengan spesialisasi fiksi dan non-fiksi kreatif. Kevin mampu merangkai kata-kata menjadi cerita yang menggugah imajinasi.",
       "isFeatured": false
@@ -165,7 +182,7 @@
       "role": "Writer",
       "category": "Writing",
       "categoryId": "writing",
-      "avatar": "SE",
+      "avatar": "S",
       "accentColor": "mint",
       "bio": "Ahli dalam penulisan teknis dan artikel informatif. Senku dapat menyederhanakan topik kompleks menjadi tulisan yang mudah dipahami.",
       "isFeatured": false
@@ -176,9 +193,42 @@
       "role": "Writer",
       "category": "Writing",
       "categoryId": "writing",
-      "avatar": "SV",
+      "avatar": "S",
       "accentColor": "mint",
       "bio": "Penyair dan penulis lirik, Saviora mengekspresikan ide-ide mendalam melalui bahasa puitis yang indah dan penuh makna.",
+      "isFeatured": false
+    },
+    {
+      "id": "rappal-coder",
+      "name": "Rappal",
+      "role": "Bot Developer",
+      "category": "Coding & Bot Dev",
+      "categoryId": "coding",
+      "avatar": "R",
+      "accentColor": "sky",
+      "bio": "Selain mendesain, Rappal juga memiliki passion dalam koding, khususnya mengembangkan bot untuk membantu otomatisasi tugas-tugas komunitas.",
+      "isFeatured": false
+    },
+    {
+      "id": "flores",
+      "name": "Flores",
+      "role": "Bot Developer",
+      "category": "Coding & Bot Dev",
+      "categoryId": "coding",
+      "avatar": "F",
+      "accentColor": "sky",
+      "bio": "Pengembang bot yang berfokus pada otomatisasi dan peningkatan pengalaman pengguna di platform digital, terutama Discord.",
+      "isFeatured": false
+    },
+    {
+      "id": "aljaan-admin",
+      "name": "Aljaan",
+      "role": "Discord Admin",
+      "category": "Community Management",
+      "categoryId": "admin",
+      "avatar": "A",
+      "accentColor": "slate",
+      "bio": "Menjaga keteraturan dan kenyamanan di server Discord, Aljaan memastikan komunitas berjalan dengan baik dan menjadi tempat yang ramah.",
       "isFeatured": false
     }
   ]
