@@ -23,18 +23,15 @@ const ListItem = React.forwardRef<
         <a
           ref={ref}
           className={cn(
-            'flex items-center select-none rounded-lg px-4 py-3 no-underline outline-none transition-colors duration-200 ease-in-out hover:bg-[rgba(255,255,255,0.05)] focus:bg-accent focus:text-accent-foreground',
+            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
             className
           )}
           {...props}
         >
-          <div className="flex-grow"> {/* Wrapper for text content */}
-            <div className="m-0 font-semibold text-white text-sm leading-none">{title}</div>
-            <p className="m-0 text-[0.85rem] text-[#a0a0b0] line-clamp-2 leading-snug mt-0.5"> {/* Adjusted to mt-0.5 for smaller gap, text styles updated */}
-              {children}
-            </p>
-          </div>
-          {/* Icon would go here if it were a separate element, and 'a' would also get 'justify-between' */}
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
         </a>
       </NavigationMenuLink>
     </li>
@@ -69,7 +66,7 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ mainNav, infoNav, ctaNav
             </NavigationMenuItem>
           ))}
 
-          <NavigationMenuItem className="relative">
+          <NavigationMenuItem>
             <NavigationMenuTrigger className={cn(
               "bg-transparent text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300",
               "data-[state=open]:bg-white/10 data-[state=open]:backdrop-blur-md data-[state=open]:border data-[state=open]:border-white/20",
@@ -77,8 +74,8 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ mainNav, infoNav, ctaNav
             )}>
               Tentang
             </NavigationMenuTrigger>
-            <NavigationMenuContent className="absolute top-full left-0 mt-[10px] bg-[rgba(35,35,45,0.6)] backdrop-blur-lg border border-[rgba(255,255,255,0.1)] rounded-xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] min-w-[300px] z-[1000]">
-              <ul className="grid gap-3 p-4 md:grid-cols-2 ">
+            <NavigationMenuContent>
+              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                 {infoNav.map((item) => (
                   <ListItem
                     key={item.name}
