@@ -9,7 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Database } from '@/integrations/supabase/types';
 import { X, ChevronDown, ExternalLink } from 'lucide-react';
-import { cn, isUrl } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -69,7 +69,7 @@ export const KaryaMediaViewer = ({ karya, onClose, showInfoPanel, toggleInfoPane
                     a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-mint hover:text-sage" />
                   }}
                 >
-                  {isUrl(karya.content_url || '') ? (karya.description || '') : (karya.content_url || '')}
+                  {karya.content_url || ''}
                 </ReactMarkdown>
               </div>
             </div>
@@ -133,7 +133,7 @@ export const KaryaMediaViewer = ({ karya, onClose, showInfoPanel, toggleInfoPane
   };
 
   return (
-    <div className={cn("relative bg-black/50 flex-grow h-full w-full")}>
+    <div className={cn("relative bg-black/50 flex-grow h-full w-full", isText && "md:h-auto")}>
       {isText ? renderTextContent() : renderMediaContent()}
       
       {/* Floating control buttons */}

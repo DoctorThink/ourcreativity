@@ -113,7 +113,9 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
             <ScrollArea className={`${
               isDescriptionExpanded ? 'h-full' : 'h-32'
             }`}>
-              <div className={`transition-all duration-300 relative`}>
+              <div className={`transition-all duration-300 ${
+                isDescriptionExpanded ? 'max-h-none' : 'max-h-32'
+              } overflow-hidden relative`}>
                 <p className="text-foreground/90 leading-relaxed font-sans text-sm whitespace-pre-wrap break-words pr-4">
                   {karya.description}
                 </p>
