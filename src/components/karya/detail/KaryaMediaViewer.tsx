@@ -9,7 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Database } from '@/integrations/supabase/types';
 import { X, ChevronDown, ExternalLink } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, isUrl } from '@/lib/utils';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -69,7 +69,7 @@ export const KaryaMediaViewer = ({ karya, onClose, showInfoPanel, toggleInfoPane
                     a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-mint hover:text-sage" />
                   }}
                 >
-                  {karya.content_url || ''}
+                  {isUrl(karya.content_url || '') ? (karya.description || '') : (karya.content_url || '')}
                 </ReactMarkdown>
               </div>
             </div>
