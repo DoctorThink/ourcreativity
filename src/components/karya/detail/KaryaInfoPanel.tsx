@@ -1,3 +1,4 @@
+// src/components/karya/KaryaInfoPanel.tsx
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -103,8 +104,9 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
         </div>
       )}
 
-      {/* Expandable description section */}
-      {karya.description && (
+      {/* --- CHANGE #1: Conditionally rendering the description block --- */}
+      {/* This entire section is now hidden for the 'writing' category to avoid showing the text twice. */}
+      {karya.description && karya.category !== 'writing' && (
         <div className="flex-1 min-h-0 flex flex-col px-6 py-4">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-sm font-medium text-foreground/80">Description</span>
@@ -142,7 +144,8 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
       )}
 
       {/* Action Buttons */}
-      <div className="flex-shrink-0 p-6 pt-4 border-t border-border/20">
+      {/* The bottom border is now conditional to avoid an extra line when the description is hidden */}
+      <div className={`flex-shrink-0 p-6 pt-4 ${karya.category !== 'writing' ? 'border-t border-border/20' : ''}`}>
         <p className="text-xs text-foreground/60 mb-4 font-medium">
           Dibuat pada {new Date(karya.created_at).toLocaleDateString('id-ID', {
             year: 'numeric',
@@ -152,7 +155,9 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
         </p>
         
         <div className="flex flex-col gap-2">
-          {karya.content_url && !karya.link_url && (
+          {/* --- CHANGE #2: Conditionally rendering the content link button --- */}
+          {/* This button is now hidden for 'writing' category to prevent duplicates with the one in KaryaMediaViewer. */}
+          {karya.content_url && !karya.link_url && karya.category !== 'writing' && (
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Button 
                 onClick={() => window.open(karya.content_url, '_blank')}
