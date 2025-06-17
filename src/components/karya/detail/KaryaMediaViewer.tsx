@@ -133,7 +133,7 @@ export const KaryaMediaViewer = ({ karya, onClose, showInfoPanel, toggleInfoPane
   };
 
   return (
-    <div className={cn("relative bg-black/50 flex-grow h-full w-full", isText && "md:h-auto")}>
+    <div className={cn("relative bg-black/50 flex-grow h-full w-full")}>
       {isText ? renderTextContent() : renderMediaContent()}
       
       {/* Floating control buttons */}
