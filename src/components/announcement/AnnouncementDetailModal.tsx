@@ -165,7 +165,7 @@ export const AnnouncementDetailModal: React.FC<AnnouncementDetailModalProps> = (
                       ),
                     }}
                   >
-                    {announcement.content || ""}
+                    {announcement.content}
                   </ReactMarkdown>
                 </motion.div>
                 

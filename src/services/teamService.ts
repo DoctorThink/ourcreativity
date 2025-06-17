@@ -1,5 +1,5 @@
 import teamData from '@/data/team.json';
-import { Video, Palette, Smile, FileText, Code, Crown } from 'lucide-react';
+import { Video, Palette, Smile, FileText, Code } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 // A map to convert string icon names from JSON into actual Lucide components
@@ -9,7 +9,6 @@ const iconMap: { [key: string]: LucideIcon } = {
   Smile,
   FileText,
   Code,
-  Crown,
 };
 
 // Type definitions for strong type-checking
