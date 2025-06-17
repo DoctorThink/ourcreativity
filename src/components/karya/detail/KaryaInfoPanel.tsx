@@ -1,11 +1,10 @@
-// src/components/karya/KaryaInfoPanel.tsx
+// src/components/karya/detail/KaryaInfoPanel.tsx
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ChevronDown, Tag, Eye, ExternalLink } from 'lucide-react';
+import { ChevronDown, Tag, Eye } from 'lucide-react';
 import { Database } from '@/integrations/supabase/types';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
@@ -104,8 +103,8 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
         </div>
       )}
 
-      {/* --- CHANGE #1: Conditionally rendering the description block --- */}
-      {/* This entire section is now hidden for the 'writing' category to avoid showing the text twice. */}
+      {/* Expandable description section */}
+      {/* This logic correctly hides the description for 'writing' category already, so we keep it */}
       {karya.description && karya.category !== 'writing' && (
         <div className="flex-1 min-h-0 flex flex-col px-6 py-4">
           <div className="flex items-center gap-2 mb-3">
@@ -113,7 +112,7 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
           </div>
           <div className="flex-1 min-h-0">
             <ScrollArea className={`${
-              isDescriptionExpanded ? 'h-full' : 'h-32'
+              isDescriptionExpanded ? 'h-full' : 'max-h-32' 
             }`}>
               <div className={`transition-all duration-300 ${
                 isDescriptionExpanded ? 'max-h-none' : 'max-h-32'
@@ -122,7 +121,7 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
                   {karya.description}
                 </p>
                 {!isDescriptionExpanded && karya.description.length > 200 && (
-                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-secondary/95 to-transparent pointer-events-none"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background/95 to-transparent pointer-events-none"></div>
                 )}
               </div>
             </ScrollArea>
@@ -143,45 +142,16 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
         </div>
       )}
 
-      {/* Action Buttons */}
-      {/* The bottom border is now conditional to avoid an extra line when the description is hidden */}
-      <div className={`flex-shrink-0 p-6 pt-4 ${karya.category !== 'writing' ? 'border-t border-border/20' : ''}`}>
-        <p className="text-xs text-foreground/60 mb-4 font-medium">
+      {/* --- CHANGE #1: Completely remove the action buttons section --- */}
+      {/* The `created_at` date is now the final element to prevent duplicated buttons. */}
+      <div className="flex-shrink-0 p-6 pt-4 mt-auto border-t border-border/20">
+        <p className="text-xs text-foreground/60 font-medium">
           Dibuat pada {new Date(karya.created_at).toLocaleDateString('id-ID', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
           })}
         </p>
-        
-        <div className="flex flex-col gap-2">
-          {/* --- CHANGE #2: Conditionally rendering the content link button --- */}
-          {/* This button is now hidden for 'writing' category to prevent duplicates with the one in KaryaMediaViewer. */}
-          {karya.content_url && !karya.link_url && karya.category !== 'writing' && (
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button 
-                onClick={() => window.open(karya.content_url, '_blank')}
-                className="gap-2 w-full rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium" 
-                size="sm"
-              >
-                <ExternalLink className="h-4 w-4" />
-                <span>Link Konten</span>
-              </Button>
-            </motion.div>
-          )}
-          {karya.link_url && (
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button 
-                onClick={() => window.open(karya.link_url, '_blank')}
-                className="gap-2 w-full rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-lavender to-purpleLight text-white border border-white/10 font-medium" 
-                size="sm"
-              >
-                <ExternalLink className="h-4 w-4" />
-                <span>Lihat Karya Lengkap</span>
-              </Button>
-            </motion.div>
-          )}
-        </div>
       </div>
     </div>
   );
