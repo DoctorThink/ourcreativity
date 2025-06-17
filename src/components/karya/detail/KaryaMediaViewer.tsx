@@ -1,4 +1,4 @@
-// src/components/karya/KaryaMediaViewer.tsx
+// src/components/karya/detail/KaryaMediaViewer.tsx
 
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -20,15 +20,13 @@ interface KaryaMediaViewerProps {
   onClose: () => void;
   showInfoPanel: boolean;
   toggleInfoPanel: () => void;
+  isTextWork: boolean; // --- CHANGE #1: Accepting the new prop ---
 }
 
 const isVideo = (url: string) => url?.match(/\.(mp4|webm|ogg)$/i);
 const isDocument = (url: string | null | undefined): boolean => !!url && /\.(pdf|docx?|txt)$/i.test(url);
 
-export const KaryaMediaViewer = ({ karya, onClose, showInfoPanel, toggleInfoPanel }: KaryaMediaViewerProps) => {
-  // --- CHANGE #1: Simplified isText check ---
-  // The logic now correctly identifies any 'writing' category as text-based content.
-  const isText = karya.category === 'writing'; 
+export const KaryaMediaViewer = ({ karya, onClose, showInfoPanel, toggleInfoPanel, isTextWork }: KaryaMediaViewerProps) => {
   const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
 
   const renderTextContent = () => {
@@ -63,8 +61,6 @@ export const KaryaMediaViewer = ({ karya, onClose, showInfoPanel, toggleInfoPane
           <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground font-sans">{karya.title}</h2>
           <p className="text-sm text-foreground/70 font-medium mb-4">Oleh {karya.creator_name}</p>
 
-          {/* --- CHANGE #2: Added Link Konten button for source URLs --- */}
-          {/* This button appears only if a content_url (like an Instagram link) exists. */}
           {karya.content_url && (
             <Button 
               onClick={() => window.open(karya.content_url, '_blank')}
@@ -81,8 +77,6 @@ export const KaryaMediaViewer = ({ karya, onClose, showInfoPanel, toggleInfoPane
           <ScrollArea className="h-full w-full max-h-[calc(100vh-250px)]">
             <div className="max-w-4xl mx-auto">
               <div className="prose prose-lg prose-invert max-w-none text-foreground/90 font-sans leading-relaxed">
-                {/* --- CHANGE #3: Displaying the full story from description --- */}
-                {/* The main content is now correctly pulled from karya.description. */}
                 <ReactMarkdown
                   components={{
                     a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-mint hover:text-sage" />
@@ -152,12 +146,14 @@ export const KaryaMediaViewer = ({ karya, onClose, showInfoPanel, toggleInfoPane
   };
 
   return (
-    <div className={cn("relative bg-black/50 flex-grow h-full w-full", isText && "md:h-auto")}>
-      {isText ? renderTextContent() : renderMediaContent()}
+    <div className={cn("relative bg-black/50 flex-grow h-full w-full", isTextWork && "md:h-auto")}>
+      {isTextWork ? renderTextContent() : renderMediaContent()}
       
       {/* Floating control buttons */}
       <div className="absolute top-4 right-4 z-10 flex gap-2">
-        {!isText && (
+        {/* --- CHANGE #2: Conditionally rendering the Show/Hide button --- */}
+        {/* This button now only appears for visual media, not written works. */}
+        {!isTextWork && (
           <button
             onClick={toggleInfoPanel}
             className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
