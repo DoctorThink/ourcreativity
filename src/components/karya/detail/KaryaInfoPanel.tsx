@@ -44,28 +44,28 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
   const toggleDescription = () => setIsDescriptionExpanded(!isDescriptionExpanded);
 
   return (
-    <div className="h-full flex flex-col bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md">
+    <div className="h-full flex flex-col bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md overflow-hidden">
       {/* Header with title and category info */}
-      <div className="flex-shrink-0 p-6 border-b border-border/20">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1 pr-4">
-            <h2 className="text-xl font-bold tracking-tight text-foreground font-sans leading-tight mb-2">
+      <div className="flex-shrink-0 p-4 md:p-6 border-b border-border/20">
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex-1 pr-3 min-w-0">
+            <h2 className="text-lg md:text-xl font-bold tracking-tight text-foreground font-sans leading-tight mb-2 truncate">
               {karya.title}
             </h2>
-            <p className="text-foreground/70 font-medium text-sm">
+            <p className="text-foreground/70 font-medium text-xs md:text-sm truncate">
               by {karya.creator_name}
             </p>
           </div>
           <div className="flex-shrink-0">
-            <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm py-1.5 px-3 rounded-full border border-white/10 shadow-md">
-              <div className="bg-white/90 p-1 rounded-full">
+            <div className="flex items-center gap-1.5 bg-black/20 backdrop-blur-sm py-1 px-2 rounded-full border border-white/10 shadow-md">
+              <div className="bg-white/90 p-0.5 rounded-full">
                 <img
                   src={categoryIcons[karya.category] || '/lovable-uploads/design.png'}
                   alt={karya.category}
-                  className="w-4 h-4 object-contain"
+                  className="w-3 h-3 object-contain"
                 />
               </div>
-              <span className="text-xs text-foreground/80 font-medium">
+              <span className="text-xs text-foreground/80 font-medium whitespace-nowrap">
                 {categoryNames[karya.category] || 'Karya'}
               </span>
             </div>
@@ -74,9 +74,9 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
         
         {/* View count section */}
         {karya.view_count != null && karya.view_count > 0 && (
-          <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm px-3 py-2 rounded-full border border-white/10 shadow-md w-fit">
-            <Eye className="w-4 h-4 text-foreground/80" />
-            <span className="text-sm font-medium text-foreground/90">
+          <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm px-2.5 py-1.5 rounded-full border border-white/10 shadow-md w-fit">
+            <Eye className="w-3.5 h-3.5 text-foreground/80" />
+            <span className="text-xs font-medium text-foreground/90">
               {karya.view_count} views
             </span>
           </div>
@@ -85,16 +85,16 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
       
       {/* Tags section */}
       {tags.length > 0 && (
-        <div className="flex-shrink-0 px-6 py-4 border-b border-border/20">
-          <div className="flex items-center gap-2 mb-3">
-            <Tag className="w-4 h-4 text-foreground/60" />
-            <span className="text-sm font-medium text-foreground/80">Tags</span>
+        <div className="flex-shrink-0 px-4 md:px-6 py-3 border-b border-border/20">
+          <div className="flex items-center gap-2 mb-2">
+            <Tag className="w-3.5 h-3.5 text-foreground/60" />
+            <span className="text-xs font-medium text-foreground/80">Tags</span>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5">
             {tags.map((tag, index) => (
               <Badge
                 key={index}
-                className="bg-foreground/10 hover:bg-foreground/15 text-foreground/90 border-none font-medium text-xs"
+                className="bg-foreground/10 hover:bg-foreground/15 text-foreground/90 border-none font-medium text-xs py-0.5 px-2"
               >
                 #{tag}
               </Badge>
@@ -104,47 +104,43 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
       )}
 
       {/* Expandable description section */}
-      {/* This logic correctly hides the description for 'writing' category already, so we keep it */}
       {karya.description && karya.category !== 'writing' && (
-        <div className="flex-1 min-h-0 flex flex-col px-6 py-4">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-sm font-medium text-foreground/80">Description</span>
+        <div className="flex-1 min-h-0 flex flex-col px-4 md:px-6 py-3">
+          <div className="flex items-center gap-2 mb-2 flex-shrink-0">
+            <span className="text-xs font-medium text-foreground/80">Description</span>
           </div>
-          <div className="flex-1 min-h-0">
-            <ScrollArea className={`${
-              isDescriptionExpanded ? 'h-full' : 'max-h-32' 
-            }`}>
-              <div className={`transition-all duration-300 ${
-                isDescriptionExpanded ? 'max-h-none' : 'max-h-32'
-              } overflow-hidden relative`}>
-                <p className="text-foreground/90 leading-relaxed font-sans text-sm whitespace-pre-wrap break-words pr-4">
-                  {karya.description}
-                </p>
-                {!isDescriptionExpanded && karya.description.length > 200 && (
-                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background/95 to-transparent pointer-events-none"></div>
-                )}
-              </div>
-            </ScrollArea>
+          <div className="flex-1 min-h-0 relative">
+            <div className={`${
+              isDescriptionExpanded ? 'h-full overflow-y-auto' : 'h-24 overflow-hidden'
+            } transition-all duration-300 relative`}>
+              <p className="text-foreground/90 leading-relaxed font-sans text-xs md:text-sm whitespace-pre-wrap break-words">
+                {karya.description}
+              </p>
+              {!isDescriptionExpanded && karya.description.length > 150 && (
+                <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-secondary/95 to-transparent pointer-events-none"></div>
+              )}
+            </div>
           </div>
-          {karya.description.length > 200 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleDescription}
-              className="mt-3 text-foreground/60 hover:text-foreground hover:bg-foreground/5 gap-1 rounded-full font-medium self-start"
-            >
-              {isDescriptionExpanded ? 'Show Less' : 'Read More'}
-              <ChevronDown
-                className={`h-4 w-4 transition-transform ${isDescriptionExpanded ? 'rotate-180' : ''}`}
-              />
-            </Button>
+          {karya.description.length > 150 && (
+            <div className="flex-shrink-0 pt-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleDescription}
+                className="text-foreground/60 hover:text-foreground hover:bg-foreground/5 gap-1 rounded-full font-medium text-xs h-7 px-3"
+              >
+                {isDescriptionExpanded ? 'Show Less' : 'Read More'}
+                <ChevronDown
+                  className={`h-3 w-3 transition-transform ${isDescriptionExpanded ? 'rotate-180' : ''}`}
+                />
+              </Button>
+            </div>
           )}
         </div>
       )}
 
-      {/* --- CHANGE #1: Completely remove the action buttons section --- */}
-      {/* The `created_at` date is now the final element to prevent duplicated buttons. */}
-      <div className="flex-shrink-0 p-6 pt-4 mt-auto border-t border-border/20">
+      {/* Created date section */}
+      <div className="flex-shrink-0 p-4 md:p-6 pt-2 border-t border-border/20 mt-auto">
         <p className="text-xs text-foreground/60 font-medium">
           Dibuat pada {new Date(karya.created_at).toLocaleDateString('id-ID', {
             year: 'numeric',

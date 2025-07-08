@@ -32,54 +32,68 @@ export const KaryaMediaViewer = ({ karya, onClose, showInfoPanel, toggleInfoPane
   const renderTextContent = () => {
     if (isDocument(karya.content_url)) {
       return (
-        <div className="w-full h-full flex flex-col items-center justify-center bg-secondary backdrop-blur-md p-8 text-center">
+        <div className="w-full h-full flex flex-col items-center justify-center bg-secondary backdrop-blur-md p-6 md:p-8 text-center overflow-hidden">
+          <div className="flex flex-col items-center justify-center max-w-2xl mx-auto">
             <img 
               src="/lovable-uploads/karyatulis.png" 
               alt="Karya Tulis" 
-              className="w-24 h-24 mx-auto mb-6 opacity-80" 
+              className="w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 md:mb-6 opacity-80 flex-shrink-0" 
             />
-            <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground font-sans">{karya.title}</h2>
-            <p className="text-base text-foreground/70 font-medium mb-8">Oleh {karya.creator_name}</p>
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 text-foreground font-sans text-center leading-tight">
+              {karya.title}
+            </h2>
+            <p className="text-sm md:text-base text-foreground/70 font-medium mb-6 md:mb-8">
+              Oleh {karya.creator_name}
+            </p>
             <Button 
               onClick={() => window.open(karya.content_url!, '_blank')}
-              className="gap-2 rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium"
+              className="gap-2 rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium flex-shrink-0"
             >
               <ExternalLink className="h-4 w-4" />
               Lihat Dokumen
             </Button>
+          </div>
         </div>
       );
     }
     return (
-      <div className="w-full h-full flex flex-col bg-secondary backdrop-blur-md">
-        <div className="flex-shrink-0 p-8 text-center border-b border-border/20">
-          <img 
-            src="/lovable-uploads/karyatulis.png" 
-            alt="Karya Tulis" 
-            className="w-16 h-16 mx-auto mb-4 opacity-80" 
-          />
-          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground font-sans">{karya.title}</h2>
-          <p className="text-sm text-foreground/70 font-medium mb-4">Oleh {karya.creator_name}</p>
+      <div className="w-full h-full flex flex-col bg-secondary backdrop-blur-md overflow-hidden">
+        <div className="flex-shrink-0 p-6 md:p-8 text-center border-b border-border/20">
+          <div className="max-w-2xl mx-auto">
+            <img 
+              src="/lovable-uploads/karyatulis.png" 
+              alt="Karya Tulis" 
+              className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 opacity-80" 
+            />
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 text-foreground font-sans leading-tight">
+              {karya.title}
+            </h2>
+            <p className="text-sm text-foreground/70 font-medium mb-3 md:mb-4">
+              Oleh {karya.creator_name}
+            </p>
 
-          {karya.content_url && (
-            <Button 
-              onClick={() => window.open(karya.content_url, '_blank')}
-              className="gap-2 rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium" 
-              size="sm"
-            >
-              <ExternalLink className="h-4 w-4" />
-              <span>Link Konten</span>
-            </Button>
-          )}
+            {karya.content_url && (
+              <Button 
+                onClick={() => window.open(karya.content_url, '_blank')}
+                className="gap-2 rounded-full shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-r from-mint to-sage text-white border border-white/10 font-medium" 
+                size="sm"
+              >
+                <ExternalLink className="h-4 w-4" />
+                <span>Link Konten</span>
+              </Button>
+            )}
+          </div>
         </div>
         
-        <div className="flex-1 min-h-0 p-6 md:p-8">
-          <ScrollArea className="h-full w-full max-h-[calc(100vh-250px)]">
-            <div className="max-w-4xl mx-auto">
-              <div className="prose prose-lg prose-invert max-w-none text-foreground/90 font-sans leading-relaxed">
+        <div className="flex-1 min-h-0 overflow-hidden">
+          <ScrollArea className="h-full w-full">
+            <div className="p-6 md:p-8">
+              <div className="max-w-4xl mx-auto prose prose-sm md:prose-lg prose-invert max-w-none text-foreground/90 font-sans leading-relaxed">
                 <ReactMarkdown
                   components={{
-                    a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-mint hover:text-sage" />
+                    a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-mint hover:text-sage break-words" />,
+                    p: ({node, ...props}) => <p {...props} className="break-words" />,
+                    div: ({node, ...props}) => <div {...props} className="break-words" />
                   }}
                 >
                   {karya.description || 'Tidak ada deskripsi.'}
