@@ -32,8 +32,18 @@ export const filterKaryaByTags = (karya: any[], selectedTags: string[]): any[] =
 };
 
 export const getTransformedUrl = (baseUrl: string | null | undefined, options: { format?: 'webp' | 'avif' | 'jpeg', width?: number, quality?: number } = {}): string => {
-  if (!baseUrl) return '/placeholder.svg';
+  if (!baseUrl || typeof baseUrl !== 'string' || baseUrl.trim() === '') {
+    return '/placeholder.svg';
+  }
+  
   try {
+    // Check if it's already a valid URL (starts with http/https)
+    const urlPattern = /^https?:\/\//i;
+    if (!urlPattern.test(baseUrl)) {
+      // If it's a relative path, return it as is
+      return baseUrl;
+    }
+    
     const url = new URL(baseUrl);
     const newWidth = options.width || 800;
     const quality = options.quality || 75;
@@ -45,7 +55,8 @@ export const getTransformedUrl = (baseUrl: string | null | undefined, options: {
     return url.toString();
   } catch (e) {
     console.error("Error creating transformed URL:", e);
-    return baseUrl;
+    // Return the original URL if transformation fails
+    return baseUrl || '/placeholder.svg';
   }
 };
 

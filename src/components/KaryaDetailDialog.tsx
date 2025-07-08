@@ -97,7 +97,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
         {/* --- CHANGE #2: Conditional Layout Rendering --- */}
         {isTextWork ? (
           // Layout for Written Works (Text-only View)
-          <div className="relative h-full w-full">
+          <div className="relative h-full w-full min-h-0">
             <KaryaMediaViewer 
               karya={karya} 
               onClose={onClose} 
@@ -108,9 +108,9 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
           </div>
         ) : (
           // Layout for Visual Media (Side-by-side View)
-          <div className="relative flex flex-col md:flex-row h-full w-full overflow-hidden">
+          <div className="relative flex flex-col md:flex-row h-full w-full overflow-hidden min-h-0">
             <motion.div 
-              className={`relative flex-shrink-0 h-1/2 md:h-full bg-black transition-all duration-300 ${showInfoPanel ? 'md:w-2/3 lg:w-3/4' : 'md:w-full'} overflow-hidden`}
+              className={`relative flex-shrink-0 h-1/2 md:h-full bg-black transition-all duration-300 ${showInfoPanel ? 'md:w-2/3 lg:w-3/4' : 'md:w-full'} overflow-hidden min-h-0`}
               key={`${currentIndex}-media`}
               custom={direction}
               variants={variants}
@@ -136,7 +136,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 100 }}
                   transition={{ duration: 0.4, delay: 0.1 }}
-                  className="flex-shrink-0 w-full md:w-1/3 lg:w-1/4 h-1/2 md:h-full overflow-hidden bg-secondary/95 backdrop-blur-md border-l border-border/20"
+                  className="flex-shrink-0 w-full md:w-1/3 lg:w-1/4 h-1/2 md:h-full overflow-hidden bg-secondary/95 backdrop-blur-md border-l border-border/20 min-h-0"
                 >
                   <KaryaInfoPanel karya={karya} />
                 </motion.div>

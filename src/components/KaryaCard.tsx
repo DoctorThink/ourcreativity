@@ -42,11 +42,12 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
   };
 
   // Use the media_urls array if it exists and has items, otherwise fallback to image_url
-  const mediaUrls = karya.media_urls?.length ? karya.media_urls : [karya.image_url];
+  const validMediaUrls = karya.media_urls?.filter(url => url && url.trim() !== '') || [];
+  const mediaUrls = validMediaUrls.length > 0 ? validMediaUrls : (karya.image_url && karya.image_url.trim() !== '' ? [karya.image_url] : []);
 
   // Determine content type
-  const isVideo = (url: string) => url?.match(/\.(mp4|webm|ogg)$/i);
-  const isText = karya.category === 'writing' && karya.description && !mediaUrls.some(url => url && !isVideo(url));
+  const isVideo = (url: string) => url && url.match(/\.(mp4|webm|ogg)$/i);
+  const isText = karya.category === 'writing' && karya.description && mediaUrls.length === 0;
   
   // Check if this card has any videos
   const hasVideo = mediaUrls.some(url => isVideo(url));
@@ -150,19 +151,23 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                           </div>
                         </div>
                       </div>
-                    ) : (
-                      <picture>
-                        <source srcSet={getTransformedUrl(url, { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
-                        <source srcSet={getTransformedUrl(url, { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
-                        <img
-                          src={getTransformedUrl(url, { format: 'jpeg', width: 300, quality: 50 })}
-                          alt={`${karya.title} - slide ${index + 1}`}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                          width={karya.media_width || 400}
-                          height={karya.media_height || 300}
-                        />
-                      </picture>
+                     ) : url ? (
+                       <picture>
+                         <source srcSet={getTransformedUrl(url, { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
+                         <source srcSet={getTransformedUrl(url, { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
+                         <img
+                           src={getTransformedUrl(url, { format: 'jpeg', width: 300, quality: 50 })}
+                           alt={`${karya.title} - slide ${index + 1}`}
+                           className="w-full h-full object-cover"
+                           loading="lazy"
+                           width={karya.media_width || 400}
+                           height={karya.media_height || 300}
+                         />
+                       </picture>
+                     ) : (
+                       <div className="w-full h-full bg-secondary/50 flex items-center justify-center">
+                         <span className="text-foreground/60">No image</span>
+                       </div>
                     )}
                   </CarouselItem>
                 ))}
@@ -195,20 +200,24 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
                       <Play className="w-6 h-6 text-white" />
                     </div>
                   </div>
-                </div>
-              ) : (
-                <picture>
-                  <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
-                  <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
-                  <img
-                    src={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 300, quality: 50 })}
-                    alt={karya.title}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    width={karya.media_width || 400}
-                    height={karya.media_height || 300}
-                  />
-                </picture>
+                 </div>
+               ) : mediaUrls[0] ? (
+                 <picture>
+                   <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'webp', width: 400, quality: 60 })} type="image/webp" />
+                   <source srcSet={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 400, quality: 60 })} type="image/jpeg" />
+                   <img
+                     src={getTransformedUrl(mediaUrls[0], { format: 'jpeg', width: 300, quality: 50 })}
+                     alt={karya.title}
+                     className="w-full h-full object-cover"
+                     loading="lazy"
+                     width={karya.media_width || 400}
+                     height={karya.media_height || 300}
+                   />
+                 </picture>
+               ) : (
+                 <div className="w-full h-full bg-secondary/50 flex items-center justify-center">
+                   <span className="text-foreground/60">No image</span>
+                 </div>
               )}
             </>
           )}
