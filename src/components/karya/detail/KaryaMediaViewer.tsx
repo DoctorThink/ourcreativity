@@ -160,29 +160,26 @@ export const KaryaMediaViewer = ({ karya, onClose, showInfoPanel, toggleInfoPane
   };
 
   return (
-    <div className={cn("relative bg-black/50 flex-grow h-full w-full", isTextWork && "md:h-auto")}>
+    <div className={cn("relative bg-gradient-to-br from-black/90 to-black/95 flex-grow h-full w-full overflow-hidden", isTextWork && "md:h-auto")}>
       {isTextWork ? renderTextContent() : renderMediaContent()}
       
-      {/* Floating control buttons */}
-      <div className="absolute top-4 right-4 z-10 flex gap-2">
-        {/* --- CHANGE #2: Conditionally rendering the Show/Hide button --- */}
-        {/* This button now only appears for visual media, not written works. */}
+      {/* Floating control buttons - repositioned for better accessibility */}
+      <div className="absolute top-6 right-6 z-10 flex gap-3">
+        {/* Show/Hide info panel button for visual media only */}
         {!isTextWork && (
           <button
             onClick={toggleInfoPanel}
-            className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
+            className="rounded-xl p-3 text-white/90 hover:text-white bg-black/40 hover:bg-black/60 backdrop-blur-xl border border-white/20 transition-all duration-200 hover:scale-105 shadow-lg group"
           >
-            <ChevronDown className={cn("h-5 w-5 transition-transform", !showInfoPanel && "rotate-180")} />
+            <ChevronDown className={cn("h-5 w-5 transition-transform duration-300", !showInfoPanel && "rotate-180")} />
             <span className="sr-only">{showInfoPanel ? 'Hide info' : 'Show info'}</span>
+            
+            {/* Tooltip */}
+            <div className="absolute -bottom-10 right-0 bg-black/80 text-white text-xs px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+              {showInfoPanel ? 'Hide Details' : 'Show Details'}
+            </div>
           </button>
         )}
-        <button
-          onClick={onClose}
-          className="rounded-full p-2.5 text-white hover:text-white/90 bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/10 transition-colors shadow-lg"
-        >
-          <X className="h-5 w-5" />
-          <span className="sr-only">Close</span>
-        </button>
       </div>
     </div>
   );
