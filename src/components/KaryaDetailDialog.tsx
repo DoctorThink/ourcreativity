@@ -92,12 +92,12 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 overflow-hidden border-border/30 bg-background/50 backdrop-blur-xl shadow-xl transition-all duration-300 w-full h-full max-w-full max-h-full md:max-w-7xl md:max-h-[90vh] md:rounded-2xl flex relative">
+      <DialogContent className="p-0 overflow-hidden border-border/30 bg-background/50 backdrop-blur-xl shadow-xl transition-all duration-300 w-[95vw] h-[95vh] max-w-7xl max-h-[95vh] rounded-2xl flex-col">
         
         {/* --- CHANGE #2: Conditional Layout Rendering --- */}
         {isTextWork ? (
           // Layout for Written Works (Text-only View)
-          <div className="relative h-full w-full min-h-0">
+          <div className="relative h-full w-full flex flex-col overflow-hidden">
             <KaryaMediaViewer 
               karya={karya} 
               onClose={onClose} 
@@ -108,9 +108,9 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
           </div>
         ) : (
           // Layout for Visual Media (Side-by-side View)
-          <div className="relative flex flex-col md:flex-row h-full w-full overflow-hidden min-h-0">
+          <div className="relative flex flex-col md:flex-row h-full w-full overflow-hidden">
             <motion.div 
-              className={`relative flex-shrink-0 h-1/2 md:h-full bg-black transition-all duration-300 ${showInfoPanel ? 'md:w-2/3 lg:w-3/4' : 'md:w-full'} overflow-hidden min-h-0`}
+              className={`relative flex-shrink-0 h-1/2 md:h-full bg-black transition-all duration-300 ${showInfoPanel ? 'md:w-2/3 lg:w-3/4' : 'md:w-full'} overflow-hidden`}
               key={`${currentIndex}-media`}
               custom={direction}
               variants={variants}
@@ -136,7 +136,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 100 }}
                   transition={{ duration: 0.4, delay: 0.1 }}
-                  className="flex-shrink-0 w-full md:w-1/3 lg:w-1/4 h-1/2 md:h-full overflow-hidden bg-secondary/95 backdrop-blur-md border-l border-border/20 min-h-0"
+                  className="flex-shrink-0 w-full md:w-1/3 lg:w-1/4 h-1/2 md:h-full overflow-hidden bg-secondary/95 backdrop-blur-md border-l border-border/20"
                 >
                   <KaryaInfoPanel karya={karya} />
                 </motion.div>
