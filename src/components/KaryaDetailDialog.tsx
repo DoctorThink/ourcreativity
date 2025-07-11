@@ -92,10 +92,10 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 overflow-hidden border border-border/20 bg-background/80 backdrop-blur-xl shadow-2xl transition-all duration-500 w-[92vw] h-[85vh] max-w-6xl max-h-[85vh] rounded-3xl flex-col relative">
+      <DialogContent className="p-0 overflow-hidden border border-border/20 bg-background/80 backdrop-blur-xl shadow-2xl transition-all duration-500 w-[90vw] h-[80vh] max-w-5xl max-h-[80vh] rounded-2xl flex flex-col">
         
         {/* Enhanced Header with Glowar styling */}
-        <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-r from-background/90 via-background/80 to-background/90 backdrop-blur-md border-b border-border/20 rounded-t-3xl z-30 flex items-center justify-between px-6">
+        <div className="flex-shrink-0 h-14 bg-gradient-to-r from-background/90 via-background/80 to-background/90 backdrop-blur-md border-b border-border/20 rounded-t-2xl flex items-center justify-between px-6">
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 rounded-full bg-gradient-to-r from-amethyst to-turquoise animate-pulse"></div>
             <span className="text-sm font-medium text-foreground/80">Karya Detail</span>
@@ -118,10 +118,10 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
         </div>
 
         {/* Main Content Area */}
-        <div className="pt-16 h-full flex flex-col overflow-hidden">
+        <div className="flex-1 min-h-0 relative">
           {isTextWork ? (
             // Layout for Written Works (Text-only View)
-            <div className="relative h-full w-full flex flex-col overflow-hidden">
+            <div className="h-full w-full">
               <KaryaMediaViewer 
                 karya={karya} 
                 onClose={onClose} 
@@ -132,9 +132,9 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
             </div>
           ) : (
             // Layout for Visual Media (Side-by-side View)
-            <div className="relative flex flex-col lg:flex-row h-full w-full overflow-hidden">
+            <div className="flex flex-col lg:flex-row h-full w-full">
               <motion.div 
-                className={`relative flex-shrink-0 h-3/5 lg:h-full bg-gradient-to-b from-black/95 to-black/90 transition-all duration-500 ${showInfoPanel ? 'lg:w-2/3' : 'lg:w-full'} overflow-hidden rounded-2xl lg:rounded-none lg:rounded-l-2xl border-r border-border/10`}
+                className={`flex-shrink-0 h-3/5 lg:h-full bg-gradient-to-b from-black/95 to-black/90 transition-all duration-500 ${showInfoPanel ? 'lg:w-2/3' : 'lg:w-full'} overflow-hidden`}
                 key={`${currentIndex}-media`}
                 custom={direction}
                 variants={variants}
@@ -160,7 +160,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 100 }}
                     transition={{ duration: 0.5, ease: "easeInOut" }}
-                    className="flex-shrink-0 w-full lg:w-1/3 h-2/5 lg:h-full overflow-hidden bg-gradient-to-b from-secondary/95 via-secondary/90 to-background/95 backdrop-blur-xl border-t lg:border-t-0 border-border/20 rounded-b-2xl lg:rounded-none lg:rounded-r-2xl"
+                    className="flex-shrink-0 w-full lg:w-1/3 h-2/5 lg:h-full overflow-hidden bg-gradient-to-b from-secondary/95 via-secondary/90 to-background/95 backdrop-blur-xl border-t lg:border-t-0 lg:border-l border-border/20"
                   >
                     <KaryaInfoPanel karya={karya} />
                   </motion.div>
@@ -168,29 +168,29 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
               </AnimatePresence>
             </div>
           )}
+          
+          {/* Enhanced Navigation Arrows */}
+          {karyaList.length > 1 && (
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/60 text-white/90 hover:text-white rounded-full border border-white/20 backdrop-blur-md transition-all duration-200 hover:scale-110 shadow-lg"
+                onClick={() => changeKarya(-1)}
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/60 text-white/90 hover:text-white rounded-full border border-white/20 backdrop-blur-md transition-all duration-200 hover:scale-110 shadow-lg"
+                onClick={() => changeKarya(1)}
+              >
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </>
+          )}
         </div>
-        
-        {/* Enhanced Navigation Arrows */}
-        {karyaList.length > 1 && (
-          <>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/60 text-white/90 hover:text-white rounded-full border border-white/20 backdrop-blur-md transition-all duration-200 hover:scale-110 shadow-lg"
-              onClick={() => changeKarya(-1)}
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/60 text-white/90 hover:text-white rounded-full border border-white/20 backdrop-blur-md transition-all duration-200 hover:scale-110 shadow-lg"
-              onClick={() => changeKarya(1)}
-            >
-              <ArrowRight className="h-5 w-5" />
-            </Button>
-          </>
-        )}
 
         {/* Decorative Elements */}
         <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-amethyst/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
