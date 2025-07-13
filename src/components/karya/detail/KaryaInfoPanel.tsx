@@ -109,18 +109,18 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
           <div className="flex items-center gap-2 mb-2 flex-shrink-0">
             <span className="text-xs font-medium text-foreground/80">Description</span>
           </div>
-          <div className="flex-1 min-h-0 relative">
+          <ScrollArea className="flex-1 min-h-0">
             <div className={`${
-              isDescriptionExpanded ? 'h-full overflow-y-auto' : 'h-24 overflow-hidden'
+              isDescriptionExpanded ? '' : 'max-h-24 overflow-hidden'
             } transition-all duration-300 relative`}>
-              <p className="text-foreground/90 leading-relaxed font-sans text-xs md:text-sm whitespace-pre-wrap break-words">
+              <p className="text-foreground/90 leading-relaxed font-sans text-xs md:text-sm whitespace-pre-wrap break-words pr-2">
                 {karya.description}
               </p>
               {!isDescriptionExpanded && karya.description.length > 150 && (
                 <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-secondary/95 to-transparent pointer-events-none"></div>
               )}
             </div>
-          </div>
+          </ScrollArea>
           {karya.description.length > 150 && (
             <div className="flex-shrink-0 pt-2">
               <Button

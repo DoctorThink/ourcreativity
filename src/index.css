@@ -175,22 +175,24 @@
   100% { background-position: 0% 50%; }
 }
 
-/* OPTIMIZED MASONRY GRID STYLING - 4 Grid Layout for PC */
+/* PINTEREST-STYLE MASONRY GRID STYLING */
 .masonry-container {
   width: 100%;
-  max-width: 1200px; /* Reduced max width for better 4-column layout */
-  margin: 0 auto; /* Center the container */
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
 
 .masonry-grid {
   display: flex !important;
   width: 100% !important;
-  margin-left: -12px !important; /* Reduced gap for tighter 4-column layout */
+  margin-left: -8px !important;
   margin-right: 0 !important;
+  gap: 0 !important;
 }
 
 .masonry-grid-column {
-  padding-left: 12px !important; /* Reduced padding for tighter layout */
+  padding-left: 8px !important;
   padding-right: 0 !important;
   background-clip: padding-box !important;
   flex: 1 !important;
@@ -199,41 +201,56 @@
 
 .masonry-item {
   display: block !important;
-  margin-bottom: 16px !important; /* Reduced margin for tighter layout */
+  margin-bottom: 16px !important;
   break-inside: avoid !important;
   width: 100% !important;
+  transform: translateZ(0);
+  will-change: transform;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 
-/* Enhanced Responsive Breakpoints for 4-Grid Layout */
-@media screen and (min-width: 1200px) {
+.masonry-item:hover {
+  transform: translateY(-2px) translateZ(0);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Pinterest-style Responsive Breakpoints */
+@media screen and (min-width: 1400px) {
   .masonry-grid-column {
-    width: calc(25% - 9px) !important; /* Exactly 4 columns */
+    width: calc(20% - 6.4px) !important; /* 5 columns on extra large screens */
+  }
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1399px) {
+  .masonry-grid-column {
+    width: calc(25% - 6px) !important; /* 4 columns */
   }
 }
 
 @media screen and (min-width: 1024px) and (max-width: 1199px) {
   .masonry-grid-column {
-    width: calc(33.333% - 8px) !important; /* 3 columns */
+    width: calc(33.333% - 5.33px) !important; /* 3 columns */
   }
 }
 
 @media screen and (min-width: 768px) and (max-width: 1023px) {
   .masonry-grid-column {
-    width: calc(50% - 6px) !important; /* 2 columns */
+    width: calc(50% - 4px) !important; /* 2 columns */
   }
 }
 
 @media screen and (max-width: 767px) {
   .masonry-container {
     max-width: 100%;
+    padding: 0 12px;
   }
   
   .masonry-grid {
-    margin-left: -8px !important;
+    margin-left: -6px !important;
   }
   
   .masonry-grid-column {
-    padding-left: 8px !important;
+    padding-left: 6px !important;
     width: 100% !important; /* 1 column */
   }
   

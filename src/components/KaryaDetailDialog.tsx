@@ -1,7 +1,7 @@
 // src/components/KaryaDetailDialog.tsx
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Database } from '@/integrations/supabase/types';
 import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
@@ -93,6 +93,9 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="p-0 overflow-hidden border border-border/20 bg-background/80 backdrop-blur-xl shadow-2xl transition-all duration-500 w-[90vw] h-[80vh] max-w-5xl max-h-[80vh] rounded-2xl flex flex-col">
+        <DialogTitle className="sr-only">
+          {karya?.title || 'Karya Detail'}
+        </DialogTitle>
         
         {/* Enhanced Header with Glowar styling */}
         <div className="flex-shrink-0 h-14 bg-gradient-to-r from-background/90 via-background/80 to-background/90 backdrop-blur-md border-b border-border/20 rounded-t-2xl flex items-center justify-between px-6">
