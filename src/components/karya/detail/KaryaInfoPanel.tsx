@@ -43,7 +43,7 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
   const toggleDescription = () => setIsDescriptionExpanded(!isDescriptionExpanded);
 
   return (
-    <div className="h-full flex flex-col bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md overflow-hidden">
+    <div className="h-full flex flex-col bg-gradient-to-b from-secondary/95 to-background/95 backdrop-blur-md">
       {/* Header with title and category info */}
       <div className="flex-shrink-0 p-4 md:p-6 border-b border-border/20">
         <div className="flex items-start justify-between mb-3">
@@ -108,13 +108,13 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
           <div className="flex items-center gap-2 mb-2 flex-shrink-0">
             <span className="text-xs font-medium text-foreground/80">Description</span>
           </div>
-          <div className="flex-1 min-h-0 relative">
+          <div className="flex-1 min-h-0 relative overflow-hidden">
             <div className={`${
               isDescriptionExpanded 
-                ? 'h-full overflow-y-auto' 
+                ? 'h-full overflow-y-auto scrollbar-thin scrollbar-thumb-foreground/20 scrollbar-track-transparent' 
                 : 'h-20 overflow-hidden'
-            } transition-all duration-300 ease-out`}>
-              <p className="text-foreground/90 leading-relaxed font-sans text-xs md:text-sm whitespace-pre-wrap break-words pr-3">
+            } transition-all duration-500 ease-out pr-2`}>
+              <p className="text-foreground/90 leading-relaxed font-sans text-xs md:text-sm whitespace-pre-wrap break-words">
                 {karya.description}
               </p>
             </div>
@@ -128,11 +128,11 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
                 variant="ghost"
                 size="sm"
                 onClick={toggleDescription}
-                className="text-foreground/60 hover:text-foreground hover:bg-foreground/10 gap-1.5 rounded-full font-medium text-xs h-8 px-4 transition-all duration-200"
+                className="text-foreground/60 hover:text-foreground hover:bg-foreground/10 gap-1.5 rounded-full font-medium text-xs h-8 px-4 transition-all duration-200 hover:scale-105"
               >
                 {isDescriptionExpanded ? 'Show Less' : 'Read More'}
                 <ChevronDown
-                  className={`h-3 w-3 transition-transform duration-200 ${isDescriptionExpanded ? 'rotate-180' : ''}`}
+                  className={`h-3 w-3 transition-transform duration-300 ${isDescriptionExpanded ? 'rotate-180' : ''}`}
                 />
               </Button>
             </div>
