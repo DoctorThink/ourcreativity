@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChevronDown, Tag, Eye } from 'lucide-react';
 import { Database } from '@/integrations/supabase/types';
 
@@ -109,29 +108,31 @@ export const KaryaInfoPanel = ({ karya }: KaryaInfoPanelProps) => {
           <div className="flex items-center gap-2 mb-2 flex-shrink-0">
             <span className="text-xs font-medium text-foreground/80">Description</span>
           </div>
-          <ScrollArea className="flex-1 min-h-0">
+          <div className="flex-1 min-h-0 relative">
             <div className={`${
-              isDescriptionExpanded ? '' : 'max-h-24 overflow-hidden'
-            } transition-all duration-300 relative`}>
-              <p className="text-foreground/90 leading-relaxed font-sans text-xs md:text-sm whitespace-pre-wrap break-words pr-2">
+              isDescriptionExpanded 
+                ? 'h-full overflow-y-auto' 
+                : 'h-20 overflow-hidden'
+            } transition-all duration-300 ease-out`}>
+              <p className="text-foreground/90 leading-relaxed font-sans text-xs md:text-sm whitespace-pre-wrap break-words pr-3">
                 {karya.description}
               </p>
-              {!isDescriptionExpanded && karya.description.length > 150 && (
-                <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-secondary/95 to-transparent pointer-events-none"></div>
-              )}
             </div>
-          </ScrollArea>
+            {!isDescriptionExpanded && karya.description.length > 150 && (
+              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-secondary/95 via-secondary/80 to-transparent pointer-events-none"></div>
+            )}
+          </div>
           {karya.description.length > 150 && (
-            <div className="flex-shrink-0 pt-2">
+            <div className="flex-shrink-0 pt-3">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={toggleDescription}
-                className="text-foreground/60 hover:text-foreground hover:bg-foreground/5 gap-1 rounded-full font-medium text-xs h-7 px-3"
+                className="text-foreground/60 hover:text-foreground hover:bg-foreground/10 gap-1.5 rounded-full font-medium text-xs h-8 px-4 transition-all duration-200"
               >
                 {isDescriptionExpanded ? 'Show Less' : 'Read More'}
                 <ChevronDown
-                  className={`h-3 w-3 transition-transform ${isDescriptionExpanded ? 'rotate-180' : ''}`}
+                  className={`h-3 w-3 transition-transform duration-200 ${isDescriptionExpanded ? 'rotate-180' : ''}`}
                 />
               </Button>
             </div>

@@ -8,8 +8,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KaryaMediaViewer } from './karya/detail/KaryaMediaViewer';
 import { KaryaInfoPanel } from './karya/detail/KaryaInfoPanel';
-import { Button } from './ui/button';
-import { ArrowLeft, ArrowRight, X } from 'lucide-react';
+import { KaryaDialogHeader } from './karya/detail/KaryaDialogHeader';
+import { KaryaDialogNavigation } from './karya/detail/KaryaDialogNavigation';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
@@ -97,28 +97,11 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
           {karya?.title || 'Karya Detail'}
         </DialogTitle>
         
-        {/* Enhanced Header with Glowar styling */}
-        <div className="flex-shrink-0 h-14 bg-gradient-to-r from-background/90 via-background/80 to-background/90 backdrop-blur-md border-b border-border/20 rounded-t-2xl flex items-center justify-between px-6">
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-gradient-to-r from-amethyst to-turquoise animate-pulse"></div>
-            <span className="text-sm font-medium text-foreground/80">Karya Detail</span>
-          </div>
-          <div className="flex items-center gap-2">
-            {karyaList.length > 1 && (
-              <div className="flex items-center gap-1 px-3 py-1 bg-black/20 backdrop-blur-sm rounded-full border border-white/10">
-                <span className="text-xs font-medium text-foreground/80">
-                  {currentIndex + 1} / {karyaList.length}
-                </span>
-              </div>
-            )}
-            <button
-              onClick={onClose}
-              className="rounded-full p-2 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 backdrop-blur-md border border-white/10 transition-all duration-200 hover:scale-105"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
+        <KaryaDialogHeader 
+          currentIndex={currentIndex}
+          totalCount={karyaList.length}
+          onClose={onClose}
+        />
 
         {/* Main Content Area */}
         <div className="flex-1 min-h-0 relative">
@@ -163,7 +146,7 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 100 }}
                     transition={{ duration: 0.5, ease: "easeInOut" }}
-                    className="flex-shrink-0 w-full lg:w-1/3 h-2/5 lg:h-full overflow-hidden bg-gradient-to-b from-secondary/95 via-secondary/90 to-background/95 backdrop-blur-xl border-t lg:border-t-0 lg:border-l border-border/20"
+                    className="flex-shrink-0 w-full lg:w-1/3 h-2/5 lg:h-full bg-gradient-to-b from-secondary/95 via-secondary/90 to-background/95 backdrop-blur-xl border-t lg:border-t-0 lg:border-l border-border/20"
                   >
                     <KaryaInfoPanel karya={karya} />
                   </motion.div>
@@ -172,27 +155,11 @@ const KaryaDetailDialog = ({ karyaList, initialIndex, isOpen, onClose }: KaryaDe
             </div>
           )}
           
-          {/* Enhanced Navigation Arrows */}
-          {karyaList.length > 1 && (
-            <>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/60 text-white/90 hover:text-white rounded-full border border-white/20 backdrop-blur-md transition-all duration-200 hover:scale-110 shadow-lg"
-                onClick={() => changeKarya(-1)}
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/60 text-white/90 hover:text-white rounded-full border border-white/20 backdrop-blur-md transition-all duration-200 hover:scale-110 shadow-lg"
-                onClick={() => changeKarya(1)}
-              >
-                <ArrowRight className="h-5 w-5" />
-              </Button>
-            </>
-          )}
+          <KaryaDialogNavigation 
+            onPrevious={() => changeKarya(-1)}
+            onNext={() => changeKarya(1)}
+            totalCount={karyaList.length}
+          />
         </div>
 
         {/* Decorative Elements */}
