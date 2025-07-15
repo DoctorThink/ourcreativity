@@ -7,6 +7,7 @@ import { AppHeader } from "./page-layout/Header";
 import { MobileMenu } from "./page-layout/MobileMenu";
 import { PageHeader } from "./page-layout/PageHeader";
 import { AppFooter } from "./page-layout/Footer";
+import JoinCommunityDialog from "../JoinCommunityDialog";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -32,6 +33,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   fullWidth = false,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
@@ -79,7 +81,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
     { name: "Cerita Kami", path: "/cerita-kami", icon: BookOpen, type: "info", description: "Perjalanan, visi, dan misi komunitas." },
     { name: "Informasi", path: "/informasi", icon: Info, type: "info", description: "Detail lengkap tentang komunitas kami." },
     { name: "Syarat & Ketentuan", path: "/terms", icon: FileText, type: "info", description: "Panduan dan aturan main di komunitas." },
-    { name: "Ayo Gabung", path: "#", external: true, url: "https://linktr.ee/ourcreativity.ofc", icon: UserPlus, type: "cta" },
+    { name: "Ayo Gabung", path: "#", action: "joinDialog", icon: UserPlus, type: "cta" },
   ];
 
   const mainNav = navItems.filter(item => item.type === 'main');
@@ -94,7 +96,9 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   };
   
   const handleNavClick = (item: NavItem) => {
-    if (item.external && item.url) {
+    if (item.action === 'joinDialog') {
+      setIsJoinDialogOpen(true);
+    } else if (item.external && item.url) {
       window.open(item.url, '_blank');
     } else {
       navigate(item.path);
@@ -144,6 +148,11 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       </main>
       
       <AppFooter className={footerClassName} fullWidth={fullWidth} />
+      
+      <JoinCommunityDialog 
+        open={isJoinDialogOpen} 
+        onOpenChange={setIsJoinDialogOpen} 
+      />
     </div>
   );
 };

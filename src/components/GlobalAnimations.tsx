@@ -2,6 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
 
 // Define animation constants to avoid duplication
 const ANIMATION_CONFIGS = {
@@ -28,6 +33,64 @@ const ANIMATION_CONFIGS = {
   }
 };
 
+// Universal scroll animation optimization
+const initializeScrollAnimations = () => {
+  // Configure GSAP for better performance
+  gsap.config({
+    force3D: true,
+    nullTargetWarn: false,
+  });
+
+  // Universal fade in animation for all elements with class 'animate-on-scroll'
+  gsap.utils.toArray('.animate-on-scroll').forEach((element: any) => {
+    gsap.fromTo(element, 
+      { 
+        opacity: 0, 
+        y: 30,
+        scale: 0.98,
+        filter: 'blur(5px)'
+      },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: 'blur(0px)',
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: element,
+          start: 'top 85%',
+          end: 'top 65%',
+          toggleActions: 'play none none reverse',
+        }
+      }
+    );
+  });
+
+  // Smooth scroll behavior optimization
+  const smoothScroll = (target: string) => {
+    const element = document.querySelector(target);
+    if (element) {
+      gsap.to(window, {
+        duration: 1,
+        scrollTo: { y: element, offsetY: 100 },
+        ease: 'power2.inOut'
+      });
+    }
+  };
+
+  // Add click handlers for smooth scroll links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = anchor.getAttribute('href');
+      if (target) {
+        smoothScroll(target);
+      }
+    });
+  });
+};
+
 export const GlobalAnimations: React.FC = () => {
   const location = useLocation();
   const prefersReducedMotion = useReducedMotion();
@@ -36,6 +99,16 @@ export const GlobalAnimations: React.FC = () => {
     secondary: "turquoise",
     accent: "coral"
   });
+  
+  // Initialize scroll animations on component mount
+  useEffect(() => {
+    initializeScrollAnimations();
+    
+    // Cleanup function
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
   
   // Change color scheme based on route
   useEffect(() => {
@@ -260,6 +333,57 @@ export const GlobalAnimations: React.FC = () => {
       />
     </div>
   );
+};
+
+// Hook for smooth page transitions
+export const usePageTransition = () => {
+  const pageTransition = {
+    initial: { opacity: 0, y: 20, filter: 'blur(10px)' },
+    animate: { 
+      opacity: 1, 
+      y: 0, 
+      filter: 'blur(0px)',
+      transition: {
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1]
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      y: -20, 
+      filter: 'blur(5px)',
+      transition: {
+        duration: 0.3,
+        ease: [0.22, 1, 0.36, 1]
+      }
+    }
+  };
+
+  return pageTransition;
+};
+
+// Optimized scroll animations
+export const useScrollAnimation = () => {
+  const scrollVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 30,
+      scale: 0.98,
+      filter: 'blur(5px)'
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      filter: 'blur(0px)',
+      transition: {
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1]
+      }
+    }
+  };
+
+  return scrollVariants;
 };
 
 export default GlobalAnimations;

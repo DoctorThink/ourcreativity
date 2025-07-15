@@ -9,4 +9,5 @@ export interface NavItem {
   description?: string;
   external?: boolean;
   url?: string;
+  action?: string;
 }

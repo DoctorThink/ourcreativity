@@ -6,6 +6,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Universal scroll and animation optimizations */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+}
+
+body {
+  will-change: scroll-position;
+  -webkit-overflow-scrolling: touch;
+  text-rendering: optimizeLegibility;
+}
+
 @layer base {
   :root {
     /* Core Theme Colors - Lighter Gray Monochromatic */

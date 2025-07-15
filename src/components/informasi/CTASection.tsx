@@ -1,14 +1,14 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import JoinCommunityDialog from "../JoinCommunityDialog";
 
 export const CTASection: React.FC = () => {
-  const navigate = useNavigate();
+  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
 
   const handleJoinClick = () => {
-    navigate('/');
+    setIsJoinDialogOpen(true);
   };
 
   return (
@@ -47,6 +47,11 @@ export const CTASection: React.FC = () => {
           </motion.button>
         </motion.div>
       </div>
+      
+      <JoinCommunityDialog 
+        open={isJoinDialogOpen} 
+        onOpenChange={setIsJoinDialogOpen} 
+      />
     </section>
   );
 };

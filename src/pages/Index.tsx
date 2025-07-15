@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Megaphone, Users, BookOpen, Info, FileText, Palette, UserPlus, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../components/layouts/PageLayout";
 import BentoCard from "../components/ui/BentoCard";
+import JoinCommunityDialog from "../components/JoinCommunityDialog";
 
 interface HomeCardProps {
   id: string;
@@ -40,10 +41,11 @@ const tileVariants = {
 
 const Index = () => {
   const navigate = useNavigate();
+  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
 
   const handleTileClick = (path: string, id: string) => {
     if (id === 'ayo-gabung') {
-      window.open('https://linktr.ee/ourcreativity.ofc', '_blank');
+      setIsJoinDialogOpen(true);
     } else {
       navigate(path);
     }
@@ -230,6 +232,11 @@ const Index = () => {
           </div>
         </div>
       </motion.div>
+      
+      <JoinCommunityDialog 
+        open={isJoinDialogOpen} 
+        onOpenChange={setIsJoinDialogOpen} 
+      />
     </PageLayout>
   );
 };
