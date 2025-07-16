@@ -12,8 +12,9 @@ interface JoinCommunityDialogProps {
 const JoinCommunityDialog = ({ open, onOpenChange }: JoinCommunityDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl p-0 overflow-hidden border-border/20 shadow-2xl bg-gradient-to-tr from-secondary/80 to-background/90 backdrop-blur-xl rounded-3xl">
-        <div className="p-8 md:p-10 space-y-8">
+      <DialogContent className="max-w-4xl max-h-[90vh] p-0 border-border/20 shadow-2xl bg-gradient-to-tr from-secondary/80 to-background/90 backdrop-blur-xl rounded-3xl overflow-hidden">
+        <div className="max-h-[90vh] overflow-y-auto overscroll-contain">
+          <div className="p-4 md:p-8 lg:p-10 space-y-6 md:space-y-8">
           {/* Enhanced Dialog Title with Animation */}
           <div className="flex items-center justify-center gap-4 mb-6 text-center">
             <motion.div 
@@ -92,7 +93,7 @@ const JoinCommunityDialog = ({ open, onOpenChange }: JoinCommunityDialogProps) =
               Atau gabung langsung ke grup diskusi spesifik:
             </motion.p>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
               {[
                 {
                   name: "Main OurCreativity",
@@ -130,7 +131,7 @@ const JoinCommunityDialog = ({ open, onOpenChange }: JoinCommunityDialogProps) =
                   href={group.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`relative flex flex-col items-center gap-4 p-6 rounded-2xl border ${group.bgColor} ${group.borderColor} hover:shadow-lg group transition-all duration-300 backdrop-blur-sm`}
+                  className={`relative flex flex-col items-center gap-3 md:gap-4 p-4 md:p-6 rounded-2xl border ${group.bgColor} ${group.borderColor} hover:shadow-lg group transition-all duration-300 backdrop-blur-sm`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
@@ -144,12 +145,12 @@ const JoinCommunityDialog = ({ open, onOpenChange }: JoinCommunityDialogProps) =
                     <group.icon className={`w-6 h-6 ${group.color}`} />
                   </div>
                   
-                  <div className="text-center">
-                    <h4 className="text-base font-semibold text-foreground mb-1">{group.name}</h4>
-                    <p className="text-sm text-foreground/60">{group.description}</p>
-                  </div>
+                   <div className="text-center">
+                     <h4 className="text-sm md:text-base font-semibold text-foreground mb-1">{group.name}</h4>
+                     <p className="text-xs md:text-sm text-foreground/60">{group.description}</p>
+                   </div>
                   
-                  <div className="flex items-center gap-2 text-sm text-foreground/50">
+                  <div className="flex items-center gap-2 text-xs md:text-sm text-foreground/50">
                     {group.isWhatsApp ? (
                       <MessageCircle className="w-4 h-4" />
                     ) : (
@@ -171,16 +172,17 @@ const JoinCommunityDialog = ({ open, onOpenChange }: JoinCommunityDialogProps) =
               ))}
             </div>
             
-            <motion.p 
-              className="text-sm text-foreground/50 mt-8 text-center px-4 flex items-center justify-center gap-2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1, duration: 0.5 }}
-            >
-              <Info size={16} className="text-foreground/40"/>
-              Beberapa grup butuh pengisian form untuk menyaring anggota, silakan isi form untuk di accept.
-            </motion.p>
-          </motion.div>
+             <motion.p 
+               className="text-xs md:text-sm text-foreground/50 mt-6 md:mt-8 text-center px-4 flex items-center justify-center gap-2"
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               transition={{ delay: 1, duration: 0.5 }}
+             >
+               <Info size={14} className="text-foreground/40 flex-shrink-0"/>
+               <span>Beberapa grup butuh pengisian form untuk menyaring anggota, silakan isi form untuk di accept.</span>
+             </motion.p>
+           </motion.div>
+         </div>
         </div>
 
         {/* Enhanced Decorative Background Elements with Animation */}

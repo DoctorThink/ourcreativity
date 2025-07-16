@@ -41,6 +41,9 @@ const initializeScrollAnimations = () => {
     nullTargetWarn: false,
   });
 
+  // Kill existing ScrollTriggers to prevent conflicts
+  ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+
   // Universal fade in animation for all elements with class 'animate-on-scroll'
   gsap.utils.toArray('.animate-on-scroll').forEach((element: any) => {
     gsap.fromTo(element, 
@@ -67,6 +70,54 @@ const initializeScrollAnimations = () => {
     );
   });
 
+  // Enhanced universal animations for common elements
+  const animateElements = (selector: string, fromProps: any, toProps: any, delay: number = 0) => {
+    gsap.utils.toArray(selector).forEach((element: any, index: number) => {
+      gsap.fromTo(element, fromProps, {
+        ...toProps,
+        delay: delay + (index * 0.1),
+        scrollTrigger: {
+          trigger: element,
+          start: 'top 85%',
+          end: 'top 65%',
+          toggleActions: 'play none none reverse',
+        }
+      });
+    });
+  };
+
+  // Cards animation
+  animateElements('.card', 
+    { opacity: 0, y: 40, scale: 0.95, filter: 'blur(8px)' },
+    { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' }
+  );
+
+  // Headings animation
+  animateElements('h1, h2, h3, h4, h5, h6', 
+    { opacity: 0, y: 25, filter: 'blur(3px)' },
+    { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.6, ease: 'power2.out' }
+  );
+
+  // Paragraphs animation
+  animateElements('p', 
+    { opacity: 0, y: 20, filter: 'blur(2px)' },
+    { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.5, ease: 'power2.out' },
+    0.1
+  );
+
+  // Buttons animation
+  animateElements('button', 
+    { opacity: 0, y: 20, scale: 0.95 },
+    { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'power2.out' },
+    0.2
+  );
+
+  // Images animation
+  animateElements('img', 
+    { opacity: 0, scale: 0.9, filter: 'blur(10px)' },
+    { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' }
+  );
+
   // Smooth scroll behavior optimization
   const smoothScroll = (target: string) => {
     const element = document.querySelector(target);
@@ -89,6 +140,22 @@ const initializeScrollAnimations = () => {
       }
     });
   });
+
+  // Add scroll-based fade out for elements going out of view
+  gsap.utils.toArray('.fade-on-scroll').forEach((element: any) => {
+    gsap.to(element, {
+      opacity: 0.3,
+      scale: 0.95,
+      filter: 'blur(2px)',
+      scrollTrigger: {
+        trigger: element,
+        start: 'top 20%',
+        end: 'bottom 20%',
+        scrub: true,
+        toggleActions: 'play none none reverse',
+      }
+    });
+  });
 };
 
 export const GlobalAnimations: React.FC = () => {
@@ -100,15 +167,18 @@ export const GlobalAnimations: React.FC = () => {
     accent: "coral"
   });
   
-  // Initialize scroll animations on component mount
+  // Initialize scroll animations on component mount and route changes
   useEffect(() => {
-    initializeScrollAnimations();
+    const timeoutId = setTimeout(() => {
+      initializeScrollAnimations();
+    }, 100);
     
     // Cleanup function
     return () => {
+      clearTimeout(timeoutId);
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
-  }, []);
+  }, [location.pathname]);
   
   // Change color scheme based on route
   useEffect(() => {
