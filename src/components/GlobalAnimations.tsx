@@ -35,10 +35,22 @@ const ANIMATION_CONFIGS = {
 
 // Universal scroll animation optimization
 const initializeScrollAnimations = () => {
-  // Configure GSAP for better performance
+  // Configure GSAP for ultra-smooth performance
   gsap.config({
     force3D: true,
     nullTargetWarn: false,
+    autoSleep: 60,
+    units: {
+      left: "px",
+      top: "px",
+      rotation: "rad"
+    }
+  });
+
+  // Configure ScrollTrigger for maximum smoothness
+  ScrollTrigger.config({
+    limitCallbacks: true,
+    syncInterval: 150
   });
 
   // Kill existing ScrollTriggers to prevent conflicts
@@ -118,17 +130,37 @@ const initializeScrollAnimations = () => {
     { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' }
   );
 
-  // Smooth scroll behavior optimization
+  // Ultra-smooth scroll behavior optimization
   const smoothScroll = (target: string) => {
     const element = document.querySelector(target);
     if (element) {
       gsap.to(window, {
-        duration: 1,
-        scrollTo: { y: element, offsetY: 100 },
-        ease: 'power2.inOut'
+        duration: 1.2,
+        scrollTo: { 
+          y: element, 
+          offsetY: 100,
+          autoKill: false
+        },
+        ease: 'power2.inOut',
+        overwrite: 'auto'
       });
     }
   };
+
+  // Add smooth momentum scrolling for better feel
+  gsap.registerEffect({
+    name: "smoothScroll",
+    effect: (targets: any, config: any) => {
+      return gsap.to(targets, {
+        duration: config.duration || 1,
+        ease: config.ease || "power2.inOut",
+        scrollTo: config.scrollTo,
+        overwrite: "auto"
+      });
+    },
+    defaults: { duration: 1 },
+    extendTimeline: true
+  });
 
   // Add click handlers for smooth scroll links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
