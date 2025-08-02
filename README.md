@@ -1,4 +1,3 @@
-Baik, berikut adalah ringkasan lengkap semua pembaruan dalam setiap bulan, dilabeli sebagai "Update v4.0" dalam Bahasa Indonesia.
 
 ---
 
