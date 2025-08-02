@@ -20,7 +20,6 @@ import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 import { Toaster } from "./components/ui/toaster";
 import "./App.css";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 // Create React Query client with retry configuration for better reliability
 const queryClient = new QueryClient({
@@ -35,25 +34,31 @@ const queryClient = new QueryClient({
 
 import { PageTransition } from "./components/PageTransition";
 import { AnimatePresence } from "framer-motion";
-import { CustomCursor } from "./components/features/karya/CustomCursor";
-import { ScrollProgressIndicator } from "./components/features/karya/ScrollProgressIndicator";
-import { ParticleBackground } from "./components/features/karya/ParticleBackground";
 import { GlobalAnimations } from "./components/GlobalAnimations";
+import { GlobalLoader } from "./components/GlobalLoader";
 import RequireAuth from "./components/features/admin/RequireAuth";
 
 // Create AppContent component that uses router hooks
 function AppContent() {
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin();
   }, []);
+
+  const handleLoadComplete = () => {
+    setIsLoading(false);
+  };
+
+  // Show loader on initial load
+  if (isLoading) {
+    return <GlobalLoader onLoadComplete={handleLoadComplete} />;
+  }
 
   return (
     <>
-      {/* Apply global design elements */}
-      <CustomCursor />
-      <ScrollProgressIndicator />
+      {/* Apply minimal global elements for performance */}
       <GlobalAnimations />
       
       <AnimatePresence mode="wait">

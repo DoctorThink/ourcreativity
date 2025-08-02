@@ -12,35 +12,8 @@ const CeritaKami = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    
-    const ctx = gsap.context(() => {
-      // Smooth scrolling setup
-      gsap.set("body", { overflow: "auto" });
-      
-      // Global scroll animations for section transitions
-      gsap.utils.toArray<HTMLElement>('section').forEach((section, index) => {
-        if (index > 0) { // Skip hero section
-          gsap.fromTo(section, {
-            opacity: 0.8,
-            y: 50
-          }, {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: section,
-              start: "top 85%",
-              toggleActions: "play none none none"
-            }
-          });
-        }
-      });
-
-    }, containerRef);
-
-    return () => ctx.revert();
+    // Remove complex animations for better performance
+    gsap.set("body", { overflow: "auto" });
   }, []);
 
   return (
