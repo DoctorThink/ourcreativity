@@ -10,7 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { X, ChevronLeft, ChevronRight, Info, Eye, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { KaryaMediaViewer } from './karya/detail/KaryaMediaViewer';
+import { KaryaMediaViewer } from './features/karya/detail/KaryaMediaViewer';
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 

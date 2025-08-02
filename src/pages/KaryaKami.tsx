@@ -1,15 +1,15 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { KaryaGallery } from "../components/karya/KaryaGallery";
+import { KaryaGallery } from "../components/features/karya/KaryaGallery";
 import PageLayout from "../components/layouts/PageLayout";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Database } from "@/integrations/supabase/types";
 import { sortKaryaByRecency, sortKaryaByPopularity } from "@/lib/karyaUtils";
-import UploadButton from "../components/karya/UploadButton";
-import { FeaturedWork } from "@/components/karya/FeaturedWork";
-import { FilterBar } from "@/components/karya/FilterBar";
+import UploadButton from "../components/features/karya/UploadButton";
+import { FeaturedWork } from "@/components/features/karya/FeaturedWork";
+import { FilterBar } from "@/components/features/karya/FilterBar";
 import KaryaDetailDialog from "@/components/KaryaDetailDialog";
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];

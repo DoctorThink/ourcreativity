@@ -2,10 +2,10 @@
 import React, { useRef, useLayoutEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { HeroSection } from "@/components/informasi/HeroSection";
-import { ValuesSection } from "@/components/informasi/ValuesSection";
-import { ProgramsSection } from "@/components/informasi/ProgramsSection";
-import { CTASection } from "@/components/informasi/CTASection";
+import { HeroSection } from "@/components/features/informasi/HeroSection";
+import { ValuesSection } from "@/components/features/informasi/ValuesSection";
+import { ProgramsSection } from "@/components/features/informasi/ProgramsSection";
+import { CTASection } from "@/components/features/informasi/CTASection";
 
 const Informasi = () => {
   const mainRef = useRef<HTMLDivElement>(null);

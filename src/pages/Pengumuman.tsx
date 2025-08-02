@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "../components/layouts/PageLayout";
 import { useLocalAnnouncements } from "@/hooks/useLocalAnnouncements";
-import { GlowarGrid } from "@/components/announcement/GlowarGrid";
-import { GlowarFilterBar } from "@/components/announcement/GlowarFilterBar";
-import { GlowarFeaturedCard } from "@/components/announcement/GlowarFeaturedCard";
-import { AnnouncementDetailModal } from "@/components/announcement/AnnouncementDetailModal";
-import { AnnouncementLoadingState } from "@/components/announcement/AnnouncementLoadingState";
-import { AnnouncementErrorState } from "@/components/announcement/AnnouncementErrorState";
+import { GlowarGrid } from "@/components/features/announcement/GlowarGrid";
+import { GlowarFilterBar } from "@/components/features/announcement/GlowarFilterBar";
+import { GlowarFeaturedCard } from "@/components/features/announcement/GlowarFeaturedCard";
+import { AnnouncementDetailModal } from "@/components/features/announcement/AnnouncementDetailModal";
+import { AnnouncementLoadingState } from "@/components/features/announcement/AnnouncementLoadingState";
+import { AnnouncementErrorState } from "@/components/features/announcement/AnnouncementErrorState";
 
 const containerVariants = {
   hidden: { opacity: 0 },

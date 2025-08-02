@@ -2,7 +2,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Masonry from "react-masonry-css";
-import KaryaCard from "../KaryaCard";
+import KaryaCard from "../../KaryaCard";
 import { Database } from "@/integrations/supabase/types";
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];

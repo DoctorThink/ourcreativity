@@ -1,7 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "../../ui/card";
 import { Database } from "@/integrations/supabase/types";
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];

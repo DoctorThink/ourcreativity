@@ -35,11 +35,11 @@ const queryClient = new QueryClient({
 
 import { PageTransition } from "./components/PageTransition";
 import { AnimatePresence } from "framer-motion";
-import { CustomCursor } from "./components/karya/CustomCursor";
-import { ScrollProgressIndicator } from "./components/karya/ScrollProgressIndicator";
-import { ParticleBackground } from "./components/karya/ParticleBackground";
+import { CustomCursor } from "./components/features/karya/CustomCursor";
+import { ScrollProgressIndicator } from "./components/features/karya/ScrollProgressIndicator";
+import { ParticleBackground } from "./components/features/karya/ParticleBackground";
 import { GlobalAnimations } from "./components/GlobalAnimations";
-import RequireAuth from "./components/admin/RequireAuth";
+import RequireAuth from "./components/features/admin/RequireAuth";
 
 // Create AppContent component that uses router hooks
 function AppContent() {

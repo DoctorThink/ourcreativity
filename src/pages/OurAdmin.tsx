@@ -13,13 +13,13 @@ import {
 import PageLayout from "../components/layouts/PageLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import AdminDashboardHeader from "@/components/admin/AdminDashboardHeader";
-import AdminDashboardStats from "@/components/admin/AdminDashboardStats";
-import AnnouncementManager from "@/components/admin/AnnouncementManager";
-import TeamEditor from "@/components/admin/TeamEditor";
-import KaryaModeration from "@/components/admin/KaryaModeration";
-import ContentEditor from "@/components/admin/ContentEditor";
-import AdminActivityLog from "@/components/admin/AdminActivityLog";
+import AdminDashboardHeader from "@/components/features/admin/AdminDashboardHeader";
+import AdminDashboardStats from "@/components/features/admin/AdminDashboardStats";
+import AnnouncementManager from "@/components/features/admin/AnnouncementManager";
+import TeamEditor from "@/components/features/admin/TeamEditor";
+import KaryaModeration from "@/components/features/admin/KaryaModeration";
+import ContentEditor from "@/components/features/admin/ContentEditor";
+import AdminActivityLog from "@/components/features/admin/AdminActivityLog";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { useNavigate } from "react-router-dom";
 

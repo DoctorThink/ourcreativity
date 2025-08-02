@@ -1,10 +1,10 @@
 
 import React, { useRef, useLayoutEffect } from "react";
 import PageLayout from "../components/layouts/PageLayout";
-import { HeroSection } from "../components/cerita/HeroSection";
-import { OriginStorySection } from "../components/cerita/OriginStorySection";
-import { GrowthSection } from "../components/cerita/GrowthSection";
-import { VisionSection } from "../components/cerita/VisionSection";
+import { HeroSection } from "../components/features/cerita/HeroSection";
+import { OriginStorySection } from "../components/features/cerita/OriginStorySection";
+import { GrowthSection } from "../components/features/cerita/GrowthSection";
+import { VisionSection } from "../components/features/cerita/VisionSection";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 

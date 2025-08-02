@@ -9,8 +9,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import KaryaCard from "../KaryaCard";
-import KaryaDetailDialog from "../KaryaDetailDialog";
+import KaryaCard from "../../KaryaCard";
+import KaryaDetailDialog from "../../KaryaDetailDialog";
 
 type KaryaType = Database['public']['Tables']['karya']['Row'];
 
