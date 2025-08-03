@@ -57,6 +57,11 @@ function AppContent() {
     
     // Preload critical resources
     preloadCriticalResources();
+    
+    // Register service worker for offline functionality
+    if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+      navigator.serviceWorker.register('/sw.js').catch(console.error);
+    }
   }, []);
 
   const handleLoadComplete = () => {
