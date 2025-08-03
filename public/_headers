@@ -1,0 +1,23 @@
+# Static asset caching for better performance
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Images caching
+/lovable-uploads/*
+  Cache-Control: public, max-age=31536000
+
+# Fonts caching
+/fonts/*
+  Cache-Control: public, max-age=31536000
+
+# API responses
+/api/*
+  Cache-Control: no-cache
+
+# HTML files
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Service worker
+/sw.js
+  Cache-Control: no-cache

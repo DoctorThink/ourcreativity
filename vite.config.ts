@@ -19,14 +19,35 @@ export default defineConfig(({ mode }) => ({
     sourcemap: true, // Enable source maps for Sentry
     rollupOptions: {
       output: {
-        manualChunks: undefined, // Disable manual chunk splitting for now
-        // Ensure consistent casing in file names (all lowercase)
+        // Strategic code splitting for performance
+        manualChunks: {
+          // Vendor chunk for stable dependencies
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          // UI library chunk
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-toast', 'framer-motion'],
+          // Animation libraries
+          animations: ['gsap'],
+          // Query and state management
+          query: ['@tanstack/react-query'],
+          // Supabase and external services
+          services: ['@supabase/supabase-js'],
+        },
+        // Optimized file naming with content hashing
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]'
       }
     },
-    chunkSizeWarningLimit: 1000
+    // Increase chunk size warning limit for vendor chunks
+    chunkSizeWarningLimit: 800,
+    // Enable minification and compression
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: mode === 'production',
+        drop_debugger: mode === 'production',
+      },
+    },
   },
   plugins: [
     react(),

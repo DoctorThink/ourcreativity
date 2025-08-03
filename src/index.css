@@ -1,6 +1,6 @@
 /* src/index.css */
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap'); /* Added Inter 700 for font-semibold */
+/* Fonts are now loaded asynchronously via HTML head - removed blocking @import */
 
 @tailwind base;
 @tailwind components;
