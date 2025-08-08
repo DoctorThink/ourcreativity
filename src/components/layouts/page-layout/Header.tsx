@@ -39,9 +39,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   return (
     <motion.header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
+        'fixed top-3 left-3 right-3 z-50 transition-all duration-500',
         'bg-background/80 backdrop-blur-xl border border-white/10',
-        'rounded-none sm:rounded-[20px] shadow-2xl shadow-black/20',
+        'rounded-2xl md:rounded-3xl shadow-2xl shadow-black/20',
         'hover:shadow-2xl hover:shadow-black/30',
         className
       )}
@@ -59,7 +59,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           {location.pathname !== '/' && (
             <motion.button
               onClick={handleBackClick}
-              className="p-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 lg:hidden"
+              className="p-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               aria-label="Kembali"

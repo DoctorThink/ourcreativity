@@ -101,7 +101,7 @@ export const KaryaDetailDialogV2 = ({ karyaList, initialIndex, isOpen, onClose }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 border border-border/20 bg-background/95 backdrop-blur-xl shadow-2xl w-[95vw] h-[90vh] max-w-7xl rounded-2xl overflow-hidden">
+      <DialogContent className="p-0 border border-border/20 bg-background/95 backdrop-blur-xl shadow-2xl w-[95vw] h-[90vh] max-w-7xl rounded-2xl overflow-hidden touch-pan-y overscroll-contain flex flex-col">
         <DialogTitle className="sr-only">
           {karya?.title || 'Karya Detail'}
         </DialogTitle>

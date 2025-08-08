@@ -51,18 +51,25 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ mainNav, infoNav, ctaNav
   const navigate = useNavigate();
 
   return (
-    <nav className="hidden lg:flex items-center bg-white/5 backdrop-blur-sm rounded-full px-2 py-1 border border-white/10">
+    <nav className="hidden lg:flex items-center bg-white/5 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/15 shadow-lg shadow-white/5">
       <NavigationMenu>
         <NavigationMenuList>
           {mainNav.map((item) => (
             <NavigationMenuItem key={item.path}>
-              <Link to={item.path}>
-                <NavigationMenuLink
-                  className={cn(navigationMenuTriggerStyle(), 'bg-transparent', isActive(item.path) ? 'bg-white/15 text-white' : 'text-white/70 hover:text-white hover:bg-white/10')}
+              <NavigationMenuLink asChild>
+                <Link
+                  to={item.path}
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    'bg-transparent rounded-full',
+                    isActive(item.path)
+                      ? 'bg-white/15 text-white'
+                      : 'text-white/80 hover:text-white hover:bg-white/10'
+                  )}
                 >
                   {item.name}
-                </NavigationMenuLink>
-              </Link>
+                </Link>
+              </NavigationMenuLink>
             </NavigationMenuItem>
           ))}
 
