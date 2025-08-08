@@ -17,12 +17,12 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   onKaryaClick,
 }) => {
   const breakpointColumnsObj = {
-    default: 4,    // 4 columns on desktop (1200px+)
-    1200: 4,       // 4 columns on large desktop
-    1024: 3,       // 3 columns on lg screens (1024px-1199px)
-    768: 2,        // 2 columns on md screens (768px-1023px)
-    640: 2,        // 2 columns on sm screens (640px-767px)
-    480: 1         // 1 column on xs screens (below 640px)
+    default: 5,      // 5 columns on wide desktop
+    1280: 4,         // 4 columns on desktop and large laptops
+    1024: 3,         // 3 columns on large tablets/small laptops
+    768: 2,          // 2 columns on tablets
+    640: 2,          // 2 columns on large phones
+    480: 1           // 1 column on small phones
   };
 
   const handleItemClick = (item: KaryaType) => {
