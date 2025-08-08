@@ -114,8 +114,12 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
               <div className="flex flex-col items-center gap-3 text-center">
                 <img 
                   src="/lovable-uploads/karyatulis.png" 
-                  alt="Karya Tulis" 
+                  alt="Karya Tulis category icon" 
                   className="w-12 h-12 mb-2 opacity-70" 
+                  loading="lazy"
+                  decoding="async"
+                  width={48}
+                  height={48}
                 />
                 <h3 className="text-lg font-bold text-foreground font-sans mb-2 line-clamp-2">{karya.title}</h3>
                 <p className="text-foreground/80 text-sm line-clamp-4 leading-relaxed font-sans">
@@ -233,8 +237,12 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
             <div className="bg-black/40 backdrop-blur-sm p-2 rounded-full">
               <img
                 src={categoryIcons[karya.category] || '/lovable-uploads/design.png'}
-                alt={karya.category}
+                alt={`${categoryNames[karya.category] || karya.category} icon`}
                 className="w-5 h-5 object-contain"
+                loading="lazy"
+                decoding="async"
+                width={20}
+                height={20}
               />
             </div>
             <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-full text-white/90">
@@ -284,8 +292,12 @@ const KaryaCard = ({ karya, onClick }: KaryaCardProps) => {
         >
           <img
             src={categoryIcons[karya.category] || '/lovable-uploads/design.png'}
-            alt={karya.category}
+            alt={`${categoryNames[karya.category] || karya.category} icon`}
             className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+            loading="lazy"
+            decoding="async"
+            width={40}
+            height={40}
           />
         </div>
       </Card>

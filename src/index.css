@@ -231,82 +231,23 @@ body {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* Pinterest-style Responsive Breakpoints */
-@media screen and (min-width: 1400px) {
-  .masonry-grid-column {
-    width: calc(20% - 6.4px) !important; /* 5 columns on extra large screens */
-  }
-}
-
-@media screen and (min-width: 1200px) and (max-width: 1399px) {
-  .masonry-grid-column {
-    width: calc(25% - 6px) !important; /* 4 columns */
-  }
-}
-
-@media screen and (min-width: 1024px) and (max-width: 1199px) {
-  .masonry-grid-column {
-    width: calc(33.333% - 5.33px) !important; /* 3 columns */
-  }
-}
-
-@media screen and (min-width: 768px) and (max-width: 1023px) {
-  .masonry-grid-column {
-    width: calc(50% - 4px) !important; /* 2 columns */
-  }
-}
-
+/* Responsive Masonry Gutters (rely on react-masonry-css for column widths) */
 @media screen and (max-width: 767px) {
   .masonry-container {
     max-width: 100%;
     padding: 0 12px;
   }
-  
   .masonry-grid {
     margin-left: -6px !important;
   }
-  
   .masonry-grid-column {
     padding-left: 6px !important;
-    width: 100% !important; /* 1 column */
   }
-  
   .masonry-item {
     margin-bottom: 12px !important;
   }
 }
 
-/* CSS Grid Fallback System */
-@supports not (display: flex) or (not (display: flex)) {
-  .masonry-grid {
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 12px !important;
-    margin-left: 0 !important;
-  }
-  
-  .masonry-grid-column {
-    padding-left: 0 !important;
-  }
-  
-  @media (max-width: 1023px) {
-    .masonry-grid {
-      grid-template-columns: repeat(3, 1fr) !important;
-    }
-  }
-  
-  @media (max-width: 767px) {
-    .masonry-grid {
-      grid-template-columns: repeat(2, 1fr) !important;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .masonry-grid {
-      grid-template-columns: 1fr !important;
-    }
-  }
-}
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: rgba(var(--background-rgb), 0.5); }
